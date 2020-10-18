@@ -1,5 +1,5 @@
-# Mars
-The Gtk3 bindings for Pharo and Spec
+# Spec-Gtk
+The Spec Gtk bindings for Pharo
 
 # How to install
 
@@ -48,8 +48,8 @@ curl https://get.pharo.org/64/90+vmHeadlessLatest | bash
 You need to install it from the command line since you do not have the Playground in the UI:
 ```
 ./PharoConsole.exe '.\Pharo.image' eval --save " Metacello new
-        repository: 'github://pharo-spec/mars-gtk';
-        baseline: 'Mars';
+        repository: 'github://pharo-spec/Spec-Gtk';
+        baseline: 'SpecGtk';
         onConflict: [ :e | e useIncoming ];
         onUpgrade: [ :e | e useIncoming ];
         ignoreImage;
@@ -63,8 +63,8 @@ Then you will need to restart your image to let Gtk3 to take over the event loop
 Open your image using `./pharo-ui Pharo.image` and evaluate:
 ```Smalltalk
  Metacello new
-        repository: 'github://pharo-spec/mars-gtk';
-        baseline: 'Mars';
+        repository: 'github://pharo-spec/Spec-Gtk';
+        baseline: 'SpecGtk';
         onConflict: [ :e | e useIncoming ];
         onUpgrade: [ :e | e useIncoming ];
         ignoreImage;
