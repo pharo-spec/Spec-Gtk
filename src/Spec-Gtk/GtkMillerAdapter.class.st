@@ -94,8 +94,8 @@ GtkMillerAdapter >> doScrollToShowLastPage [
 		"reschedule to be sure is executed"
 		^ self scrollToShowLastPage ].
 	
-	self widget hAdjustment value: pos x.
-	self widget vAdjustment value: pos y
+	self widget hAdjustment value: pos x asFloat.
+	self widget vAdjustment value: pos y asFloat
 ]
 
 { #category : #'private accessing' }
