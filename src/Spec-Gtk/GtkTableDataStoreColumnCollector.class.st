@@ -25,6 +25,19 @@ GtkTableDataStoreColumnCollector >> addBackgroundColorColumn: aTableColumn [
 ]
 
 { #category : #private }
+GtkTableDataStoreColumnCollector >> addBoldColumn: aTableColumn [
+
+	aTableColumn displayBold ifNil: [ ^ self ]. 
+	store addColumn: (GtkTreeDataIntegerColumn new 
+		column: aTableColumn;
+		tag: #weight;
+		evaluated: [ :aClass | 
+			(aTableColumn displayBold cull: aClass) 
+				ifTrue: [ 700 "PANGO_WEIGHT_BOLD" ]
+				ifFalse: [ 400 "PANGO_WEIGHT_NORMAL" ] ]).
+]
+
+{ #category : #private }
 GtkTableDataStoreColumnCollector >> addColorColumn: aTableColumn [
 
 	aTableColumn displayColor ifNil: [ ^ self ]. 
@@ -34,6 +47,33 @@ GtkTableDataStoreColumnCollector >> addColorColumn: aTableColumn [
 		evaluated: [ :aClass | 
 			(aTableColumn displayColor cull: aClass) 
 				ifNotNil: [ :color | '#', (color asHexString) ] ]).
+]
+
+{ #category : #private }
+GtkTableDataStoreColumnCollector >> addItalicColumn: aTableColumn [
+
+	aTableColumn displayItalic ifNil: [ ^ self ]. 
+	store addColumn: (GtkTreeDataIntegerColumn new 
+		column: aTableColumn;
+		tag: #style;
+		evaluated: [ :aClass | 
+			(aTableColumn displayItalic cull: aClass) 
+				ifTrue: [ 2 "PANGO_STYLE_ITALIC" ]
+				ifFalse: [ 0 "PANGO_STYLE_NORMAL" ] ]).
+]
+
+{ #category : #private }
+GtkTableDataStoreColumnCollector >> addUnderlineColumn: aTableColumn [
+
+	aTableColumn displayUnderline ifNil: [ ^ self ]. 
+
+	store addColumn: (GtkTreeDataIntegerColumn new 
+		column: aTableColumn;
+		tag: #underline;
+		evaluated: [ :aClass | 
+			(aTableColumn displayUnderline cull: aClass) 
+				ifTrue: [ 1  "PANGO_UNDERLINE_SINGLE" ]
+				ifFalse: [ 0 "PANGO_UNDERLINE_NONE" ] ]).
 ]
 
 { #category : #accessing }
@@ -67,5 +107,7 @@ GtkTableDataStoreColumnCollector >> visitStringColumn: aTableColumn [
 	"text properties"
 	self addColorColumn: aTableColumn.
 	self addBackgroundColorColumn: aTableColumn.
-	
+	self addItalicColumn: aTableColumn.
+	self addBoldColumn: aTableColumn.
+	self addUnderlineColumn: aTableColumn
 ]

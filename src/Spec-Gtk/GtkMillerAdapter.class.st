@@ -193,6 +193,11 @@ GtkMillerAdapter >> scrollToShowLastPage [
 	] asTask schedule: TKTNewProcessTaskRunner new
 ]
 
+{ #category : #api }
+GtkMillerAdapter >> selectPage: aNumber [
+	
+]
+
 { #category : #private }
 GtkMillerAdapter >> toggleVisible: isVisible [
 

@@ -185,10 +185,24 @@ GtkTableColumnPacker >> visitStringColumn: aTableColumn [
 			addAttribute: 'foreground' 
 			column: (self columnIndexOf: aTableColumn tag: #foreground) 
 			renderer: renderer ].	
-	aTableColumn displayBackgroundColor ifNotNil: [ 
+	aTableColumn displayBackgroundColor ifNotNil: [
 		column 
 			addAttribute: 'background'
 			column: (self columnIndexOf: aTableColumn tag: #background) 
-			renderer: renderer ]	
-	
+			renderer: renderer ].
+	aTableColumn displayItalic ifNotNil: [  
+		column 
+			addAttribute: 'style'
+			column: (self columnIndexOf: aTableColumn tag: #style) 
+			renderer: renderer ].
+	aTableColumn displayBold ifNotNil: [  
+		column 
+			addAttribute: 'weight'
+			column: (self columnIndexOf: aTableColumn tag: #weight) 
+			renderer: renderer ].
+	aTableColumn displayBold ifNotNil: [  
+		column 
+			addAttribute: 'underline'
+			column: (self columnIndexOf: aTableColumn tag: #underline) 
+			renderer: renderer ].	
 ]
