@@ -213,6 +213,7 @@ GtkTreeTableAdapter >> items [
 GtkTreeTableAdapter >> newColumnBuilder [
 
 	^ GtkTreeTableColumnBuilder new 
+		store: self store;
 		model: self presenter;
 		columns: self columns;
 		yourself
@@ -235,10 +236,10 @@ GtkTreeTableAdapter >> newTreeStoreFrom: items [
 
 { #category : #building }
 GtkTreeTableAdapter >> recreateStore: gtkTreeView	generateColumns: doesGenerateColumns [
-	
+
+	self doRecreateStore: gtkTreeView.	
 	doesGenerateColumns 
 		ifTrue: [ self doRecreateColumns: gtkTreeView ].
-	self doRecreateStore: gtkTreeView.
 	self addSortableColumnsTo: gtkTreeView
 ]
 

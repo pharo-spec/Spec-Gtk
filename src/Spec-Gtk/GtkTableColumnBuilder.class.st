@@ -33,6 +33,12 @@ GtkTableColumnBuilder >> columnEdited: aTableColumn path: path text: text [
 ]
 
 { #category : #accessing }
+GtkTableColumnBuilder >> columnIndexOf: aTableColumn [
+
+	^ (self store indexOf: aTableColumn) - 1
+]
+
+{ #category : #accessing }
 GtkTableColumnBuilder >> model [
 
 	^ model

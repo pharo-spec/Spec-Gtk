@@ -17,18 +17,17 @@ GtkTableAdapter >> addModelTo: gtkTreeView [
 	gtkTreeView connectDestroy: [ 
 		gtkTreeView model roots: #() ].
 		
-	gtkTreeView headersVisible: self model isShowingColumnHeaders.
+	gtkTreeView headersVisible: self presenter isShowingColumnHeaders.
 
-	self model selection isMultipleSelection 
+	self presenter selection isMultipleSelection 
 		ifTrue: [ gtkTreeView beMultipleSelectionMode ] 
 		ifFalse: [ gtkTreeView beSingleSelectionMode ].
-				
-	self addColumnsTo: gtkTreeView.
 	
-	self model columns ifNotEmpty: [
+	self columns ifNotEmpty: [
 		gtkTreeView model: self newTreeStore.
-		self addSortableColumnsTo: gtkTreeView ].
-	
+		self addSortableColumnsTo: gtkTreeView.
+		self addColumnsTo: gtkTreeView ].
+		
 	gtkTreeView selection unselectAll.
 
 	self presenter selection isEmpty ifFalse: [ 
@@ -43,7 +42,7 @@ GtkTableAdapter >> addModelTo: gtkTreeView [
 		gtkTreeView headersVisible: self model isShowingColumnHeaders ].
 		
 	gtkTreeView connectRowActivated: [ :path | 
-		self model doActivateAtIndex: path toArray first ].
+		self presenter doActivateAtIndex: path toArray first ].
 
 	self presenter whenColumnsChangedDo: [ 
 		self refreshWidgetHeaderTitle. 

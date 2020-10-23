@@ -43,6 +43,18 @@ GtkTableColumnPacker >> column: anObject [
 	column := anObject
 ]
 
+{ #category : #accessing }
+GtkTableColumnPacker >> columnIndexOf: aTableColumn [
+
+	^ (self store indexOf: aTableColumn) - 1
+]
+
+{ #category : #accessing }
+GtkTableColumnPacker >> columnIndexOf: aTableColumn tag: anObject [
+
+	^ (self store indexOf: aTableColumn tag: anObject) - 1
+]
+
 { #category : #private }
 GtkTableColumnPacker >> doToggle: pathString column: aTableColumn [
 	| path iter item store status | 
@@ -116,6 +128,12 @@ GtkTableColumnPacker >> newToggleRenderer [
 	^ GtkCellRendererToggle new
 ]
 
+{ #category : #accessing }
+GtkTableColumnPacker >> store [
+
+	^ self builder store
+]
+
 { #category : #visiting }
 GtkTableColumnPacker >> visitCheckboxColumn: aTableColumn [
 	| renderer |
@@ -151,16 +169,26 @@ GtkTableColumnPacker >> visitImageColumn: aTableColumn [
 
 { #category : #visiting }
 GtkTableColumnPacker >> visitStringColumn: aTableColumn [
-	| renderer |
+	| renderer index |
 	
 	renderer := aTableColumn isEditable 
 		ifTrue: [ self newEditableTextRendererFor: aTableColumn ]
 		ifFalse: [ self newTextRenderer ].
 	self addRendererPropertiesTo: renderer column: aTableColumn.
 	
+	index := self columnIndexOf: aTableColumn.
 	column packStart: renderer expand: self isExpand.
-	column 
-		addAttribute: 'text' 
-		column: (self columnIndexOf: aTableColumn)
-		renderer: renderer
+	column addAttribute: 'text' column: index renderer: renderer.
+	"Add properties."
+	aTableColumn displayColor ifNotNil: [ 
+		column 
+			addAttribute: 'foreground' 
+			column: (self columnIndexOf: aTableColumn tag: #foreground) 
+			renderer: renderer ].	
+	aTableColumn displayBackgroundColor ifNotNil: [ 
+		column 
+			addAttribute: 'background'
+			column: (self columnIndexOf: aTableColumn tag: #background) 
+			renderer: renderer ]	
+	
 ]

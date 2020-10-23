@@ -37,15 +37,6 @@ SpecFormExample class >> show [
 	self new openWithSpec
 ]
 
-{ #category : #examples }
-SpecFormExample class >> showWithGtk [
-	<example>
-	
-	SpBindings 
-		value: GtkAdapterBindings new
-		during: [ self new openWithSpec ]
-]
-
 { #category : #'accessing ui' }
 SpecFormExample >> checkBox [
 	^ checkBox

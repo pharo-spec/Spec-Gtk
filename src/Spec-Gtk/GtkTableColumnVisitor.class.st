@@ -9,19 +9,6 @@ Class {
 }
 
 { #category : #accessing }
-GtkTableColumnVisitor >> columnIndex: aNumber [
-
-	self flag: #REMOVE.
-	"columnIndex := aNumber"
-]
-
-{ #category : #accessing }
-GtkTableColumnVisitor >> columnIndexOf: aTableColumn [
-
-	^ (self flattenColumns indexOf: aTableColumn) - 1
-]
-
-{ #category : #accessing }
 GtkTableColumnVisitor >> columns [
 
 	^ columns
