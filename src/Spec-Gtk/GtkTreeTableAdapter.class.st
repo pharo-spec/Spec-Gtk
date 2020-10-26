@@ -213,7 +213,6 @@ GtkTreeTableAdapter >> items [
 GtkTreeTableAdapter >> newColumnBuilder [
 
 	^ GtkTreeTableColumnBuilder new 
-		store: self store;
 		model: self presenter;
 		columns: self columns;
 		yourself
