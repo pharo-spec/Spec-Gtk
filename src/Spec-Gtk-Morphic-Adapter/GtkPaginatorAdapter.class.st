@@ -8,10 +8,15 @@ Class {
 GtkPaginatorAdapter >> addModelTo: gtkWidget [
 	| morph |
 
+	gtkWidget beMorphNotResizable.
+	gtkWidget vExpand: false.
+	gtkWidget marginBottom: self defaultMarginBottom.
 	gtkWidget morph: (morph := SpPaginatorMorph new
+		height: self defaultPaginatorHeight;
 		addPages: self presenter pages;
 		selectPage: self presenter pages size;
 		yourself).
+
 
 	self presenter whenSelectedPageChangedDo: [ :aNumber |
 		self backendDetectCyclesDo: [ 
@@ -36,6 +41,18 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 			ifNotNil: [ morph removePage: anObject ]
 			ifNil: [ morph removeAllPages ] ]
 
+]
+
+{ #category : #private }
+GtkPaginatorAdapter >> defaultMarginBottom [
+
+	^ 5
+]
+
+{ #category : #private }
+GtkPaginatorAdapter >> defaultPaginatorHeight [
+
+	^ 22
 ]
 
 { #category : #building }
