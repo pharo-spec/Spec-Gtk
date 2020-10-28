@@ -54,11 +54,21 @@ GtkMillerAdapter >> applyLayout: aLayout [
 		show.
 		
 	widget := GtkScrolledWindow newWidget: innerWidget.
-	widget connectSizeAllocate: [ :aRect | self recalculatePages ].
+	widget connectSizeAllocate: [ :aRect | 
+		self recalculatePages ].
 		
-	self toggleVisible: model isVisible.
-	model whenVisibleChangedDo: [ 	
-		self toggleVisible: model isVisible ]
+	self toggleVisible: self presenter isVisible.
+	self presenter whenVisibleChangedDo: [ 	
+		self toggleVisible: self presenter isVisible ].
+
+	self presenter hasHorizontalScrollBar 
+		ifFalse: [ widget hScrollBar hide ].
+	self presenter whenHorizontalScrollBarChangedDo: [ :show |
+		show 
+			ifTrue: [ widget hScrollBar show ]
+		 	ifFalse: [ widget hScrollBar hide ] ].
+	
+
 ]
 
 { #category : #private }
