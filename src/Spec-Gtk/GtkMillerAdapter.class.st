@@ -4,12 +4,15 @@ Class {
 	#instVars : [
 		'innerWidget',
 		'lastExtent',
-		'lastPageSize'
+		'lastPageSize',
+		'realised',
+		'keepShowingPage',
+		'firstShowingWidget'
 	],
 	#category : #'Spec-Gtk-Layout-Box'
 }
 
-{ #category : #protocol }
+{ #category : #api }
 GtkMillerAdapter >> add: aPresenter [
 
 	self add: aPresenter constraints: SpLayoutConstraints new
@@ -46,6 +49,9 @@ GtkMillerAdapter >> applyLayout: aLayout [
 
 	"build of widget was differed up to here (to know what is the direction)"
 	innerWidget := layout direction newWidgetOn: self.
+	innerWidget connectRealize: [ 
+		realised := true.
+		self scrollToShowLastPage ].
 
 	innerWidget 
 		homogeneous: true;
@@ -55,20 +61,19 @@ GtkMillerAdapter >> applyLayout: aLayout [
 		
 	widget := GtkScrolledWindow newWidget: innerWidget.
 	widget connectSizeAllocate: [ :aRect | 
-		self recalculatePages ].
+		self widgetResized ].
 		
 	self toggleVisible: self presenter isVisible.
 	self presenter whenVisibleChangedDo: [ 	
 		self toggleVisible: self presenter isVisible ].
 
-	self presenter hasHorizontalScrollBar 
-		ifFalse: [ widget hScrollBar hide ].
+	self presenter hasHorizontalScrollBar
+		ifTrue: [ self enableHScrollBar ] 
+		ifFalse: [ self disableHScrollBar ].
 	self presenter whenHorizontalScrollBarChangedDo: [ :show |
 		show 
-			ifTrue: [ widget hScrollBar show ]
-		 	ifFalse: [ widget hScrollBar hide ] ].
-	
-
+			ifTrue: [ self enableHScrollBar ]
+		 	ifFalse: [ self disableHScrollBar ] ]
 ]
 
 { #category : #private }
@@ -93,19 +98,39 @@ GtkMillerAdapter >> childrenWidgets [
 ]
 
 { #category : #private }
-GtkMillerAdapter >> doScrollToShowLastPage [
-	| lastWidget pos |
+GtkMillerAdapter >> disableHScrollBar [
 
-	lastWidget := innerWidget children last.
-	pos := lastWidget 
+	keepShowingPage := true.
+	self widgetDo: [ :w | w hScrollBar hide ]
+]
+
+{ #category : #private }
+GtkMillerAdapter >> doScrollToShow: aWidget [
+	| pos |
+
+	pos := aWidget 
 		translateCoordinates: 0@0 
 		to: innerWidget.
 	pos = (-1@ -1) ifTrue: [ 
 		"reschedule to be sure is executed"
-		^ self scrollToShowLastPage ].
+		^ self scrollToShow: aWidget ].
 	
 	self widget hAdjustment value: pos x asFloat.
 	self widget vAdjustment value: pos y asFloat
+]
+
+{ #category : #private }
+GtkMillerAdapter >> enableHScrollBar [
+
+	keepShowingPage := true.
+	self widgetDo: [ :w | w hScrollBar show ]
+]
+
+{ #category : #private }
+GtkMillerAdapter >> initialize [
+
+	super initialize.
+	realised := false
 ]
 
 { #category : #'private accessing' }
@@ -171,7 +196,7 @@ GtkMillerAdapter >> recalculatePages [
 		lastPageSize := self childrenWidgets size ]
 ]
 
-{ #category : #removing }
+{ #category : #api }
 GtkMillerAdapter >> remove: aPresenter [
 	| childWidget |
 
@@ -184,18 +209,19 @@ GtkMillerAdapter >> remove: aPresenter [
 ]
 
 { #category : #private }
-GtkMillerAdapter >> scrollToShowLastPage [
+GtkMillerAdapter >> scrollToShow: aWidget [
 
+	realised ifFalse: [ ^ self ].
 	innerWidget children ifEmpty: [ ^ self ].
 	innerWidget children size = 1 ifTrue: [ ^ self ].
-	
+
 	self flag: #HACK. "This is needed because once added a children, the children will 
 	not have immediately a real position, so we cannot scroll. 
 	Positions and sizes in Gtk3 are calculated in the redrawing loop, to prevent multiple 
 	sizing at once. We need to wait until this happens so the scrolling has sense."
 	[
-		1 milliSecond wait.
-		[ self doScrollToShowLastPage ]
+		15 milliSecond wait.
+		[ self doScrollToShow: aWidget ]
 		on: Error do: [ :e | 
 			"do not lost the error if any, but do not stop because of it"
 			e emit. 
@@ -203,9 +229,24 @@ GtkMillerAdapter >> scrollToShowLastPage [
 	] asTask schedule: TKTNewProcessTaskRunner new
 ]
 
+{ #category : #private }
+GtkMillerAdapter >> scrollToShowLastPage [
+
+	realised ifFalse: [ ^ self ].
+	innerWidget children ifEmpty: [ ^ self ].
+	innerWidget children size = 1 ifTrue: [ ^ self ].
+
+	self scrollToShow: innerWidget children last
+]
+
 { #category : #api }
 GtkMillerAdapter >> selectPage: aNumber [
-	
+	| child |
+
+	child := innerWidget children at: (aNumber max: 1).
+	keepShowingPage 
+		ifTrue: [ firstShowingWidget := child ].
+	self widgetDo: [ :w | self scrollToShow: child ]
 ]
 
 { #category : #private }
@@ -214,4 +255,12 @@ GtkMillerAdapter >> toggleVisible: isVisible [
 	isVisible 
 		ifTrue: [ widget show ] 
 		ifFalse: [ widget hide ]
+]
+
+{ #category : #private }
+GtkMillerAdapter >> widgetResized [
+
+	self recalculatePages.
+	(keepShowingPage and: [ firstShowingWidget notNil ])
+		ifTrue: [ self scrollToShow: firstShowingWidget ]
 ]
