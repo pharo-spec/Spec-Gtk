@@ -38,7 +38,7 @@ GtkMenuButtonAdapter >> updateMenu [
 
 	self presenter menu ifNotNil: [ :aValuable |
 		aValuable value ifNotNil: [ :aMenu |
-			self widgetDo: [ :w | w popUp: (self buildMenu: aMenu) showAll ] ] ]
+			self widgetDo: [ :w | w popup: (self buildMenu: aMenu) showAll ] ] ]
 ]
 
 { #category : #building }
