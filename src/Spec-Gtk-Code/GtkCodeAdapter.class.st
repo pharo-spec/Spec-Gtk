@@ -148,14 +148,19 @@ GtkCodeAdapter >> hasSyntaxHighlightEnabled [
 ]
 
 { #category : #api }
-GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter [
+GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleName [
 
 	self innerWidgetDo: [ :w | | endIter |
+
 		lastPopover := self presenter newPopover
 			bePositionRight;
 			presenter: aPresenter;
-			buildWithSpec;
 			yourself.
+
+		styleName ifNotNil: [ 
+			lastPopover addStyle: styleName ].
+		
+		lastPopover buildWithSpec.
 
 		endIter := w textBuffer 
 			selectionIteratorsDo: [ :start :end | end ] 
