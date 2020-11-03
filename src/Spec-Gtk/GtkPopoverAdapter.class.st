@@ -10,7 +10,7 @@ GtkPopoverAdapter >> addModelTo: gtkPopover [
 	gtkPopover setConstraintTo: GtkPopoverConstraint GTK_POPOVER_CONSTRAINT_NONE.
 	gtkPopover add: self presenterWidget showAll.	
 	gtkPopover beRelativeTo: self presenter relativeTo adapter innerWidget. 
-	gtkPopover beModal.
+	gtkPopover beNotModal.
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
@@ -32,7 +32,7 @@ GtkPopoverAdapter >> dismiss [
 { #category : #api }
 GtkPopoverAdapter >> popup [
 
-	self widgetDo: [ :w | w popup ]
+	self widgetDo: [ :w | w popup; beModal ]
 ]
 
 { #category : #api }
