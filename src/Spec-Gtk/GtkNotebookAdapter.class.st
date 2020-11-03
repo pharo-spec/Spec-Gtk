@@ -18,6 +18,9 @@ GtkNotebookAdapter >> addContentPage: gtkPage [
 
 { #category : #building }
 GtkNotebookAdapter >> addModelTo: gtkWidget [
+
+	gtkWidget beScrollable.
+
 	self model pages do: [ :each | self appendPage: each to: gtkWidget ].
 
 	"I add contents to fist page because this will shown anyway (and like this I allow

@@ -7,7 +7,7 @@ Class {
 { #category : #building }
 GtkPopoverAdapter >> addModelTo: gtkPopover [
 
-	gtkPopover setConstraintTo: (GtkPopoverConstraint GTK_POPOVER_CONSTRAINT_NONE).
+	gtkPopover setConstraintTo: GtkPopoverConstraint GTK_POPOVER_CONSTRAINT_NONE.
 	gtkPopover add: self presenterWidget showAll.	
 	gtkPopover beRelativeTo: self presenter relativeTo adapter innerWidget. 
 	gtkPopover beModal.

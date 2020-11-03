@@ -82,8 +82,9 @@ GtkMillerAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget 
 
 	childWidget := aPresenter buildWithSpec: constraints spec.
 	self addConstraits: constraints toChild: childWidget.
+		
 	gtkWidget 
-		packStart: childWidget 
+		packStart: childWidget
 		expand: true
 		fill: true
 		padding: 0.
@@ -178,7 +179,8 @@ GtkMillerAdapter >> recalculatePageWidths [
 	
 	"since the container box is homogeneous, I just need to change the size of 
 	 first element to get all the rest to follow"
-	widgets first sizeRequest: newWidth @ (widgets first preferredSizeMinimum y) 
+	widgets first sizeRequest: newWidth asInteger @ (widgets first preferredSizeMinimum y asInteger).
+	
 ]
 
 { #category : #private }
