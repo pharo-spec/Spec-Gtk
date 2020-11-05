@@ -10,6 +10,7 @@ Trait {
 GtkTSortableColumns >> addSortableColumn: aColumn at: index sortableId: sortableId to: gtkTreeView [
 	| gtkColumn sortFunction |
 
+	gtkTreeView columns ifEmpty: [ ^ self ].
 	sortFunction := aColumn sortFunction.
 	gtkColumn := gtkTreeView columnAt: index.
 	gtkColumn sortColumnId: sortableId.
