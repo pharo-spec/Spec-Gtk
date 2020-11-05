@@ -26,7 +26,7 @@ GtkToolbarPopoverButtonAdapter >> newWidget [
 GtkToolbarPopoverButtonAdapter >> showPopover [
 
 	self presenter newPopover
-		addStyle: 'popover-toolbar';
+		addStyle: 'popoverButton';
 		presenter: self presenter content value;
 		popup
 ]
