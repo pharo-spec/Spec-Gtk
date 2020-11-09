@@ -27,12 +27,11 @@ GtkImageAdapter >> newWidget [
 ]
 
 { #category : #updating }
-GtkImageAdapter >> updateForm: aForm into: aGtkImage [ 
-		
-	| pixbuf |
+GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImage [ 
 	
-	aForm isNil ifTrue: [ aGtkImage clear. ^ self ].
+	aFormOrGdkPixbuf ifNil: [ 
+		aGtkImage clear. 
+		^ self ].
 	
-	pixbuf := GdkPixbuf newForm: aForm.
-	aGtkImage setFromGdkPixbuf: pixbuf.
+	aGtkImage setFromGdkPixbuf: aFormOrGdkPixbuf asGdkPixbuf.
 ]
