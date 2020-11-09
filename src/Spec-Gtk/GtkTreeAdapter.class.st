@@ -22,7 +22,7 @@ GtkTreeAdapter >> defaultColumn [
 	| stringColumn |
 
 	stringColumn := SpStringTableColumn evaluated: self presenter display.
-	^ self presenter icon 
+	^ self presenter displayIcon 
 		ifNotNil: [ 
 			SpCompositeTableColumn new 
 				addColumn: (SpImageTableColumn evaluated: self presenter icon) beNotExpandable;
