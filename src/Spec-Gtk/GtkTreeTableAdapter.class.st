@@ -169,6 +169,12 @@ GtkTreeTableAdapter >> doRecreateStore: gtkTreeView [
 ]
 
 { #category : #accessing }
+GtkTreeTableAdapter >> expandAll [
+
+	self innerWidgetDo: [ :w | w expandAll ]
+]
+
+{ #category : #accessing }
 GtkTreeTableAdapter >> expandPath: aPath [ 
 
 	self innerWidgetDo: [ :w | 
