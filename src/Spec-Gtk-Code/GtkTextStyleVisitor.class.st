@@ -270,6 +270,12 @@ GtkTextStyleVisitor >> visitCascadeNode: aRBCascadeNode [
 ]
 
 { #category : #visiting }
+GtkTextStyleVisitor >> visitEnglobingErrorNode: aRBUnfinishedStatementErrorNode [
+	self flag: #TODO. "here the best is to add a marker in the border?" 
+	self visitParseErrorNode: aRBUnfinishedStatementErrorNode
+]
+
+{ #category : #visiting }
 GtkTextStyleVisitor >> visitGlobalNode: aRBGlobalNode [
 
 	self 
