@@ -35,6 +35,15 @@ GtkDialogWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 ]
 
 { #category : #accessing }
+GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
+
+	"in dialogs, centering a window relative to a presenter would mean 
+	 make it transient to that window (to blur the main window). This does not 
+	 seems to work if applied to a regular window (but we need to verify)"
+	self widgetDo: [ :w | w transientTo: aWindowPresenter window ]
+]
+
+{ #category : #accessing }
 GtkDialogWindowAdapter >> close [
 
 	self widgetDo: [ :w | w respond ]
