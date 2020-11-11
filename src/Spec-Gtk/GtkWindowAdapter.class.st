@@ -10,7 +10,8 @@ Class {
 		'toolbar',
 		'statusBar',
 		'content',
-		'minimized'
+		'minimized',
+		'lastSizeAllocation'
 	],
 	#pools : [
 		'GdkWindowState'
@@ -80,11 +81,22 @@ GtkWindowAdapter >> announceOpened [
 ]
 
 { #category : #private }
-GtkWindowAdapter >> announceResized: aPoint [
+GtkWindowAdapter >> announceResized: newSize [
+	| windowSize |
 
+	"We keep last size allocation to compare, because size-allocate can be signaled 
+	 several times, many of them with same extent. 
+	 We want to avoid the internal signaling of window resized in those cases (because 
+	 there is no real resizing). "
+	lastSizeAllocation = newSize ifTrue: [ ^ self ].
+	lastSizeAllocation := newSize.
+	"It seems the allocated extent is not necessarly the resulting size of the window, 
+	 Instead using that extent as newSize informed, we ask the real size of the 
+	 window to send."
+	self widgetDo: [ :w | windowSize := w size ].
 	self presenter announcer announce: (SpWindowResizing new
 		window: self presenter;
-		newSize: aPoint;	
+		newSize: windowSize;	
 		yourself)	
 ]
 
@@ -192,7 +204,6 @@ GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 				resize: extent ].
 	self model initialPosition
 		ifNotNil: [ :position | gtkWindow moveTo: position ].
-
 
 	"inner contents of window"
 	contentBox := GtkBox newVertical.
