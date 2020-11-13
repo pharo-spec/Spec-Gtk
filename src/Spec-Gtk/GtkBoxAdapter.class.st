@@ -62,7 +62,7 @@ GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 				padding: constraints padding ]
 		ifFalse: [ 
 			gtkWidget 
-				packEnd: childWidget 
+				reversePackEnd: childWidget 
 				expand: constraints isExpand 
 				fill: constraints isFill 
 				padding: constraints padding ].
