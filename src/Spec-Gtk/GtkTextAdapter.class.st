@@ -71,6 +71,12 @@ GtkTextAdapter >> setWrapWord: value to: gtkTextView [
 		ifFalse: [ gtkTextView beWrapNone ]
 ]
 
+{ #category : #updating }
+GtkTextAdapter >> updateEnabled [	
+	
+	self innerWidgetDo: [ :w | w sensitive: self presenter isEnabled value ]
+]
+
 { #category : #private }
 GtkTextAdapter >> updatePresenterText: aString [
 
