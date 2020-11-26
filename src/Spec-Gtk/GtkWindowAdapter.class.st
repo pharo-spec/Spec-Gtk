@@ -197,13 +197,16 @@ GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 	self addDefaultKeyBindings: gtkWindow.
 
 	"add window properties"
-	self model initialExtent
+	self presenter initialExtent
 		ifNotNil: [ :extent |
 			gtkWindow 
 				defaultSize: extent;
 				resize: extent ].
-	self model initialPosition
+	self presenter initialPosition
 		ifNotNil: [ :position | gtkWindow moveTo: position ].
+	gtkWindow decorated: self presenter hasDecorations.
+	self presenter whenDecorationsChangedDo: [ :aBoolean |
+		self widgetDo: [ :w | w decorated: aBoolean ] ].
 
 	"inner contents of window"
 	contentBox := GtkBox newVertical.
