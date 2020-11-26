@@ -321,11 +321,12 @@ GtkWindowAdapter >> notifyInfo: aSpecNotification [
 { #category : #accessing }
 GtkWindowAdapter >> open [
 
-	self widgetDo: [ :w | 
-		GtkRunLoop defer: [ 
+	self hasWidget ifFalse: [ ^ nil ].
+	self widgetDo: [ :w |
 			w show.
 			w present ].
-		self announceOpened ].
+	self presenter presenter takeKeyboardFocus.
+	self announceOpened.
 ]
 
 { #category : #'private building' }

@@ -80,6 +80,7 @@ GtkDialogWindowAdapter >> open [
 
 	^ self widgetDo: [ :w | 
 		w showAll.
+		self presenter presenter takeKeyboardFocus.
 		self announceOpened.
 		w run ]
 ]
