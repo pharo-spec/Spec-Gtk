@@ -14,8 +14,8 @@ GtkOverlayAdapter >> applyLayout: aLayout [
 
 { #category : #private }
 GtkOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [ 
-	
 	| childWidget |
+
 	childWidget := aPresenter buildWithSpec: constraints spec.
 	constraints isOverlay
 		ifFalse: [
@@ -25,5 +25,15 @@ GtkOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [
 				beHAlignCenter;
 				beVAlignCenter.
 			aWidget addOverlay: childWidget ].
+		
+	self basicApplyAlignmentTo: childWidget constraints: constraints.
+	
 	^ aWidget
+]
+
+{ #category : #accessing }
+GtkOverlayAdapter >> basicApplyAlignmentTo: childWidget constraints: constraints [
+
+	constraints hAlign ifNotNil: [ :hAlign | childWidget hAlign: hAlign asGtkAlign ].
+	constraints vAlign ifNotNil: [ :vAlign | childWidget vAlign: vAlign asGtkAlign ]
 ]
