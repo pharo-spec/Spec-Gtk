@@ -8,8 +8,10 @@ Class {
 GtkMorphAdapter >> addModelTo: gtkWidget [
 
 	self presenter whenMorphChangedDo: [ :aMorph |
+		aMorph presenter: self presenter. 
 		gtkWidget morph: aMorph ].
-	self presenter morph ifNotNil: [ :aMorph | 
+	self presenter morph ifNotNil: [ :aMorph |
+		aMorph presenter: self presenter. 
 		gtkWidget morph: aMorph ]
 ]
 
