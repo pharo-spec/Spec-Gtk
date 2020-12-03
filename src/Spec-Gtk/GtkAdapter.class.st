@@ -408,7 +408,7 @@ GtkAdapter >> removeStyle: aStyle [
 ]
 
 { #category : #emulating }
-GtkAdapter >> rightClicked [
+GtkAdapter >> sendRightClickEvent [
 	
 	self innerWidget 
 		withCallbacksOfType: GSecondaryButtonPressEventCallback 
