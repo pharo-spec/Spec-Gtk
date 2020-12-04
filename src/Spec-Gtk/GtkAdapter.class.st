@@ -46,15 +46,21 @@ GtkAdapter >> addContextMenuKeyBindings: gtkWidget [
 ]
 
 { #category : #building }
+GtkAdapter >> addKeyBindingCategory: aCategory to: gtkWidget [
+
+	aCategory allEntries keymaps do: [ :each |
+		self 
+			bindKeyCombination: each shortcut
+			toAction: each action
+			inWidget: gtkWidget ]
+]
+
+{ #category : #building }
 GtkAdapter >> addKeyBindingsTo: gtkWidget [
 
 	self presenter contextKeyBindings ifNotNil: [ :aCategory | 
 		self configureKeyBindings: gtkWidget. 
-		aCategory allEntries keymaps do: [ :each |
-			self 
-				bindKeyCombination: each shortcut
-				toAction: each action
-				inWidget: gtkWidget ] ]
+		self addKeyBindingCategory: aCategory to: gtkWidget ]
 ]
 
 { #category : #building }
@@ -80,6 +86,8 @@ GtkAdapter >> addSettingsTo: gtkWidget [
 	self presenter help ifNotNil: [ gtkWidget tooltipText: self getHelpText ].
 	self presenter whenEnabledChangedDo: [ 
 		self backendUpdatingDo: [ self updateEnabled ] ].
+	self presenter whenContextKeyBindingsChangedDo: [ 
+		self updateKeyBindings ].
 	
 	self addVisibleSettingsTo: gtkWidget
 ]
@@ -389,6 +397,12 @@ GtkAdapter >> keyPressed: keyCode shift: shiftBoolean meta: metaBoolean control:
 				ExternalAddress null } ]
 ]
 
+{ #category : #accessing }
+GtkAdapter >> kmDispatcher [
+
+	^ dispatcher
+]
+
 { #category : #protocol }
 GtkAdapter >> layout: aSpecLayoutFrame [ 
 	
@@ -475,6 +489,14 @@ GtkAdapter >> update: aSymbol with: anArray [
 GtkAdapter >> updateEnabled [
 	
 	self widgetDo: [ :w | w sensitive: self presenter isEnabled value ]
+]
+
+{ #category : #updating }
+GtkAdapter >> updateKeyBindings [
+
+	dispatcher ifNotNil: [ dispatcher detachAllKeymapCategories ].
+	self presenter contextKeyBindings 
+		ifNotNil: [ :aCategory | self addKeyBindingCategory: aCategory to: self innerWidget ]
 ]
 
 { #category : #updating }

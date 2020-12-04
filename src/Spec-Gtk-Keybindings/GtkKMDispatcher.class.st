@@ -55,6 +55,12 @@ GtkKMDispatcher >> completeMatch: aKeymapEntry buffer: aBuffer [
 	"self announcer announce: (KMCompleteMatch event: currentEvent from: self)."
 ]
 
+{ #category : #building }
+GtkKMDispatcher >> detachAllKeymapCategories [
+	
+	categories := { KMCategory new }.
+]
+
 { #category : #private }
 GtkKMDispatcher >> directCategory [
 
