@@ -38,7 +38,7 @@ GtkMillerAdapter >> add: aPresenter constraints: constraints [
 ]
 
 { #category : #private }
-GtkMillerAdapter >> addConstraits: constraints toChild: childWidget [
+GtkMillerAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 	
 	^ childWidget
@@ -81,7 +81,7 @@ GtkMillerAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget 
 	| childWidget |
 
 	childWidget := aPresenter buildWithSpec: constraints spec.
-	self addConstraits: constraints toChild: childWidget.
+	self addConstraints: constraints toChild: childWidget.
 		
 	gtkWidget 
 		packStart: childWidget

@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #private }
-GtkPanedAdapter >> addConstraits: constraints toChild: childWidget [
+GtkPanedAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 
 	^ childWidget
@@ -35,7 +35,7 @@ GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
 	childWidget := aPresenter buildWithSpec: constraints spec.
-	self addConstraits: constraints toChild: childWidget.
+	self addConstraints: constraints toChild: childWidget.
 	gtkWidget children 
 		ifNotEmpty: [ 
 			gtkWidget 

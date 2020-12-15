@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #private }
-GtkGridAdapter >> addConstraits: constraints toChild: childWidget [
+GtkGridAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 	
 	(layout rowConstraintsAt: constraints row) ifNotNil: [ :c |
@@ -42,7 +42,7 @@ GtkGridAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 
 	childWidget := aPresenter buildWithSpec: constraints spec.
 	childWidget data: aPresenter.
-	self addConstraits: constraints toChild: childWidget.
+	self addConstraints: constraints toChild: childWidget.
 	gtkWidget 
 		attach: childWidget 
 		at: constraints position 

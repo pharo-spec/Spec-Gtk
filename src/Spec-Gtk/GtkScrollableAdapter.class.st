@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #private }
-GtkScrollableAdapter >> addConstraits: constraints toChild: childWidget [
+GtkScrollableAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 
 	^ childWidget

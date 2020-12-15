@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #private }
-GtkBoxAdapter >> addConstraits: constraints toChild: childWidget [
+GtkBoxAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 	
 	constraints isExpand ifFalse: [
@@ -52,7 +52,7 @@ GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
 	childWidget := aPresenter buildWithSpec: constraints spec.
-	self addConstraits: constraints toChild: childWidget.
+	self addConstraints: constraints toChild: childWidget.
 	constraints isPlacedAtStart
 		ifTrue: [ 
 			gtkWidget 
