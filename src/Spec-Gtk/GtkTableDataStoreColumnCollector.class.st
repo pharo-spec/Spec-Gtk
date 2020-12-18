@@ -103,9 +103,8 @@ GtkTableDataStoreColumnCollector >> visitImageColumn: aTableColumn [
 { #category : #visiting }
 GtkTableDataStoreColumnCollector >> visitIndexColumn: aTableColumn [
 
-	store addColumn: (GtkTreeDataStringColumn new 
+	store addColumn: (GtkTreeDataIndexColumn new 
 		column: aTableColumn;
-		evaluated: [ :each | (self store pathAtItem: each) toArray first ];
 		yourself)
 ]
 
