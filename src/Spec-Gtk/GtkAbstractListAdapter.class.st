@@ -12,7 +12,7 @@ GtkAbstractListAdapter >> doRefreshList: gtkWidget [
 	gtkWidget model: self newTreeStore
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtkAbstractListAdapter >> elementAt: index [
 	self flag: #TODO. "Fix properly"
 
