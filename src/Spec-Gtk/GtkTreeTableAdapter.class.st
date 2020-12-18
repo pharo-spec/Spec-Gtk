@@ -112,33 +112,17 @@ GtkTreeTableAdapter >> connectToGtkSignals: gtkWidget [
 { #category : #building }
 GtkTreeTableAdapter >> connectToSpecColumnsChangedEventTo: gtkWidget [
 
-	self presenter whenColumnsChangedDo: [ 
-		self 
-			disconnectSelectionEventsOf: gtkWidget 
-			during: [ self recreateStore: gtkWidget generateColumns: true ] ]
+	self presenter whenColumnsChangedDo: [ self updateColumns ]
 ]
 
 { #category : #building }
 GtkTreeTableAdapter >> connectToSpecEvents: gtkWidget [
 
-	self presenter whenShowColumnHeadersChangedDo: [ 
-		gtkWidget headersVisible: self presenter isShowingColumnHeaders ].
-
-	self presenter whenMultiSelectionChangedDo: [ 
-		self presenter selection isMultipleSelection 
-			ifTrue: [ gtkWidget beMultipleSelectionMode ]
-			ifFalse: [ gtkWidget beSingleSelectionMode ] ].
-
-	self presenter whenSelectionChangedDo: [
-		self backendDetectCyclesDo: [  
-			self 
-				disconnectSelectionEventsOf: gtkWidget 
-				during: [ self updateSelectionOf: gtkWidget ] ] ].
-
-	self presenter whenRootsChangedDo: [ 
-		self 
-			disconnectSelectionEventsOf: gtkWidget 
-			during: [ self recreateStore: gtkWidget generateColumns: false ] ].
+	self presenter 
+		whenShowColumnHeadersChangedDo: [ self updateColumnHeaders ];
+		whenMultiSelectionChangedDo: [ self updateMultiSelection ];
+		whenSelectionChangedDo: [ self updateSelection ];
+		whenRootsChangedDo: [ self updateRoots ].
 
 	self connectToSpecColumnsChangedEventTo: gtkWidget
 ]
@@ -333,11 +317,55 @@ GtkTreeTableAdapter >> takeKeyboardFocus [
 				self doTakeKeyboardFocus ] ]
 ]
 
+{ #category : #'private updating' }
+GtkTreeTableAdapter >> updateColumnHeaders [
+
+	self innerWidgetDo: [ :w |
+		w headersVisible: self presenter isShowingColumnHeaders ]
+]
+
+{ #category : #'private updating' }
+GtkTreeTableAdapter >> updateColumns [
+
+	self innerWidgetDo: [ :w |
+		self 
+			disconnectSelectionEventsOf: w 
+			during: [ self recreateStore: w generateColumns: true ] ]
+]
+
+{ #category : #'private updating' }
+GtkTreeTableAdapter >> updateMultiSelection [
+	
+	self innerWidgetDo: [ :w | 
+		self presenter selection isMultipleSelection 
+			ifTrue: [ w beMultipleSelectionMode ]
+			ifFalse: [ w beSingleSelectionMode ] ]
+]
+
 { #category : #updating }
 GtkTreeTableAdapter >> updatePresenterSelection [
 	
 	self innerWidgetDo: [ :w | 
 		self rowSelected: w selected ]
+]
+
+{ #category : #'private updating' }
+GtkTreeTableAdapter >> updateRoots [
+
+	self innerWidgetDo: [ :w |
+		self 
+			disconnectSelectionEventsOf: w 
+			during: [ self recreateStore: w generateColumns: false ] ]
+]
+
+{ #category : #'private updating' }
+GtkTreeTableAdapter >> updateSelection [
+
+	self innerWidgetDo: [ :w | 
+		self backendDetectCyclesDo: [  
+			self 
+				disconnectSelectionEventsOf: w 
+				during: [ self updateSelectionOf: w ] ] ]
 ]
 
 { #category : #updating }
