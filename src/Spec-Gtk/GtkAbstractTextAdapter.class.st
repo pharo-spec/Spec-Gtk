@@ -37,6 +37,12 @@ GtkAbstractTextAdapter >> addTextTo: gtkWidget [
 
 ]
 
+{ #category : #building }
+GtkAbstractTextAdapter >> buildMenu: menuPresenterOrBlock [
+
+	^ super buildMenu: menuPresenterOrBlock value
+]
+
 { #category : #'spec protocol' }
 GtkAbstractTextAdapter >> cursorPositionIndex [
 
