@@ -168,11 +168,11 @@ GtkLayoutAdapter >> removeSubWidgets [
 { #category : #accessing }
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 	
-	self model adapter: (aLayout
-		buildAdapterFor: self model
-		bindings: self model application adapterBindings).
-		
-	self model owner adapter rebuild
+	GtkRunLoop defer: [ 
+		self model adapter: (aLayout
+			buildAdapterFor: self model
+			bindings: self model application adapterBindings).
+		self model owner adapter rebuild ]
 ]
 
 { #category : #protocol }
