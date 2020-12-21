@@ -1,6 +1,9 @@
 Class {
 	#name : #GtkTabAdapter,
 	#superclass : #GtkLayoutAdapter,
+	#instVars : [
+		'lastPage'
+	],
 	#category : #'Spec-Gtk-Layout-Box'
 }
 
@@ -16,12 +19,19 @@ GtkTabAdapter >> applyLayout: aLayout [
 
 	widget := GtkNotebook new.
 	self connectToEvents: aLayout. 
+
+	widget connectSwitchPage: [ :aPage | 
+		lastPage ifNotNil: [
+			aLayout announce: (SpTabUnselected newPresenter: lastPage) ].
+		lastPage := aPage data.
+		aLayout announce: (SpTabSelected newPresenter: aPage data) ].
+	
 	widget show
 ]
 
 { #category : #private }
 GtkTabAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
-	| childWidget labelPresenter labelWidget |
+	| childWidget labelPresenter labelWidget page |
 
 	labelPresenter := constraints label asPresenter.
 	labelWidget := 	labelPresenter hasAdapter 
@@ -32,9 +42,9 @@ GtkTabAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 				buildWithSpec ].
 		
 	childWidget := aPresenter buildWithSpec: constraints spec.
-	gtkWidget 
-		append: childWidget 
-		label: labelWidget.
-			
+	page := widget newPageLabel: labelWidget content: childWidget.
+	page data: aPresenter.
+	gtkWidget append: page.
+	
 	^ gtkWidget
 ]
