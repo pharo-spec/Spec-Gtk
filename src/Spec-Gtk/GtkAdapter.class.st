@@ -104,10 +104,8 @@ GtkAdapter >> addVisibleSettingsTo: gtkWidget [
 	self presenter isVisible
 		ifTrue: [ gtkWidget show ]
 		ifFalse: [ gtkWidget hide ].
-	self presenter whenVisibleChangedDo: [ :aValuable |
-		aValuable value
-			ifTrue: [ gtkWidget show ]
-			ifFalse: [ gtkWidget hide ] ]
+	self presenter whenVisibleChangedDo: [ :aValuable | 
+		self updateVisibility: aValuable value ]
 ]
 
 { #category : #'private cycle detection' }
@@ -519,6 +517,15 @@ GtkAdapter >> updateMenu [
 		existingCallbacks ifNotEmpty: [ ^ self ].
 		"Now, actually add the menu callback"
 		self addMenu: menu to: w ]
+]
+
+{ #category : #'private updating' }
+GtkAdapter >> updateVisibility: aBoolean [ 
+
+	self widgetDo: [ :w |
+		aBoolean
+			ifTrue: [ w show ]
+			ifFalse: [ w hide ] ]
 ]
 
 { #category : #building }

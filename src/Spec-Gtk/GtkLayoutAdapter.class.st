@@ -15,6 +15,11 @@ GtkLayoutAdapter class >> isAbstract [
 		or: [ self = GtkLayoutAdapter ]
 ]
 
+{ #category : #building }
+GtkLayoutAdapter >> adapterWasBuilt [
+	"hook to add after-build opeations (for example, initial status, etc.)"
+]
+
 { #category : #accessing }
 GtkLayoutAdapter >> add: aPresenter constraints: constraints [
 

@@ -7,6 +7,16 @@ Class {
 	#category : #'Spec-Gtk-Layout-Box'
 }
 
+{ #category : #building }
+GtkTabAdapter >> adapterWasBuilt [
+
+	layout children ifEmpty: [ ^ self ]. 
+	lastPage := layout children at: layout initialPageIndex.
+	layout initialPageIndex = 1 ifFalse: [ 
+		self widgetDo: [ :w | 
+			w currentPage: layout initialPageIndex ] ]
+]
+
 { #category : #private }
 GtkTabAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
