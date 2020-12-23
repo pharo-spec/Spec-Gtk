@@ -45,6 +45,7 @@ GtkTreeTableAdapter >> addModelTo: gtkTreeView [
 	
 	super addModelTo: gtkTreeView.
 
+	gtkTreeView headersVisible: self presenter isShowingColumnHeaders.
 	gtkTreeView connectDestroy: [ 
 		gtkTreeView model roots: #() ].
 
