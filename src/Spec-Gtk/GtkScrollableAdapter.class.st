@@ -28,3 +28,11 @@ GtkScrollableAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWid
 			
 	^ gtkWidget
 ]
+
+{ #category : #scrolling }
+GtkScrollableAdapter >> scrollTo: aPoint [
+
+	self widgetDo: [ :w |
+		w hAdjustment value: aPoint x.
+		w vAdjustment value: aPoint y ]
+]
