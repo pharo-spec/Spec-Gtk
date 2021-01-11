@@ -72,8 +72,4 @@ KeyboardKey class >> F9 [
 	^ self value: 65478
 ]
 
-{ #category : #'*Spec-Gtk-Keybindings' }
-KeyboardKey >> asKeyCombination [
 
-	^ KMSingleKeyCombination from: (Character value: self value)
-]
