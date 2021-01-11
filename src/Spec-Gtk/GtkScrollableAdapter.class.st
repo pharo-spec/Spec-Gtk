@@ -11,6 +11,15 @@ GtkScrollableAdapter >> addConstraints: constraints toChild: childWidget [
 	^ childWidget
 ]
 
+{ #category : #accessing }
+GtkScrollableAdapter >> addWidgetAlignment: constraints to: gtkWidget [
+
+ 	layout vAlign
+		ifNotNil: [ :align | gtkWidget vAlign: align asGtkAlign ].
+ 	layout hAlign 
+		ifNotNil: [ :align | gtkWidget hAlign: align asGtkAlign ]
+]
+
 { #category : #private }
 GtkScrollableAdapter >> applyLayout: aLayout [
 
