@@ -51,6 +51,13 @@ GtkLayoutAdapter >> applyLayout: aLayout [
 ]
 
 { #category : #private }
+GtkLayoutAdapter >> applyStyle: aWidget [
+
+	self presenter styles do: [ :each | 
+		aWidget addClass: each ]
+]
+
+{ #category : #private }
 GtkLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: aPanel [ 
 
 	self subclassResponsibility
@@ -98,7 +105,8 @@ GtkLayoutAdapter >> connectToEvents: aLayout [
 GtkLayoutAdapter >> deferredLayout: aLayout [
 
 	layout := aLayout.
-	self applyLayout: aLayout
+	self applyLayout: aLayout.
+	self applyStyle: widget
 ]
 
 { #category : #private }
@@ -156,7 +164,7 @@ GtkLayoutAdapter >> remove: aPresenter [
 		w remove: widgetToRemove ]
 ]
 
-{ #category : #'accessing - children' }
+{ #category : #'accessing children' }
 GtkLayoutAdapter >> removeAll [
 
 	self ensureAllChildrenAreRetained.
