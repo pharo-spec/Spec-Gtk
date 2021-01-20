@@ -108,12 +108,13 @@ GtkTextStyleVisitor >> reset [
 { #category : #private }
 GtkTextStyleVisitor >> resolveStyleFor: aRBVariableNode [
 
-	aRBVariableNode binding 						ifNil: [ ^ #default ].
-	aRBVariableNode isArgumentVariable 		ifTrue: [ ^ #methodArg ].
-	aRBVariableNode isTemp 						ifTrue: [ ^ #tempVar ].
-	aRBVariableNode isLiteralVariable 		ifTrue: [ ^ #globalVar ].
-	aRBVariableNode isInstanceVariable 		ifTrue: [ ^ #instVar ].
-	aRBVariableNode hasIncompleteIdentifier ifTrue: [ ^ #incompleteIdentifier ].
+	aRBVariableNode binding ifNil: [ ^ #default ].
+	aRBVariableNode isArgumentVariable ifTrue: [ ^ #methodArg ].
+	aRBVariableNode isTempVariable ifTrue: [ ^ #tempVar ].
+	aRBVariableNode isLiteralVariable ifTrue: [ ^ #globalVar ].
+	aRBVariableNode isInstanceVariable ifTrue: [ ^ #instVar ].
+	aRBVariableNode hasIncompleteIdentifier ifTrue: [ 
+		^ #incompleteIdentifier ].
 
 	^ #invalid
 ]
