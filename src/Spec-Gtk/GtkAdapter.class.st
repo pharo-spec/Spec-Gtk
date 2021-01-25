@@ -84,6 +84,8 @@ GtkAdapter >> addSettingsTo: gtkWidget [
 	
 	gtkWidget sensitive: self presenter isEnabled value.
 	self presenter help ifNotNil: [ gtkWidget tooltipText: self getHelpText ].
+	self presenter whenHelpChangedDo: [ 
+		self backendUpdatingDo: [ self updateHelp ] ].
 	self presenter whenEnabledChangedDo: [ 
 		self backendUpdatingDo: [ self updateEnabled ] ].
 	self presenter whenContextKeyBindingsChangedDo: [ 
@@ -487,6 +489,12 @@ GtkAdapter >> update: aSymbol with: anArray [
 GtkAdapter >> updateEnabled [
 	
 	self widgetDo: [ :w | w sensitive: self presenter isEnabled value ]
+]
+
+{ #category : #updating }
+GtkAdapter >> updateHelp [
+	
+	self widgetDo: [ :w | w tooltipText: self presenter help  ]
 ]
 
 { #category : #updating }
