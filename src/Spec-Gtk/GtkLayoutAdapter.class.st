@@ -199,3 +199,9 @@ GtkLayoutAdapter >> takeKeyboardFocus [
 		detect: [ :each | each canTakeKeyboardFocus ]
 		ifFound: [ :aPresenter | aPresenter takeKeyboardFocus ]
 ]
+
+{ #category : #protocol }
+GtkLayoutAdapter >> updateBorderWidth [
+
+	self widgetDo: [ :w | w borderWidth: layout borderWidth ]
+]

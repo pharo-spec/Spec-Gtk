@@ -104,3 +104,9 @@ GtkBoxAdapter >> replace: aPresenter with: otherPresenter withConstraints: const
 	self innerWidgetDo: [ :w |
 		w reorderChild: otherPresenter adapter widget position: index ]
 ]
+
+{ #category : #updating }
+GtkBoxAdapter >> updateSpacing [
+
+	self widgetDo: [ :w | w borderWidth: layout spacing ]
+]
