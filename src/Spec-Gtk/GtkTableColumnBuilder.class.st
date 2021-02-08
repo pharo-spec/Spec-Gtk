@@ -55,8 +55,10 @@ GtkTableColumnBuilder >> newColumnFor: aTableColumn [
 
 	column := GtkTreeViewColumn new.
 	column title: aTableColumn title.
-	aTableColumn width ifNotNil: [ :w | 
-		column minWidth: w ].
+	aTableColumn width 
+		ifNotNil: [ :w | column minWidth: w ].
+	self model isResizable 
+		ifTrue: [ column beResizable ].
 	
 	^ column
 ]
