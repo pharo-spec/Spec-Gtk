@@ -325,6 +325,14 @@ GtkAdapter >> installKeyUpEvent: anEvent to: aWidget [
 ]
 
 { #category : #'event installing' }
+GtkAdapter >> installMouseDoubleClickEvent: anEvent to: aWidget [
+
+	aWidget connectDoubleClicked: [ :event |
+		anEvent action value: event.
+		event wasHandled ]
+]
+
+{ #category : #'event installing' }
 GtkAdapter >> installMouseDownEvent: anEvent to: aWidget [
 
 	aWidget connectButtonPressEvent: [ :event |
