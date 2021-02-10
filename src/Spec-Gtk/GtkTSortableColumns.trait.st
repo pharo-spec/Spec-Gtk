@@ -11,11 +11,12 @@ GtkTSortableColumns >> addSortableColumn: aColumn at: index sortableId: sortable
 	| gtkColumn sortFunction |
 
 	gtkTreeView columns ifEmpty: [ ^ self ].
-	sortFunction := aColumn sortFunction.
+
 	gtkColumn := gtkTreeView columnAt: index.
 	gtkColumn sortColumnId: sortableId.
 
-	sortFunction ifNil: [ ^ self ].
+	sortFunction := aColumn sortFunction
+		ifNil: [ aColumn evaluation ascending ].
 
 	gtkTreeView model
 		connectSortColumnChanged: [ sortFunction := sortFunction reversed ];
@@ -29,7 +30,7 @@ GtkTSortableColumns >> addSortableColumn: aColumn at: index sortableId: sortable
 { #category : #private }
 GtkTSortableColumns >> addSortableColumnsTo: gtkTreeView [
 	| nextSortableId |
-	
+
 	nextSortableId := 0.
 	self columns withIndexDo: [ :each :index |
 		each isSortable ifTrue: [ 

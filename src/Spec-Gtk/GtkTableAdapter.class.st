@@ -25,8 +25,8 @@ GtkTableAdapter >> addModelTo: gtkTreeView [
 	
 	self columns ifNotEmpty: [
 		gtkTreeView model: self newTreeStore.
-		self addSortableColumnsTo: gtkTreeView.
-		self addColumnsTo: gtkTreeView ].
+		self addColumnsTo: gtkTreeView.
+		self addSortableColumnsTo: gtkTreeView ].
 		
 	gtkTreeView selection unselectAll.
 
