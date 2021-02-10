@@ -9,7 +9,7 @@ KMKeyCombination class >> fromEventKey: evt [
 	shift := evt hasShiftModifier.
 	alt := evt hasAltModifier.
 	(shift | command | control | alt)
-		ifFalse: [ ^ evt key asKeyCombination ].
+		ifFalse: [ ^ evt modifiedCharacter ].
 	
 	modifier := KMNoShortcut new.
 	control ifTrue: [ modifier := modifier + KMModifier ctrl ].
@@ -17,5 +17,5 @@ KMKeyCombination class >> fromEventKey: evt [
 	shift ifTrue: [ modifier := modifier + KMModifier shift ].
 	alt ifTrue: [ modifier := modifier + KMModifier alt ].
 	
-	^ modifier + evt key asKeyCombination
+	^ modifier + evt modifiedCharacter
 ]

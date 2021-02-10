@@ -236,6 +236,12 @@ GtkWindowAdapter >> delete [
 		self presenter application windowClosed: self ]
 ]
 
+{ #category : #private }
+GtkWindowAdapter >> handleKeyEvent: anEvent [
+
+	^ super handleKeyEvent: anEvent
+]
+
 { #category : #'private building' }
 GtkWindowAdapter >> infoArea [
 
