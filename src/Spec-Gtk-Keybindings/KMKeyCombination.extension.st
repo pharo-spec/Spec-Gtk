@@ -8,6 +8,7 @@ KMKeyCombination class >> fromEventKey: evt [
 	command := evt hasCommandModifier | evt hasMetaModifier | evt hasMod3.
 	shift := evt hasShiftModifier.
 	alt := evt hasAltModifier.
+	
 	(shift | command | control | alt)
 		ifFalse: [ ^ evt key asKeyCombination ].
 	
