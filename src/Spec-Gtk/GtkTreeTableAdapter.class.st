@@ -347,7 +347,10 @@ GtkTreeTableAdapter >> updateMultiSelection [
 GtkTreeTableAdapter >> updatePresenterSelection [
 	
 	self innerWidgetDo: [ :w | 
-		self rowSelected: w selected ]
+		w isMultipleSelection
+			ifTrue:[ self rowsSelected: w allSelected ]
+			ifFalse:[ self rowSelected: w selected ].
+	]
 ]
 
 { #category : #'private updating' }
