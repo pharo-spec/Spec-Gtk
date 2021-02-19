@@ -194,6 +194,15 @@ GtkTreeTableAdapter >> isNonEditableRow: aRow column: aColumn [
 	^ true
 ]
 
+{ #category : #accessing }
+GtkTreeTableAdapter >> itemAtPath: anArray [
+
+	^ self presenter
+		itemAt: anArray first
+		of: self presenter roots
+		then: anArray allButFirst
+]
+
 { #category : #private }
 GtkTreeTableAdapter >> items [
 
@@ -285,12 +294,6 @@ GtkTreeTableAdapter >> selectedItem [
 GtkTreeTableAdapter >> selectedPaths [
 	
 	^ self innerWidgetDo: [ :w | w allSelected ]
-]
-
-{ #category : #private }
-GtkTreeTableAdapter >> sortableItemAt: index [ 
-	
-	^ self presenter roots at: index
 ]
 
 { #category : #private }

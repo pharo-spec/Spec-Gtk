@@ -43,9 +43,3 @@ GtkTTableAccessing >> newTreeStoreFrom: items [
 
 	^ store
 ]
-
-{ #category : #private }
-GtkTTableAccessing >> sortableItemAt: index [ 
-	
-	^ self presenter model items at: index
-]
