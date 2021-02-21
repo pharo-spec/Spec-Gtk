@@ -197,10 +197,10 @@ GtkTreeTableAdapter >> isNonEditableRow: aRow column: aColumn [
 { #category : #accessing }
 GtkTreeTableAdapter >> itemAtPath: anArray [
 
-	^ self presenter
-		itemAt: anArray first
-		of: self presenter roots
-		then: anArray allButFirst
+	self innerWidgetDo: [ :w | 
+		^ w model itemAtPath: anArray ].
+
+	^ nil	
 ]
 
 { #category : #private }
