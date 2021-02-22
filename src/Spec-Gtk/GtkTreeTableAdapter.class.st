@@ -255,6 +255,12 @@ GtkTreeTableAdapter >> rowSelected: path [
 	self model selection selectPath: path
 ]
 
+{ #category : #private }
+GtkTreeTableAdapter >> rowsSelected: pathColl [
+
+	self model selection selectPaths: pathColl
+]
+
 { #category : #accessing }
 GtkTreeTableAdapter >> selectItemIn: gtkWidget path: aPath [
 
