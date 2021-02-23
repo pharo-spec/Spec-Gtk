@@ -57,6 +57,16 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		gtkSourceView showLineNumbers: hasLineNumbers ]
 ]
 
+{ #category : #'as yet unclassified' }
+GtkCodeAdapter >> addTextSegmentDecoration: aDecoration [
+	
+	self innerWidgetDo: [ :w | 
+		w textBuffer 
+			applyTagByName: 'highlight' 
+			start: aDecoration start - 1 
+			end: aDecoration stop ]
+]
+
 { #category : #building }
 GtkCodeAdapter >> addTextTo: gtkTextView [
 	
@@ -64,8 +74,7 @@ GtkCodeAdapter >> addTextTo: gtkTextView [
 	self addMonospaceStyleFor: gtkTextView.
 	"add style table"
 	self model hasSyntaxHighlight ifTrue: [ 
-		self flag: #TODO. "What do we do when color style changes?"
-		gtkTextView textBuffer: (self bufferClass newTable: GtkTextTagTable newForCode).
+		gtkTextView textBuffer: (self bufferClass newTable: self newTagTable).
 		"I need to recalculate style each time I get a change"
 		gtkTextView textBuffer connectChanged: [ 
 			self applyFullStyleTo: gtkTextView textBuffer ] ]	.
@@ -194,10 +203,27 @@ GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 		yourself
 ]
 
+{ #category : #'private factory' }
+GtkCodeAdapter >> newTagTable [
+	
+	self flag: #TODO. "This is not cool to have everything hardcoded"
+	^ GtkTextTagTable newForCode
+		add: ((GtkTextTag newName: 'highlight')
+			background: (Color orange alpha: 0.2);
+			yourself);
+		yourself
+]
+
 { #category : #'interactive error protocol' }
 GtkCodeAdapter >> notify: aString at: aNumber in: anObject [
 	
 	self flag: #TODO. "What to do here?"
+]
+
+{ #category : #'as yet unclassified' }
+GtkCodeAdapter >> removeAllTextSegmentDecorations [
+	
+	self flag: #TODO.
 ]
 
 { #category : #'private-shout' }

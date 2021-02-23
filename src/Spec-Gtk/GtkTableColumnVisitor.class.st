@@ -112,5 +112,10 @@ GtkTableColumnVisitor >> visitIndexColumn: aTableColumn [
 ]
 
 { #category : #visiting }
+GtkTableColumnVisitor >> visitLinkColumn: aColumn [
+
+]
+
+{ #category : #visiting }
 GtkTableColumnVisitor >> visitStringColumn: aTableColumn [
 ]

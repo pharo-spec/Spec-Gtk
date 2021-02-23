@@ -125,10 +125,18 @@ GtkTableColumnBuilder >> visitImageColumn: aTableColumn [
 ]
 
 { #category : #visiting }
+GtkTableColumnBuilder >> visitLinkColumn: aColumn [
+
+	self visitStringColumn: aColumn
+]
+
+{ #category : #visiting }
 GtkTableColumnBuilder >> visitStringColumn: aTableColumn [
 	| column |
-	
+
 	column := self newColumnFor: aTableColumn.
 	(self newColumnPackerFor: column) visit: aTableColumn.
-	self view appendColumn: column.
+	
+	self view appendColumn: column
+	
 ]

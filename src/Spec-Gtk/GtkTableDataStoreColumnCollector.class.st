@@ -109,6 +109,12 @@ GtkTableDataStoreColumnCollector >> visitIndexColumn: aTableColumn [
 ]
 
 { #category : #visiting }
+GtkTableDataStoreColumnCollector >> visitLinkColumn: aTableColumn [
+
+	store addColumn: (GtkTreeDataStringColumn on: aTableColumn)
+]
+
+{ #category : #visiting }
 GtkTableDataStoreColumnCollector >> visitStringColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataStringColumn on: aTableColumn).

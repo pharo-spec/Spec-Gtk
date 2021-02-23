@@ -50,6 +50,15 @@ GtkTextAdapter >> cursorPositionIndex: index [
 		w textBuffer cursorPosition: index ]
 ]
 
+{ #category : #commands }
+GtkTextAdapter >> cutText [
+
+]
+
+{ #category : #commands }
+GtkTextAdapter >> pasteText [
+]
+
 { #category : #private }
 GtkTextAdapter >> setEditable: aBoolean [ 
 

@@ -10,5 +10,6 @@ GtkTextTagTable class >> newForCode [
 			tag := GtkTextTag newName: aName asString.
 			attributes do: [ :each | each acceptTag: tag ].
 			table add: tag ].
+
 	^ table
 ]
