@@ -162,10 +162,7 @@ GtkWindowAdapter >> configureKeyBindings: gtkWindow [
 	gtkWindow connectKeyPressEvent: [ :event |
 		(self handleKeyEvent: event)
 			ifTrue: [ true ]
-			ifFalse: [ 
-				self presenter title printToStdout.
-				event printToStdout.
-				gtkWindow propagateKeyEvent: event ] ].
+			ifFalse: [ gtkWindow propagateKeyEvent: event ] ].
 ]
 
 { #category : #'private building' }

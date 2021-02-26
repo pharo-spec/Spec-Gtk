@@ -51,6 +51,7 @@ GtkKMDispatcher >> completeMatch: aKeymapEntry buffer: aBuffer [
 	buffer completeMatch.
 	aKeymapEntry action 
 		cull: target
+		cull: nil "this was a morph in Morphic"
 		cull: aBuffer first
 	"self announcer announce: (KMCompleteMatch event: currentEvent from: self)."
 ]
