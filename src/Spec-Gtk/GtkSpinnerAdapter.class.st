@@ -8,9 +8,9 @@ Class {
 GtkSpinnerAdapter >> addModelTo: aSpinner [
 
 	super addModelTo: aSpinner.
-	self updateSpinner: aSpinner withState: self presenter state.
+	"self updateSpinner: aSpinner withState: self presenter state.
 	self presenter property: #state whenChangedDo: [ :state |
-		self updateSpinner: aSpinner withState: state. ]
+		self updateSpinner: aSpinner withState: state. ]"
 ]
 
 { #category : #building }
