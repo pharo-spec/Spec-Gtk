@@ -76,7 +76,7 @@ GtkComponentListAdapter >> doTakeKeyboardFocus: gtkListBox [
 		grabFocus
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtkComponentListAdapter >> elementAt: index [
 self flag: #TODO. "I need to fix this tomorrow"
 	^ self presenter items at: index
@@ -168,10 +168,11 @@ GtkComponentListAdapter >> showMenu: aValuable event: event [
 { #category : #building }
 GtkComponentListAdapter >> update: gtkWidget with: aCollection [
 
-	"This is a workaround to prevent double geneation of list. If I am updating the same 
-	 presenters I already have, I skip the process."
-	currentShownItems = aCollection ifTrue: [ ^ self ]. 
+	"This is a workaround to prevent double geneation of list. If I am updating 
+	 the same presenters I already have, I skip the process."
+	currentShownItems = aCollection ifTrue: [ ^ self ].
 	currentShownItems := aCollection.
+
 	gtkWidget removeAll.
 	aCollection do: [ :presenter |
 		self flag: #TODO. "WARNING. Rebuild presenters may keep value holders in 
@@ -182,7 +183,34 @@ GtkComponentListAdapter >> update: gtkWidget with: aCollection [
 			selectable: presenter isSelectable;
 			yourself) ].
 
-	gtkWidget showAll
+	gtkWidget showAll.	
+
+	self flag: #TODO. "Composed lists should be like this but they are crashing the image somehow.
+	Since I do not have a lot of time now, I just comment it and keep the 'old' way (which will not 
+	 work fine in all cases)"
+	"oldWidgets := gtkWidget children collect: [ :each | 
+		each child 
+			objectRef; 
+			yourself ].
+
+	newRows := aCollection collect: [ :aPresenter | | childWidget |
+		aPresenter adapter 
+			ifNotNil: [ :anAdapter | 
+				(oldWidgets includes: anAdapter widget) ifTrue: [ 
+					childWidget := anAdapter widget ] ].
+		childWidget ifNil: [ 
+			childWidget := aPresenter buildWithSpec ].
+		
+		childWidget asListBoxRow
+			activatable: aPresenter isActivatable;
+			selectable: aPresenter isSelectable;
+			yourself ].
+	
+	gtkWidget removeAll.
+	gtkWidget addAll: newRows.
+	oldWidgets do: [ :each | each objectUnref ].
+
+	gtkWidget showAll"
 ]
 
 { #category : #building }
