@@ -24,6 +24,10 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 	gtkEntry maxLength: self model maxLength.
 	self model whenMaxLengthChangedDo: [ gtkEntry maxLength: self presenter maxLength ].
 	
+	gtkEntry editable: self presenter isEditable.
+	self presenter whenEditableChangedDo: [ :value | 
+		self setEditable: value ].
+	
 	self presenter isPassword ifTrue: [ 
 		gtkEntry bePassword.
 		gtkEntry visibility: false. ].
@@ -65,6 +69,12 @@ GtkTextInputFieldAdapter >> placeHolderText [
 GtkTextInputFieldAdapter >> selectAll [
 	
 	self innerWidgetDo: [ :w | w selectAll ]
+]
+
+{ #category : #private }
+GtkTextInputFieldAdapter >> setEditable: aBoolean [ 
+
+	self innerWidgetDo: [ :w | w editable: aBoolean ]
 ]
 
 { #category : #visiting }
