@@ -58,7 +58,7 @@ SpecFormExample >> checkBoxLabel: anObject [
 ]
 
 { #category : #initialization }
-SpecFormExample >> initializeWidgets [
+SpecFormExample >> initializePresenters [
 	
 	textInputLabel := self newLabel label: 'Text input'.
 	textInput := self newTextInput 
