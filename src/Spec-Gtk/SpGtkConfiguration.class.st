@@ -30,7 +30,13 @@ SpGtkConfiguration >> addCSSProviderFromString: aString [
 SpGtkConfiguration >> configure: anApplication [
 
 	GtkRunLoop defer: [
+		self configureGeneral: anApplication.
 		super configure: anApplication ]
+]
+
+{ #category : #configuring }
+SpGtkConfiguration >> configureGeneral: anApplication [
+	"A hook to configure a gtk application for all platforms"
 ]
 
 { #category : #private }
