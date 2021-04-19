@@ -20,11 +20,11 @@ GtkPanedAdapter >> applyLayout: aLayout [
 
 	widget := aLayout direction newWidgetOn: self.
 
-	self connectToEvents: aLayout. 
+	self connectToEvents: aLayout.
 
-	aLayout position ifNotNil: [ :pos |
-		pos < 1 
-			ifTrue: [ self setPositionDeferred: aLayout position to: widget ]
+	aLayout positionOfSlider ifNotNil: [ :pos | 
+		pos < 1
+			ifTrue: [ self setPositionDeferred: aLayout positionOfSlider to: widget ]
 			ifFalse: [ self setPosition: aLayout position to: widget ] ].
 	widget wideHandle: true.
 	widget show
@@ -53,13 +53,13 @@ GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 
 { #category : #private }
 GtkPanedAdapter >> calculatePercentAtDirectionOf: aWidget extent: aPoint [
+
 	| pos |
-	
-	pos := layout isHorizontal 
+	pos := layout isHorizontal
 		ifTrue: [ aPoint x ]
 		ifFalse: [ aPoint y ].
-		
-	^ (pos * layout position) asInteger
+
+	^ (pos * layout positionOfSlider) asInteger
 ]
 
 { #category : #factory }
