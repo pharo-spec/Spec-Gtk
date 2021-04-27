@@ -25,7 +25,7 @@ GtkPanedAdapter >> applyLayout: aLayout [
 	aLayout positionOfSlider ifNotNil: [ :pos | 
 		pos < 1
 			ifTrue: [ self setPositionDeferred: aLayout positionOfSlider to: widget ]
-			ifFalse: [ self setPosition: aLayout position to: widget ] ].
+			ifFalse: [ self setPosition: aLayout positionOfSlider to: widget ] ].
 	widget wideHandle: true.
 	widget show
 ]

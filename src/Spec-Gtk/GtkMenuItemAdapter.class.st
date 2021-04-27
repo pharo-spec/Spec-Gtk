@@ -83,14 +83,15 @@ GtkMenuItemAdapter >> menuLabelWithIconAndAccelFor: gtkWidget [
 		packStart: (gtkLabel := GtkLabel new);
 		yourself.
 
-	(self presenter name includes: $_)
-		ifTrue: [ 
-			gtkLabel 
-				useUnderline: true;
-				textWithMnemonic: self presenter name;
-				mnemonicWidget: gtkWidget ]
-		ifFalse: [ 
-			gtkLabel label: self presenter name ].		
+	self presenter name ifNotNil: [ 
+		(self presenter name includes: $_)
+			ifTrue: [ 
+				gtkLabel 
+					useUnderline: true;
+					textWithMnemonic: self presenter name;
+					mnemonicWidget: gtkWidget ]
+			ifFalse: [ 
+				gtkLabel label: self presenter name ] ].		
 
 	self presenter shortcut ifNotNil: [ :shortcut |
 		self addAcceleratorShortcutLabel: shortcut to: gtkBox ].
