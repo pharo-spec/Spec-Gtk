@@ -72,6 +72,19 @@ GtkTreeTableAdapter >> addSearchTo: gtkTreeView [
 ]
 
 { #category : #accessing }
+GtkTreeTableAdapter >> collapseAll [
+
+	self innerWidgetDo: [ :w | w collapseAll ]
+]
+
+{ #category : #accessing }
+GtkTreeTableAdapter >> collapsePath: aPath [ 
+
+	self innerWidgetDo: [ :w | 
+		w collapseToPath: aPath ]
+]
+
+{ #category : #accessing }
 GtkTreeTableAdapter >> columnCount [
 	
 	^ self innerWidget model numberOfColumns
