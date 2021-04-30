@@ -25,7 +25,7 @@ GtkMenuAdapter >> openAt: aPosition [
 	 gtk render loop assumes the action is over and it disposes the menu, that's the 
 	 reason of the schedule"
 	[  
-		150 milliseconds wait.  
+		150 milliSeconds wait.  
 		self widgetDo: [ :w |
 			w connectHide: [ self presenter application unregisterWindow: self presenter ].
 			w showAll.
