@@ -55,6 +55,12 @@ GtkTextAdapter >> cutText [
 
 ]
 
+{ #category : #'spec protocol' }
+GtkTextAdapter >> lineAtCursorPosition [
+
+	^ self innerWidgetDo: [ :w | w textBuffer lineAtCursorPosition ]
+]
+
 { #category : #commands }
 GtkTextAdapter >> pasteText [
 ]
