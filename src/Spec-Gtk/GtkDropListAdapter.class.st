@@ -10,9 +10,7 @@ GtkDropListAdapter >> addModelTo: gtkComboBox [
 	super addModelTo: gtkComboBox.
 	self setModelTo: gtkComboBox.
 	
-	gtkComboBox connectChanged: [ 
-		self widgetDo: [ :w | 
-			self model selectIndex: w activeIndex + 1 ] ].
+	gtkComboBox connectChanged: [ self selectionChanged ].
 	self model whenSelectionChangedDo: [ 
 		gtkComboBox activeIndex: self model selectedIndex - 1 ].
 	self model model whenChangedDo: [ 
@@ -43,6 +41,12 @@ GtkDropListAdapter >> displayedIcon [
 	self model hasIcons ifFalse: [ ^ nil ].
 	
 	^ (widget model iteratorFromString: selectedIndex asString) gdkPixbufAt: 0 
+]
+
+{ #category : #accessing }
+GtkDropListAdapter >> elementAt: index [
+
+	^ self presenter model at: index
 ]
 
 { #category : #building }
@@ -87,6 +91,13 @@ GtkDropListAdapter >> selectIndex: anInteger [
 GtkDropListAdapter >> selectedIndexes [
 	
 	^ self widgetDo: #selectedIndexes 
+]
+
+{ #category : #private }
+GtkDropListAdapter >> selectionChanged [
+
+	self widgetDo: [ :w |
+		self presenter selectIndex: w activeIndex + 1 ] 
 ]
 
 { #category : #building }
