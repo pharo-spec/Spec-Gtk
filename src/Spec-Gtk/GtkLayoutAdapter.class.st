@@ -3,7 +3,8 @@ Class {
 	#superclass : #GtkAdapter,
 	#instVars : [
 		'layout',
-		'changeLayoutSubscription'
+		'changeLayoutSubscription',
+		'subscribedLayout'
 	],
 	#category : #'Spec-Gtk-Layout-Base'
 }
@@ -98,7 +99,9 @@ GtkLayoutAdapter >> connectToEvents: aLayout [
 			constraints: (aLayout constraintsFor: ann child) ].	
 			
 	aLayout whenChildrenRemovedDo: [ :ann |
-		self remove: ann child ]
+		self remove: ann child ].
+	
+	subscribedLayout := aLayout.
 ]
 
 { #category : #private }
