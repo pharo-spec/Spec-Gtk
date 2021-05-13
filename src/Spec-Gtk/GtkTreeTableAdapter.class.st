@@ -263,12 +263,6 @@ GtkTreeTableAdapter >> refreshList [
 ]
 
 { #category : #private }
-GtkTreeTableAdapter >> rowSelected: path [
-
-	self model selection selectPath: path
-]
-
-{ #category : #private }
 GtkTreeTableAdapter >> rowsSelected: pathColl [
 
 	self model selection selectPaths: pathColl
@@ -368,8 +362,8 @@ GtkTreeTableAdapter >> updateMultiSelection [
 { #category : #updating }
 GtkTreeTableAdapter >> updatePresenterSelection [
 	
-	self innerWidgetDo: [ :w | 
-		self rowSelected: w selected ]
+	self innerWidgetDo: [ :w |
+		self rowsSelected: w allSelected ]
 ]
 
 { #category : #'private updating' }
@@ -385,7 +379,7 @@ GtkTreeTableAdapter >> updateRoots [
 GtkTreeTableAdapter >> updateSelection [
 
 	self innerWidgetDo: [ :w | 
-		self backendDetectCyclesDo: [  
+		self backendDetectCyclesDo: [
 			self 
 				disconnectSelectionEventsOf: w 
 				during: [ self updateSelectionOf: w ] ] ]
