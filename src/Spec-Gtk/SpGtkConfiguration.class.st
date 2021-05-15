@@ -40,9 +40,30 @@ SpGtkConfiguration >> configureGeneral: anApplication [
 ]
 
 { #category : #private }
+SpGtkConfiguration >> detectDarkTheme [
+	| backgroundColor |
+
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	 dark or light theme"
+	backgroundColor := GtkRunLoop defer: [ 
+		| widget |
+		widget := GtkTextView new. 
+		widget markForAutoRelease. 
+		widget styleContext getBackgroundColor ].
+	
+	^ backgroundColor luminance < 0.5
+]
+
+{ #category : #private }
 SpGtkConfiguration >> installTheme: aString [
 
 	self settings themeName: aString
+]
+
+{ #category : #testing }
+SpGtkConfiguration >> isDarkTheme [
+
+	^ self detectDarkTheme
 ]
 
 { #category : #'private accessing' }
