@@ -206,8 +206,7 @@ GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 { #category : #'private factory' }
 GtkCodeAdapter >> newTagTable [
 	
-	self flag: #TODO. "This is not cool to have everything hardcoded"
-	^ GtkTextTagTable newForCode
+	^ (GtkTextTagTable newForCode: self styleTable)
 		add: ((GtkTextTag newName: 'highlight')
 			background: (Color orange alpha: 0.2);
 			yourself);
@@ -253,6 +252,15 @@ GtkCodeAdapter >> setText: aString to: gtkWidget [
 
 	super setText: aString to: gtkWidget.
 	self userActionDo: [ :action | action registerChange ]
+]
+
+{ #category : #'private factory' }
+GtkCodeAdapter >> styleTable [
+	| styleTableName |	
+
+	styleTableName := self presenter syntaxHighlightTheme 	
+		ifNil: [ self presenter application syntaxHighlightTheme ].
+	^ SHRBTextStyler newAttributesForStyleTableNamed: styleTableName
 ]
 
 { #category : #private }
