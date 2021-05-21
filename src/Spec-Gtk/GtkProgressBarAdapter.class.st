@@ -25,19 +25,11 @@ GtkProgressBarAdapter >> indeterminateValue [
 		w pulse ]
 ]
 
-{ #category : #building }
-GtkProgressBarAdapter >> updateProgressValueTo: value [
-
-	value crTrace.
-	"self innerWidgetDo: [ :w |
-		self backendDetectCyclesDo: [ 
-			w  ] ]"
-]
-
 { #category : #api }
 GtkProgressBarAdapter >> updateState [
 
-	self presenter state ifNotNil: [ :state | state applyTo: self ]
+	self presenter state 
+		ifNotNil: [ :state | state applyTo: self ]
 ]
 
 { #category : #building }
