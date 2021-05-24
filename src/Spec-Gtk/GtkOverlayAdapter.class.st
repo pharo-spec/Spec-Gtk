@@ -9,7 +9,7 @@ GtkOverlayAdapter >> applyLayout: aLayout [
 
 	widget := GtkOverlay new.
 	self connectToEvents: aLayout. 
-	widget showAll.
+	widget show.
 ]
 
 { #category : #private }

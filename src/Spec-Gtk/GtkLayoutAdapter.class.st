@@ -109,7 +109,9 @@ GtkLayoutAdapter >> deferredLayout: aLayout [
 
 	layout := aLayout.
 	self applyLayout: aLayout.
-	self applyStyle: widget
+	self applyStyle: widget.
+	self addKeyBindingsTo: widget.
+	self addEventsTo: widget
 ]
 
 { #category : #private }
