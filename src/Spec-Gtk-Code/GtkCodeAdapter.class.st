@@ -259,7 +259,13 @@ GtkCodeAdapter >> styleTable [
 	| styleTableName |	
 
 	styleTableName := self presenter syntaxHighlightTheme 	
-		ifNil: [ self presenter application syntaxHighlightTheme ].
+		ifNil: [ 
+			self presenter application 
+				propertyAt: #syntaxHighlightTheme 
+				ifAbsent: [ 
+					"answer the default"
+					^ SHRBTextStyler newAttributesForStyleTable: SHRBTextStyler styleTable ] ].
+
 	^ SHRBTextStyler newAttributesForStyleTableNamed: styleTableName
 ]
 
