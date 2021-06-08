@@ -76,7 +76,7 @@ BaselineOfSpecGtk >> spec: spec [
 
 	spec baseline: 'SpecCore' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec';
+			repository: 'github://pharo-spec/Spec:Pharo9.0';
 			loads: 'Core' ]
 ]
 
@@ -85,7 +85,7 @@ BaselineOfSpecGtk >> specCode: spec [
 
 	spec baseline: 'SpecCode' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec';
+			repository: 'github://pharo-spec/Spec:Pharo9.0';
 			className: 'BaselineOfSpecCore';
 			loads: 'Code' ]
 ]
@@ -95,6 +95,6 @@ BaselineOfSpecGtk >> specMorphic: spec [
 
 	spec baseline: 'SpecMorphic' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec';
+			repository: 'github://pharo-spec/Spec:Pharo9.0';
 			className: 'BaselineOfSpec2' ]
 ]
