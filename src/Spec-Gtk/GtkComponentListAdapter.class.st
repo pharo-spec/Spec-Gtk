@@ -55,7 +55,7 @@ GtkComponentListAdapter >> addModelTo: gtkListBox [
 GtkComponentListAdapter >> disconnectSelectionEventsOf: aWidget during: aBlock [
 
 	aWidget 
-		disconnectAll: #('row-selected' 'selected-rows-changed')
+		blockCallbacks: #('row-selected' 'selected-rows-changed')
 		during: aBlock
 ]
 

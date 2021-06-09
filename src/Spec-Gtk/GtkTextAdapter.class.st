@@ -74,8 +74,11 @@ GtkTextAdapter >> setEditable: aBoolean [
 { #category : #building }
 GtkTextAdapter >> setText: aString to: gtkWidget [
 
-	self backendDetectCyclesDo: [
-		super setText: aString to: gtkWidget	]
+	gtkWidget textBuffer 
+		blockCallback: GChangedCallback signalName
+		during: [ 
+			self backendDetectCyclesDo: [
+				super setText: aString to: gtkWidget	] ]
 ]
 
 { #category : #private }

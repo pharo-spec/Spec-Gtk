@@ -295,7 +295,7 @@ GtkCodeAdapter >> userActionDuring: aBlock [
 	userAction := GtkCodeUserAction new.
 	self innerWidgetDo: [ :w |
 		w textBuffer 
-			disconnect: GChangedCallback signalName 
+			blockCallback: GChangedCallback signalName 
 			during: [ 
 				w textBuffer userActionDuring: aBlock.
 				userAction hasChanged ifTrue: [
