@@ -7,8 +7,8 @@ Class {
 	#name : #SpFramePresenter,
 	#superclass : #SpAbstractWidgetPresenter,
 	#instVars : [
-		'#label => SpObservableSlot',
-		'#presenter => SpObservableSlot'
+		'#label => ObservableSlot',
+		'#presenter => ObservableSlot'
 	],
 	#category : #'Spec-Gtk-Frame'
 }
