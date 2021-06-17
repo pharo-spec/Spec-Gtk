@@ -209,7 +209,8 @@ GtkLayoutAdapter >> takeKeyboardFocus [
 GtkLayoutAdapter >> unsubscribe [ 
 	
 	subscribedLayout ifNotNil: [ 
-		subscribedLayout unsubscribe ]
+		subscribedLayout unsubscribe ].
+	super unsubscribe.
 ]
 
 { #category : #protocol }
