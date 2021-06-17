@@ -484,6 +484,13 @@ GtkAdapter >> takeKeyboardFocus [
 	self doTakeKeyboardFocus
 ]
 
+{ #category : #releasing }
+GtkAdapter >> unsubscribe [ 
+
+	super unsubscribe.
+	widget := nil.
+]
+
 { #category : #updating }
 GtkAdapter >> update: aSymbol with: anArray [
 

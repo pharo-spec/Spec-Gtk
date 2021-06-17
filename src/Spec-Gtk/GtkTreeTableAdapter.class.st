@@ -334,6 +334,16 @@ GtkTreeTableAdapter >> takeKeyboardFocus [
 				self doTakeKeyboardFocus ] ]
 ]
 
+{ #category : #releasing }
+GtkTreeTableAdapter >> unsubscribe [ 
+
+	self presenter selection unsubscribe: self.
+	(self presenter observablePropertyNamed: #roots) unsubscribe: self.
+	(self presenter observablePropertyNamed: #showColumnHeaders) unsubscribe: self.
+	
+	super unsubscribe.
+]
+
 { #category : #'private updating' }
 GtkTreeTableAdapter >> updateColumnHeaders [
 

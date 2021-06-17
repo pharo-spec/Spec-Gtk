@@ -99,3 +99,10 @@ GtkListAdapter >> setModelTo: gtkList [
 	gtkList appendTextColumn: columnIndex.
 	gtkList model: self newTreeStore
 ]
+
+{ #category : #releasing }
+GtkListAdapter >> unsubscribe [ 
+
+	self presenter selection unsubscribe: self.
+	super unsubscribe.
+]

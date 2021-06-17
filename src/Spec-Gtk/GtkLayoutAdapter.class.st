@@ -205,6 +205,13 @@ GtkLayoutAdapter >> takeKeyboardFocus [
 		ifFound: [ :aPresenter | aPresenter takeKeyboardFocus ]
 ]
 
+{ #category : #releasing }
+GtkLayoutAdapter >> unsubscribe [ 
+	
+	subscribedLayout ifNotNil: [ 
+		subscribedLayout unsubscribe ]
+]
+
 { #category : #protocol }
 GtkLayoutAdapter >> updateBorderWidth [
 
