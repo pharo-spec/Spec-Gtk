@@ -337,6 +337,8 @@ GtkTreeTableAdapter >> takeKeyboardFocus [
 { #category : #releasing }
 GtkTreeTableAdapter >> unsubscribe [ 
 
+	self widgetDo: [:w | w children first disconnect: #destroy ].
+
 	self presenter selection unsubscribe: self.
 	(self presenter observablePropertyNamed: #roots) unsubscribe: self.
 	(self presenter observablePropertyNamed: #showColumnHeaders) unsubscribe: self.

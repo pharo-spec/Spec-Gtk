@@ -18,9 +18,10 @@ GtkListAdapter >> addModelTo: gtkList [
 	"Reset the model before destroying will prevent an annoying behaviour from GtkTreeView: 
 	 it iterates the nodes when destroying the view (no idea why, probably to give you a 
 	 chance to free what you put in user_data)"
+
 	gtkList connectDestroy: [ 
 		gtkList model roots: #() ].
-
+	
 	self presenter selection isMultipleSelection 
 		ifTrue: [ gtkList beMultipleSelectionMode ]
 		ifFalse: [ gtkList beSingleSelectionMode ].
@@ -103,6 +104,9 @@ GtkListAdapter >> setModelTo: gtkList [
 { #category : #releasing }
 GtkListAdapter >> unsubscribe [ 
 
-	self presenter selection unsubscribe: self.
+	self widgetDo: [:w | w children first disconnect: #destroy ].
+	 
+	self presenter selection unsubscribeOuterContextReceiver: self.
+
 	super unsubscribe.
 ]
