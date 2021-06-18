@@ -339,7 +339,11 @@ GtkTreeTableAdapter >> unsubscribe [
 
 	self widgetDo: [:w | w children first disconnect: #destroy ].
 
-	self presenter selection unsubscribe: self.
+	self presenter selectionMode unsubscribe: self.
+	
+	(self presenter selection observablePropertyNamed: #selection) unsubscribe: self.
+	(self presenter selection observablePropertyNamed: #selection) unsubscribeOuterContextReceiver: self.
+	
 	(self presenter observablePropertyNamed: #roots) unsubscribe: self.
 	(self presenter observablePropertyNamed: #showColumnHeaders) unsubscribe: self.
 	
