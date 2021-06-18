@@ -121,6 +121,20 @@ GtkDropListAdapter >> takeKeyboardFocus [
 ]
 
 { #category : #building }
+GtkDropListAdapter >> unsubscribe [ 
+
+	| subscriptionsToRemove |
+	self presenter selection unsubscribeOuterContextReceiver: self.
+	
+	"please, pretend you haven't seen this"
+	subscriptionsToRemove := self presenter model announcer subscriptions subscriptions select: [:sub | (sub action at: 1) receiver = self ].
+	subscriptionsToRemove do: [ :sub |
+		self presenter model announcer subscriptions remove: sub ].
+	
+	super unsubscribe.
+]
+
+{ #category : #building }
 GtkDropListAdapter >> widgetClass [
 	
 	^ GtkComboBox
