@@ -110,3 +110,19 @@ GtkTableAdapter >> refreshWidgetHeaderTitleTo: gtkTreeView [
 GtkTableAdapter >> unselectAll [
 	innerWidget selection unselectAll
 ]
+
+{ #category : #testing }
+GtkTableAdapter >> unsubscribe [
+
+	| aSelectionMode |
+
+	self presenter selectionMode unsubscribe: self.
+	aSelectionMode := 	self presenter selectionMode observablePropertyNamed: #selectedIndex..
+	aSelectionMode
+		unsubscribe: self;
+		unsubscribeOuterContextReceiver: self.
+
+	super unsubscribe.
+	
+	widget := nil.
+]
