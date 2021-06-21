@@ -335,19 +335,26 @@ GtkTreeTableAdapter >> takeKeyboardFocus [
 ]
 
 { #category : #releasing }
-GtkTreeTableAdapter >> unsubscribe [ 
+GtkTreeTableAdapter >> unsubscribe [
 
-	self widgetDo: [:w | w children first disconnect: #destroy ].
+	| aSelection |
+	self widgetDo: [ :arg1 |
+		arg1 children first model roots: #() .
+		arg1 children first disconnect: #destroy.
+		(arg1 children first instVarNamed: #listStore) prepareToDisconnect.
+		arg1 children first instVarNamed: #listStore put: nil ].
 
 	self presenter selectionMode unsubscribe: self.
-	
-	(self presenter selection observablePropertyNamed: #selection) unsubscribe: self.
-	(self presenter selection observablePropertyNamed: #selection) unsubscribeOuterContextReceiver: self.
-	
+	aSelection := self presenter selection observablePropertyNamed: #selection.
+	aSelection
+		unsubscribe: self;
+		unsubscribeOuterContextReceiver: self.
 	(self presenter observablePropertyNamed: #roots) unsubscribe: self.
-	(self presenter observablePropertyNamed: #showColumnHeaders) unsubscribe: self.
-	
+	(self presenter observablePropertyNamed: #showColumnHeaders) 
+		unsubscribe: self.
 	super unsubscribe.
+	
+	widget := nil.
 ]
 
 { #category : #'private updating' }
