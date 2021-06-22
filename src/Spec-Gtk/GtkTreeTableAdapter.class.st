@@ -335,6 +335,12 @@ GtkTreeTableAdapter >> takeKeyboardFocus [
 ]
 
 { #category : #releasing }
+GtkTreeTableAdapter >> unsubscirbeSelectionMode [
+ 
+	self presenter selectionMode unsubscribe: self.
+]
+
+{ #category : #releasing }
 GtkTreeTableAdapter >> unsubscribe [
 
 	| aSelection |
@@ -344,7 +350,7 @@ GtkTreeTableAdapter >> unsubscribe [
 		(arg1 children first instVarNamed: #listStore) prepareToDisconnect.
 		arg1 children first instVarNamed: #listStore put: nil ].
 
-	self presenter selectionMode unsubscribe: self.
+	self unsubscirbeSelectionMode.
 	aSelection := self presenter selection observablePropertyNamed: #selection.
 	aSelection
 		unsubscribe: self;
