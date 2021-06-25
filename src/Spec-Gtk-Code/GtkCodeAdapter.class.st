@@ -46,10 +46,8 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		indentOnTab: true;
 		tabWidth: 4.
 
-	gtkSourceView textBuffer 
-		infiniteUndoLevels;
-		highlightMatchingBrackets: true.
-		
+	gtkSourceView textBuffer: (self newTextBufferForText: nil).		
+
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
 	
@@ -72,13 +70,6 @@ GtkCodeAdapter >> addTextTo: gtkTextView [
 	
 	"gtkTextView monospace: true."
 	self addMonospaceStyleFor: gtkTextView.
-	"add style table"
-	self model hasSyntaxHighlight ifTrue: [ 
-		gtkTextView textBuffer: (self bufferClass newTable: self newTagTable).
-		"I need to recalculate style each time I get a change"
-		gtkTextView textBuffer connectChanged: [ 
-			self applyFullStyleTo: gtkTextView textBuffer ] ]	.
-		
 	super addTextTo: gtkTextView
 ]
 
@@ -213,6 +204,44 @@ GtkCodeAdapter >> newTagTable [
 		yourself
 ]
 
+{ #category : #'private factory' }
+GtkCodeAdapter >> newTextBuffer [
+
+	^ self bufferClass new
+]
+
+{ #category : #'private factory' }
+GtkCodeAdapter >> newTextBufferForHighlight [
+	| textBuffer |
+
+	textBuffer := self bufferClass newTable: self newTagTable.
+	textBuffer connectChanged: [ 
+		self applyFullStyleTo: textBuffer ].
+
+	^  textBuffer
+]
+
+{ #category : #'private factory' }
+GtkCodeAdapter >> newTextBufferForText: aString [
+	| textBuffer |
+
+	"add style table"
+	textBuffer := self model hasSyntaxHighlight 
+		ifTrue: [ self newTextBufferForHighlight ]
+		ifFalse: [ self newTextBuffer ].
+
+	aString ifNotNil: [ 
+		textBuffer text: aString ].
+
+	self presenter hasUndoRedoHistory 
+		ifTrue: [ textBuffer infiniteUndoLevels ]
+ 		ifFalse: [ textBuffer disableUndo ].
+	
+	textBuffer highlightMatchingBrackets: true.
+
+	^ textBuffer
+]
+
 { #category : #'interactive error protocol' }
 GtkCodeAdapter >> notify: aString at: aNumber in: anObject [
 	
@@ -250,7 +279,7 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 { #category : #building }
 GtkCodeAdapter >> setText: aString to: gtkWidget [
 
-	super setText: aString to: gtkWidget.
+	gtkWidget textBuffer: (self newTextBufferForText: aString).
 	self userActionDo: [ :action | action registerChange ]
 ]
 

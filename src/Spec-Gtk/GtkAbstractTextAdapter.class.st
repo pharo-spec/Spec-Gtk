@@ -24,7 +24,8 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 	super addModelTo: gtkWidget.
 	self addTextTo: gtkWidget. 
 	self presenter whenTextChangedDo: [ :text | 
-		self setText: text to: gtkWidget ].
+		self innerWidgetDo: [ :w | 
+			self setText: text to: w ] ].
 	gtkWidget connectPopulatePopup: [ :menuWidget |
 		self populatePopup: menuWidget  ]
 ]

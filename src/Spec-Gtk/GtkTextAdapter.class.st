@@ -26,6 +26,13 @@ GtkTextAdapter >> addModelTo: gtkTextView [
 	self presenter whenWrapWordChangedDo: [ :value |
 		self setWrapWord: value to: gtkTextView ].
 	
+	self flag: #Gtk4. "In fact, GtkTextView does not has undo/redo in Gtk3, but is 
+	present in Gtk4. I will wait until we move there to implement this (since it does not 
+	has sense to hack that before)"
+	self presenter hasUndoRedoHistory 
+		ifTrue: [ "do something" ]
+		ifFalse: [ "do something else" ].
+	
 	gtkTextView textBuffer connectChanged: [
 		self updatePresenterText: gtkTextView text ]
 ]
