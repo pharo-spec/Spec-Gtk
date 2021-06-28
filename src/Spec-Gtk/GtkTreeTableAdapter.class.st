@@ -344,14 +344,6 @@ GtkTreeTableAdapter >> unsubscirbeSelectionMode [
 GtkTreeTableAdapter >> unsubscribe [
 
 	| aSelection |
-	self widgetDo: [ :arg1 |
-		arg1 children first model roots: #() .
-		arg1 children first disconnect: #destroy.
-		
-		GtkRunLoop forceDefer: [
-			(arg1 children first instVarNamed: #listStore) prepareToDisconnect.
-			arg1 children first instVarNamed: #listStore put: nil].
-		 ].
 
 	self unsubscirbeSelectionMode.
 	aSelection := self presenter selection observablePropertyNamed: #selection.

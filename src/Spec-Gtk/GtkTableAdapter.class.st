@@ -115,12 +115,6 @@ GtkTableAdapter >> unselectAll [
 GtkTableAdapter >> unsubscribe [
 
 	| aSelectionMode |
-	
-	self widgetDo: [ :arg1 |
-		arg1 children first model roots: #() .
-		arg1 children first disconnect: #destroy.
-		(arg1 children first instVarNamed: #listStore) prepareToDisconnect.
-		arg1 children first instVarNamed: #listStore put: nil ].	
 
 	self presenter selectionMode unsubscribe: self.
 	aSelectionMode := 	self presenter selectionMode observablePropertyNamed: #selectedIndex..

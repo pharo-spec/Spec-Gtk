@@ -173,6 +173,12 @@ GtkAdapter >> buildWidget [
 	^ self wrapWidget: gtkWidget
 ]
 
+{ #category : #releasing }
+GtkAdapter >> cleanupAfterReplacing [ 
+
+	widget := nil.
+]
+
 { #category : #private }
 GtkAdapter >> configureKeyBindings: gtkWidget [
 

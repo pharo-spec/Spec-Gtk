@@ -86,6 +86,14 @@ GtkLayoutAdapter >> buildWithSpec: aSpec [
 ]
 
 { #category : #private }
+GtkLayoutAdapter >> cleanupAfterReplacing [ 
+	
+	widget children do: [ :aChild |
+		aChild cleanupAfterReplacing ].
+	widget := nil.
+]
+
+{ #category : #private }
 GtkLayoutAdapter >> connectToEvents: aLayout [
 
 	self presenter whenVisibleChangedDo: [ 	
@@ -187,9 +195,12 @@ GtkLayoutAdapter >> removeSubWidgets [
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 	
 	GtkRunLoop defer: [ 
+		| oldAdapter |
+		oldAdapter := self model adapter.
 		self model adapter: (aLayout
 			buildAdapterFor: self model
 			bindings: self model application adapterBindings).
+		oldAdapter cleanupAfterReplacing.
 		self model owner adapter rebuild ]
 ]
 
@@ -210,7 +221,9 @@ GtkLayoutAdapter >> unsubscribe [
 	
 	subscribedLayout ifNotNil: [ 
 		subscribedLayout unsubscribe ].
-	super unsubscribe.
+	
+	"we must not nil the widget for layout adapters. That's why we do not call the superclass implementation"
+	self unsubscribeFromObservables .
 ]
 
 { #category : #protocol }
