@@ -17,6 +17,12 @@ GtkKMDispatcher class >> on: aTarget [
 		yourself
 ]
 
+{ #category : #compatibility }
+GtkKMDispatcher >> addKeymapEntry: aKeymap [
+
+	self directCategory addKeymapEntry: aKeymap
+]
+
 { #category : #accessing }
 GtkKMDispatcher >> attachCategory: aCategory [
 
@@ -26,8 +32,7 @@ GtkKMDispatcher >> attachCategory: aCategory [
 { #category : #compatibility }
 GtkKMDispatcher >> bindKeyCombination: aShortcut toAction: aBlock [
 
-	^ self directCategory 
-		addKeymapEntry: (KMKeymap
+	^ self addKeymapEntry: (KMKeymap
 			shortcut: aShortcut 
 			action: aBlock)
 ]
@@ -116,8 +121,8 @@ GtkKMDispatcher >> partialMatch [
 GtkKMDispatcher >> removeKeyCombination: aShortcut [
 
 	self categories do: [ :each |
-		(each keymapForShortcut: aShortcut) ifNotNil: [ :keymap |
-			each removeKeymapEntry: keymap ] ]
+		(each keymapForShortcut: aShortcut) 
+			ifNotNil: [ :keymap | each removeKeymapEntry: keymap ] ]
 ]
 
 { #category : #accessing }
