@@ -73,7 +73,7 @@ GtkKMDispatcherTest >> eventKey: character shift: aBoolean [
 { #category : #running }
 GtkKMDispatcherTest >> setUp [
 
-	GtkApplication ensureRunning
+	GtkEngine ensureRunning
 ]
 
 { #category : #tests }
