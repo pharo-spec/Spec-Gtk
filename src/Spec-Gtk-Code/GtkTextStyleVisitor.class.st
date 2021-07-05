@@ -106,15 +106,18 @@ GtkTextStyleVisitor >> reset [
 ]
 
 { #category : #private }
-GtkTextStyleVisitor >> resolveStyleFor: aRBVariableNode [
+GtkTextStyleVisitor >> resolveStyleFor: aVariableNode [
 
-	aRBVariableNode binding ifNil: [ ^ #default ].
-	aRBVariableNode isArgumentVariable ifTrue: [ ^ #methodArg ].
-	aRBVariableNode isTempVariable ifTrue: [ ^ #tempVar ].
-	aRBVariableNode isLiteralVariable ifTrue: [ ^ #globalVar ].
-	aRBVariableNode isInstanceVariable ifTrue: [ ^ #instVar ].
-	aRBVariableNode hasIncompleteIdentifier ifTrue: [ 
-		^ #incompleteIdentifier ].
+	aVariableNode binding 						ifNil:  [ ^ #default].
+	aVariableNode isArgumentVariable 			ifTrue: [ ^ #methodArg].
+	aVariableNode isTempVariable 				ifTrue: [ ^ #tempVar].
+	aVariableNode isGlobalVariable 			ifTrue: [ ^ #globalVar].
+	"here we should add support for #classVar"
+	aVariableNode isClassVariable 				ifTrue: [ ^ #globalVar].
+	aVariableNode isInstanceVariable 			ifTrue: [ ^ #instVar]. 
+	"for now we use temp variable here, we could now color them with their own color"
+	aVariableNode isWorkspaceVariable 		ifTrue: [ ^ #tempVar]. 
+	aVariableNode hasIncompleteIdentifier 	ifTrue: [ ^ #incompleteIdentifier ].
 
 	^ #invalid
 ]
@@ -218,6 +221,13 @@ GtkTextStyleVisitor >> styleTempBars: aRBSequenceNode [
 		self addStyle: tempBarAttribute from: pos to: pos ]
 ]
 
+{ #category : #private }
+GtkTextStyleVisitor >> styleVariable: aVariableNode [
+		
+	self flag: #TODO. "Here we can add link attributes (to inspect, etc.) 
+	or other ways of complement variables"
+]
+
 { #category : #accessing }
 GtkTextStyleVisitor >> tags [
 
@@ -279,10 +289,7 @@ GtkTextStyleVisitor >> visitEnglobingErrorNode: aRBUnfinishedStatementErrorNode 
 { #category : #visiting }
 GtkTextStyleVisitor >> visitGlobalNode: aRBGlobalNode [
 
-	self 
-		addStyle: #globalVar
-		from: aRBGlobalNode start 
-		to: aRBGlobalNode stop
+	^ self visitVariableNode: aRBGlobalNode
 ]
 
 { #category : #visiting }
@@ -468,12 +475,12 @@ GtkTextStyleVisitor >> visitThisContextNode: aThisContextNode [
 ]
 
 { #category : #visiting }
-GtkTextStyleVisitor >> visitVariableNode: aRBVariableNode [ 
+GtkTextStyleVisitor >> visitVariableNode: aVariableNode [ 
 	
 	self 
-		addStyle: (self resolveStyleFor: aRBVariableNode) 
-		from: aRBVariableNode start
-		to: aRBVariableNode stop.
-	
-	
+		addStyle: (self resolveStyleFor: aVariableNode) 
+		from: aVariableNode start
+		to: aVariableNode stop.
+	"extra styles"
+	self styleVariable: aVariableNode
 ]

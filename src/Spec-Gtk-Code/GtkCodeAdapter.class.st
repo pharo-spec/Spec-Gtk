@@ -111,6 +111,12 @@ GtkCodeAdapter >> behavior [
 	^ self presenter behavior
 ]
 
+{ #category : #'api-shout' }
+GtkCodeAdapter >> bindingOf: aString [
+
+	^ self presenter bindingOf: aString
+]
+
 { #category : #building }
 GtkCodeAdapter >> bufferClass [
 
@@ -138,6 +144,18 @@ GtkCodeAdapter >> doItContext [
 GtkCodeAdapter >> doItReceiver [
 
 	^ self presenter doItReceiver
+]
+
+{ #category : #'api-shout' }
+GtkCodeAdapter >> hasBindingOf: aString [
+
+	^ self presenter hasBindingOf: aString
+]
+
+{ #category : #'api-shout' }
+GtkCodeAdapter >> hasBindingThatBeginsWith: aString [
+
+	^ self presenter hasBindingThatBeginsWith: aString
 ]
 
 { #category : #api }
@@ -248,10 +266,24 @@ GtkCodeAdapter >> notify: aString at: aNumber in: anObject [
 	self flag: #TODO. "What to do here?"
 ]
 
+{ #category : #api }
+GtkCodeAdapter >> refreshStyling [
+
+	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
+	self innerWidgetDo: [ :w | 
+		self applyStyleTo: w textBuffer ]
+]
+
 { #category : #'as yet unclassified' }
 GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	
 	self flag: #TODO.
+]
+
+{ #category : #'api-shout' }
+GtkCodeAdapter >> selectedClassOrMetaClass [
+
+	^ self presenter selectedClassOrMetaClass
 ]
 
 { #category : #'private-shout' }
