@@ -71,7 +71,7 @@ GtkBaseListAdapter >> type: aString [
 	"this will be used to test search"
 	| entry |
 
-	GtkRunLoop defer: [ 
+	GRunLoop defer: [ 
 		entry := self innerWidget searchEntry ].
 	entry isNull inspect
 ]

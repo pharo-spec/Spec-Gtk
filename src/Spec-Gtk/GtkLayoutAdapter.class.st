@@ -135,7 +135,7 @@ GtkLayoutAdapter >> ensureRetained: aWidget [
 { #category : #protocol }
 GtkLayoutAdapter >> layout: aLayout [
 
-	GtkRunLoop defer: [
+	GRunLoop defer: [
 		self deferredLayout: aLayout ]
 ]
 
@@ -186,7 +186,7 @@ GtkLayoutAdapter >> removeSubWidgets [
 { #category : #accessing }
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 	
-	GtkRunLoop defer: [ 
+	GRunLoop defer: [ 
 		self model adapter: (aLayout
 			buildAdapterFor: self model
 			bindings: self model application adapterBindings).

@@ -7,6 +7,6 @@ Trait {
 GtkTDisconnectSelectionEvents >> disconnectSelectionEventsOf: aWidget during: aBlock [
 
 	aWidget selection 
-		blockCallback: 'changed' 
+		blockCallback: GChangedCallback signalName
 		during: aBlock
 ]

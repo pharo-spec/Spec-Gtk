@@ -32,7 +32,7 @@ GtkAdapter class >> isAbstract [
 { #category : #initialization }
 GtkAdapter >> adapt: aPresenter [
 
-	^ GtkRunLoop defer: [ super adapt: aPresenter ]
+	^ GRunLoop defer: [ super adapt: aPresenter ]
 ]
 
 { #category : #building }
@@ -145,7 +145,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
 GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget [
 	
 	dispatcher ifNil: [ 
-		GtkRunLoop defer: [
+		GRunLoop defer: [
 			self configureKeyBindings: gtkWidget ] ].
 
 	dispatcher 
@@ -281,7 +281,7 @@ GtkAdapter >> innerWidget [
 GtkAdapter >> innerWidgetDo: aBlock [
 
 	self hasWidget ifFalse: [ ^ nil ].
-	^ GtkRunLoop defer: [ 
+	^ GRunLoop defer: [ 
 		aBlock value: self innerWidget ]
 ]
 
@@ -554,7 +554,7 @@ GtkAdapter >> widgetClass [
 GtkAdapter >> widgetDo: aBlock [ 
 
 	self hasWidget ifFalse: [ ^ nil ].
-	^ GtkRunLoop defer: [ aBlock value: widget ]
+	^ GRunLoop defer: [ aBlock value: widget ]
 ]
 
 { #category : #building }

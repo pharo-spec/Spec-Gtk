@@ -388,7 +388,7 @@ GtkTreeTableAdapter >> updateSelection [
 { #category : #updating }
 GtkTreeTableAdapter >> updateSelectionOf: gtkWidget [
 
-	GtkRunLoop defer: [ 
+	GRunLoop defer: [ 
 		self presenter selection selectedPaths 
 			do: [ :selectedPath | self selectItemIn: gtkWidget path: selectedPath ] ]
 ]

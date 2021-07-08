@@ -91,21 +91,19 @@ GtkAbstractTextAdapter >> selectAll [
 { #category : #selection }
 GtkAbstractTextAdapter >> selectLine [
 
-	self innerWidgetDo: [ :w | 
-		w textBuffer selectLineAtCursor ]
+	self innerWidgetDo: [ :w | w textBuffer selectLineAtCursor ].
 ]
 
 { #category : #selection }
 GtkAbstractTextAdapter >> selection [ 
+	| selection |
 
-	^ self innerWidget 
-		ifNotNil: [ :w | 
-			| selection |
-			selection := w textBuffer selection.
-			selection ifNotNil: [ 
-				selection first + 1 to: selection last ] ]	
-		ifNil: [ 
-			1 to: 0 ]
+	self innerWidgetDo: [ :w | 
+		selection := w textBuffer selection. 
+		selection ifNotNil: [ 
+			selection := selection first + 1 to: selection last ] ].
+	
+	^ selection ifNil: [ 1 to: 0 ]
 ]
 
 { #category : #emulating }

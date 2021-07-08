@@ -1,6 +1,6 @@
 Trait {
 	#name : #GtkTTableAccessing,
-	#category : #'Spec-Gtk'
+	#category : #'Spec-Gtk-Adapter-Table'
 }
 
 { #category : #building }

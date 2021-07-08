@@ -56,7 +56,7 @@ GtkWindowAdapter >> addModelTo: gtkWindow [
 GtkWindowAdapter >> addPresenterIn: gtkWindow withSpecLayout: aSpec [
 	
 	initialized := false.
-	GtkRunLoop defer: [ 
+	GRunLoop defer: [ 
 		self deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec.
 		initialized := true.
 		self processDeferredActions ]
