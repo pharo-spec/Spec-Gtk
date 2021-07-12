@@ -55,6 +55,12 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		gtkSourceView showLineNumbers: hasLineNumbers ]
 ]
 
+{ #category : #building }
+GtkCodeAdapter >> addTextBufferTo: gtkTextView [
+
+	"this is solved in #newTextBufferForText:"
+]
+
 { #category : #'as yet unclassified' }
 GtkCodeAdapter >> addTextSegmentDecoration: aDecoration [
 	
@@ -131,7 +137,7 @@ GtkCodeAdapter >> classOrMetaClass: aClass [
 
 	self innerWidgetDo: [ :w | 
 		self applyFullStyleTo: w textBuffer ].
-	self updateCompletionProvider	
+	self updateCompletionProvider
 ]
 
 { #category : #'api-shout' }
@@ -257,6 +263,10 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 	
 	textBuffer highlightMatchingBrackets: true.
 
+	textBuffer connectChanged: [
+		self backendDetectCyclesDo: [ 
+			self innerWidgetDo: [ :w | self updatePresenterText: w text ] ] ].
+
 	^ textBuffer
 ]
 
@@ -311,8 +321,9 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 { #category : #building }
 GtkCodeAdapter >> setText: aString to: gtkWidget [
 
-	gtkWidget textBuffer: (self newTextBufferForText: aString).
-	self userActionDo: [ :action | action registerChange ]
+	self backendDetectCyclesDo: [
+		gtkWidget textBuffer: (self newTextBufferForText: aString).
+		self userActionDo: [ :action | action registerChange ] ]
 ]
 
 { #category : #'private factory' }
