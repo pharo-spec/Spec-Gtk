@@ -15,6 +15,9 @@ GtkAbstractListAdapter >> doRefreshList: gtkWidget [
 { #category : #accessing }
 GtkAbstractListAdapter >> elementAt: index [
 
+	self innerWidgetDo: [ :w | 
+		^ w model roots at: index ].
+
 	^ self presenter items at: index
 ]
 
