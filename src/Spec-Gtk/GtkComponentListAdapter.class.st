@@ -78,8 +78,10 @@ GtkComponentListAdapter >> doTakeKeyboardFocus: gtkListBox [
 
 { #category : #accessing }
 GtkComponentListAdapter >> elementAt: index [
-self flag: #TODO. "I need to fix this tomorrow"
-	^ self presenter items at: index
+	| item |
+
+	item := self innerWidgetDo: [ :w | w model roots at: index ].
+	^ item ifNil: [ self presenter items at: index ]
 ]
 
 { #category : #'private accessing' }

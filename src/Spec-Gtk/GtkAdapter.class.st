@@ -181,6 +181,26 @@ GtkAdapter >> configureKeyBindings: gtkWidget [
 		self handleKeyEvent: event ]
 ]
 
+{ #category : #private }
+GtkAdapter >> deferredUpdateMenuIn: w [
+	| existingCallbacks menu |
+
+	existingCallbacks := Set new.
+	w 
+		withCallbacksOfType: GSecondaryButtonPressEventCallback 
+		do: [ :each | existingCallbacks add: each ].
+		
+	menu := self presenter contextMenu. 
+	menu ifNil: [ 
+		existingCallbacks do: [ :each | each disconnectFrom: w ].
+		^ self ].
+	"if there is already a callback, I do not need to do anything (because it will be 
+	 evaluated each time)"
+	existingCallbacks ifNotEmpty: [ ^ self ].
+	"Now, actually add the menu callback"
+	self addMenu: menu to: w
+]
+
 { #category : #protocol }
 GtkAdapter >> doTakeKeyboardFocus [
 
@@ -517,22 +537,7 @@ GtkAdapter >> updateKeyBindings [
 GtkAdapter >> updateMenu [
 
 	self innerWidgetDo: [ :w |
-		| existingCallbacks menu |
-
-		existingCallbacks := Set new.
-		w 
-			withCallbacksOfType: GSecondaryButtonPressEventCallback 
-			do: [ :each | existingCallbacks add: each ].
-			
-		menu := self presenter contextMenu. 
-		menu ifNil: [ 
-			existingCallbacks do: [ :each | each disconnectFrom: w ].
-			^ self ].
-		"if there is already a callback, I do not need to do anything (because it will be 
-		 evaluated each time)"
-		existingCallbacks ifNotEmpty: [ ^ self ].
-		"Now, actually add the menu callback"
-		self addMenu: menu to: w ]
+		self deferredUpdateMenuIn: w ]
 ]
 
 { #category : #'private updating' }

@@ -209,11 +209,8 @@ GtkTreeTableAdapter >> isNonEditableRow: aRow column: aColumn [
 
 { #category : #accessing }
 GtkTreeTableAdapter >> itemAtPath: anArray [
-
-	self innerWidgetDo: [ :w | 
-		^ w model itemAtPath: anArray ].
-
-	^ nil	
+ 	
+	^ self innerWidgetDo: [ :w | w model itemAtPath: anArray ]
 ]
 
 { #category : #private }
@@ -258,6 +255,7 @@ GtkTreeTableAdapter >> recreateStore: gtkTreeView	generateColumns: doesGenerateC
 { #category : #updating }
 GtkTreeTableAdapter >> refreshList [
 
+	self halt.
 	self innerWidgetDo: [ :w | 
 		w model: (self newStoreFrom: self presenter items) ]
 ]

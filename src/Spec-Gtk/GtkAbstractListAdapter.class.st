@@ -14,11 +14,10 @@ GtkAbstractListAdapter >> doRefreshList: gtkWidget [
 
 { #category : #accessing }
 GtkAbstractListAdapter >> elementAt: index [
+	| item |
 
-	self innerWidgetDo: [ :w | 
-		^ w model roots at: index ].
-
-	^ self presenter items at: index
+	item := self innerWidgetDo: [ :w | w model roots at: index ].
+	^ item ifNil: [ self presenter items at: index ]
 ]
 
 { #category : #private }
