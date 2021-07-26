@@ -18,6 +18,11 @@ GtkBaseListAdapter >> addModelTo: gtkList [
 
 	super addModelTo: gtkList.
 	gtkList activateOnSingleClick: self presenter activatesOnSingleClick.
+	self presenter dragEnabled 
+		ifTrue: [ gtkList enableModelDragSourceDefault ].
+	self presenter dropEnabled
+		ifTrue: [  ].
+	
 	self addSearchTo: gtkList.
 	self presenter contextMenu ifNotNil: [ :menu |
 		self addMenu: menu to: gtkList ].

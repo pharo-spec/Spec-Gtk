@@ -49,6 +49,9 @@ GtkTreeTableAdapter >> addModelTo: gtkTreeView [
 	gtkTreeView connectDestroy: [ 
 		gtkTreeView model roots: #() ].
 
+	self presenter dragEnabled 
+		ifTrue: [ gtkTreeView enableModelDragSourceDefault ].
+
 	self addSearchTo: gtkTreeView.
 	
 	self recreateStore: gtkTreeView generateColumns: true.
