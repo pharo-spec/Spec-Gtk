@@ -41,5 +41,12 @@ GtkTTableAccessing >> newTreeStoreFrom: items [
 
 	store roots: items.
 
+	"configure drag&drop"
+	store dragEnabled: self presenter dragEnabled.
+	self presenter dropEnabled ifTrue: [ 
+		store 
+			dropEnabled: true;
+			acceptDrop: self presenter acceptDrop ].	
+
 	^ store
 ]

@@ -69,6 +69,13 @@ GtkListAdapter >> newTreeStore [
 	
 	store roots: self presenter items.
 	
+	"configure drag&drop"
+	store dragEnabled: self presenter dragEnabled.
+	self presenter dropEnabled ifTrue: [ 
+		store 
+			dropEnabled: true;
+			acceptDrop: self presenter acceptDrop ].	
+	
 	^ store
 ]
 

@@ -49,13 +49,11 @@ GtkTreeTableAdapter >> addModelTo: gtkTreeView [
 	gtkTreeView connectDestroy: [ 
 		gtkTreeView model roots: #() ].
 
-	self presenter dragEnabled 
-		ifTrue: [ gtkTreeView enableModelDragSourceDefault ].
-
 	self addSearchTo: gtkTreeView.
 	
 	self recreateStore: gtkTreeView generateColumns: true.
 	self configureInitialState: gtkTreeView.
+	self configureDragAndDrop: gtkTreeView.
 	self connectToGtkSignals: gtkTreeView.
 	self connectToSpecEvents: gtkTreeView
 ]
@@ -97,6 +95,18 @@ GtkTreeTableAdapter >> columnCount [
 GtkTreeTableAdapter >> columns [
 
 	^ self presenter columns ifEmpty: [ { self defaultColumn } ]
+]
+
+{ #category : #building }
+GtkTreeTableAdapter >> configureDragAndDrop: gtkTreeView [
+	"Configure drag&drop. This is related to GtkTreeDataStore too, if you want to understand how 
+	 it works you need to check for GtkTreeDataStore creation/configuration too (e.g. #newTreeStore)"
+	
+	self presenter dragEnabled 
+		ifTrue: [ gtkTreeView enableModelDragSourceDefault ].
+	self presenter dropEnabled
+		ifTrue: [ gtkTreeView enableModelDragDestDefault ].
+
 ]
 
 { #category : #building }
@@ -242,6 +252,13 @@ GtkTreeTableAdapter >> newTreeStoreFrom: items [
 
 	store roots: items.
 	store children: self presenter children.
+	
+	"configure drag&drop"
+	store dragEnabled: self presenter dragEnabled.
+	self presenter dropEnabled ifTrue: [ 
+		store 
+			dropEnabled: true;
+			acceptDrop: self presenter acceptDrop ].	
 
 	^ store
 ]

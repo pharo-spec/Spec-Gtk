@@ -14,18 +14,14 @@ GtkBaseListAdapter >> addKeyBindingsTo: gtkWidget [
 ]
 
 { #category : #building }
-GtkBaseListAdapter >> addModelTo: gtkList [
+GtkBaseListAdapter >> addModelTo: gtkTreeView [
 
-	super addModelTo: gtkList.
-	gtkList activateOnSingleClick: self presenter activatesOnSingleClick.
-	self presenter dragEnabled 
-		ifTrue: [ gtkList enableModelDragSourceDefault ].
-	self presenter dropEnabled
-		ifTrue: [  ].
-	
-	self addSearchTo: gtkList.
+	super addModelTo: gtkTreeView.
+	gtkTreeView activateOnSingleClick: self presenter activatesOnSingleClick.
+	self configureDragAndDrop: gtkTreeView.	
+	self addSearchTo: gtkTreeView.
 	self presenter contextMenu ifNotNil: [ :menu |
-		self addMenu: menu to: gtkList ].
+		self addMenu: menu to: gtkTreeView ].
 ]
 
 { #category : #building }
@@ -46,6 +42,18 @@ GtkBaseListAdapter >> addSearchTo: gtkTreeView [
 GtkBaseListAdapter >> columns [
 	
 	^ innerWidget columns
+]
+
+{ #category : #building }
+GtkBaseListAdapter >> configureDragAndDrop: gtkTreeView [
+	"Configure drag&drop. This is related to GtkTreeDataStore too, if you want to understand how 
+	 it works you need to check for GtkTreeDataStore creation/configuration too (e.g. #newTreeStore)"
+	
+	self presenter dragEnabled 
+		ifTrue: [ 
+			gtkTreeView enableModelDragSourceDefault ].
+	self presenter dropEnabled
+		ifTrue: [ gtkTreeView enableModelDragDestDefault ]
 ]
 
 { #category : #testing }
