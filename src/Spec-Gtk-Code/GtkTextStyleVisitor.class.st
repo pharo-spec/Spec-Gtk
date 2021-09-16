@@ -126,7 +126,6 @@ GtkTextStyleVisitor >> resolveStyleFor: aVariableNode [
 GtkTextStyleVisitor >> styleAST: ast [
 
 	self reset.
-	ast doSemanticAnalysis.
 	ast acceptVisitor: self
 ]
 
@@ -176,7 +175,7 @@ GtkTextStyleVisitor >> styleMethod: aString [
 		source: aString;
 		noPattern: false;
 		requestor: nil;
-		failBlock: [ ^nil ];
+		failBlock: [ ^ nil ];
 		options:  #(+ optionParseErrors + optionSkipSemanticWarnings);
 		parse.	
 
