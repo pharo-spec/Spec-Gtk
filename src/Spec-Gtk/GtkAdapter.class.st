@@ -236,11 +236,6 @@ GtkAdapter >> getHelpText [
 	^ self presenter help ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : #'GTInspector-Extensions' }
-GtkAdapter >> gtInspectorPreviewIn: aGLMCompositePresentation [
-	"Do nothing at the moment"
-]
-
 { #category : #private }
 GtkAdapter >> handleKeyEvent: event [
 
