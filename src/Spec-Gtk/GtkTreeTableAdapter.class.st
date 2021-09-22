@@ -287,6 +287,11 @@ GtkTreeTableAdapter >> rowsSelected: pathColl [
 ]
 
 { #category : #accessing }
+GtkTreeTableAdapter >> scrollToSelection [
+	"not needed, in gtk it will always scroll to selection"
+]
+
+{ #category : #accessing }
 GtkTreeTableAdapter >> selectItemIn: gtkWidget path: aPath [
 
 	(aPath isNil or: [ aPath isEmpty ]) ifTrue: [ 
