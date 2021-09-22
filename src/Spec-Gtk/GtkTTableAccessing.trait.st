@@ -9,6 +9,7 @@ GtkTTableAccessing >> addColumn: aTableColumn to: aGtkTreeView [
 	
 	addColumnVisitor := GtkTableColumnBuilder new
 		model: self presenter;
+		resizable: self presenter isResizable;
 		columns: self presenter columns;
 		view: aGtkTreeView;
 		yourself.
@@ -37,7 +38,7 @@ GtkTTableAccessing >> newTreeStoreFrom: items [
 	store beList.
 	GtkTableDataStoreColumnCollector new
 		store: store;
-		visitAll: self model columns.
+		visitAll: self tableColumns.
 
 	store roots: items.
 
@@ -49,4 +50,10 @@ GtkTTableAccessing >> newTreeStoreFrom: items [
 			acceptDrop: self presenter acceptDrop ].	
 
 	^ store
+]
+
+{ #category : #factory }
+GtkTTableAccessing >> tableColumns [
+	
+	^ self model columns
 ]
