@@ -14,6 +14,15 @@ GtkTextAdapter >> accept [
 ]
 
 { #category : #building }
+GtkTextAdapter >> addEditionContextMenuTo: menuPresenter [
+	
+
+	self presenter hasEditionContextMenu ifFalse: [ ^ self ].
+	
+	menuPresenter addMenuGroup: self presenter editionContextMenu menuGroups last 
+]
+
+{ #category : #building }
 GtkTextAdapter >> addModelTo: gtkTextView [
 
 	super addModelTo: gtkTextView.

@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #building }
+GtkAbstractTextAdapter >> addEditionContextMenuTo: menuPresenter [
+	
+
+	self presenter hasEditionContextMenu ifFalse: [ ^ self ].
+	
+	self presenter editionContextMenu menuGroups 
+		do: [ :each | menuPresenter addMenuGroup: each ]
+]
+
+{ #category : #building }
 GtkAbstractTextAdapter >> addKeyBindingsTo: gtkWidget [
 
 	super addKeyBindingsTo: gtkWidget.
@@ -65,9 +75,8 @@ GtkAbstractTextAdapter >> populatePopup: menuWidget [
 	
 	menuPresenter := self presenter contextMenu value.
 	menuPresenter ifNil: [ ^ self ].
-	self presenter hasEditionContextMenu ifTrue: [ 
-		self presenter editionContextMenu menuGroups do: [ :each |
-			menuPresenter addMenuGroup: each ] ].
+	
+	self addEditionContextMenuTo: menuPresenter.
 	
 	lastShownMenu := menuWidget.
 	newMenu := self buildMenu: menuPresenter.
