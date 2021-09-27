@@ -54,6 +54,11 @@ GtkAbstractTextAdapter >> buildMenu: menuPresenterOrBlock [
 	^ super buildMenu: menuPresenterOrBlock value
 ]
 
+{ #category : #'undo-redo' }
+GtkAbstractTextAdapter >> clearUndoManager [
+	"do nothing, it does not has sense in gtk"
+]
+
 { #category : #'spec protocol' }
 GtkAbstractTextAdapter >> cursorPositionIndex [
 
