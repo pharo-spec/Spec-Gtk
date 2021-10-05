@@ -7,7 +7,7 @@ Class {
 		'doItContext',
 		'doItRequestor'
 	],
-	#category : #'Spec-Gtk-Code'
+	#category : #'Spec-Gtk-Code-Base'
 }
 
 { #category : #accessing }

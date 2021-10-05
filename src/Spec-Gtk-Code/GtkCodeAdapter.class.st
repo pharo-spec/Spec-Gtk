@@ -6,7 +6,7 @@ Class {
 		'lastPopover',
 		'userAction'
 	],
-	#category : #'Spec-Gtk-Code'
+	#category : #'Spec-Gtk-Code-Base'
 }
 
 { #category : #building }
@@ -111,13 +111,13 @@ GtkCodeAdapter >> applyStyleTo: textBuffer [
 				toBuffer: textBuffer ]
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> behavior [
 
 	^ self presenter behavior
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> bindingOf: aString [
 
 	^ self presenter bindingOf: aString
@@ -140,25 +140,25 @@ GtkCodeAdapter >> classOrMetaClass: aClass [
 	self updateCompletionProvider
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> doItContext [ 
 
 	^ self presenter doItContext
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> doItReceiver [
 
 	^ self presenter doItReceiver
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> hasBindingOf: aString [
 
 	^ self presenter hasBindingOf: aString
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> hasBindingThatBeginsWith: aString [
 
 	^ self presenter hasBindingThatBeginsWith: aString
@@ -201,7 +201,7 @@ GtkCodeAdapter >> interactionModel: anInteractionModel [
 	self classOrMetaClass: anInteractionModel behavior
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> isForScripting [
 
 	^ self presenter isForScripting
@@ -242,7 +242,7 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 	textBuffer connectChanged: [ 
 		self applyFullStyleTo: textBuffer ].
 
-	^  textBuffer
+	^ textBuffer
 ]
 
 { #category : #'private factory' }
@@ -290,7 +290,7 @@ GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	self flag: #TODO.
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> selectedClassOrMetaClass [
 
 	^ self presenter selectedClassOrMetaClass
