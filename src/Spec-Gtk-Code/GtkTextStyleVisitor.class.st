@@ -10,7 +10,7 @@ Class {
 		'contextClass',
 		'tags'
 	],
-	#category : #'Spec-Gtk-Code'
+	#category : #'Spec-Gtk-Code-Base'
 }
 
 { #category : #private }
