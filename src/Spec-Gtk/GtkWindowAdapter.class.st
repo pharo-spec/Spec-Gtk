@@ -77,7 +77,7 @@ GtkWindowAdapter >> announceClosed [
 { #category : #private }
 GtkWindowAdapter >> announceOpened [
 
-	self model windowIsOpening
+	self model windowIsOpened
 ]
 
 { #category : #private }
