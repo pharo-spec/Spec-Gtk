@@ -25,6 +25,26 @@ GtkToggleButtonAdapter >> setIconTo: gtkToggleButton [
 		image: self presenter icon asGtkImage
 ]
 
+{ #category : #updating }
+GtkToggleButtonAdapter >> updatePresenterState [
+
+	self widgetDo: [ :w |
+		self state ifTrue: [ 
+			self presenter associatedToggleButtons 
+				do: [ :each | each state: false ] ]. 
+		super updatePresenterState ]
+]
+
+{ #category : #updating }
+GtkToggleButtonAdapter >> updateState [
+
+	self widgetDo: [ :w |
+		self state ifTrue: [ 
+			self presenter associatedToggleButtons 
+				do: [ :each | each state: false ] ]. 
+		super updateState ]
+]
+
 { #category : #factory }
 GtkToggleButtonAdapter >> widgetClass [
 
