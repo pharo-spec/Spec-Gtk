@@ -36,15 +36,15 @@ GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 
 	childWidget := aPresenter buildWithSpec: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
-	gtkWidget children 
-		ifNotEmpty: [ 
-			gtkWidget 
-				pack2: childWidget 
-				resize: constraints canResize 
-				shrink: constraints canShrink ]
-		ifEmpty: [
+	((layout children indexOf: aPresenter) = 1)
+		ifTrue: [ 
 			gtkWidget 
 				pack1: childWidget 
+				resize: constraints canResize 
+				shrink: constraints canShrink ]
+		ifFalse: [
+			gtkWidget 
+				pack2: childWidget 
 				resize: constraints canResize 
 				shrink: constraints canShrink ].
 			
