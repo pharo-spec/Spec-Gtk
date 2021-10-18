@@ -132,6 +132,18 @@ GtkLayoutAdapter >> ensureRetained: aWidget [
 	aWidget markForAutoRelease
 ]
 
+{ #category : #testing }
+GtkLayoutAdapter >> isSpLayout [
+
+	^ true
+]
+
+{ #category : #accessing }
+GtkLayoutAdapter >> layout [
+
+	^ layout
+]
+
 { #category : #protocol }
 GtkLayoutAdapter >> layout: aLayout [
 
