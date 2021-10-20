@@ -32,11 +32,27 @@ GtkPanedAdapter >> applyLayout: aLayout [
 
 { #category : #private }
 GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
-	| childWidget |
+	| childWidget position |
 
 	childWidget := aPresenter buildWithSpec: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
-	((layout children indexOf: aPresenter) = 1)
+	
+	position := layout children indexOf: (aPresenter isSpLayout
+		ifTrue: [ aPresenter layout ]
+		ifFalse: [ aPresenter ]).
+	position = 0 ifTrue: [ 
+		"Not found, check for symbols. If is symbol, I need to get the presenter"
+		layout children withIndexDo: [ :each :index | 
+			(each isSymbol and: [ (layout presenter presenterAt: each) = aPresenter ]) 
+				ifTrue: [ position := index ] ].
+		"If I still do not find it, I may be adding dynamically. Check if there is room and add it"
+		position = 0 ifTrue: [ 
+			layout children size < 2 ifTrue: [
+				position := layout children size + 1 ].
+			position = 0 ifTrue: [  
+				self error: 'Can''t find a child.' ] ] ]. 
+	
+	(position = 1)
 		ifTrue: [ 
 			gtkWidget 
 				pack1: childWidget 
