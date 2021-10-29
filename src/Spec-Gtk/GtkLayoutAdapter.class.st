@@ -199,10 +199,10 @@ GtkLayoutAdapter >> removeSubWidgets [
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 	
 	GRunLoop defer: [ 
-		self model adapter: (aLayout
-			buildAdapterFor: self model
-			bindings: self model application adapterBindings).
-		self model owner adapter rebuild ]
+		self presenter adapter: (aLayout
+			buildAdapterFor: self presenter
+			bindings: self presenter application adapterBindings).
+		self presenter owner adapter rebuild ]
 ]
 
 { #category : #protocol }
