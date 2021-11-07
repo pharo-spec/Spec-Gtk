@@ -62,7 +62,7 @@ GtkNotebookAdapter >> appendPage: aPage to: gtkWidget [
 GtkNotebookAdapter >> buildLabelForTab: aPage [
 	| labelPresenter |
 
-	labelPresenter := aPage newLabelPresenterFor: self presenter.
+	labelPresenter := aPage labelPresenterFor: self presenter.
 	^ SpBindings 
 	 	value: self presenter application adapterBindings
 		during: [ labelPresenter buildWithSpec ]
