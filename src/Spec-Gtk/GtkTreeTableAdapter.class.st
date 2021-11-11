@@ -53,6 +53,7 @@ GtkTreeTableAdapter >> addModelTo: gtkTreeView [
 	
 	self recreateStore: gtkTreeView generateColumns: true.
 	self configureInitialState: gtkTreeView.
+	self configureDragAndDrop: gtkTreeView.
 	self connectToGtkSignals: gtkTreeView.
 	self connectToSpecEvents: gtkTreeView
 ]
@@ -94,6 +95,18 @@ GtkTreeTableAdapter >> columnCount [
 GtkTreeTableAdapter >> columns [
 
 	^ self presenter columns ifEmpty: [ { self defaultColumn } ]
+]
+
+{ #category : #building }
+GtkTreeTableAdapter >> configureDragAndDrop: gtkTreeView [
+	"Configure drag&drop. This is related to GtkTreeDataStore too, if you want to understand how 
+	 it works you need to check for GtkTreeDataStore creation/configuration too (e.g. #newTreeStore)"
+	
+	self presenter dragEnabled 
+		ifTrue: [ gtkTreeView enableModelDragSourceDefault ].
+	self presenter dropEnabled
+		ifTrue: [ gtkTreeView enableModelDragDestDefault ].
+
 ]
 
 { #category : #building }
@@ -209,11 +222,8 @@ GtkTreeTableAdapter >> isNonEditableRow: aRow column: aColumn [
 
 { #category : #accessing }
 GtkTreeTableAdapter >> itemAtPath: anArray [
-
-	self innerWidgetDo: [ :w | 
-		^ w model itemAtPath: anArray ].
-
-	^ nil	
+ 	
+	^ self innerWidgetDo: [ :w | w model itemAtPath: anArray ]
 ]
 
 { #category : #private }
@@ -242,6 +252,13 @@ GtkTreeTableAdapter >> newTreeStoreFrom: items [
 
 	store roots: items.
 	store children: self presenter children.
+	
+	"configure drag&drop"
+	store dragEnabled: self presenter dragEnabled.
+	self presenter dropEnabled ifTrue: [ 
+		store 
+			dropEnabled: true;
+			acceptDrop: self presenter acceptDrop ].	
 
 	^ store
 ]
@@ -258,6 +275,7 @@ GtkTreeTableAdapter >> recreateStore: gtkTreeView	generateColumns: doesGenerateC
 { #category : #updating }
 GtkTreeTableAdapter >> refreshList [
 
+	self halt.
 	self innerWidgetDo: [ :w | 
 		w model: (self newStoreFrom: self presenter items) ]
 ]
@@ -266,6 +284,11 @@ GtkTreeTableAdapter >> refreshList [
 GtkTreeTableAdapter >> rowsSelected: pathColl [
 
 	self model selection selectPaths: pathColl
+]
+
+{ #category : #accessing }
+GtkTreeTableAdapter >> scrollToSelection [
+	"not needed, in gtk it will always scroll to selection"
 ]
 
 { #category : #accessing }
@@ -412,7 +435,7 @@ GtkTreeTableAdapter >> updateSelection [
 { #category : #updating }
 GtkTreeTableAdapter >> updateSelectionOf: gtkWidget [
 
-	GtkRunLoop defer: [ 
+	GRunLoop defer: [ 
 		self presenter selection selectedPaths 
 			do: [ :selectedPath | self selectItemIn: gtkWidget path: selectedPath ] ]
 ]

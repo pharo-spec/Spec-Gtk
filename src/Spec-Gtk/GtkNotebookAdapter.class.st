@@ -21,7 +21,7 @@ GtkNotebookAdapter >> addModelTo: gtkWidget [
 
 	gtkWidget beScrollable.
 
-	self model pages do: [ :each | self appendPage: each to: gtkWidget ].
+	self presenter pages do: [ :each | self appendPage: each to: gtkWidget ].
 
 	"I add contents to fist page because this will shown anyway (and like this I allow
 	 the layout to act correctly)"
@@ -29,8 +29,11 @@ GtkNotebookAdapter >> addModelTo: gtkWidget [
 		ifNotEmpty: [ 
 			self presenter selectedPage
 				ifNil: [ self presenter selectPageIndex: 1 ].
-			self addContentPage: (gtkWidget pageWithData: self model selectedPage) ].
+			self addContentPage: (gtkWidget pageWithData: self presenter selectedPage) ].
 	self presenter whenSelectedPageChangedDo: [ :page | self selectPage: page ].
+
+	self presenter selectedPage 
+		ifNotNil: [ :aPage | self selectPage: aPage on: gtkWidget ].
 
 	"get when page changed"
 	gtkWidget connectSwitchPage: [ :aPage | 
@@ -42,34 +45,27 @@ GtkNotebookAdapter >> addModelTo: gtkWidget [
 ]
 
 { #category : #building }
-GtkNotebookAdapter >> appendPage: each to: gtkWidget [
+GtkNotebookAdapter >> appendPage: aPage to: gtkWidget [
 	| page |
 
 	page := gtkWidget
-		newPageLabel: (self buildLabelForTab: each)
+		newPageLabel: (self buildLabelForTab: aPage)
 		content: (GtkBox newVertical
 			show;
 			yourself).
-	page data: each.
+	page data: aPage.
 
 	^ gtkWidget append: page
 ]
 
 { #category : #building }
 GtkNotebookAdapter >> buildLabelForTab: aPage [
-	| label |
+	| labelPresenter |
 
-	label := GtkLabel newLabel: aPage title asString.
-	aPage icon ifNotNil: [ :icon |
-		label := GtkBox newHorizontal
-			packStart: icon asGtkImage
-				expand: false 
-				fill: false 
-				padding: 0;
-			packStart: label;
-			showAll ].
-
-	^ label
+	labelPresenter := aPage newLabelPresenterFor: self presenter.
+	^ SpBindings 
+	 	value: self presenter application adapterBindings
+		during: [ labelPresenter buildWithSpec ]
 ]
 
 { #category : #building }
@@ -106,7 +102,14 @@ GtkNotebookAdapter >> removePageContent: gtkPage [
 GtkNotebookAdapter >> selectPage: aPage [ 
 	
 	self widgetDo: [ :w |
-		(w pageWithData: aPage) select ]
+		self selectPage: aPage on: w ]
+]
+
+{ #category : #private }
+GtkNotebookAdapter >> selectPage: aPage on: aWidget [
+	
+	aPage ifNil: [ ^ self ].
+	(aWidget pageWithData: aPage) select
 ]
 
 { #category : #updating }
@@ -146,7 +149,7 @@ GtkNotebookAdapter >> updatePageTitle: aPage [
 
 { #category : #building }
 GtkNotebookAdapter >> updatePagesWith: aCollection [
-	
+
 	self widgetDo: [ :w | | pagesToRemove |
 		pagesToRemove := w children 
 			reject: [ :eachPage | aCollection includes: eachPage data ].

@@ -1,6 +1,6 @@
 Trait {
 	#name : #GtkTTableAccessing,
-	#category : #'Spec-Gtk'
+	#category : #'Spec-Gtk-Adapter-Table'
 }
 
 { #category : #building }
@@ -9,6 +9,7 @@ GtkTTableAccessing >> addColumn: aTableColumn to: aGtkTreeView [
 	
 	addColumnVisitor := GtkTableColumnBuilder new
 		model: self presenter;
+		resizable: self presenter isResizable;
 		columns: self presenter columns;
 		view: aGtkTreeView;
 		yourself.
@@ -37,9 +38,22 @@ GtkTTableAccessing >> newTreeStoreFrom: items [
 	store beList.
 	GtkTableDataStoreColumnCollector new
 		store: store;
-		visitAll: self model columns.
+		visitAll: self tableColumns.
 
 	store roots: items.
 
+	"configure drag&drop"
+	store dragEnabled: self presenter dragEnabled.
+	self presenter dropEnabled ifTrue: [ 
+		store 
+			dropEnabled: true;
+			acceptDrop: self presenter acceptDrop ].	
+
 	^ store
+]
+
+{ #category : #factory }
+GtkTTableAccessing >> tableColumns [
+	
+	^ self model columns
 ]

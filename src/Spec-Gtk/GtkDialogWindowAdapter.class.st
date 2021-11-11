@@ -82,6 +82,6 @@ GtkDialogWindowAdapter >> open [
 		w showAll.
 		self presenter presenter takeKeyboardFocus.
 		"To be executed in the event loop of the dialog"
-		GtkRunLoop forceDefer: [ self announceOpened ].
+		GRunLoop forceDefer: [ self announceOpened ].
 		w run ]
 ]

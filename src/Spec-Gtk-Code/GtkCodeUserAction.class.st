@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'registerChange'
 	],
-	#category : #'Spec-Gtk-Code'
+	#category : #'Spec-Gtk-Code-Base'
 }
 
 { #category : #testing }

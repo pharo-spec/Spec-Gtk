@@ -78,8 +78,14 @@ GtkComponentListAdapter >> doTakeKeyboardFocus: gtkListBox [
 
 { #category : #accessing }
 GtkComponentListAdapter >> elementAt: index [
-self flag: #TODO. "I need to fix this tomorrow"
-	^ self presenter items at: index
+	| item |
+
+	item := self innerWidgetDo: [ :w | 
+		(w children 
+			at: index 
+			ifAbsent: [ nil ])
+			ifNotNil: [ :aRow | aRow data ] ].
+	^ item ifNil: [ self presenter items at: index ]
 ]
 
 { #category : #'private accessing' }
@@ -179,6 +185,7 @@ GtkComponentListAdapter >> update: gtkWidget with: aCollection [
 		weird status (also, it may prevent old adaptors to be collected, creating 
 		a leak)."
 		gtkWidget add: (presenter buildWithSpec asListBoxRow
+			data: presenter;
 			activatable: presenter isActivatable;
 			selectable: presenter isSelectable;
 			yourself) ].
@@ -202,6 +209,7 @@ GtkComponentListAdapter >> update: gtkWidget with: aCollection [
 			childWidget := aPresenter buildWithSpec ].
 		
 		childWidget asListBoxRow
+			data: aPresenter;
 			activatable: aPresenter isActivatable;
 			selectable: aPresenter isSelectable;
 			yourself ].

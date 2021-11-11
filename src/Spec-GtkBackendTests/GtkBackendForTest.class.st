@@ -101,7 +101,7 @@ GtkBackendForTest >> openInstanceOf: aTest [
 { #category : #running }
 GtkBackendForTest >> runTest: aBlockClosure [ 
 		
-	GtkApplication ensureRunning. 
+	GtkEngine ensureRunning. 
 	app := SpApplication new.
 	app useBackend: #Gtk.
 	aBlockClosure value

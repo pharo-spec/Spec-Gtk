@@ -29,7 +29,7 @@ GtkAdapterTestCase >> initializeTestedInstance [
 { #category : #running }
 GtkAdapterTestCase >> runCaseManaged [
 	
-	GtkApplication ensureRunning. 
+	GtkEngine ensureRunning. 
 	app := SpApplication new.
 	app useBackend: #Gtk.
 	

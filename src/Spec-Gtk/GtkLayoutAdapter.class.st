@@ -140,10 +140,22 @@ GtkLayoutAdapter >> ensureRetained: aWidget [
 	aWidget markForAutoRelease
 ]
 
+{ #category : #testing }
+GtkLayoutAdapter >> isSpLayout [
+
+	^ true
+]
+
+{ #category : #accessing }
+GtkLayoutAdapter >> layout [
+
+	^ layout
+]
+
 { #category : #protocol }
 GtkLayoutAdapter >> layout: aLayout [
 
-	GtkRunLoop defer: [
+	GRunLoop defer: [
 		self deferredLayout: aLayout ]
 ]
 
@@ -193,7 +205,7 @@ GtkLayoutAdapter >> removeSubWidgets [
 
 { #category : #accessing }
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
-	
+
 	GtkRunLoop defer: [ 
 		| oldAdapter |
 		oldAdapter := self model adapter.

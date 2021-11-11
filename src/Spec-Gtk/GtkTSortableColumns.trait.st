@@ -32,6 +32,7 @@ GtkTSortableColumns >> makeSortableColumn: gtkColumn model: aTableColumn [
 	id := self columns indexOf: aTableColumn.
 	gtkColumn
 		beClickable;
+		disconnect: GClickedCallback signalName;
 		connectClicked: [ self toggleSort: gtkColumn model: aTableColumn ]
 ]
 

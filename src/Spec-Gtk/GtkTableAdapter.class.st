@@ -57,11 +57,14 @@ GtkTableAdapter >> addModelTo: gtkTreeView [
 { #category : #private }
 GtkTableAdapter >> appendAddedColumns [
 	| columns |
-	
+
 	self innerWidgetDo: [ :w |
 		columns := self presenter columns.  
 		(columns last: (columns size - w columns size)) 
 			do: [ :aTableColumn | 
+				GtkTableDataStoreColumnCollector new
+					store: w model;
+					visit: aTableColumn.
 				self addColumn: aTableColumn to: w.
 				GtkTableDataStoreColumnCollector new 
 					store: w model;

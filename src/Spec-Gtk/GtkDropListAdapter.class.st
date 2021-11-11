@@ -26,7 +26,7 @@ GtkDropListAdapter >> addModelTo: gtkComboBox [
 GtkDropListAdapter >> disconnectSelectionEventsOf: aWidget during: aBlock [
 
 	aWidget 
-		blockCallback: 'changed'
+		blockCallback: GChangedCallback signalName
 		during: aBlock
 ]
 

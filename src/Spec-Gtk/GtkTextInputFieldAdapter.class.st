@@ -43,8 +43,7 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 { #category : #'spec protocol' }
 GtkTextInputFieldAdapter >> cursorPositionIndex: index [
 	
-	^ self innerWidgetDo: [ :w |
-		w cursorPosition: index ]
+	^ self innerWidgetDo: [ :w | w cursorPosition: index ]
 ]
 
 { #category : #private }
