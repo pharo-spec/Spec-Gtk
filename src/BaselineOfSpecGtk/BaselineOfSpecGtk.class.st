@@ -47,7 +47,7 @@ BaselineOfSpecGtk >> gtk: spec [
 
 	spec baseline: 'GtkCore' with: [ 
 		spec 
-			repository: 'github://pavel-krivanek/gtk-bindings:production';
+			repository: 'github://pavel-krivanek/gtk-bindings:production10';
 			className: 'BaselineOfGtk';			
 			loads: 'Core' ]
 ]
@@ -57,7 +57,7 @@ BaselineOfSpecGtk >> gtkCode: spec [
 
 	spec baseline: 'GtkCode' with: [ 
 		spec 
-			repository: 'github://pavel-krivanek/gtk-bindings:production';
+			repository: 'github://pavel-krivanek/gtk-bindings:production10';
 			className: 'BaselineOfGtk';
 			loads: 'Code' ]
 ]
@@ -67,7 +67,7 @@ BaselineOfSpecGtk >> gtkMorphic: spec [
 
 	spec baseline: 'GtkMorphic' with: [ 
 		spec 
-			repository: 'github://pavel-krivanek/gtk-bindings:production';
+			repository: 'github://pavel-krivanek/gtk-bindings:production10';
 			className: 'BaselineOfGtk';
 			loads: 'Morphic' ]
 ]
