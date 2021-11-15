@@ -56,7 +56,7 @@ GtkWindowAdapter >> addModelTo: gtkWindow [
 GtkWindowAdapter >> addPresenterIn: gtkWindow withSpecLayout: aSpec [
 	
 	initialized := false.
-	GtkRunLoop defer: [ 
+	GRunLoop defer: [ 
 		self deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec.
 		initialized := true.
 		self processDeferredActions ]
@@ -77,7 +77,7 @@ GtkWindowAdapter >> announceClosed [
 { #category : #private }
 GtkWindowAdapter >> announceOpened [
 
-	self model windowIsOpening
+	self model windowIsOpened
 ]
 
 { #category : #private }

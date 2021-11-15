@@ -25,6 +25,7 @@ BaselineOfSpecGtk >> baseline: spec [
 				package: 'Spec-Gtk' with: [ spec requires: #('GtkCore' 'Spec-Gtk-Keybindings') ];
 				"spec-code"
 				package: 'Spec-Gtk-Code' with: [ spec requires: #('SpecCode' 'GtkCode') ];
+				package: 'Spec-Gtk-Code-Diff' with: [ spec requires: #('SpecCode' 'GtkCode') ];
 				package: 'Spec-Gtk-Pillar' with: [ spec requires: #('GtkCore') ];
 				"morphic"
 				package: 'Spec-Gtk-Morphic-Adapter' with: [ spec requires: #('GtkMorphic' 'Spec-Gtk') ];
@@ -32,7 +33,7 @@ BaselineOfSpecGtk >> baseline: spec [
 				package: 'Spec-GtkBackendTests' with: [ spec requires: ('Spec-Gtk') ] ].
 		
 		spec group: 'Core' with: #('GtkCore' 'SpecCore' 'Spec-Gtk' 'Spec-Gtk-Frame' 'Spec-Gtk-Keybindings').
-		spec group: 'Code' with: #('GtkCode' 'Spec-Gtk-Code').	
+		spec group: 'Code' with: #('GtkCode' 'Spec-Gtk-Code' 'Spec-Gtk-Code-Diff').	
 		spec group: 'Morphic' with: #('GtkMorphic' 'Spec-Gtk-Morphic-Adapter').
 		spec group: 'Tests' with: #('Spec-GtkBackendTests').
 		
@@ -76,7 +77,7 @@ BaselineOfSpecGtk >> spec: spec [
 
 	spec baseline: 'SpecCore' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec:Pharo9.0';
+			repository: 'github://pharo-spec/Spec:Pharo10';
 			loads: 'Core' ]
 ]
 
@@ -85,7 +86,7 @@ BaselineOfSpecGtk >> specCode: spec [
 
 	spec baseline: 'SpecCode' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec:Pharo9.0';
+			repository: 'github://pharo-spec/Spec:Pharo10';
 			className: 'BaselineOfSpecCore';
 			loads: 'Code' ]
 ]
@@ -95,6 +96,6 @@ BaselineOfSpecGtk >> specMorphic: spec [
 
 	spec baseline: 'SpecMorphic' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec:Pharo9.0';
+			repository: 'github://pharo-spec/Spec:Pharo10';
 			className: 'BaselineOfSpec2' ]
 ]

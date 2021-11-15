@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #building }
+GtkAbstractTextAdapter >> addEditionContextMenuTo: menuPresenter [
+	
+
+	self presenter hasEditionContextMenu ifFalse: [ ^ self ].
+	
+	self presenter editionContextMenu menuGroups 
+		do: [ :each | menuPresenter addMenuGroup: each ]
+]
+
+{ #category : #building }
 GtkAbstractTextAdapter >> addKeyBindingsTo: gtkWidget [
 
 	super addKeyBindingsTo: gtkWidget.
@@ -24,7 +34,8 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 	super addModelTo: gtkWidget.
 	self addTextTo: gtkWidget. 
 	self presenter whenTextChangedDo: [ :text | 
-		self setText: text to: gtkWidget ].
+		self innerWidgetDo: [ :w | 
+			self setText: text to: w ] ].
 	gtkWidget connectPopulatePopup: [ :menuWidget |
 		self populatePopup: menuWidget  ]
 ]
@@ -41,6 +52,11 @@ GtkAbstractTextAdapter >> addTextTo: gtkWidget [
 GtkAbstractTextAdapter >> buildMenu: menuPresenterOrBlock [
 
 	^ super buildMenu: menuPresenterOrBlock value
+]
+
+{ #category : #'undo-redo' }
+GtkAbstractTextAdapter >> clearUndoManager [
+	"do nothing, it does not has sense in gtk"
 ]
 
 { #category : #'spec protocol' }
@@ -64,9 +80,8 @@ GtkAbstractTextAdapter >> populatePopup: menuWidget [
 	
 	menuPresenter := self presenter contextMenu value.
 	menuPresenter ifNil: [ ^ self ].
-	self presenter hasEditionContextMenu ifTrue: [ 
-		self presenter editionContextMenu menuGroups do: [ :each |
-			menuPresenter addMenuGroup: each ] ].
+	
+	self addEditionContextMenuTo: menuPresenter.
 	
 	lastShownMenu := menuWidget.
 	newMenu := self buildMenu: menuPresenter.
@@ -90,21 +105,19 @@ GtkAbstractTextAdapter >> selectAll [
 { #category : #selection }
 GtkAbstractTextAdapter >> selectLine [
 
-	self innerWidgetDo: [ :w | 
-		w textBuffer selectLineAtCursor ]
+	self innerWidgetDo: [ :w | w textBuffer selectLineAtCursor ].
 ]
 
 { #category : #selection }
 GtkAbstractTextAdapter >> selection [ 
+	| selection |
 
-	^ self innerWidget 
-		ifNotNil: [ :w | 
-			| selection |
-			selection := w textBuffer selection.
-			selection ifNotNil: [ 
-				selection first + 1 to: selection last ] ]	
-		ifNil: [ 
-			1 to: 0 ]
+	self innerWidgetDo: [ :w | 
+		selection := w textBuffer selection. 
+		selection ifNotNil: [ 
+			selection := selection first + 1 to: selection last ] ].
+	
+	^ selection ifNil: [ 1 to: 0 ]
 ]
 
 { #category : #emulating }

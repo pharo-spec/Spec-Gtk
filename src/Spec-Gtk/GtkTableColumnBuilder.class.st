@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'model',
 		'view',
-		'sortColumnId'
+		'sortColumnId',
+		'resizable'
 	],
 	#category : #'Spec-Gtk-Adapter-Table'
 }
@@ -38,6 +39,12 @@ GtkTableColumnBuilder >> columnIndexOf: aTableColumn [
 	^ (self store indexOf: aTableColumn) - 1
 ]
 
+{ #category : #testing }
+GtkTableColumnBuilder >> isResizable [
+
+	^ resizable ifNil: [ self model isResizable ]
+]
+
 { #category : #accessing }
 GtkTableColumnBuilder >> model [
 
@@ -57,7 +64,7 @@ GtkTableColumnBuilder >> newColumnFor: aTableColumn [
 	column title: aTableColumn title.
 	aTableColumn width 
 		ifNotNil: [ :w | column minWidth: w ].
-	self model isResizable 
+	self isResizable 
 		ifTrue: [ column beResizable ].
 	
 	^ column
@@ -77,6 +84,12 @@ GtkTableColumnBuilder >> newColumnPackerFor: column [
 GtkTableColumnBuilder >> nodeFromPath: path [
 	
 	^ self model itemAt: 	((path substrings: ':') first asNumber + 1)
+]
+
+{ #category : #accessing }
+GtkTableColumnBuilder >> resizable: aBoolean [ 
+
+	resizable := aBoolean
 ]
 
 { #category : #private }

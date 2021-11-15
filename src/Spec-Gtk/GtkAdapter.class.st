@@ -32,7 +32,7 @@ GtkAdapter class >> isAbstract [
 { #category : #initialization }
 GtkAdapter >> adapt: aPresenter [
 
-	^ GtkRunLoop defer: [ super adapt: aPresenter ]
+	^ GRunLoop defer: [ super adapt: aPresenter ]
 ]
 
 { #category : #building }
@@ -145,7 +145,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
 GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget [
 	
 	dispatcher ifNil: [ 
-		GtkRunLoop defer: [
+		GRunLoop defer: [
 			self configureKeyBindings: gtkWidget ] ].
 
 	dispatcher 
@@ -181,6 +181,26 @@ GtkAdapter >> configureKeyBindings: gtkWidget [
 		self handleKeyEvent: event ]
 ]
 
+{ #category : #private }
+GtkAdapter >> deferredUpdateMenuIn: w [
+	| existingCallbacks menu |
+
+	existingCallbacks := Set new.
+	w 
+		withCallbacksOfType: GSecondaryButtonPressEventCallback 
+		do: [ :each | existingCallbacks add: each ].
+		
+	menu := self presenter contextMenu. 
+	menu ifNil: [ 
+		existingCallbacks do: [ :each | each disconnectFrom: w ].
+		^ self ].
+	"if there is already a callback, I do not need to do anything (because it will be 
+	 evaluated each time)"
+	existingCallbacks ifNotEmpty: [ ^ self ].
+	"Now, actually add the menu callback"
+	self addMenu: menu to: w
+]
+
 { #category : #protocol }
 GtkAdapter >> doTakeKeyboardFocus [
 
@@ -214,11 +234,6 @@ GtkAdapter >> enabled: aBoolean [
 GtkAdapter >> getHelpText [
 
 	^ self presenter help ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
-]
-
-{ #category : #'GTInspector-Extensions' }
-GtkAdapter >> gtInspectorPreviewIn: aGLMCompositePresentation [
-	"Do nothing at the moment"
 ]
 
 { #category : #private }
@@ -281,7 +296,7 @@ GtkAdapter >> innerWidget [
 GtkAdapter >> innerWidgetDo: aBlock [
 
 	self hasWidget ifFalse: [ ^ nil ].
-	^ GtkRunLoop defer: [ 
+	^ GRunLoop defer: [ 
 		aBlock value: self innerWidget ]
 ]
 
@@ -517,22 +532,7 @@ GtkAdapter >> updateKeyBindings [
 GtkAdapter >> updateMenu [
 
 	self innerWidgetDo: [ :w |
-		| existingCallbacks menu |
-
-		existingCallbacks := Set new.
-		w 
-			withCallbacksOfType: GSecondaryButtonPressEventCallback 
-			do: [ :each | existingCallbacks add: each ].
-			
-		menu := self presenter contextMenu. 
-		menu ifNil: [ 
-			existingCallbacks do: [ :each | each disconnectFrom: w ].
-			^ self ].
-		"if there is already a callback, I do not need to do anything (because it will be 
-		 evaluated each time)"
-		existingCallbacks ifNotEmpty: [ ^ self ].
-		"Now, actually add the menu callback"
-		self addMenu: menu to: w ]
+		self deferredUpdateMenuIn: w ]
 ]
 
 { #category : #'private updating' }
@@ -554,7 +554,7 @@ GtkAdapter >> widgetClass [
 GtkAdapter >> widgetDo: aBlock [ 
 
 	self hasWidget ifFalse: [ ^ nil ].
-	^ GtkRunLoop defer: [ aBlock value: widget ]
+	^ GRunLoop defer: [ aBlock value: widget ]
 ]
 
 { #category : #building }

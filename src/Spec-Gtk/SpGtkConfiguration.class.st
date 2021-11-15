@@ -29,7 +29,7 @@ SpGtkConfiguration >> addCSSProviderFromString: aString [
 { #category : #configuring }
 SpGtkConfiguration >> configure: anApplication [
 
-	GtkRunLoop defer: [
+	GRunLoop defer: [
 		self configureGeneral: anApplication.
 		super configure: anApplication ]
 ]
@@ -45,7 +45,7 @@ SpGtkConfiguration >> detectDarkTheme [
 
 	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
 	 dark or light theme"
-	backgroundColor := GtkRunLoop defer: [ 
+	backgroundColor := GRunLoop defer: [ 
 		| widget |
 		widget := GtkTextView new. 
 		widget markForAutoRelease. 
