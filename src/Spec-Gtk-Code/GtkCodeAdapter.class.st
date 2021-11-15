@@ -6,7 +6,7 @@ Class {
 		'lastPopover',
 		'userAction'
 	],
-	#category : #'Spec-Gtk-Code'
+	#category : #'Spec-Gtk-Code-Base'
 }
 
 { #category : #building }
@@ -46,15 +46,19 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		indentOnTab: true;
 		tabWidth: 4.
 
-	gtkSourceView textBuffer 
-		infiniteUndoLevels;
-		highlightMatchingBrackets: true.
-		
+	gtkSourceView textBuffer: (self newTextBufferForText: nil).		
+
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
 	
 	self presenter whenLineNumbersChangedDo: [ :hasLineNumbers |
 		gtkSourceView showLineNumbers: hasLineNumbers ]
+]
+
+{ #category : #building }
+GtkCodeAdapter >> addTextBufferTo: gtkTextView [
+
+	"this is solved in #newTextBufferForText:"
 ]
 
 { #category : #'as yet unclassified' }
@@ -72,13 +76,6 @@ GtkCodeAdapter >> addTextTo: gtkTextView [
 	
 	"gtkTextView monospace: true."
 	self addMonospaceStyleFor: gtkTextView.
-	"add style table"
-	self model hasSyntaxHighlight ifTrue: [ 
-		gtkTextView textBuffer: (self bufferClass newTable: self newTagTable).
-		"I need to recalculate style each time I get a change"
-		gtkTextView textBuffer connectChanged: [ 
-			self applyFullStyleTo: gtkTextView textBuffer ] ]	.
-		
 	super addTextTo: gtkTextView
 ]
 
@@ -114,10 +111,16 @@ GtkCodeAdapter >> applyStyleTo: textBuffer [
 				toBuffer: textBuffer ]
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> behavior [
 
 	^ self presenter behavior
+]
+
+{ #category : #'api - shout' }
+GtkCodeAdapter >> bindingOf: aString [
+
+	^ self presenter bindingOf: aString
 ]
 
 { #category : #building }
@@ -134,19 +137,31 @@ GtkCodeAdapter >> classOrMetaClass: aClass [
 
 	self innerWidgetDo: [ :w | 
 		self applyFullStyleTo: w textBuffer ].
-	self updateCompletionProvider	
+	self updateCompletionProvider
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> doItContext [ 
 
 	^ self presenter doItContext
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> doItReceiver [
 
 	^ self presenter doItReceiver
+]
+
+{ #category : #'api - shout' }
+GtkCodeAdapter >> hasBindingOf: aString [
+
+	^ self presenter hasBindingOf: aString
+]
+
+{ #category : #'api - shout' }
+GtkCodeAdapter >> hasBindingThatBeginsWith: aString [
+
+	^ self presenter hasBindingThatBeginsWith: aString
 ]
 
 { #category : #api }
@@ -186,7 +201,7 @@ GtkCodeAdapter >> interactionModel: anInteractionModel [
 	self classOrMetaClass: anInteractionModel behavior
 ]
 
-{ #category : #'api-shout' }
+{ #category : #'api - shout' }
 GtkCodeAdapter >> isForScripting [
 
 	^ self presenter isForScripting
@@ -213,16 +228,72 @@ GtkCodeAdapter >> newTagTable [
 		yourself
 ]
 
+{ #category : #'private factory' }
+GtkCodeAdapter >> newTextBuffer [
+
+	^ self bufferClass new
+]
+
+{ #category : #'private factory' }
+GtkCodeAdapter >> newTextBufferForHighlight [
+	| textBuffer |
+
+	textBuffer := self bufferClass newTable: self newTagTable.
+	textBuffer connectChanged: [ 
+		self applyFullStyleTo: textBuffer ].
+
+	^ textBuffer
+]
+
+{ #category : #'private factory' }
+GtkCodeAdapter >> newTextBufferForText: aString [
+	| textBuffer |
+
+	"add style table"
+	textBuffer := self model hasSyntaxHighlight 
+		ifTrue: [ self newTextBufferForHighlight ]
+		ifFalse: [ self newTextBuffer ].
+
+	aString ifNotNil: [ 
+		textBuffer text: aString ].
+
+	self presenter hasUndoRedoHistory 
+		ifTrue: [ textBuffer infiniteUndoLevels ]
+ 		ifFalse: [ textBuffer disableUndo ].
+	
+	textBuffer highlightMatchingBrackets: true.
+
+	textBuffer connectChanged: [
+		self backendDetectCyclesDo: [ 
+			self innerWidgetDo: [ :w | self updatePresenterText: w text ] ] ].
+
+	^ textBuffer
+]
+
 { #category : #'interactive error protocol' }
 GtkCodeAdapter >> notify: aString at: aNumber in: anObject [
 	
 	self flag: #TODO. "What to do here?"
 ]
 
+{ #category : #api }
+GtkCodeAdapter >> refreshStyling [
+
+	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
+	self innerWidgetDo: [ :w | 
+		self applyStyleTo: w textBuffer ]
+]
+
 { #category : #'as yet unclassified' }
 GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	
 	self flag: #TODO.
+]
+
+{ #category : #'api - shout' }
+GtkCodeAdapter >> selectedClassOrMetaClass [
+
+	^ self presenter selectedClassOrMetaClass
 ]
 
 { #category : #'private-shout' }
@@ -250,8 +321,9 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 { #category : #building }
 GtkCodeAdapter >> setText: aString to: gtkWidget [
 
-	super setText: aString to: gtkWidget.
-	self userActionDo: [ :action | action registerChange ]
+	self backendDetectCyclesDo: [
+		gtkWidget textBuffer: (self newTextBufferForText: aString).
+		self userActionDo: [ :action | action registerChange ] ]
 ]
 
 { #category : #'private factory' }

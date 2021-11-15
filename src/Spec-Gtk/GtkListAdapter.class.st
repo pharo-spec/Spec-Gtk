@@ -16,6 +16,26 @@ GtkListAdapter class >> adaptingAliases [
 ]
 
 { #category : #building }
+GtkListAdapter >> addColumn: aTableColumn to: aGtkTreeView [ 
+	| addColumnVisitor |
+	
+	addColumnVisitor := GtkTableColumnBuilder new
+		model: self presenter;
+		resizable: false;
+		columns: { aTableColumn };
+		view: aGtkTreeView;
+		yourself.
+		
+	aTableColumn acceptColumnVisitor: addColumnVisitor
+]
+
+{ #category : #building }
+GtkListAdapter >> addColumnsTo: gtkWidget [
+
+	self error: 'Should not arrrive here. A list does not has columns'
+]
+
+{ #category : #building }
 GtkListAdapter >> addModelTo: gtkList [
 
 	super addModelTo: gtkList.
@@ -59,7 +79,40 @@ GtkListAdapter >> isShowColumnHeaders [
 ]
 
 { #category : #private }
-GtkListAdapter >> newTreeStore [
+GtkListAdapter >> listColumn [
+
+	^ listColumn ifNil: [ listColumn := self newListColumn ]
+]
+
+{ #category : #factory }
+GtkListAdapter >> newListColumn [
+	| column |
+		
+	column := SpStringTableColumn
+		title: self presenter headerTitle
+		evaluated: self presenter display.	
+	
+	self presenter displayColor 
+		ifNotNil: [ :aBlock | column displayColor: aBlock ].
+	self presenter displayBold
+		ifNotNil: [ :aBlock | column displayBold: aBlock ].
+	self presenter displayItalic
+		ifNotNil: [ :aBlock | column displayItalic: aBlock ].
+	self presenter displayUnderline
+		ifNotNil: [ :aBlock | column displayUnderline: aBlock ].
+	self presenter displayBackgroundColor 
+		ifNotNil: [ :aBlock | column displayBackgroundColor: aBlock ].
+
+	self presenter displayIcon ifNotNil: [ :aBlock |
+		column := SpCompositeTableColumn 
+			with: (SpImageTableColumn evaluated: aBlock) beNotExpandable
+			with: column ].
+
+	^ column
+]
+
+{ #category : #private }
+GtkListAdapter >> newTreeStoreOld [
 	| store |
 
 	store := GtkTreeDataStore new.
@@ -73,6 +126,13 @@ GtkListAdapter >> newTreeStore [
 		(self presenter displayValueFor: item) asString ]).
 	
 	store roots: self presenter items.
+	
+	"configure drag&drop"
+	store dragEnabled: self presenter dragEnabled.
+	self presenter dropEnabled ifTrue: [ 
+		store 
+			dropEnabled: true;
+			acceptDrop: self presenter acceptDrop ].	
 	
 	^ store
 ]
@@ -94,13 +154,14 @@ GtkListAdapter >> refreshWidgetHeaderTitleTo: gtkTreeView [
 
 { #category : #building }
 GtkListAdapter >> setModelTo: gtkList [
-	| columnIndex |
 
-	columnIndex := 0.
-	gtkList removeAllColumns.
-	self presenter hasIcons ifTrue: [ 
-		gtkList appendPixbufColumn: columnIndex.
-		columnIndex := columnIndex + 1 ].
-	gtkList appendTextColumn: columnIndex.
-	gtkList model: self newTreeStore
+	gtkList model: self newTreeStore.
+	self addColumn: self listColumn to: gtkList.
+	
+]
+
+{ #category : #private }
+GtkListAdapter >> tableColumns [
+
+	^ { self listColumn }
 ]

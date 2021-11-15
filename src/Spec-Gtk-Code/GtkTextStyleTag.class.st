@@ -6,7 +6,7 @@ Class {
 		'start',
 		'stop'
 	],
-	#category : #'Spec-Gtk-Code'
+	#category : #'Spec-Gtk-Code-Base'
 }
 
 { #category : #'instance creation' }

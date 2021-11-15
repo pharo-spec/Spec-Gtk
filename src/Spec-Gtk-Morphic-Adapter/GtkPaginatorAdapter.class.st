@@ -17,7 +17,6 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 		selectPage: self presenter pages size;
 		yourself).
 
-
 	self presenter whenSelectedPageChangedDo: [ :aNumber |
 		self backendDetectCyclesDo: [ 
 			morph selectPage: aNumber ] ].
