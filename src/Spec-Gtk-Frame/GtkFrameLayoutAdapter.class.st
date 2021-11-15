@@ -4,7 +4,7 @@ Gtk adapter for the frame layout
 Class {
 	#name : #GtkFrameLayoutAdapter,
 	#superclass : #GtkLayoutAdapter,
-	#category : #'Spec-Gtk-Frame-Support'
+	#category : #'Spec-Gtk-Frame-Layout'
 }
 
 { #category : #private }

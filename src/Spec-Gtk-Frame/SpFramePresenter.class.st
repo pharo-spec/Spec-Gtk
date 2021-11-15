@@ -10,7 +10,7 @@ Class {
 		'#label => ObservableSlot',
 		'#presenter => ObservableSlot'
 	],
-	#category : #'Spec-Gtk-Frame'
+	#category : #'Spec-Gtk-Frame-Presenter'
 }
 
 { #category : #specs }

@@ -5,9 +5,10 @@ Class {
 	#name : #SpFrameLayout,
 	#superclass : #SpExecutableLayout,
 	#instVars : [
-		'label'
+		'label',
+		'child'
 	],
-	#category : #'Spec-Gtk-Frame-Support'
+	#category : #'Spec-Gtk-Frame-Layout'
 }
 
 { #category : #'instance creation' }
@@ -29,54 +30,9 @@ SpFrameLayout >> adapterName [
 ]
 
 { #category : #adding }
-SpFrameLayout >> add: aName [
+SpFrameLayout >> add: aNameOrPresenter [
 
-	self 
-		add: aName 
-		withConstraints: [ :constraints | ]
-]
-
-{ #category : #adding }
-SpFrameLayout >> add: aName expand: shouldExpand [
-
-	^ self 
-		add: aName 
-		withConstraints: [ :constraints | 
-			constraints expand: shouldExpand ]
-]
-
-{ #category : #adding }
-SpFrameLayout >> add: aName expand: shouldExpand fill: shouldFill padding: aNumber [
-"
-aName 		- the presenter to be added to box
-expand 	- true if the new child is to be given extra space allocated to box . 
-			  The extra space will be divided evenly between all children that use this option
-fill 		- true if space given to child by the expand option is actually allocated to child , 
-			  rather than just padding it. This parameter has no effect if expand is set to false. 
-padding 	- extra space in pixels to put between this child and its neighbors, over and above 
-			  the global amount specified by “spacing” property. If child is a widget at one of 
-			  the reference ends of box , then padding pixels are also put between child and the
-			  reference edge of box"
-
-	self 
-		add: aName 
-		withConstraints: [ :constraints |
-			constraints 
-				expand: shouldExpand;
-				fill: shouldFill; 
-				padding: aNumber ]
-]
-
-{ #category : #adding }
-SpFrameLayout >> add: aPresenter height: anInteger [ 
-	self add: aPresenter withConstraints: [:constraints | constraints height: anInteger ].
-]
-
-{ #category : #adding }
-SpFrameLayout >> add: aPresenter width: anInteger [
-	self
-		add: aPresenter
-		withConstraints: [ :constraints | constraints width: anInteger ].
+	self child: aNameOrPresenter
 ]
 
 { #category : #adding }
@@ -87,42 +43,13 @@ SpFrameLayout >> add: aPresenter withConstraints: aBlock [
 ]
 
 { #category : #adding }
-SpFrameLayout >> addLast: aName [
+SpFrameLayout >> child: aNameOrPresenter [
 
+	child ifNotNil: [ self remove: child ].
+	child := aNameOrPresenter.
 	self 
-		addLast: aName 
-		withConstraints: [ :constraints | ]
-]
-
-{ #category : #adding }
-SpFrameLayout >> addLast: aName expand: shouldExpand [
-
-	self 
-		addLast: aName 
-		withConstraints: [ :constraints | 
-			constraints expand: shouldExpand ]
-]
-
-{ #category : #adding }
-SpFrameLayout >> addLast: aName expand: shouldExpand fill: shouldFill padding: aNumber [
-
-	self 
-		addLast: aName 
-		withConstraints: [ :constraints |
-			constraints 
-				expand: shouldExpand;
-				fill: shouldFill; 
-				padding: aNumber ]
-]
-
-{ #category : #adding }
-SpFrameLayout >> addLast: aName withConstraints: aBlock [
-
-	self 
-		add: aName 
-		withConstraints: [ :constraints |
-			constraints bePlacedAtEnd.
-			aBlock value: constraints ]
+		add: aNameOrPresenter 
+		withConstraints: [ :constraints | ].
 ]
 
 { #category : #private }
@@ -144,8 +71,9 @@ SpFrameLayout >> label [
 ]
 
 { #category : #accessing }
-SpFrameLayout >> label: anObject [
-	label := anObject
+SpFrameLayout >> label: aString [
+
+	label := aString
 ]
 
 { #category : #removing }
