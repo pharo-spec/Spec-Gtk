@@ -1,6 +1,11 @@
 Class {
 	#name : #GtkListAdapter,
 	#superclass : #GtkBaseListAdapter,
+	#traits : 'GtkTTableAccessing - {#addColumns:to:}',
+	#classTraits : 'GtkTTableAccessing classTrait',
+	#instVars : [
+		'listColumn'
+	],
 	#category : #'Spec-Gtk-Adapter-List'
 }
 
