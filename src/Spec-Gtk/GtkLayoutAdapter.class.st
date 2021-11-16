@@ -206,7 +206,7 @@ GtkLayoutAdapter >> removeSubWidgets [
 { #category : #accessing }
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 
-	GtkRunLoop defer: [ 
+	GRunLoop defer: [ 
 		| oldAdapter |
 		oldAdapter := self presenter adapter.
 		self presenter adapter: (aLayout
