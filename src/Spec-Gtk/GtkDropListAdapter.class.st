@@ -121,6 +121,17 @@ GtkDropListAdapter >> takeKeyboardFocus [
 ]
 
 { #category : #building }
+GtkDropListAdapter >> unsubscribe [ 
+
+	self presenter selection unsubscribeOuterContextReceiver: self.
+	
+	"unsubscribe subscription made in SpCollectionListModel>>#whenChangedDo:"
+	self presenter model announcer unsubscribe: self presenter model.
+	
+	super unsubscribe.
+]
+
+{ #category : #building }
 GtkDropListAdapter >> widgetClass [
 	
 	^ GtkComboBox

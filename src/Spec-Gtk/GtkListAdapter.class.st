@@ -165,3 +165,13 @@ GtkListAdapter >> tableColumns [
 
 	^ { self listColumn }
 ]
+
+{ #category : #releasing }
+GtkListAdapter >> unsubscribe [ 
+
+	self widgetDo: [:w | w children first disconnect: #destroy ].
+	 
+	self presenter selection unsubscribeOuterContextReceiver: self.
+
+	super unsubscribe.
+]

@@ -42,3 +42,9 @@ GtkTreeAdapter >> defaultColumn [
 				yourself ]
 		ifNil: [ column ]
 ]
+
+{ #category : #'private accessing' }
+GtkTreeAdapter >> unsubscirbeSelectionMode [
+ 
+	"do nothing here"
+]

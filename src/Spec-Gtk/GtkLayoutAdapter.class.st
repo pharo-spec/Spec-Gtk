@@ -86,6 +86,14 @@ GtkLayoutAdapter >> buildWithSpec: aSpec [
 ]
 
 { #category : #private }
+GtkLayoutAdapter >> cleanupAfterReplacing [ 
+	
+	widget children do: [ :aChild |
+		aChild cleanupAfterReplacing ].
+	widget := nil.
+]
+
+{ #category : #private }
 GtkLayoutAdapter >> connectToEvents: aLayout [
 
 	self presenter whenVisibleChangedDo: [ 	
@@ -197,11 +205,14 @@ GtkLayoutAdapter >> removeSubWidgets [
 
 { #category : #accessing }
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
-	
+
 	GRunLoop defer: [ 
+		| oldAdapter |
+		oldAdapter := self presenter adapter.
 		self presenter adapter: (aLayout
 			buildAdapterFor: self presenter
 			bindings: self presenter application adapterBindings).
+		oldAdapter cleanupAfterReplacing.
 		self presenter owner adapter rebuild ]
 ]
 
@@ -215,6 +226,16 @@ GtkLayoutAdapter >> takeKeyboardFocus [
 	presenters 
 		detect: [ :each | each canTakeKeyboardFocus ]
 		ifFound: [ :aPresenter | aPresenter takeKeyboardFocus ]
+]
+
+{ #category : #releasing }
+GtkLayoutAdapter >> unsubscribe [ 
+	
+	subscribedLayout ifNotNil: [ 
+		subscribedLayout unsubscribe ].
+	
+	"we must not nil the widget for layout adapters. That's why we do not call the superclass implementation"
+	super unsubscribe.
 ]
 
 { #category : #protocol }
