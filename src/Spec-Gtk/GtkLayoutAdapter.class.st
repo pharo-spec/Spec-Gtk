@@ -208,12 +208,12 @@ GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 
 	GtkRunLoop defer: [ 
 		| oldAdapter |
-		oldAdapter := self model adapter.
-		self model adapter: (aLayout
-			buildAdapterFor: self model
-			bindings: self model application adapterBindings).
+		oldAdapter := self presenter adapter.
+		self presenter adapter: (aLayout
+			buildAdapterFor: self presenter
+			bindings: self presenter application adapterBindings).
 		oldAdapter cleanupAfterReplacing.
-		self model owner adapter rebuild ]
+		self presenter owner adapter rebuild ]
 ]
 
 { #category : #protocol }
