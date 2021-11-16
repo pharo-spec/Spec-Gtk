@@ -120,7 +120,7 @@ GtkTableAdapter >> unsubscribe [
 	| aSelectionMode |
 
 	self presenter selectionMode unsubscribe: self.
-	aSelectionMode := 	self presenter selectionMode observablePropertyNamed: #selectedIndex..
+	aSelectionMode := self presenter selectionMode observablePropertyNamed: #selectedIndex.
 	aSelectionMode
 		unsubscribe: self;
 		unsubscribeOuterContextReceiver: self.
