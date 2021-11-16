@@ -235,7 +235,7 @@ GtkLayoutAdapter >> unsubscribe [
 		subscribedLayout unsubscribe ].
 	
 	"we must not nil the widget for layout adapters. That's why we do not call the superclass implementation"
-	self unsubscribeFromObservables .
+	super unsubscribe.
 ]
 
 { #category : #protocol }
