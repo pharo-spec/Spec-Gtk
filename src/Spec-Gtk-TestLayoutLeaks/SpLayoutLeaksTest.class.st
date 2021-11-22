@@ -11,7 +11,7 @@ SpLayoutLeaksTest >> testOpen [
 	win := SpLayoutLeaksTestPresenter openGtk.
 	testPresenter := win presenter.
 	oldAdapters := testPresenter adapters.
-	testPresenter swapLayout.
+	testPresenter swapLayouts.
 	3 timesRepeat: [ Smalltalk garbageCollect ].
 	self assert: (oldAdapters allSatisfy: [ :e | e isNil ]).
 	win close. 

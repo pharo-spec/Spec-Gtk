@@ -22,7 +22,8 @@ Class {
 		'text',
 		'textInput',
 		'toggleButton',
-		'treeTable'
+		'treeTable',
+		'treeTable2'
 	],
 	#category : #'Spec-Gtk-TestLayoutLeaks'
 }
@@ -88,6 +89,7 @@ SpLayoutLeaksTestPresenter >> adapters [
 		toggleButton adapter.
 		tree adapter.
 		treeTable adapter.
+		treeTable2 adapter.
 	}
 ]
 
@@ -112,8 +114,9 @@ SpLayoutLeaksTestPresenter >> defaultLayout [
 			add: #textInput;
 			add: #toggleButton;
 			add: #table;
-			"add: #tree;"
+			add: #tree;
 			add: #treeTable;
+			add: #treeTable2;
 			yourself)
 		
 ]
@@ -145,8 +148,9 @@ SpLayoutLeaksTestPresenter >> gridLayout [
 			add: #textInput at: 3@4 ;
 			add: #toggleButton at: 4@4 ;
 			add: #table at: 1@4 ;
-			"add: #tree at: 1@5 ;"
+			add: #tree at: 1@5 ;
 			add: #treeTable at: 2@5 ;
+			add: #treeTable2 at: 1@6 ;
 			yourself)
 		
 ]
@@ -194,15 +198,21 @@ SpLayoutLeaksTestPresenter >> initializePresenters [
 		beMultipleSelection;
 		roots: { 1. 2. 3 }.
 	treeTable selectItem: 1.
+
+	treeTable2 := self newTreeTable.
+	treeTable2 
+		beSingleSelection;
+		roots: { 1. 2. 3 }.
+	treeTable2 selectItem: 1.
 	
-	self swapLayout
+	self swapLayout.
 	
 ]
 
 { #category : #'instance creation' }
 SpLayoutLeaksTestPresenter >> layoutSelectors [ 
 
-	^ #( defaultLayout gridLayout emptyLayout defaultLayout gridLayout )
+	^ #( defaultLayout gridLayout "emptyLayout" defaultLayout gridLayout )
 	
 ]
 
@@ -213,7 +223,7 @@ SpLayoutLeaksTestPresenter >> swapLayout [
 	
 	selectors := self layoutSelectors. 
 	
-	layoutNumber := (layoutNumber // selectors size) + 1.	
+	layoutNumber := (layoutNumber \\ selectors size) + 1.	
 		l := self perform: (selectors at: layoutNumber).
 
 	layout := l.
