@@ -212,7 +212,7 @@ SpLayoutLeaksTestPresenter >> initializePresenters [
 { #category : #'instance creation' }
 SpLayoutLeaksTestPresenter >> layoutSelectors [ 
 
-	^ #( defaultLayout gridLayout "emptyLayout" defaultLayout gridLayout )
+	^ #( defaultLayout gridLayout emptyLayout defaultLayout gridLayout )
 	
 ]
 
