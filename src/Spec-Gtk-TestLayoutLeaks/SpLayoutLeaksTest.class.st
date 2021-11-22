@@ -7,7 +7,9 @@ Class {
 { #category : #tests }
 SpLayoutLeaksTest >> testOpen [
 
-	| win testPresenter oldAdapters | 
+	| win testPresenter oldAdapters finder | 
+	finder := GtkLeakFinder new.
+	finder start.
 	win := SpLayoutLeaksTestPresenter openGtk.
 	testPresenter := win presenter.
 	oldAdapters := testPresenter adapters.
@@ -15,4 +17,6 @@ SpLayoutLeaksTest >> testOpen [
 	3 timesRepeat: [ Smalltalk garbageCollect ].
 	self assert: (oldAdapters allSatisfy: [ :e | e isNil ]).
 	win close. 
+	finder stop.
+	self assert: finder leaks isEmpty.
 ]
