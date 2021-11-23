@@ -98,7 +98,7 @@ SpLayoutLeaksTestPresenterFromSelection >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		add: (SpBoxLayout newVertical
-			add: #button;
+		"	add: #button;
 			add: #buttonBar;
 			add: #checkBox;
 			add: #dropList;
@@ -115,7 +115,7 @@ SpLayoutLeaksTestPresenterFromSelection >> defaultLayout [
 			add: #toggleButton;
 			add: #table;
 			add: #tree;"
-"			add: #treeTable;
+			add: #treeTable;
 			add: #treeTable2;
 			yourself)
 		
@@ -132,7 +132,7 @@ SpLayoutLeaksTestPresenterFromSelection >> gridLayout [
 
 	^ SpBoxLayout newVertical
 		add: (SpGridLayout new
-			add: #button at: 1@1; 
+			"add: #button at: 1@1; 
 			add: #buttonBar at: 2@1;
 			add: #checkBox at: 3@1 ;
 			add: #dropList at: 4@1 ;
@@ -148,7 +148,7 @@ SpLayoutLeaksTestPresenterFromSelection >> gridLayout [
 			add: #textInput at: 3@4 ;
 			add: #toggleButton at: 4@4 ;
 			add: #table at: 1@4 ;
-			add: #tree at: 1@5 ;
+			add: #tree at: 1@5 ;"
 			add: #treeTable at: 2@5 ;
 			add: #treeTable2 at: 1@6 ;
 			yourself)
@@ -197,8 +197,14 @@ SpLayoutLeaksTestPresenterFromSelection >> initializePresenters [
 	treeTable 
 		beMultipleSelection;
 		roots: { 1. 2. 3 }.
-	treeTable whenSelectionChangedDo: [ self swapLayouts ].
 	treeTable selectItem: 1.
+	treeTable whenSelectionChangedDo: [
+		treeTable2 := self newTreeTable.
+		treeTable2 
+			beSingleSelection;
+			roots: { 1. 2. 3 }.
+		treeTable2 selectItem: 1.
+		 self swapLayout ].
 
 	treeTable2 := self newTreeTable.
 	treeTable2 
@@ -218,12 +224,6 @@ SpLayoutLeaksTestPresenterFromSelection >> layoutSelectors [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenterFromSelection >> performTest [ 
-
-	treeTable selectItem: 1.
-]
-
-{ #category : #'instance creation' }
 SpLayoutLeaksTestPresenterFromSelection >> swapLayout [ 
 
 	| selectors l | 
@@ -240,9 +240,5 @@ SpLayoutLeaksTestPresenterFromSelection >> swapLayout [
 { #category : #'instance creation' }
 SpLayoutLeaksTestPresenterFromSelection >> swapLayouts [ 
 
-	1 timesRepeat: [
-		#swapLayouts traceCr.
-		self layoutSelectors size timesRepeat: [ 
-			self swapLayout ]
-	].
+	treeTable selectItem: 2.
 ]

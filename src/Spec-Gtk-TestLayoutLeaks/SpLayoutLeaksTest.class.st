@@ -14,7 +14,7 @@ SpLayoutLeaksTest >> testOpen [
 	testPresenter := win presenter.
 	oldAdapters := testPresenter adapters.
 	testPresenter swapLayouts.
-	3 timesRepeat: [ Smalltalk garbageCollect ].
+	30 timesRepeat: [ Smalltalk garbageCollect ].
 	self assert: (oldAdapters allSatisfy: [ :e | e isNil ]).
 	win close. 
 	finder stop.
