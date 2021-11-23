@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'layout',
 		'changeLayoutSubscription',
-		'subscribedLayout',
-		'unsubscribed'
+		'subscribedLayout'
 	],
 	#category : #'Spec-Gtk-Layout-Base'
 }
