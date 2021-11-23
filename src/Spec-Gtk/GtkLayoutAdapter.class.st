@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'layout',
 		'changeLayoutSubscription',
-		'subscribedLayout'
+		'subscribedLayout',
+		'unsubscribed'
 	],
 	#category : #'Spec-Gtk-Layout-Base'
 }
@@ -231,11 +232,21 @@ GtkLayoutAdapter >> takeKeyboardFocus [
 { #category : #releasing }
 GtkLayoutAdapter >> unsubscribe [ 
 	
+	self unsubscribed ifTrue: [ ^ self ].
+	
+	unsubscribed := true.
+	
 	subscribedLayout ifNotNil: [ 
 		subscribedLayout unsubscribe ].
 	
 	"we must not nil the widget for layout adapters. That's why we do not call the superclass implementation"
 	super unsubscribe.
+]
+
+{ #category : #releasing }
+GtkLayoutAdapter >> unsubscribed [ 
+
+	^ unsubscribed ifNil: [ unsubscribed := false ]
 ]
 
 { #category : #protocol }
