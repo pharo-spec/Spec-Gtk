@@ -35,7 +35,7 @@ GtkPatchSideBySideVisitorTest >> testPatchIncludesLastLine [
 	visitor := GtkPatchSideBySideVisitor new.
 	patch accept: visitor.
 
-	self assert: visitor leftText lines last equals: 'yourself'.
-	self assert: visitor rightText lines last equals: 'yourself'.
+	self assert: visitor leftText lines last trimmed equals: 'yourself'.
+	self assert: visitor rightText lines last trimmed equals: 'yourself'.
 
 ]

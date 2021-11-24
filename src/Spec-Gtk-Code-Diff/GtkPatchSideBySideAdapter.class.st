@@ -23,7 +23,7 @@ GtkPatchSideBySideAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 { #category : #adding }
 GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 	
-	self presenter marks valuesDo: [ :each |
+	self marks valuesDo: [ :each |
 		gtkSourceView 
 			markAttributesForCategory: each name 
 				attributes: (GtkSourceMarkAttributes new 
@@ -37,12 +37,24 @@ GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 GtkPatchSideBySideAdapter >> addModelTo: aView [
 
 	super addModelTo: aView.
-
-	self setPatchTo: aView.
-	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ].
 	
 	self addMarksTo: leftSourceView.
 	self addMarksTo: rightSourceView.
+	
+	self addPatchTo: aView
+]
+
+{ #category : #adding }
+GtkPatchSideBySideAdapter >> addPatchTo: aView [
+	
+	self setPatch.
+	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
+]
+
+{ #category : #private }
+GtkPatchSideBySideAdapter >> marks [
+	
+	^ self presenter marks
 ]
 
 { #category : #factory }
@@ -75,14 +87,20 @@ GtkPatchSideBySideAdapter >> newWidget [
 ]
 
 { #category : #'private - accessing' }
-GtkPatchSideBySideAdapter >> setPatch: aPatchModel [
+GtkPatchSideBySideAdapter >> setPatch [
 
-	self innerWidgetDo: [ :w | 
-		self setPatch: aPatchModel patch to: w ]
+	(self presenter model isNil 
+		or: [ self presenter model isEmpty ])
+		ifTrue: [ 
+			leftSourceView text: ''.
+			rightSourceView text: ''. 
+			^ self ].
+
+	self setPatch: self presenter model patch
 ]
 
 { #category : #'private - accessing' }
-GtkPatchSideBySideAdapter >> setPatch: patch to: aView [ 
+GtkPatchSideBySideAdapter >> setPatch: patch [
 	| visitor |
 	
 	visitor := GtkPatchSideBySideVisitor new 
@@ -102,18 +120,4 @@ GtkPatchSideBySideAdapter >> setPatch: patch to: aView [
 			addMark: aMark value 
 			line: aMark key 
 			to: rightSourceView textBuffer ]
-]
-
-{ #category : #'private - accessing' }
-GtkPatchSideBySideAdapter >> setPatchTo: aView [ 
-
-	(self presenter model isNil 
-		or: [ self presenter model isEmpty ])
-		ifTrue: [ 
-			leftSourceView text: ''.
-			rightSourceView text: ''. 
-			^ self ].
-	self 
-		setPatch: self presenter model patch
-		to: aView
 ]
