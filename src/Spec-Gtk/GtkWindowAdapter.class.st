@@ -205,8 +205,7 @@ GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 	self presenter initialPosition
 		ifNotNil: [ :position | gtkWindow moveTo: position ].
 	gtkWindow decorated: self presenter hasDecorations.
-	self presenter whenDecorationsChangedDo: [ :aBoolean |
-		self widgetDo: [ :w | w decorated: aBoolean ] ].
+	self subscribeDecorations.
 
 	"inner contents of window"
 	contentBox := GtkBox newVertical.
@@ -393,10 +392,23 @@ GtkWindowAdapter >> rebuild [
 	contentBox show
 ]
 
+{ #category : #private }
+GtkWindowAdapter >> setDecorated: aBoolean [
+
+	self widgetDo: [ :w | w decorated: aBoolean ]
+]
+
 { #category : #'private building' }
 GtkWindowAdapter >> statusBar [
 
 	^ statusBar ifNil: [ statusBar := self model statusBar buildWithSpec ]
+
+]
+
+{ #category : #private }
+GtkWindowAdapter >> subscribeDecorations [
+	self presenter whenDecorationsChangedDo: [ :aBoolean |
+		self setDecorated: aBoolean ].
 
 ]
 

@@ -1,5 +1,5 @@
 Class {
-	#name : #SpLayoutLeaksTestPresenter,
+	#name : #SpLayoutLeaksTestPresenterFromSelection,
 	#superclass : #SpPresenter,
 	#instVars : [
 		'layoutNumber',
@@ -29,7 +29,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter class >> leaksCheck [
+SpLayoutLeaksTestPresenterFromSelection class >> leaksCheck [
 
 	<sampleInstance>
 	
@@ -46,7 +46,7 @@ SpLayoutLeaksTestPresenter class >> leaksCheck [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter class >> openGtk [
+SpLayoutLeaksTestPresenterFromSelection class >> openGtk [
 
 	<script>
 	
@@ -56,7 +56,7 @@ SpLayoutLeaksTestPresenter class >> openGtk [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter class >> openMorphic [
+SpLayoutLeaksTestPresenterFromSelection class >> openMorphic [
 
 	<script>
 	
@@ -66,7 +66,7 @@ SpLayoutLeaksTestPresenter class >> openMorphic [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> adapters [ 
+SpLayoutLeaksTestPresenterFromSelection >> adapters [ 
 
 	^ WeakArray withAll: { 
 		button adapter. 
@@ -94,11 +94,11 @@ SpLayoutLeaksTestPresenter >> adapters [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> defaultLayout [ 
+SpLayoutLeaksTestPresenterFromSelection >> defaultLayout [ 
 
 	^ SpBoxLayout newVertical
 		add: (SpBoxLayout newVertical
-			add: #button;
+		"	add: #button;
 			add: #buttonBar;
 			add: #checkBox;
 			add: #dropList;
@@ -114,7 +114,7 @@ SpLayoutLeaksTestPresenter >> defaultLayout [
 			add: #textInput;
 			add: #toggleButton;
 			add: #table;
-			add: #tree;
+			add: #tree;"
 			add: #treeTable;
 			add: #treeTable2;
 			yourself)
@@ -122,17 +122,17 @@ SpLayoutLeaksTestPresenter >> defaultLayout [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> emptyLayout [ 
+SpLayoutLeaksTestPresenterFromSelection >> emptyLayout [ 
 
 	^ SpBoxLayout newVertical
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> gridLayout [ 
+SpLayoutLeaksTestPresenterFromSelection >> gridLayout [ 
 
 	^ SpBoxLayout newVertical
 		add: (SpGridLayout new
-			add: #button at: 1@1; 
+			"add: #button at: 1@1; 
 			add: #buttonBar at: 2@1;
 			add: #checkBox at: 3@1 ;
 			add: #dropList at: 4@1 ;
@@ -148,7 +148,7 @@ SpLayoutLeaksTestPresenter >> gridLayout [
 			add: #textInput at: 3@4 ;
 			add: #toggleButton at: 4@4 ;
 			add: #table at: 1@4 ;
-			add: #tree at: 1@5 ;
+			add: #tree at: 1@5 ;"
 			add: #treeTable at: 2@5 ;
 			add: #treeTable2 at: 1@6 ;
 			yourself)
@@ -156,7 +156,7 @@ SpLayoutLeaksTestPresenter >> gridLayout [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> initializePresenters [ 
+SpLayoutLeaksTestPresenterFromSelection >> initializePresenters [ 
 
 	layoutNumber := self layoutSelectors size.	
 	
@@ -198,6 +198,13 @@ SpLayoutLeaksTestPresenter >> initializePresenters [
 		beMultipleSelection;
 		roots: { 1. 2. 3 }.
 	treeTable selectItem: 1.
+	treeTable whenSelectionChangedDo: [
+		treeTable2 := self newTreeTable.
+		treeTable2 
+			beSingleSelection;
+			roots: { 1. 2. 3 }.
+		treeTable2 selectItem: 1.
+		 self swapLayout ].
 
 	treeTable2 := self newTreeTable.
 	treeTable2 
@@ -210,14 +217,14 @@ SpLayoutLeaksTestPresenter >> initializePresenters [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> layoutSelectors [ 
+SpLayoutLeaksTestPresenterFromSelection >> layoutSelectors [ 
 
 	^ #( defaultLayout gridLayout emptyLayout defaultLayout gridLayout )
 	
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> swapLayout [ 
+SpLayoutLeaksTestPresenterFromSelection >> swapLayout [ 
 
 	| selectors l | 
 	
@@ -231,10 +238,7 @@ SpLayoutLeaksTestPresenter >> swapLayout [
 ]
 
 { #category : #'instance creation' }
-SpLayoutLeaksTestPresenter >> swapLayouts [ 
+SpLayoutLeaksTestPresenterFromSelection >> swapLayouts [ 
 
-	10 timesRepeat: [
-		self layoutSelectors size timesRepeat: [ 
-			self swapLayout ]
-	].
+	treeTable selectItem: 2.
 ]

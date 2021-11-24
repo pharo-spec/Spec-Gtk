@@ -97,9 +97,7 @@ GtkLayoutAdapter >> cleanupAfterReplacing [
 GtkLayoutAdapter >> connectToEvents: aLayout [
 
 	self presenter whenVisibleChangedDo: [ 	
-		self presenter isVisible 
-			ifTrue: [ widget show ] 
-			ifFalse: [ widget hide ] ].
+		self showByVisibility].
 		
 	aLayout whenChildrenAddedDo: [ :ann |
 		self 
@@ -216,6 +214,14 @@ GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 		self presenter owner adapter rebuild ]
 ]
 
+{ #category : #private }
+GtkLayoutAdapter >> showByVisibility [ 
+	
+	self presenter isVisible 
+		ifTrue: [ widget show ] 
+		ifFalse: [ widget hide ]
+]
+
 { #category : #protocol }
 GtkLayoutAdapter >> takeKeyboardFocus [
 	| presenters |
@@ -231,11 +237,23 @@ GtkLayoutAdapter >> takeKeyboardFocus [
 { #category : #releasing }
 GtkLayoutAdapter >> unsubscribe [ 
 	
+	self unsubscribed ifTrue: [ ^ self ].
+	
+	unsubscribed := true.
+	
 	subscribedLayout ifNotNil: [ 
 		subscribedLayout unsubscribe ].
 	
+	(self presenter observablePropertyNamed: #visible) unsubscribe: self.
+	
 	"we must not nil the widget for layout adapters. That's why we do not call the superclass implementation"
 	super unsubscribe.
+]
+
+{ #category : #releasing }
+GtkLayoutAdapter >> unsubscribed [ 
+
+	^ unsubscribed ifNil: [ unsubscribed := false ]
 ]
 
 { #category : #protocol }
