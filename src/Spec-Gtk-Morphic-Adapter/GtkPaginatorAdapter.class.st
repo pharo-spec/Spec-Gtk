@@ -15,6 +15,8 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 		height: self defaultPaginatorHeight;
 		addPages: self presenter pages;
 		selectPage: self presenter pages size;
+		color: self backgroundColor;
+		selectionColor: self selectedColor;
 		yourself).
 
 	self presenter whenSelectedPageChangedDo: [ :aNumber |
@@ -43,6 +45,12 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 ]
 
 { #category : #private }
+GtkPaginatorAdapter >> backgroundColor [
+
+	^ self presenter application configuration panelBackgroundColor
+]
+
+{ #category : #private }
 GtkPaginatorAdapter >> defaultMarginBottom [
 
 	^ 5
@@ -52,6 +60,18 @@ GtkPaginatorAdapter >> defaultMarginBottom [
 GtkPaginatorAdapter >> defaultPaginatorHeight [
 
 	^ 22
+]
+
+{ #category : #private }
+GtkPaginatorAdapter >> panelBackgroundColor [
+
+	^ self presenter application configuration panelBackgroundColor
+]
+
+{ #category : #private }
+GtkPaginatorAdapter >> selectedColor [
+
+	^ self presenter application configuration listSelectedColor alpha: 0.3
 ]
 
 { #category : #building }

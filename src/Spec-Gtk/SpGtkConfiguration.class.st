@@ -26,6 +26,30 @@ SpGtkConfiguration >> addCSSProviderFromString: aString [
 	(GtkCssProvider newFromString: aString) addForApplicationToDefaultScreen
 ]
 
+{ #category : #'accessing - colors' }
+SpGtkConfiguration >> buttonBackgroundColor [
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	 dark or light theme"
+	
+	^ GRunLoop defer: [ 
+		| widget |
+		widget := GtkButton new. 
+		widget markForAutoRelease. 
+		widget styleContext getBackgroundColor ]
+]
+
+{ #category : #'accessing - colors' }
+SpGtkConfiguration >> buttonSelectedColor [
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	 dark or light theme"
+	
+	^ GRunLoop defer: [ 
+		| widget |
+		widget := GtkButton new. 
+		widget markForAutoRelease. 
+		widget styleContext getSelectedColor ]
+]
+
 { #category : #configuring }
 SpGtkConfiguration >> configure: anApplication [
 
@@ -45,11 +69,7 @@ SpGtkConfiguration >> detectDarkTheme [
 
 	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
 	 dark or light theme"
-	backgroundColor := GRunLoop defer: [ 
-		| widget |
-		widget := GtkTextView new. 
-		widget markForAutoRelease. 
-		widget styleContext getBackgroundColor ].
+	backgroundColor := self textBackgroundColor.
 	
 	^ backgroundColor luminance < 0.5
 ]
@@ -66,8 +86,56 @@ SpGtkConfiguration >> isDarkTheme [
 	^ self detectDarkTheme
 ]
 
+{ #category : #'accessing - colors' }
+SpGtkConfiguration >> listActiveColor [
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	 dark or light theme"
+	
+	^ GRunLoop defer: [ 
+		| widget |
+		widget := GtkTreeView new. 
+		widget markForAutoRelease. 
+		widget styleContext getActiveColor ]
+]
+
+{ #category : #'accessing - colors' }
+SpGtkConfiguration >> listSelectedColor [
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	 dark or light theme"
+	
+	^ GRunLoop defer: [ 
+		| widget |
+		widget := GtkTreeView new. 
+		widget markForAutoRelease. 
+		widget styleContext getSelectedColor ]
+]
+
+{ #category : #'accessing - colors' }
+SpGtkConfiguration >> panelBackgroundColor [
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	 dark or light theme"
+	
+	^ GRunLoop defer: [ 
+		| widget |
+		widget := GtkBox newVertical. 
+		widget markForAutoRelease. 
+		widget styleContext getBackgroundColor ]
+]
+
 { #category : #'private accessing' }
 SpGtkConfiguration >> settings [ 
 
 	^ GtkSettings default
+]
+
+{ #category : #'accessing - colors' }
+SpGtkConfiguration >> textBackgroundColor [
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	 dark or light theme"
+	
+	^ GRunLoop defer: [ 
+		| widget |
+		widget := GtkTextView new. 
+		widget markForAutoRelease. 
+		widget styleContext getBackgroundColor ]
 ]
