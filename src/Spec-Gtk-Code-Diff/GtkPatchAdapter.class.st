@@ -6,14 +6,14 @@ Class {
 	#category : #'Spec-Gtk-Code-Diff'
 }
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkPatchAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 	| start |
 
 	start := aTextBuffer iterAtLine: lineNumber - 1.
 	
 	aTextBuffer 
-		createSourceMarkNamed: ('insert_{1}' format: { lineNumber }) 
+		createSourceMarkNamed: ('{1}_{2}' format: { tagName. lineNumber }) 
 		category: tagName 
 		where: start
 ]
@@ -54,19 +54,19 @@ GtkPatchAdapter >> addModelTo: gtkSourceView [
 	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkPatchAdapter >> bufferClass [ 
 	
 	^ GtkSourceBuffer
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkPatchAdapter >> newTagTable [
 	
 	^ GtkTextTagTable newForCode: self styleTable
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkPatchAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
@@ -75,7 +75,7 @@ GtkPatchAdapter >> newTextBufferForHighlight [
 	^ textBuffer
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkPatchAdapter >> newTextBufferForText: aString [
 	| textBuffer |
 
@@ -89,14 +89,14 @@ GtkPatchAdapter >> newTextBufferForText: aString [
 	^ textBuffer
 ]
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkPatchAdapter >> setPatch: aPatchModel [
 
 	self innerWidgetDo: [ :w | 
 		self setPatch: aPatchModel patch to: w ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkPatchAdapter >> setPatch: patch to: gtkTextView [ 
 	| visitor |
 	
@@ -112,7 +112,7 @@ GtkPatchAdapter >> setPatch: patch to: gtkTextView [
 			to: gtkTextView textBuffer ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkPatchAdapter >> setPatchTo: gtkTextView [ 
 
 	(self presenter model isNil 
@@ -126,14 +126,14 @@ GtkPatchAdapter >> setPatchTo: gtkTextView [
 		to: gtkTextView
 ]
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkPatchAdapter >> setText: aString to: gtkWidget [
 
 	self backendDetectCyclesDo: [
 		gtkWidget textBuffer: (self newTextBufferForText: aString) ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkPatchAdapter >> styleTable [
 	| styleTableName |	
 
