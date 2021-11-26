@@ -376,7 +376,10 @@ GtkTreeTableAdapter >> unsubscribe [
 	(self presenter observablePropertyNamed: #roots) unsubscribe: self.
 	(self presenter observablePropertyNamed: #showColumnHeaders) 
 		unsubscribe: self.
+		
 	super unsubscribe.
+	
+	self innerWidgetDo: [ :w | w model: GtkTreeDataStore new ].
 	
 	widget := nil.
 ]

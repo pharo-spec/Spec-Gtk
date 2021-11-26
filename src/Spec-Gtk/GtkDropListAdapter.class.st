@@ -11,14 +11,14 @@ GtkDropListAdapter >> addModelTo: gtkComboBox [
 	self setModelTo: gtkComboBox.
 	
 	gtkComboBox connectChanged: [ self selectionChanged ].
-	self model whenSelectionChangedDo: [ 
-		gtkComboBox activeIndex: self model selectedIndex - 1 ].
-	self model model whenChangedDo: [ 
+	self presenter whenSelectionChangedDo: [ 
+		gtkComboBox activeIndex: self presenter selectedIndex - 1 ].
+	self presenter model whenChangedDo: [ 
 		self
 			disconnectSelectionEventsOf: gtkComboBox
 			during: [ self setModelTo: gtkComboBox ] ].
 		
-	self model selectedIndex 
+	self presenter selectedIndex 
 		ifNotNil: [ :index | gtkComboBox activeIndex: index - 1 ]
 ]
 
@@ -55,6 +55,21 @@ GtkDropListAdapter >> modelItemsAsDisplay [
 	^ self presenter model items 
 		collect: [ :each | self presenter displayForItem: each]
 	
+]
+
+{ #category : #building }
+GtkDropListAdapter >> newTreeDataStore [
+	| store |
+
+	store := GtkTreeDataStore new.
+	store beList.
+
+	store addColumn: (GtkTreeDataStringColumn evaluated: [ :item |
+		(self presenter displayForItem: item) asString ]).
+
+	store roots: self presenter model items.
+
+	^ store
 ]
 
 { #category : #building }
@@ -106,11 +121,11 @@ GtkDropListAdapter >> setModelTo: gtkComboBox [
 
 	columnIndex := 0.
 	gtkComboBox clear.
-	self presenter hasIcons ifTrue: [ 
+	"self presenter hasIcons ifTrue: [ 
 		gtkComboBox appendPixbufColumn: columnIndex.
-		columnIndex := columnIndex + 1 ].
+		columnIndex := columnIndex + 1 ]."
 	gtkComboBox appendTextColumn: columnIndex.
-	gtkComboBox model: self newTreeStore
+	gtkComboBox model: self newTreeDataStore
 
 ]
 

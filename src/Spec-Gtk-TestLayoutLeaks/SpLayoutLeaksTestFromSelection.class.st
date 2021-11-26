@@ -6,8 +6,10 @@ Class {
 
 { #category : #tests }
 SpLayoutLeaksTestFromSelection >> testOpen [
-
-	| win testPresenter oldAdapters finder | 
+	| win testPresenter oldAdapters finder |
+	
+	self timeLimit: 60 seconds.
+	
 	finder := GtkLeakFinder new.
 	finder start.
 	win := SpLayoutLeaksTestPresenterFromSelection openGtk.
