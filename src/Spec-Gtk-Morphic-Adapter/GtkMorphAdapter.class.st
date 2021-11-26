@@ -19,7 +19,12 @@ GtkMorphAdapter >> setMorph: aMorph to: gtkWidget [
 	aMorph ifNil: [ ^ self ].
 
 	aMorph presenter: self presenter. 
-	gtkWidget morph: aMorph
+	gtkWidget morph: aMorph.
+	"if morph is rigid, then widget is not resizable"
+	((aMorph vResizing = #rigid) 
+		and: [ aMorph hResizing = #rigid ])
+		ifTrue: [ gtkWidget beMorphNotResizable ]
+		ifFalse: [ gtkWidget beMorphResizable ]
 ]
 
 { #category : #building }
