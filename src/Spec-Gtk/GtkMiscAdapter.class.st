@@ -20,7 +20,7 @@ GtkMiscAdapter >> installEvent: anEvent [
 	(innerWidget isNil and: [ self presenter owner notNil ]) ifTrue: [
 		self widgetDo: [ :w |
 			innerWidget := w.
-			self widget: (GtkEventBox newWidget: innerWidget).
+			self widget: (GtkEventBox newWidget: innerWidget) show.
 			self presenter owner rebuildLayout ] ].
 	super installEvent: anEvent
 ]
@@ -40,6 +40,7 @@ GtkMiscAdapter >> wrapWidget: aWidget [
 		
 	innerWidget := aWidget.
 	eventBox := GtkEventBox newWidget: innerWidget.
+	eventBox show.
 	eventBox events: innerWidget events.
 	innerWidget callbacks 
 		do: [ :each | each connectTo: eventBox ].
