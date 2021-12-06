@@ -1,6 +1,6 @@
 Extension { #name : #PluggableMenuSpec }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : #'*Spec-Gtk-Morphic-Adapter' }
 PluggableMenuSpec >> asMenuBarPresenter [
 	
 	^ SpMenuBarPresenter new
@@ -9,10 +9,10 @@ PluggableMenuSpec >> asMenuBarPresenter [
 				group addMenuItem: each asMenuItemPresenter ] ]
 ]
 
-{ #category : #'*Spec-Gtk' }
+{ #category : #'*Spec-Gtk-Morphic-Adapter' }
 PluggableMenuSpec >> asMenuPresenter [
 	| presenter |
-	
+
 	presenter := SpMenuPresenter new.
 	(self items groupByRuns: [ :each | each separator = true ]) do: [ :eachGroup |
 		presenter addGroup: [ :group |
