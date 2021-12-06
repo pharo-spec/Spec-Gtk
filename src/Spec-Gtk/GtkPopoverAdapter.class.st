@@ -26,7 +26,12 @@ GtkPopoverAdapter >> buildWidget [
 { #category : #api }
 GtkPopoverAdapter >> dismiss [ 
 
-	self widgetDo: [ :w | w popdown ]
+	self widgetDo: [ :w | 
+		w popdown. 
+		"I need to destroy explicitly because it may cause gtk to send callbacks to 
+		 me and it may (most of the times it *will*) be already collected (then... 
+		 well, crash)."
+		w destroy ]
 ]
 
 { #category : #api }
