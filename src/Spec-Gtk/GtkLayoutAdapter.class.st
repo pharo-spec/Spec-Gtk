@@ -190,8 +190,9 @@ GtkLayoutAdapter >> remove: aPresenter [
 { #category : #'accessing children' }
 GtkLayoutAdapter >> removeAll [
 
-	self ensureAllChildrenAreRetained.
-	self widgetDo: [ :w | w removeAll ]
+	self widgetDo: [ :w | 
+		self ensureAllChildrenAreRetained.
+		w removeAll ]
 ]
 
 { #category : #protocol }
