@@ -61,7 +61,7 @@ GtkCodeAdapter >> addTextBufferTo: gtkTextView [
 	"this is solved in #newTextBufferForText:"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - segments' }
 GtkCodeAdapter >> addTextSegmentDecoration: aDecoration [
 	
 	self innerWidgetDo: [ :w | 
@@ -169,6 +169,13 @@ GtkCodeAdapter >> hasSyntaxHighlightEnabled [
 	"this is used just for testing"
 	
 	^ self presenter hasSyntaxHighlight
+]
+
+{ #category : #'api - search' }
+GtkCodeAdapter >> highlightSearchText: aBoolean [ 
+
+	self innerWidgetDo: [ :w |
+		w textBuffer searchContext highlight: aBoolean ]
 ]
 
 { #category : #api }
@@ -284,10 +291,43 @@ GtkCodeAdapter >> refreshStyling [
 		self applyStyleTo: w textBuffer ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - segments' }
 GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	
 	self flag: #TODO.
+]
+
+{ #category : #'api - search' }
+GtkCodeAdapter >> searchBackward [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext 
+			backwardThenDo: [ :start :end :wrappedAround | 
+				buffer
+					selectRangeInsert: start 
+					bound: end ] ]
+]
+
+{ #category : #'api - search' }
+GtkCodeAdapter >> searchForward [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext 
+			forwardThenDo: [ :start :end :wrappedAround | 
+				buffer
+					selectRangeInsert: start 
+					bound: end ] ]
+]
+
+{ #category : #'api - search' }
+GtkCodeAdapter >> searchText: aString [
+
+	self innerWidgetDo: [ :w |
+		w textBuffer searchContext searchText: aString ]
 ]
 
 { #category : #'api - shout' }
