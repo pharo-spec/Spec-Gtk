@@ -59,6 +59,14 @@ GtkLayoutAdapter >> applyStyle: aWidget [
 ]
 
 { #category : #private }
+GtkLayoutAdapter >> applyVisibility [ 
+	
+	self presenter isVisible 
+		ifTrue: [ widget show ] 
+		ifFalse: [ widget hide ]
+]
+
+{ #category : #private }
 GtkLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: aPanel [ 
 
 	self subclassResponsibility
@@ -97,7 +105,7 @@ GtkLayoutAdapter >> cleanupAfterReplacing [
 GtkLayoutAdapter >> connectToEvents: aLayout [
 
 	self presenter whenVisibleChangedDo: [ 	
-		self showByVisibility].
+		self applyVisibility ].
 		
 	aLayout whenChildrenAddedDo: [ :ann |
 		self 
@@ -213,14 +221,6 @@ GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 			bindings: self presenter application adapterBindings).
 		oldAdapter cleanupAfterReplacing.
 		self presenter owner adapter rebuild ]
-]
-
-{ #category : #private }
-GtkLayoutAdapter >> showByVisibility [ 
-	
-	self presenter isVisible 
-		ifTrue: [ widget show ] 
-		ifFalse: [ widget hide ]
 ]
 
 { #category : #protocol }

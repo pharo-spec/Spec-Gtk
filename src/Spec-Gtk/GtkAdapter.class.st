@@ -176,7 +176,7 @@ GtkAdapter >> buildWidget [
 { #category : #releasing }
 GtkAdapter >> cleanupAfterReplacing [ 
 
-	widget := nil.
+	widget := nil
 ]
 
 { #category : #private }
