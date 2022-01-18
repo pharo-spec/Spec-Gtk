@@ -39,12 +39,7 @@ GtkBoxAdapter >> applyLayout: aLayout [
 	widget 
 		homogeneous: aLayout isHomogeneous;
 		spacing: aLayout spacing;
-		borderWidth: aLayout borderWidth.
-		
-	self presenter isVisible 
-		ifTrue: [ widget show ] 
-		ifFalse: [ widget hide ].
-	
+		borderWidth: aLayout borderWidth
 ]
 
 { #category : #private }

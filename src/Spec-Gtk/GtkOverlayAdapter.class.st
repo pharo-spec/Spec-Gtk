@@ -8,8 +8,7 @@ Class {
 GtkOverlayAdapter >> applyLayout: aLayout [
 
 	widget := GtkOverlay new.
-	self connectToEvents: aLayout. 
-	widget show.
+	self connectToEvents: aLayout
 ]
 
 { #category : #private }

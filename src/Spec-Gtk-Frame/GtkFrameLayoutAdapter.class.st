@@ -22,12 +22,7 @@ GtkFrameLayoutAdapter >> applyLayout: aLayout [
 		ifNil: [ self newFrame ]
 		ifNotNil: [ :aLabel | self newFrameWithLabel: aLabel ].
 
-	self connectToEvents: aLayout. 
-
-	self presenter isVisible 
-		ifTrue: [ widget show ] 
-		ifFalse: [ widget hide ].
-	
+	self connectToEvents: aLayout
 ]
 
 { #category : #private }

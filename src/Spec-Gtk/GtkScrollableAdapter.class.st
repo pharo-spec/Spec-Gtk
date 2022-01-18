@@ -24,8 +24,7 @@ GtkScrollableAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 GtkScrollableAdapter >> applyLayout: aLayout [
 
 	widget := GtkScrolledWindow new.
-	self connectToEvents: aLayout. 
-	widget show
+	self connectToEvents: aLayout
 ]
 
 { #category : #private }

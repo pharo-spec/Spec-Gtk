@@ -139,7 +139,11 @@ GtkTableColumnPacker >> visitCheckboxColumn: aTableColumn [
 	| renderer |
 
 	renderer := self newToggleRenderer.
-	renderer connectToggled: [ :pathString | self doToggle: pathString column: aTableColumn ].
+	(aTableColumn onActivation notNil 
+		or: [ aTableColumn onDeactivation notNil ])
+		ifTrue: [ 
+			renderer activatable: true.
+			renderer connectToggled: [ :pathString | self doToggle: pathString column: aTableColumn ] ].
 	self addRendererPropertiesTo: renderer column: aTableColumn.
 	column packStart: renderer expand: self isExpand.
 	column 
