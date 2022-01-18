@@ -131,7 +131,7 @@ GtkCodeAdapter >> bufferClass [
 		ifFalse: [ super bufferClass ]
 ]
 
-{ #category : #'private-shout' }
+{ #category : #'private - shout' }
 GtkCodeAdapter >> classOrMetaClass: aClass [
 	"I will take the behavior from model, I just need to fire a refresh"
 
@@ -214,7 +214,7 @@ GtkCodeAdapter >> isForScripting [
 	^ self presenter isForScripting
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 
 	^ GtkCodeCompletionEngine new 
@@ -225,7 +225,7 @@ GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 		yourself
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkCodeAdapter >> newTagTable [
 	
 	^ (GtkTextTagTable newForCode: self styleTable)
@@ -235,13 +235,13 @@ GtkCodeAdapter >> newTagTable [
 		yourself
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkCodeAdapter >> newTextBuffer [
 
 	^ self bufferClass new
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkCodeAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
@@ -252,7 +252,7 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 	^ textBuffer
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkCodeAdapter >> newTextBufferForText: aString [
 	| textBuffer |
 
@@ -297,6 +297,17 @@ GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	self flag: #TODO.
 ]
 
+{ #category : #private }
+GtkCodeAdapter >> scrollToIter: iter in: gtkWidget [
+
+	gtkWidget 
+		scrollToIter: iter 
+		withinMargin: 0.25
+		useAlign: false 
+		xalign: 0.0 
+		yalign: 0.0 
+]
+
 { #category : #'api - search' }
 GtkCodeAdapter >> searchBackward [
 
@@ -318,16 +329,17 @@ GtkCodeAdapter >> searchForward [
 		buffer := w textBuffer.
 		buffer searchContext 
 			forwardThenDo: [ :start :end :wrappedAround | 
-				buffer
-					selectRangeInsert: start 
-					bound: end ] ]
+				buffer selectRangeInsert: start bound: end.
+				self scrollToIter: start in: w ] ]
 ]
 
 { #category : #'api - search' }
 GtkCodeAdapter >> searchText: aString [
 
-	self innerWidgetDo: [ :w |
-		w textBuffer searchContext searchText: aString ]
+	self innerWidgetDo: [ :w | | searchContext |
+		searchContext := w textBuffer searchContext.
+		searchContext searchText: aString.
+		self startSearch: searchContext ]
 ]
 
 { #category : #'api - shout' }
@@ -336,7 +348,7 @@ GtkCodeAdapter >> selectedClassOrMetaClass [
 	^ self presenter selectedClassOrMetaClass
 ]
 
-{ #category : #'private-shout' }
+{ #category : #'private - shout' }
 GtkCodeAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer [ 
 
 	(GtkTextStyleVisitor new 
@@ -347,7 +359,7 @@ GtkCodeAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer 
 
 ]
 
-{ #category : #'private-shout' }
+{ #category : #'private - shout' }
 GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [ 
 
 	(GtkTextStyleVisitor new
@@ -366,7 +378,19 @@ GtkCodeAdapter >> setText: aString to: gtkWidget [
 		self userActionDo: [ :action | action registerChange ] ]
 ]
 
-{ #category : #'private factory' }
+{ #category : #private }
+GtkCodeAdapter >> startSearch: aSearchContext [
+	| start |
+
+	self flag: #TODO. "maybe start this from cursor position"
+	start := self innerWidget textBuffer startIter.
+	aSearchContext 
+		forwardAsync: start 
+		onFirstPositionDo: [ :matchStart :matchEnd |
+			self scrollToIter: matchStart in: self innerWidget ]
+]
+
+{ #category : #'private - factory' }
 GtkCodeAdapter >> styleTable [
 	| styleTableName |	
 
@@ -387,7 +411,7 @@ GtkCodeAdapter >> textWithStyle [
 	^ self innerWidget textBuffer asText
 ]
 
-{ #category : #'private-shout' }
+{ #category : #'private - shout' }
 GtkCodeAdapter >> updateCompletionProvider [	
 	
 	completionProvider ifNotNil: [ :p | 

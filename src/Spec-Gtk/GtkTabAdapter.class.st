@@ -34,9 +34,7 @@ GtkTabAdapter >> applyLayout: aLayout [
 		lastPage ifNotNil: [
 			aLayout announce: (SpTabUnselected newPresenter: lastPage) ].
 		lastPage := aPage data.
-		aLayout announce: (SpTabSelected newPresenter: aPage data) ].
-	
-	widget show
+		aLayout announce: (SpTabSelected newPresenter: aPage data) ]
 ]
 
 { #category : #private }
