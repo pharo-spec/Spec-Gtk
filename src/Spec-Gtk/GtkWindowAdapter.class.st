@@ -392,6 +392,12 @@ GtkWindowAdapter >> rebuild [
 	contentBox show
 ]
 
+{ #category : #'spec protocol' }
+GtkWindowAdapter >> resize: aPoint [
+
+	self widgetDo: [ :w | w resize: aPoint ]
+]
+
 { #category : #private }
 GtkWindowAdapter >> setDecorated: aBoolean [
 
