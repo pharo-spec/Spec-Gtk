@@ -65,7 +65,7 @@ GtkNotebookAdapter >> buildLabelForTab: aPage [
 	labelPresenter := aPage labelPresenterFor: self presenter.
 	^ SpBindings 
 	 	value: self presenter application adapterBindings
-		during: [ labelPresenter buildWithSpec ]
+		during: [ labelPresenter build ]
 ]
 
 { #category : #building }
@@ -73,7 +73,7 @@ GtkNotebookAdapter >> buildPage: aPresenter [
 
 	^ SpBindings 
 	 	value: self model application adapterBindings
-		during: [ aPresenter buildWithSpec ]
+		during: [ aPresenter build ]
 ]
 
 { #category : #private }

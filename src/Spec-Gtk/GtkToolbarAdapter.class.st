@@ -42,18 +42,19 @@ GtkToolbarAdapter >> numberOfItems [
 ]
 
 { #category : #building }
-GtkToolbarAdapter >> updateItems: gtkToolbar [ 
+GtkToolbarAdapter >> updateItems: gtkToolbar [
 
 	gtkToolbar removeAll.
 
-	self model leftItems do: [ :each | gtkToolbar add: each buildWithSpec ].
+	self model leftItems do: [ :each | gtkToolbar add: each build ].
 
 	self needsSeparator ifTrue: [ 
-		gtkToolbar add: (GtkSeparatorToolItem new 
-			show;
-			yourself) ].
+		gtkToolbar add: (GtkSeparatorToolItem new
+				 show;
+				 yourself) ].
 
-	self model rightItems reverseDo: [ :each | gtkToolbar add: each buildWithSpec ]
+	self model rightItems reverseDo: [ :each | 
+		gtkToolbar add: each build ]
 ]
 
 { #category : #building }

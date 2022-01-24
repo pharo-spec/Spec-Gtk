@@ -82,6 +82,12 @@ GtkLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: aPanel [
 ]
 
 { #category : #building }
+GtkLayoutAdapter >> build [
+	
+	^ self widget
+]
+
+{ #category : #building }
 GtkLayoutAdapter >> buildWidget [
 	"We defer this until layout: (because then I will know what I have to create)"
 	
@@ -89,17 +95,40 @@ GtkLayoutAdapter >> buildWidget [
 ]
 
 { #category : #building }
-GtkLayoutAdapter >> buildWithSpec [
+GtkLayoutAdapter >> buildWithLayout: aSpecLayout [
 	"This provides some polymorphism with regular presenters to allow composition of layouts."
 	
 	^ self widget
 ]
 
 { #category : #building }
+GtkLayoutAdapter >> buildWithSelector: aSelector [
+ 
+	^ self build
+]
+
+{ #category : #building }
+GtkLayoutAdapter >> buildWithSpec [
+	"This provides some polymorphism with regular presenters to allow composition of layouts."
+
+	self 
+		deprecated: 'Please use #build instead' 
+		transformWith:  '`@receiver buildWithSpec' 
+						-> '`@receiver build'. 
+		
+	^ self build
+]
+
+{ #category : #building }
 GtkLayoutAdapter >> buildWithSpec: aSpec [
 	"This provides some polymorphism with regular presenters to allow composition of layouts."
-	
-	^ self widget
+
+	self
+		deprecated: 'Please use #buildWithLayout: instead'
+		transformWith: '`@receiver buildWithSpec: `@arg'
+			-> '`@receiver buildWithLayout: `@arg'.
+
+	^ self buildWithLayout: aSpec
 ]
 
 { #category : #private }

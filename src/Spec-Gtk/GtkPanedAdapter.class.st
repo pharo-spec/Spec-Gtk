@@ -31,37 +31,36 @@ GtkPanedAdapter >> applyLayout: aLayout [
 
 { #category : #private }
 GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
-	| childWidget position |
 
-	childWidget := aPresenter buildWithSpec: constraints spec.
+	| childWidget position |
+	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
-  
+
 	position := layout children indexOf: (aPresenter isSpLayout
-		ifTrue: [ aPresenter layout ]
-		ifFalse: [ aPresenter ]).
-	position = 0 ifTrue: [ 
-		"Not found, check for symbols. If is symbol, I need to get the presenter"
+			             ifTrue: [ aPresenter layout ]
+			             ifFalse: [ aPresenter ]).
+	position = 0 ifTrue: [ "Not found, check for symbols. If is symbol, I need to get the presenter"
 		layout children withIndexDo: [ :each :index | 
-			(each isSymbol and: [ (layout presenter presenterAt: each) = aPresenter ]) 
-				ifTrue: [ position := index ] ].
+			(each isSymbol and: [ 
+				 (layout presenter presenterAt: each) = aPresenter ]) ifTrue: [ 
+				position := index ] ].
 		"If I still do not find it, there is an error"
 		position = 0 ifTrue: [ 
 			layout children size < 2 ifTrue: [ 
 				position := layout children size + 1 ].
 			"Still zero? Then there is an error"
-			position = 0 ifTrue: [ 
-				self error: 'Can''t find a child.' ] ] ]. 
+			position = 0 ifTrue: [ self error: 'Can''t find a child.' ] ] ].
 
 	position = 1
 		ifTrue: [ 
-			gtkWidget 
-				pack1: childWidget 
-				resize: constraints canResize 
+			gtkWidget
+				pack1: childWidget
+				resize: constraints canResize
 				shrink: constraints canShrink ]
-		ifFalse: [
-			gtkWidget 
-				pack2: childWidget 
-				resize: constraints canResize 
+		ifFalse: [ 
+			gtkWidget
+				pack2: childWidget
+				resize: constraints canResize
 				shrink: constraints canShrink ].
 
 	^ gtkWidget

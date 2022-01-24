@@ -8,9 +8,9 @@ Class {
 GtkActionBarAdapter >> addModelTo: gtkWidget [
 	
 	(self itemsAt: #start) 
-		do: [ :each | gtkWidget packStart: each buildWithSpec ].
+		do: [ :each | gtkWidget packStart: each build ].
 	(self itemsAt: #end) 
-		reverseDo: [ :each | gtkWidget packEnd: each buildWithSpec ]
+		reverseDo: [ :each | gtkWidget packEnd: each build ]
 ]
 
 { #category : #private }

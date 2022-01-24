@@ -23,7 +23,7 @@ GtkFrameAdapter >> presenterWidget [
 
 	^ self presenter presenter adapter 
 		ifNotNil: [ :anAdapter | anAdapter widget ]
-		ifNil: [ self presenter presenter buildWithSpec ]
+		ifNil: [ self presenter presenter build ]
 ]
 
 { #category : #building }

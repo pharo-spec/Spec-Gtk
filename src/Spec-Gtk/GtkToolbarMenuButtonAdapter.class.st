@@ -22,7 +22,7 @@ GtkToolbarMenuButtonAdapter >> buildMenu: menuPresenter [
 	menuPresenter owner: self presenter.
 	menuWidget := SpBindings
 		value: self presenter application adapterBindings
-		during: [ menuPresenter buildWithSpec ].
+		during: [ menuPresenter build ].
 	^ menuWidget
 ]
 

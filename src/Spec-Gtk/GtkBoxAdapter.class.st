@@ -44,22 +44,22 @@ GtkBoxAdapter >> applyLayout: aLayout [
 
 { #category : #private }
 GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
-	| childWidget |
 
-	childWidget := aPresenter buildWithSpec: constraints spec.
+	| childWidget |
+	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
 	constraints isPlacedAtStart
 		ifTrue: [ 
-			gtkWidget 
-				packStart: childWidget 
-				expand: constraints isExpand 
+			gtkWidget
+				packStart: childWidget
+				expand: constraints isExpand
 				fill: constraints isFill
 				padding: constraints padding ]
 		ifFalse: [ 
-			gtkWidget 
-				reversePackEnd: childWidget 
-				expand: constraints isExpand 
-				fill: constraints isFill 
+			gtkWidget
+				reversePackEnd: childWidget
+				expand: constraints isExpand
+				fill: constraints isFill
 				padding: constraints padding ].
 
 	^ gtkWidget

@@ -52,7 +52,7 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 { #category : #building }
 GtkPopoverAdapter >> presenterWidget [
 
-	^ self presenter presenter buildWithSpec
+	^ self presenter presenter build
 ]
 
 { #category : #building }

@@ -61,7 +61,7 @@ GtkMenuItemAdapter >> addModelTo: gtkWidget [
 
 	"submenu"
 	self presenter subMenu
-		ifNotNil: [ :menuPresenter | gtkWidget submenu: menuPresenter buildWithSpec ]
+		ifNotNil: [ :menuPresenter | gtkWidget submenu: menuPresenter build ]
 ]
 
 { #category : #'private accessing' }

@@ -28,8 +28,11 @@ GtkProgressBarAdapter >> indeterminateValue [
 { #category : #api }
 GtkProgressBarAdapter >> updateState [
 
-	self presenter state 
-		ifNotNil: [ :state | state applyTo: self ]
+	self presenter state ifNil: [ ^ self ].
+	
+	self presenter state applyTo: self.
+	GRunLoop current isInCallback 
+		ifTrue: [ GtkPollingRunLoop new processEvents ]
 ]
 
 { #category : #building }

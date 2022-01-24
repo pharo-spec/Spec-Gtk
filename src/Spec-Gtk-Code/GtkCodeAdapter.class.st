@@ -191,7 +191,7 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 		styleName ifNotNil: [ 
 			lastPopover addStyle: styleName ].
 		
-		lastPopover buildWithSpec.
+		lastPopover build.
 
 		endIter := w textBuffer 
 			selectionIteratorsDo: [ :start :end | end ] 

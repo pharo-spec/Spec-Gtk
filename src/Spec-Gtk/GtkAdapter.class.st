@@ -158,7 +158,7 @@ GtkAdapter >> buildMenu: aMenuPresenter [
 
 	^ aMenuPresenter 
 		owner: self presenter;
-		buildWithSpec
+		build
 ]
 
 { #category : #building }

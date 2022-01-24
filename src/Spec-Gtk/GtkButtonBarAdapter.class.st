@@ -18,7 +18,7 @@ GtkButtonBarAdapter >> addModelTo: gtkWidget [
 	
 	gtkWidget borderWidth: self class defaultBorderWidth.
 	self model items do: [ :each |
-		gtkWidget packStart: each buildWithSpec ]
+		gtkWidget packStart: each build ]
 ]
 
 { #category : #building }

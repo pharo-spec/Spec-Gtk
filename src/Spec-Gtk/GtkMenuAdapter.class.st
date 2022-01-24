@@ -10,7 +10,7 @@ GtkMenuAdapter >> addModelTo: gtkWidget [
 	self model menuGroups 
 		do: [ :eachGroup | 
 			eachGroup menuItems
-				do: [ :each | gtkWidget add: each buildWithSpec ] ]
+				do: [ :each | gtkWidget add: each build ] ]
 		separatedBy: [ 
 			gtkWidget add: (GtkSeparatorMenuItem new
 				show;

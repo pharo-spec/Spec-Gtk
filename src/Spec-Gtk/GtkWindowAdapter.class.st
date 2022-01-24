@@ -56,7 +56,7 @@ GtkWindowAdapter >> addModelTo: gtkWindow [
 GtkWindowAdapter >> addPresenterIn: gtkWindow withSpecLayout: aSpec [
 	
 	initialized := false.
-	GRunLoop defer: [ 
+	GRunLoop defer: [
 		self deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec.
 		initialized := true.
 		self processDeferredActions ]
@@ -179,7 +179,7 @@ GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 GtkWindowAdapter >> contentWithSpecLayout: aSpec [
 
 	^ content ifNil: [ 
-		content := self model presenter buildWithSpecLayout: aSpec ]
+		  content := self model presenter buildWithLayout: aSpec ]
 ]
 
 { #category : #'private deferring' }
@@ -291,7 +291,7 @@ GtkWindowAdapter >> maximize [
 GtkWindowAdapter >> menuBarAccelInstalledOn: gtkWindow [
 	
 	^ menuBar ifNil: [ 
-		menuBar := self model menu buildWithSpec.
+		menuBar := self model menu build.
 		self presenter menu shortcutGroup 
 			ifNotNil: [ :accelGroup | gtkWindow addAcceleratorGroup: accelGroup  ].
 		menuBar ]
@@ -401,7 +401,7 @@ GtkWindowAdapter >> setDecorated: aBoolean [
 { #category : #'private building' }
 GtkWindowAdapter >> statusBar [
 
-	^ statusBar ifNil: [ statusBar := self model statusBar buildWithSpec ]
+	^ statusBar ifNil: [ statusBar := self model statusBar build ]
 
 ]
 
@@ -421,6 +421,6 @@ GtkWindowAdapter >> title: aString [
 { #category : #'private building' }
 GtkWindowAdapter >> toolbar [ 
 
-	^ toolbar ifNil: [ toolbar  := self presenter toolbar buildWithSpec ]
+	^ toolbar ifNil: [ toolbar  := self presenter toolbar build ]
 
 ]

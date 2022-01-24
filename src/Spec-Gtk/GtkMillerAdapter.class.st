@@ -80,7 +80,7 @@ GtkMillerAdapter >> applyLayout: aLayout [
 GtkMillerAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
-	childWidget := aPresenter buildWithSpec: constraints spec.
+	childWidget := aPresenter buildWithLayout: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
 		
 	gtkWidget 
