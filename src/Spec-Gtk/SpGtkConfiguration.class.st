@@ -11,19 +11,22 @@ Class {
 { #category : #private }
 SpGtkConfiguration >> addCSSProviderFromPath: aString [
 
-	(GtkCssProvider newFromPath: aString) addForApplicationToDefaultScreen
+	GRunLoop defer: [ 	
+		(GtkCssProvider newFromPath: aString) addForApplicationToDefaultScreen ]
 ]
 
 { #category : #private }
 SpGtkConfiguration >> addCSSProviderFromReference: aReference [
 
-	(GtkCssProvider newFromReference: aReference) addForApplicationToDefaultScreen
+	GRunLoop defer: [ 
+		(GtkCssProvider newFromReference: aReference) addForApplicationToDefaultScreen ]
 ]
 
 { #category : #private }
 SpGtkConfiguration >> addCSSProviderFromString: aString [
 
-	(GtkCssProvider newFromString: aString) addForApplicationToDefaultScreen
+	GRunLoop defer: [ 
+		(GtkCssProvider newFromString: aString) addForApplicationToDefaultScreen ]
 ]
 
 { #category : #'accessing - colors' }

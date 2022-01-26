@@ -36,6 +36,12 @@ SpecGtkBackend >> initialize [
 
 ]
 
+{ #category : #factory }
+SpecGtkBackend >> newDefaultConfiguration [
+
+	^ SpGtkConfiguration new
+]
+
 { #category : #'ui notifying' }
 SpecGtkBackend >> notifyError: aSpecNotification [
 
