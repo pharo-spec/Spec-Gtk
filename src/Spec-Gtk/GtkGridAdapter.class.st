@@ -39,7 +39,7 @@ GtkGridAdapter >> applyLayout: aLayout [
 GtkGridAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
-	childWidget := aPresenter buildWithLayout: constraints spec.
+	childWidget := aPresenter buildWithSelector: constraints spec.
 	childWidget data: aPresenter.
 	self addConstraints: constraints toChild: childWidget.
 	gtkWidget 
