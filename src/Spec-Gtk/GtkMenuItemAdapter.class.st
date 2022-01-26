@@ -14,7 +14,7 @@ GtkMenuItemAdapter class >> defaultSpacing [
 GtkMenuItemAdapter >> addAcceleratorShortcut: shortcut to: gtkWidget [
 	
 	self flag: #HACK.	"this is to ensure is not a key combination (gtk does not allows them)"
-	shortcut currentCharacter asString ifEmpty: [ ^ self ].
+	shortcut spGtkCurrentCharacter asString ifEmpty: [ ^ self ].
 
 	gtkWidget
 		addAccelerator: 'activate'
@@ -26,7 +26,7 @@ GtkMenuItemAdapter >> addAcceleratorShortcut: shortcut to: gtkWidget [
 GtkMenuItemAdapter >> addAcceleratorShortcutLabel: shortcut to: gtkBox [
 	
 	self flag: #HACK. "this is to ensure is not a key combination (gtk does not allows them)"
-	shortcut currentCharacter asString ifEmpty: [ ^ self ].
+	shortcut spGtkCurrentCharacter asString ifEmpty: [ ^ self ].
 	
 	gtkBox 
 		packEnd: (GtkAccelLabel newAccelerator: shortcut)

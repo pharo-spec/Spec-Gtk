@@ -15,7 +15,7 @@ GtkOverlayAdapter >> applyLayout: aLayout [
 GtkOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [ 
 	| childWidget |
 
-	childWidget := aPresenter buildWithSelector: constraints spec.
+	childWidget := aPresenter buildWithLayout: constraints spec.
 	constraints isOverlay
 		ifFalse: [
 			aWidget add: childWidget ]
