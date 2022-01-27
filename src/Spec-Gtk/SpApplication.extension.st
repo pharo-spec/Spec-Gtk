@@ -17,3 +17,9 @@ SpApplication >> addCSSProviderFromString: aPath [
 
 	self ensureConfiguration addCSSProviderFromString: aPath
 ]
+
+{ #category : #'*Spec-Gtk' }
+SpApplication >> defaultConfigurationForGtk [
+
+	^ SpGtkConfiguration new
+]

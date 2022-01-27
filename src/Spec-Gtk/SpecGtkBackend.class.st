@@ -17,6 +17,12 @@ SpecGtkBackend >> adapterBindingsClass [
 ]
 
 { #category : #accessing }
+SpecGtkBackend >> defaultConfigurationFor: anApplication [
+
+	^ anApplication defaultConfigurationForGtk
+]
+
+{ #category : #accessing }
 SpecGtkBackend >> defer: aBlock [ 
 
 	GRunLoop defer: aBlock
@@ -34,12 +40,6 @@ SpecGtkBackend >> initialize [
 	GtkEngine ensureRunning.	
 	super initialize.
 
-]
-
-{ #category : #factory }
-SpecGtkBackend >> newDefaultConfiguration [
-
-	^ SpGtkConfiguration new
 ]
 
 { #category : #'ui notifying' }
