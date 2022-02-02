@@ -31,7 +31,7 @@ GtkScrollableAdapter >> applyLayout: aLayout [
 GtkScrollableAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
-	childWidget := aPresenter buildWithLayout: constraints spec.
+	childWidget := aPresenter buildWithSelector: constraints spec.
 	gtkWidget add: childWidget.
 			
 	^ gtkWidget

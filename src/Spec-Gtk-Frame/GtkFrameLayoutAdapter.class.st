@@ -29,7 +29,7 @@ GtkFrameLayoutAdapter >> applyLayout: aLayout [
 GtkFrameLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
-	childWidget := aPresenter buildWithLayout: constraints spec.
+	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraits: constraints toChild: childWidget.
 	
 	gtkWidget add: childWidget.
