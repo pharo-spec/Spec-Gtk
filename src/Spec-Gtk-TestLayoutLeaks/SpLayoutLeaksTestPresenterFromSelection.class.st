@@ -49,10 +49,9 @@ SpLayoutLeaksTestPresenterFromSelection class >> leaksCheck [
 SpLayoutLeaksTestPresenterFromSelection class >> openGtk [
 
 	<script>
-	
-	| p |  
+	| p |
 	p := self newApplication: (SpApplication new useBackend: #Gtk).
-	^ p openWithSpec.
+	^ p open
 ]
 
 { #category : #'instance creation' }
