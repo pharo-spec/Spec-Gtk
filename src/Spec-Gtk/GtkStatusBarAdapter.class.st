@@ -12,7 +12,9 @@ GtkStatusBarAdapter >> addModelTo: gtkStatusBar [
 
 	self model message ifNotNil: [ :message | 
 		(gtkStatusBar contextNamed: self contextName)
-			pushMessage: message ]
+			pushMessage: message ].
+		
+	unsubscribed := false.
 ]
 
 { #category : #private }
@@ -26,6 +28,8 @@ GtkStatusBarAdapter >> contextName [
 
 { #category : #api }
 GtkStatusBarAdapter >> popMessage [
+
+	unsubscribed ifTrue: [ ^ self ].
 	
 	self widgetDo: [ :w | 
 		(w contextNamed: self contextName)
@@ -34,10 +38,20 @@ GtkStatusBarAdapter >> popMessage [
 
 { #category : #api }
 GtkStatusBarAdapter >> pushMessage [
+
+	unsubscribed ifTrue: [ ^ self ].
 	
 	self widgetDo: [ :w | 
 		(w contextNamed: self contextName)
 			pushMessage: self model message ]
+]
+
+{ #category : #api }
+GtkStatusBarAdapter >> unsubscribe [ 
+
+	super unsubscribe.
+	
+	unsubscribed := true.
 ]
 
 { #category : #updating }

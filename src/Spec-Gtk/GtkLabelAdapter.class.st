@@ -17,7 +17,7 @@ GtkLabelAdapter >> addModelTo: gtkWidget [
 { #category : #accessing }
 GtkLabelAdapter >> getText [
 
-	^ self presenter label localizedForPresenter: self presenter
+	^ (self presenter label ifNil: ['']) localizedForPresenter: self presenter
 ]
 
 { #category : #accessing }
