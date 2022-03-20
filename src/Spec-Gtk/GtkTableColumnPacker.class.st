@@ -194,7 +194,13 @@ GtkTableColumnPacker >> visitLinkColumn: aTableColumn [
 	
 	index := self columnIndexOf: aTableColumn.
 	column packStart: renderer expand: self isExpand.
-	column addAttribute: 'text' column: index renderer: renderer	
+	column addAttribute: 'text' column: index renderer: renderer.
+	
+	aTableColumn action ifNotNil: [ 	
+		renderer onActivate: [ :event :widget :path | 
+			| pathArray |
+			pathArray := (path substrings: '.') collect: [ :each | each asNumber + 1 ].
+			aTableColumn action value: (self store itemAtPath: pathArray) ] ]
 ]
 
 { #category : #visiting }
