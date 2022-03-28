@@ -76,12 +76,13 @@ GtkDialogWindowAdapter >> newWidget [
 ]
 
 { #category : #accessing }
-GtkDialogWindowAdapter >> open [ 
+GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 
 	^ self widgetDo: [ :w | 
 		w showAll.
 		self presenter presenter takeKeyboardFocus.
 		"To be executed in the event loop of the dialog"
 		GRunLoop forceDefer: [ self announceOpened ].
+		aBlock value.
 		w run ]
 ]

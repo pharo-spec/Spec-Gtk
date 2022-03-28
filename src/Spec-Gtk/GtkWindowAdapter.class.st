@@ -326,12 +326,19 @@ GtkWindowAdapter >> notifyInfo: aString [
 { #category : #accessing }
 GtkWindowAdapter >> open [
 
+	self openWithDeferredAction: [ ]
+]
+
+{ #category : #accessing }
+GtkWindowAdapter >> openWithDeferredAction: aBlock [
+ 
 	self hasWidget ifFalse: [ ^ nil ].
 	self widgetDo: [ :w |
 			w show.
 			w present ].
 	self presenter presenter takeKeyboardFocus.
 	self announceOpened.
+	aBlock value
 ]
 
 { #category : #'private building' }
