@@ -17,9 +17,14 @@ GtkDropListAdapter >> addModelTo: gtkComboBox [
 		self
 			disconnectSelectionEventsOf: gtkComboBox
 			during: [ self setModelTo: gtkComboBox ] ].
-		
-	self presenter selectedIndex 
-		ifNotNil: [ :index | gtkComboBox activeIndex: index - 1 ]
+	
+	(self presenter isStartWithSelection
+		and: [ self presenter model isEmpty not
+		and: [ self presenter selectedIndex = 0 ] ]) 
+		ifTrue: [ gtkComboBox selectIndex: 1 ]
+		ifFalse: [ 
+			self presenter selectedIndex 
+				ifNotNil: [ :index | gtkComboBox activeIndex: index - 1 ] ]
 ]
 
 { #category : #private }
