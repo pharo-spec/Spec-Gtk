@@ -11,6 +11,7 @@ GtkPopoverAdapter >> addModelTo: gtkPopover [
 	gtkPopover add: self presenterWidget showAll.	
 	gtkPopover beRelativeTo: self presenter relativeTo adapter innerWidget. 
 	gtkPopover beNotModal.
+	gtkPopover connectHide: [ self unregister: gtkPopover ].
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
@@ -37,7 +38,9 @@ GtkPopoverAdapter >> dismiss [
 { #category : #api }
 GtkPopoverAdapter >> popup [
 
-	self widgetDo: [ :w | w popup; beModal ]
+	self widgetDo: [ :w | 
+		self register: w.
+		w popup; beModal ]
 ]
 
 { #category : #api }
@@ -63,6 +66,13 @@ GtkPopoverAdapter >> rebuild [
 ]
 
 { #category : #private }
+GtkPopoverAdapter >> register: gtkPopover [
+
+	(GEngine current isWindowRegistered: gtkPopover) ifTrue: [ ^ self ].
+	GEngine current registerWindow: gtkPopover
+]
+
+{ #category : #private }
 GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 
 	gtkPopover 
@@ -74,6 +84,12 @@ GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 		
 	^ self presenter position applyTo: gtkPopover
+]
+
+{ #category : #private }
+GtkPopoverAdapter >> unregister: gtkPopover [
+
+	GEngine current unregisterWindow: gtkPopover
 ]
 
 { #category : #building }
