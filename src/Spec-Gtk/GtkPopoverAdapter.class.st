@@ -29,10 +29,10 @@ GtkPopoverAdapter >> dismiss [
 
 	self widgetDo: [ :w | 
 		w popdown. 
-		"I need to destroy explicitly because it may cause gtk to send callbacks to 
+		"I need to disconnect explicitly because it may cause gtk to send callbacks to 
 		 me and it may (most of the times it *will*) be already collected (then... 
 		 well, crash)."
-		w destroy ]
+		w disconnectAll ]
 ]
 
 { #category : #api }
@@ -47,6 +47,7 @@ GtkPopoverAdapter >> popup [
 GtkPopoverAdapter >> popupPointingTo: aRectangle [
 
 	self widgetDo: [ :w | 
+		self register: w.
 		w 
 			setPointingTo: aRectangle asGdkRectangle;
 			popup ]
