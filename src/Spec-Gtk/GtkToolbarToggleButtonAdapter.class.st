@@ -10,7 +10,9 @@ GtkToolbarToggleButtonAdapter >> addModelTo: gtkToolButton [
 	super addModelTo: gtkToolButton.
 
 	gtkToolButton connectToggled: [ self updateState ].
-	self presenter whenToggledDo: [ self updatePresenterState ] 
+	self presenter whenToggledDo: [ self updatePresenterState ].
+	
+	gtkToolButton active: self presenter state
 ]
 
 { #category : #building }
