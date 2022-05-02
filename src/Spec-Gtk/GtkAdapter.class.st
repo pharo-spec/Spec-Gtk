@@ -138,7 +138,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
 	self 
 		bindKeyCombination: aShortcut 
 		toAction: aBlock 
-		inWidget: self widget
+		inWidget: self innerWidget
 ]
 
 { #category : #private }
