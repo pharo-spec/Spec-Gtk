@@ -12,11 +12,12 @@ GtkToolbarBaseButtonAdapter >> addModelTo: gtkToolButton [
 	
 	gtkToolButton tooltipText: self presenter help.
 	
+	self presenter contextMenu 
+		ifNotNil: [ :menu | self addMenu: menu to: gtkToolButton ].
+	
 	self presenter 
 		whenLabelChangedDo: [ self updateLabel ];
-		whenIconChangedDo: [ self updateIcon ].
-	
-
+		whenIconChangedDo: [ self updateIcon ]
 ]
 
 { #category : #accessing }
