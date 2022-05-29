@@ -9,7 +9,9 @@ GtkMorphAdapter >> addModelTo: gtkWidget [
 
 	self presenter whenMorphChangedDo: [ :aMorph |
 		self widgetDo: [ :w | self setMorph: aMorph to: w ] ].
-	self setMorph: self presenter morph to: gtkWidget
+	self setMorph: self presenter morph to: gtkWidget.
+	self model contextMenu 
+		ifNotNil: [ :menu | self addMenu: menu to: gtkWidget ]	
 	
 ]
 
