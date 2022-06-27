@@ -92,6 +92,8 @@ GtkListAdapter >> newListColumn [
 		title: self presenter headerTitle
 		evaluated: self presenter display.	
 	
+	self presenter displayAlignment 
+		ifNotNil: [ :aBlock | column displayAlignment: aBlock ].
 	self presenter displayColor 
 		ifNotNil: [ :aBlock | column displayColor: aBlock ].
 	self presenter displayBold

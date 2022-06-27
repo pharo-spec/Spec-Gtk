@@ -13,6 +13,17 @@ Class {
 }
 
 { #category : #private }
+GtkTableDataStoreColumnCollector >> addAlignmentColumn: aTableColumn [
+
+	aTableColumn displayAlignment ifNil: [ ^ self ]. 
+	store addColumn: (GtkTreeDataIntegerColumn new 
+		column: aTableColumn;
+		tag: #alignment;
+		evaluated: [ :aClass | 
+			(aTableColumn displayAlignment cull: aClass) asXAlign ]).
+]
+
+{ #category : #private }
 GtkTableDataStoreColumnCollector >> addBackgroundColorColumn: aTableColumn [
 
 	aTableColumn displayBackgroundColor ifNil: [ ^ self ]. 
@@ -119,6 +130,7 @@ GtkTableDataStoreColumnCollector >> visitStringColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataStringColumn on: aTableColumn).
 	"text properties"
+	self addAlignmentColumn: aTableColumn.
 	self addColorColumn: aTableColumn.
 	self addBackgroundColorColumn: aTableColumn.
 	self addItalicColumn: aTableColumn.

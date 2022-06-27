@@ -216,6 +216,11 @@ GtkTableColumnPacker >> visitStringColumn: aTableColumn [
 	column packStart: renderer expand: self isExpand.
 	column addAttribute: 'text' column: index renderer: renderer.
 	"Add properties."
+	aTableColumn displayAlignment ifNotNil: [ 
+		column 
+			addAttribute: 'xalign' 
+			column: (self columnIndexOf: aTableColumn tag: #alignment) 
+			renderer: renderer ].	
 	aTableColumn displayColor ifNotNil: [ 
 		column 
 			addAttribute: 'foreground' 
