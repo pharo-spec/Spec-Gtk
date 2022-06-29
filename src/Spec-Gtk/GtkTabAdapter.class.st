@@ -66,3 +66,11 @@ GtkTabAdapter >> remove: aPresenter [
 	^ self widgetDo: [ :w | 
 		w remove: (w children detect: [ :each | each data = aPresenter ]) ]
 ]
+
+{ #category : #accessing }
+GtkTabAdapter >> selectIndex: index [
+
+	lastPage := layout children at: index.
+	self widgetDo: [ :w | 
+		w currentPage: index - 1 ]
+]

@@ -15,12 +15,72 @@ GtkTableColumnPacker class >> on: aModel [
 	^ self new model: aModel
 ]
 
+{ #category : #'private - attributes' }
+GtkTableColumnPacker >> addAlignmentAttribute: aTableColumn column: aColumn renderer: aRenderer [
+	
+	aTableColumn displayAlignment ifNil: [ ^ self ].
+	aColumn 
+		addAttribute: 'xalign' 
+		column: (self columnIndexOf: aTableColumn tag: #alignment) 
+		renderer: aRenderer
+]
+
+{ #category : #'private - attributes' }
+GtkTableColumnPacker >> addBackgroundColorAttribute: aTableColumn column: aColumn renderer: aRenderer [
+
+	aTableColumn displayBackgroundColor ifNil: [ ^ self ].
+	aColumn
+		addAttribute: 'background'
+		column: (self columnIndexOf: aTableColumn tag: #background) 
+		renderer: aRenderer
+]
+
+{ #category : #'private - attributes' }
+GtkTableColumnPacker >> addBoldAttribute: aTableColumn column: aColumn renderer: aRenderer [
+
+	aTableColumn displayBold ifNil: [ ^ self ]. 
+	aColumn 
+		addAttribute: 'weight'
+		column: (self columnIndexOf: aTableColumn tag: #weight) 
+		renderer: aRenderer
+]
+
+{ #category : #'private - attributes' }
+GtkTableColumnPacker >> addColorAttribute: aTableColumn column: aColumn renderer: aRenderer [
+	
+	aTableColumn displayColor ifNil: [ ^ self ]. 
+	aColumn 
+		addAttribute: 'foreground' 
+		column: (self columnIndexOf: aTableColumn tag: #foreground) 
+		renderer: aRenderer
+]
+
+{ #category : #'private - attributes' }
+GtkTableColumnPacker >> addItalicAttribute: aTableColumn column: aColumn renderer: aRenderer [
+
+	aTableColumn displayItalic ifNil: [ ^ self ]. 
+	aColumn 
+		addAttribute: 'style'
+		column: (self columnIndexOf: aTableColumn tag: #style) 
+		renderer: aRenderer
+]
+
 { #category : #private }
 GtkTableColumnPacker >> addRendererPropertiesTo: renderer column: aTableColumn [
 	
 	aTableColumn width ifNotNil: [ :w | 
 		renderer width: w ].
 
+]
+
+{ #category : #'private - attributes' }
+GtkTableColumnPacker >> addUnderlineAttribute: aTableColumn column: aColumn renderer: aRenderer [
+
+	aTableColumn displayUnderline ifNil: [ ^ self ].
+	aColumn 
+		addAttribute: 'underline'
+		column: (self columnIndexOf: aTableColumn tag: #underline) 
+		renderer: aRenderer
 ]
 
 { #category : #accessing }
@@ -95,7 +155,7 @@ GtkTableColumnPacker >> isExpand [
 	^ expand
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkTableColumnPacker >> newEditableTextRendererFor: aTableColumn [
 	| renderer |
 	
@@ -110,19 +170,19 @@ GtkTableColumnPacker >> newEditableTextRendererFor: aTableColumn [
 	^ renderer
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkTableColumnPacker >> newImageRenderer [
 
 	^ GtkCellRendererPixbuf new
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkTableColumnPacker >> newTextRenderer [
 
 	^ GtkCellRendererText new
 ]
 
-{ #category : #'private factory' }
+{ #category : #'private - factory' }
 GtkTableColumnPacker >> newToggleRenderer [
 
 	^ GtkCellRendererToggle new
@@ -149,7 +209,9 @@ GtkTableColumnPacker >> visitCheckboxColumn: aTableColumn [
 	column 
 		addAttribute: 'active' 
 		column: (self columnIndexOf: aTableColumn)
-		renderer: renderer
+		renderer: renderer.
+	"attributes"
+	self addAlignmentAttribute: aTableColumn column: column renderer: renderer.
 ]
 
 { #category : #visiting }
@@ -168,7 +230,9 @@ GtkTableColumnPacker >> visitImageColumn: aTableColumn [
 	column 
 		addAttribute: 'pixbuf' 
 		column: (self columnIndexOf: aTableColumn)
-		renderer: renderer
+		renderer: renderer.
+	"attributes"
+	self addAlignmentAttribute: aTableColumn column: column renderer: renderer
 ]
 
 { #category : #visiting }
@@ -182,7 +246,9 @@ GtkTableColumnPacker >> visitIndexColumn: aTableColumn [
 	
 	index := self columnIndexOf: aTableColumn.
 	column packStart: renderer expand: self isExpand.
-	column addAttribute: 'text' column: index renderer: renderer
+	column addAttribute: 'text' column: index renderer: renderer.
+	"attributes"
+	self addAlignmentAttribute: aTableColumn column: column renderer: renderer
 ]
 
 { #category : #visiting }
@@ -200,7 +266,9 @@ GtkTableColumnPacker >> visitLinkColumn: aTableColumn [
 		renderer onActivate: [ :event :widget :path | 
 			| pathArray |
 			pathArray := (path substrings: '.') collect: [ :each | each asNumber + 1 ].
-			aTableColumn action value: (self store itemAtPath: pathArray) ] ]
+			aTableColumn action value: (self store itemAtPath: pathArray) ] ].
+	"attributes"
+	self addAlignmentAttribute: aTableColumn column: column renderer: renderer
 ]
 
 { #category : #visiting }
@@ -215,35 +283,11 @@ GtkTableColumnPacker >> visitStringColumn: aTableColumn [
 	index := self columnIndexOf: aTableColumn.
 	column packStart: renderer expand: self isExpand.
 	column addAttribute: 'text' column: index renderer: renderer.
-	"Add properties."
-	aTableColumn displayAlignment ifNotNil: [ 
-		column 
-			addAttribute: 'xalign' 
-			column: (self columnIndexOf: aTableColumn tag: #alignment) 
-			renderer: renderer ].	
-	aTableColumn displayColor ifNotNil: [ 
-		column 
-			addAttribute: 'foreground' 
-			column: (self columnIndexOf: aTableColumn tag: #foreground) 
-			renderer: renderer ].	
-	aTableColumn displayBackgroundColor ifNotNil: [
-		column 
-			addAttribute: 'background'
-			column: (self columnIndexOf: aTableColumn tag: #background) 
-			renderer: renderer ].
-	aTableColumn displayItalic ifNotNil: [  
-		column 
-			addAttribute: 'style'
-			column: (self columnIndexOf: aTableColumn tag: #style) 
-			renderer: renderer ].
-	aTableColumn displayBold ifNotNil: [  
-		column 
-			addAttribute: 'weight'
-			column: (self columnIndexOf: aTableColumn tag: #weight) 
-			renderer: renderer ].
-	aTableColumn displayBold ifNotNil: [  
-		column 
-			addAttribute: 'underline'
-			column: (self columnIndexOf: aTableColumn tag: #underline) 
-			renderer: renderer ].	
+	"attributes"
+	self addAlignmentAttribute: aTableColumn column: column renderer: renderer.
+	self addColorAttribute: aTableColumn column: column renderer: renderer.
+	self addBackgroundColorAttribute: aTableColumn column: column renderer: renderer.
+	self addItalicAttribute: aTableColumn column: column renderer: renderer.	
+	self addBoldAttribute: aTableColumn column: column renderer: renderer.	
+	self addUnderlineAttribute: aTableColumn column: column renderer: renderer
 ]
