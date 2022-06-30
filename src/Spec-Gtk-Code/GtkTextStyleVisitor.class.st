@@ -320,11 +320,11 @@ GtkTextStyleVisitor >> visitLiteralNode: aRBLiteralValueNode [
 
 { #category : #visiting }
 GtkTextStyleVisitor >> visitMessageNode: aRBMessageNode [ 
-	| style link |
+	| style |
 	
 	style := #keyword.
-	(Symbol findInternedSelector: aRBMessageNode selector asString) 
-		ifNil: [ 
+	aRBMessageNode selector isSelectorSymbol 
+		ifFalse: [ 
 			style := (Symbol selectorThatStartsCaseSensitive: aRBMessageNode selector asString skipping: nil) isNil
 				ifTrue: [ #undefinedKeyword ]
 				ifFalse: [ #incompleteKeyword ] ].
