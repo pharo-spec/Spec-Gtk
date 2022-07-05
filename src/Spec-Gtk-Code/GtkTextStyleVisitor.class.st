@@ -70,9 +70,13 @@ GtkTextStyleVisitor >> literalStyleSymbol: aValue [
 { #category : #private }
 GtkTextStyleVisitor >> methodOrBlockArgStyleFor: aRBArgumentNode [ 
 	
-	^ aRBArgumentNode isBlockVar
-		ifTrue: [ #blockArg ]
-		ifFalse: [ #methodArg ]
+	^ aRBArgumentNode isDefinedByBlock
+		ifTrue: [ 
+			aRBArgumentNode isDefinition 
+				ifTrue: [ #blockPatternArg ]
+				ifFalse: [ #blockArg ] ]
+		ifFalse: [ 
+			#methodArg ]
 ]
 
 { #category : #private }
@@ -89,6 +93,12 @@ GtkTextStyleVisitor >> methodOrBlockTempStyleFor: aRBTemporaryNode [
 	^ aRBTemporaryNode isDefinedByBlock
 		  ifTrue: [ #blockTempVar ]
 		  ifFalse: [ #tempVar ]
+]
+
+{ #category : #styling }
+GtkTextStyleVisitor >> processOverlapedTags [
+	"Seems that GtkSourceView does not process fine the fact that some tags may be overlapped"
+	
 ]
 
 { #category : #accessing }
@@ -180,6 +190,8 @@ GtkTextStyleVisitor >> styleMethod: aString [
 		parse.	
 
 	self styleAST: ast.
+
+	self processOverlapedTags.
 
 	^ self tags
 ]
@@ -344,6 +356,17 @@ GtkTextStyleVisitor >> visitMessageNode: aRBMessageNode [
 ]
 
 { #category : #visiting }
+GtkTextStyleVisitor >> visitMethodArguments: arguments [ 
+
+	arguments ifEmpty: [ ^ self ].
+	arguments do: [ :argument | 
+		self 
+			addStyle: #patternArg 
+			from: argument start
+			to: argument stop ]
+]
+
+{ #category : #visiting }
 GtkTextStyleVisitor >> visitMethodComments: comments [
 
 	comments do: [ :comment | self addStyle: #comment from: comment start to: comment stop ].
@@ -355,9 +378,8 @@ GtkTextStyleVisitor >> visitMethodComments: comments [
 GtkTextStyleVisitor >> visitMethodNode: aRBMethodNode [ 
 	
 	self visitMethodComments: aRBMethodNode comments.
-	
-	"aMethodNode arguments do: [ :argument | self addStyle: #patternArg forNode: argument ].
-	link := TextMethodLink selector: aMethodNode selector."
+	self visitMethodArguments: aRBMethodNode arguments. 
+
 	aRBMethodNode selectorParts
 		with: aRBMethodNode keywordsPositions
 		do: [ :keyword :position | 
@@ -407,11 +429,11 @@ GtkTextStyleVisitor >> visitPragmaNode: aRBPragmaNode [
 
 { #category : #visiting }
 GtkTextStyleVisitor >> visitReturnNode: aRBReturnNode [ 
-	
+
 	self 
 		addStyle: #return
 		from: aRBReturnNode start
-		to: aRBReturnNode stop.
+		to: aRBReturnNode children first start - 1.
 		
 	self visitNode: aRBReturnNode value
 ]
