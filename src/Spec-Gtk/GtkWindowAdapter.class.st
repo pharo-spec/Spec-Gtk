@@ -171,7 +171,7 @@ GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 	"add close events (delete is sent before)"
 	gtkWindow 
 		connectDeleteEvent: [ self announceWillClose. false ];
-		connectHide: [ self closeFromSignal ];
+		"connectHide: [ self closeFromSignal ];"
 		connectSizeAllocate: [ :aRect | self announceResized: aRect extent ]
 ]
 
