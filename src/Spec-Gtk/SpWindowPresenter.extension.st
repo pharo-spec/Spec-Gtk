@@ -4,7 +4,7 @@ Extension { #name : #SpWindowPresenter }
 SpWindowPresenter >> inform: aString [
 
 	self withAdapterDo: [ :anAdapter | 
-		anAdapter notifyInfo: aString ]
+		anAdapter inform: aString ]
 ]
 
 { #category : #'*Spec-Gtk' }

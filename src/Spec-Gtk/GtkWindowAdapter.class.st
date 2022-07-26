@@ -241,6 +241,12 @@ GtkWindowAdapter >> infoArea [
 	^ infoArea ifNil: [ infoArea := GtkInfoArea new ]
 ]
 
+{ #category : #notifying }
+GtkWindowAdapter >> inform: aString [
+
+	self notifyInfo: aString
+]
+
 { #category : #initialization }
 GtkWindowAdapter >> initialize [
 
