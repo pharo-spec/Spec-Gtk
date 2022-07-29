@@ -21,7 +21,7 @@ GtkTableColumnPacker >> addAlignmentAttribute: aTableColumn column: aColumn rend
 	aTableColumn displayAlignment ifNil: [ ^ self ].
 	aColumn 
 		addAttribute: 'xalign' 
-		column: (self columnIndexOf: aTableColumn tag: #alignment) 
+		column: (self columnIndexOf: aTableColumn tag: #xalign) 
 		renderer: aRenderer
 ]
 
