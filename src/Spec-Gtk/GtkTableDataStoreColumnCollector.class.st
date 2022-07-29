@@ -18,7 +18,7 @@ GtkTableDataStoreColumnCollector >> addAlignmentColumn: aTableColumn [
 	aTableColumn displayAlignment ifNil: [ ^ self ]. 
 	store addColumn: (GtkTreeDataIntegerColumn new 
 		column: aTableColumn;
-		tag: #alignment;
+		tag: #xalign;
 		evaluated: [ :aClass | 
 			(aTableColumn displayAlignment cull: aClass) asXAlign ]).
 ]
@@ -102,13 +102,15 @@ GtkTableDataStoreColumnCollector >> store: aStore [
 { #category : #visiting }
 GtkTableDataStoreColumnCollector >> visitCheckboxColumn: aTableColumn [
 
-	store addColumn: (GtkTreeDataBooleanColumn on: aTableColumn)
+	store addColumn: (GtkTreeDataBooleanColumn on: aTableColumn).
+	self addAlignmentColumn: aTableColumn
 ]
 
 { #category : #visiting }
 GtkTableDataStoreColumnCollector >> visitImageColumn: aTableColumn [
 
-	store addColumn: (GtkTreeDataPixbufColumn on: aTableColumn)
+	store addColumn: (GtkTreeDataPixbufColumn on: aTableColumn).
+	self addAlignmentColumn: aTableColumn	
 ]
 
 { #category : #visiting }
@@ -116,21 +118,23 @@ GtkTableDataStoreColumnCollector >> visitIndexColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataIndexColumn new 
 		column: aTableColumn;
-		yourself)
+		yourself).
+	self addAlignmentColumn: aTableColumn		
 ]
 
 { #category : #visiting }
 GtkTableDataStoreColumnCollector >> visitLinkColumn: aTableColumn [
 
-	store addColumn: (GtkTreeDataStringColumn on: aTableColumn)
+	store addColumn: (GtkTreeDataStringColumn on: aTableColumn).
+	self addAlignmentColumn: aTableColumn	
 ]
 
 { #category : #visiting }
 GtkTableDataStoreColumnCollector >> visitStringColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataStringColumn on: aTableColumn).
-	"text properties"
 	self addAlignmentColumn: aTableColumn.
+	"text properties"
 	self addColorColumn: aTableColumn.
 	self addBackgroundColorColumn: aTableColumn.
 	self addItalicColumn: aTableColumn.
