@@ -108,7 +108,7 @@ GtkComponentListAdapter >> isNonEditableRow: aRow column: aColumn [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 GtkComponentListAdapter >> items [
 
 	^ innerWidget items
