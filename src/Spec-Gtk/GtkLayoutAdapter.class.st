@@ -217,7 +217,11 @@ GtkLayoutAdapter >> rebuild [
 	widget removeAll.
 	"re-add all"
 	layout children do: [ :each |
-		self add: each constraints: (layout constraintsFor: each) ].
+		each isSymbol 
+			ifTrue: [ 
+				self add: (self model perform: each) adapter constraints: (layout constraintsFor: each) ]
+			ifFalse: [ 
+				self add: each forGtkLayoutRebuild constraints: (layout constraintsFor: each) ]].
 	"show"
 	widget show.
 	"now dispose"
