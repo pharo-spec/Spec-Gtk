@@ -28,6 +28,7 @@ GtkTabAdapter >> addConstraints: constraints toChild: childWidget [
 GtkTabAdapter >> applyLayout: aLayout [
 
 	widget := GtkNotebook new.
+	widget beScrollable.
 	self connectToEvents: aLayout. 
 
 	widget connectSwitchPage: [ :aPage | 
