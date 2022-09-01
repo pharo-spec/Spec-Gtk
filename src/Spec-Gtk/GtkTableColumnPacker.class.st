@@ -265,7 +265,7 @@ GtkTableColumnPacker >> visitLinkColumn: aTableColumn [
 	aTableColumn action ifNotNil: [ 	
 		renderer onActivate: [ :event :widget :path | 
 			| pathArray |
-			pathArray := (path substrings: '.') collect: [ :each | each asNumber + 1 ].
+			pathArray := (path substrings: ':') collect: [ :each | each asNumber + 1 ].
 			aTableColumn action value: (self store itemAtPath: pathArray) ] ].
 	"attributes"
 	self addAlignmentAttribute: aTableColumn column: column renderer: renderer
