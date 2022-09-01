@@ -151,7 +151,8 @@ GtkAbstractTextAdapter >> setText: aString to: gtkWidget [
 GtkAbstractTextAdapter >> showContextMenu [
 
 	self presenter contextMenu ifNil: [ ^ self ].
-	self innerWidgetDo: [ :w | w emitSignalByName: 'popup-menu' ]
+	self innerWidgetDo: [ :w | 
+		w emitSignalByName: 'popup-menu' ]
 ]
 
 { #category : #accessing }
