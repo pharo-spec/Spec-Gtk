@@ -81,7 +81,7 @@ GtkAbstractTextAdapter >> populatePopup: menuWidget [
 	menuPresenter := self presenter contextMenu value.
 	menuPresenter ifNil: [ ^ self ].
 	
-	self addEditionContextMenuTo: menuPresenter.
+	"self addEditionContextMenuTo: menuPresenter."
 	
 	lastShownMenu := menuWidget.
 	newMenu := self buildMenu: menuPresenter.

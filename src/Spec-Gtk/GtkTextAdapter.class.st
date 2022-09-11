@@ -52,6 +52,12 @@ GtkTextAdapter >> addTextBufferTo: gtkTextView [
 		self updatePresenterText: gtkTextView text ]
 ]
 
+{ #category : #api }
+GtkTextAdapter >> backendIncludesEditionMenu [
+
+	^ true
+]
+
 { #category : #building }
 GtkTextAdapter >> bufferClass [
 
