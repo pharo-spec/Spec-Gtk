@@ -8,17 +8,18 @@ Class {
 GtkLinkAdapter >> addModelTo: gtkButton [
 
 	widget := gtkButton.
-
-	"self presenter contextMenu ifNotNil: [ :menu |
-		self addMenu: menu to: gtkButton ]."
+	
+	self flag: #TODO. "Add SpTAlignable to SpLinkPresenter. Now I have no time nor the requirement"
+	gtkButton hAlignStart.
+	gtkButton connectActivateLink: [ true ].
 
 	gtkButton connectClicked: [ 
-		self presenter performAction ].	
+		self presenter performAction ].
 
-	self presenter label isEmptyOrNil ifFalse: [ self updateLabel ].
+	self presenter label isEmptyOrNil 
+		ifFalse: [ self updateLabel ].
 	
-	model whenLabelChangedDo: [ self updateLabel ].
-
+	model whenLabelChangedDo: [ self updateLabel ]
 ]
 
 { #category : #factory }

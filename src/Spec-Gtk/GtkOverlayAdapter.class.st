@@ -21,8 +21,8 @@ GtkOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [
 			aWidget add: childWidget ]
 		ifTrue: [
 			childWidget
-				beHAlignCenter;
-				beVAlignCenter.
+				hAlignCenter;
+				vAlignCenter.
 			aWidget addOverlay: childWidget ].
 		
 	self basicApplyAlignmentTo: childWidget constraints: constraints.
