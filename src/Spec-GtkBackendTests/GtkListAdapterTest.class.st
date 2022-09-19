@@ -22,16 +22,6 @@ GtkListAdapterTest >> setUp [
 ]
 
 { #category : #tests }
-GtkListAdapterTest >> testListWithIcons [
-
-	presenter icons: [ :each | each systemIcon ].
-	self openInstance.
-	self 
-		assert: presenter adapter innerWidget model numberOfColumns
-		equals: 2
-]
-
-{ #category : #tests }
 GtkListAdapterTest >> testListWithNoIcons [
 
 	self openInstance.
