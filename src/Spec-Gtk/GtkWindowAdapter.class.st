@@ -387,7 +387,7 @@ GtkWindowAdapter >> processDeferredActions [
 GtkWindowAdapter >> rebuild [
 
 	contentBox hide.
-	contentBox children do: [ :each | each markForAutoRelease ].
+	contentBox children do: [ :each | each ensureObjectRefAndAutoRelease ].
 	contentBox removeAll.
 	content := self model presenter adapter widget.
 	

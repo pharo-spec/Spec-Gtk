@@ -182,7 +182,7 @@ GtkLayoutAdapter >> ensureRetained: aWidget [
 	 we mark the object for autoRelease (ensuring it *will* be collected when no references 
 	 in the image remains)"
 
-	aWidget markForAutoRelease
+	aWidget ensureObjectRefAndAutoRelease
 ]
 
 { #category : #testing }

@@ -88,7 +88,7 @@ GtkBoxAdapter >> replace: aPresenter with: otherPresenter withConstraints: const
 	| index |
 	
 	"preserve aPresenter widget (in case it will be used later)"
-	aPresenter adapter widget markForAutoRelease.
+	aPresenter adapter widget ensureObjectRefAndAutoRelease.
 	index := widget children indexOf: aPresenter adapter widget.
 	self remove: aPresenter.
 	
