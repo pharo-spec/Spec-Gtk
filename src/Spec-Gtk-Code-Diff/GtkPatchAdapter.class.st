@@ -130,7 +130,10 @@ GtkPatchAdapter >> setPatchTo: gtkTextView [
 GtkPatchAdapter >> setText: aString to: gtkWidget [
 
 	self backendDetectCyclesDo: [
-		gtkWidget textBuffer: (self newTextBufferForText: aString) ]
+		| textBuffer |
+		textBuffer := self newTextBufferForText: aString.
+		gtkWidget textBuffer: textBuffer.
+		textBuffer objectUnref ]
 ]
 
 { #category : #'private - accessing' }

@@ -35,7 +35,7 @@ GtkCodeAdapter >> addSourceCompletionProviderTo: gtkSourceView [
 
 { #category : #building }
 GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
-	
+
 	self flag: #TODO. "Find a better way to validate this"
 	(gtkSourceView isKindOf: GtkSourceView) ifFalse: [ ^ self ].
 	  
@@ -45,8 +45,6 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		autoIndent: true;
 		indentOnTab: true;
 		tabWidth: 4.
-
-	gtkSourceView textBuffer: (self newTextBufferForText: nil).		
 
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
@@ -374,7 +372,11 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 GtkCodeAdapter >> setText: aString to: gtkWidget [
 
 	self backendDetectCyclesDo: [
-		gtkWidget textBuffer: (self newTextBufferForText: aString).
+		| textBuffer |
+		textBuffer := self newTextBufferForText: aString.
+		gtkWidget textBuffer: textBuffer.
+		"the widget will take ownership"
+		textBuffer objectUnref.
 		self userActionDo: [ :action | action registerChange ] ]
 ]
 
