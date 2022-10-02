@@ -13,6 +13,7 @@ Class {
 GtkCodeAdapter >> addModelTo: gtkTextView [ 
 
 	self addSourceFeaturesTo: gtkTextView.	
+	self addSmartCharactersTo: gtkTextView.
 	super addModelTo: gtkTextView
 ]
 
@@ -20,6 +21,25 @@ GtkCodeAdapter >> addModelTo: gtkTextView [
 GtkCodeAdapter >> addMonospaceStyleFor: gtkTextView [
 	
 	gtkTextView styleContext addClass: 'code'
+]
+
+{ #category : #building }
+GtkCodeAdapter >> addSmartCharactersTo: gtkTextView [
+	| smartChars selection |
+	
+	smartChars := GtkCodeSmartCharacters allChars.	
+	gtkTextView connectKeyPressEvent: [ :event | | char |
+		char := event character.
+		(self presenter hasSmartCharacters 
+			and: [ (smartChars includes: char)  
+			and: [ (selection := self selection) notEmpty ] ])
+			ifTrue: [ 
+				(GtkCodeSmartCharacters findMatching: char) 
+					applyTo: gtkTextView 
+					in: selection.
+				true ]
+			ifFalse: [ 
+				false ] ]
 ]
 
 { #category : #building }
