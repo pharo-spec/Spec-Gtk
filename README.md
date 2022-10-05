@@ -25,10 +25,10 @@ You need to have Gtk3 installed (this should be already the case).
 
 ## Installing in your image
 
-1) Download a Pharo 10.0 image: 
+1) Download a Pharo 11.0 image:
 
 ```
-curl get.pharo.org/100 | bash
+curl get.pharo.org/110 | bash
 ```
 
 2) Open your image using `./pharo-ui Pharo.image` and evaluate:
