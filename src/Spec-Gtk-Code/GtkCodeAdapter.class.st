@@ -34,9 +34,10 @@ GtkCodeAdapter >> addSmartCharactersTo: gtkTextView [
 			and: [ (smartChars includes: char)  
 			and: [ (selection := self selection) notEmpty ] ])
 			ifTrue: [ 
-				(GtkCodeSmartCharacters findMatching: char) 
-					applyTo: gtkTextView 
-					in: selection.
+				self userActionDuring: [
+					(GtkCodeSmartCharacters findMatching: char) 
+						applyTo: gtkTextView 
+						in: selection ].
 				true ]
 			ifFalse: [ 
 				false ] ]

@@ -46,6 +46,7 @@ GtkCodeSmartCharacters class >> smartCharsTable [
 
 	^ SmartCharsTable ifNil: [ 
 		SmartCharsTable := {
+			self newOpen: $( close: $).
 			self newOpen: ${ close: $}.
 			self newOpen: $< close: $>.
 			self newOpen: $[ close: $].
@@ -84,4 +85,11 @@ GtkCodeSmartCharacters >> pairs [
 	^ close 
 		ifNotNil: [ { open. close } ]
 		ifNil: [ { open } ]
+]
+
+{ #category : #'as yet unclassified' }
+GtkCodeSmartCharacters >> printOn: stream [
+
+	super printOn: stream.
+	stream << '(' << self pairs asString << ')'
 ]
