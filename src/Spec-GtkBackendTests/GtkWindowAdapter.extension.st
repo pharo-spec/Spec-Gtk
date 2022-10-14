@@ -9,5 +9,5 @@ GtkWindowAdapter >> windowIsResizable [
 { #category : #'*Spec-GtkBackendTests' }
 GtkWindowAdapter >> windowSize [
 
-	^ self widgetDo: [ :w | w size ]
+	^ self widgetDo: [ :w | w defaultSize ]
 ]

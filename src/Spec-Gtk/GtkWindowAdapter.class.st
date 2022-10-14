@@ -22,7 +22,7 @@ Class {
 { #category : #private }
 GtkWindowAdapter >> add: gtkBox toWindow: gtkWindow [
 
-	gtkWindow add: gtkBox
+	gtkWindow child: gtkBox
 ]
 
 { #category : #'private building' }
@@ -93,7 +93,7 @@ GtkWindowAdapter >> announceResized: newSize [
 	"It seems the allocated extent is not necessarly the resulting size of the window, 
 	 Instead using that extent as newSize informed, we ask the real size of the 
 	 window to send."
-	self widgetDo: [ :w | windowSize := w size ].
+	self widgetDo: [ :w | windowSize := w defaultSize ].
 	self presenter announcer announce: (SpWindowResizing new
 		window: self presenter;
 		newSize: windowSize;	
@@ -169,10 +169,14 @@ GtkWindowAdapter >> configureKeyBindings: gtkWindow [
 GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 
 	"add close events (delete is sent before)"
-	gtkWindow 
-		connectDeleteEvent: [ self announceWillClose. false ];
+
+	gtkWindow
+		connectDeleteEvent: [ 
+			self announceWillClose.
+			false ];
 		connectHide: [ self closeFromSignal ];
-		connectSizeAllocate: [ :aRect | self announceResized: aRect extent ]
+		connectDefaultWidth: [ self announceResized: self widget defaultSize ];
+		connectDefaultHeight: [ self announceResized: self widget defaultSize ]
 ]
 
 { #category : #'private building' }
@@ -199,9 +203,7 @@ GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 	"add window properties"
 	self presenter initialExtent
 		ifNotNil: [ :extent |
-			gtkWindow 
-				defaultSize: extent;
-				resize: extent ].
+			gtkWindow defaultSize: extent ].
 	self presenter initialPosition
 		ifNotNil: [ :position | gtkWindow moveTo: position ].
 	gtkWindow decorated: self presenter hasDecorations.
@@ -222,7 +224,7 @@ GtkWindowAdapter >> deferredCenter: gtkWindow relativeTo: aWindowPresenter [
 	isVisible := gtkWindow isVisible.
 	isVisible ifTrue:[ gtkWindow hide ].
 	bounds := aWindowPresenter adapter widget bounds.
-	position := bounds topLeft + ((bounds extent - gtkWindow size) // 2).
+	position := bounds topLeft + ((bounds extent - gtkWindow defaultSize) // 2).
 	gtkWindow moveTo: position.
 	isVisible ifTrue: [ gtkWindow show ]
 ]
@@ -345,34 +347,19 @@ GtkWindowAdapter >> openWithDeferredAction: aBlock [
 GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 
 	"menu bar"
-	self model hasMenu ifTrue: [ 
-		gtkBox 
-			packStart: (self menuBarAccelInstalledOn: gtkWindow) 
-			expand: false 
-			fill: false 
-			padding: 0 ].
+
+	self model hasMenu 
+		ifTrue: [ gtkBox append: (self menuBarAccelInstalledOn: gtkWindow) ].
 	"tool bar"
-	self model hasToolbar ifTrue: [ 
-		gtkBox 
-			packStart: self toolbar 
-			expand: false 
-			fill: false 
-			padding: 0 ].
+	self model hasToolbar 
+		ifTrue: [ gtkBox packStart: self toolbar ].
 	"infoArea"
-	contentBox
-		packStart: self infoArea
-		expand: false
-		fill: false
-		padding: 0.
+	contentBox append: self infoArea.
 	"contents"
-	gtkBox packStart: (self contentWithSpecLayout: aSpec).
+	gtkBox append: (self contentWithSpecLayout: aSpec).
 	"status bar"
-	self model hasStatusBar ifTrue: [ 
-		gtkBox 
-			packStart: self statusBar 
-			expand: false 
-			fill: false 
-			padding: 0 ]
+	self model hasStatusBar 
+		ifTrue: [ gtkBox append: self statusBar ]
 ]
 
 { #category : #'private deferring' }
