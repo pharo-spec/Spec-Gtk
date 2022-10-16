@@ -10,7 +10,6 @@ Class {
 		'toolbar',
 		'statusBar',
 		'content',
-		'minimized',
 		'lastSizeAllocation'
 	],
 	#pools : [
@@ -264,7 +263,6 @@ GtkWindowAdapter >> inform: aString [
 GtkWindowAdapter >> initialize [
 
 	initialized := false.
-	minimized := false.
 	super initialize
 ]
 
@@ -285,7 +283,8 @@ GtkWindowAdapter >> isMaximized [
 { #category : #'spec protocol' }
 GtkWindowAdapter >> isMinimized [
 
-	^ minimized
+	^ self widgetDo: [ :w |
+		w gdkSurface state isMinimized ]
 ]
 
 { #category : #'spec protocol' }
@@ -313,7 +312,7 @@ GtkWindowAdapter >> menuBarAccelInstalledOn: gtkWindow [
 { #category : #'spec protocol' }
 GtkWindowAdapter >> minimize [
 
-	self widgetDo: [ :w | w iconify ]
+	self widgetDo: [ :w | w minimize ]
 ]
 
 { #category : #building }
