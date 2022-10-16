@@ -25,7 +25,7 @@ GtkWindowAdapter >> add: gtkBox toWindow: gtkWindow [
 	gtkWindow child: gtkBox
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 	
 	self flag: #TODO. "Take this from a configuration."
@@ -35,7 +35,7 @@ GtkWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 		inWidget: gtkWindow
 ]
 
-{ #category : #'private deferring' }
+{ #category : #'private - deferring' }
 GtkWindowAdapter >> addDeferredAction: aBlock [
 
 	deferredActions ifNil: [ deferredActions := #() ].
@@ -159,13 +159,13 @@ GtkWindowAdapter >> closeFromSignal [
 GtkWindowAdapter >> configureKeyBindings: gtkWindow [
 		
 	dispatcher := GtkKMDispatcher on: self presenter.
-	gtkWindow connectKeyPressEvent: [ :event |
+	gtkWindow addKeyPressEvent: [ :event |
 		(self handleKeyEvent: event)
 			ifTrue: [ true ]
-			ifFalse: [ gtkWindow propagateKeyEvent: event ] ].
+			ifFalse: [ gtkWindow propagateKeyEvent: event ] ]
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 
 	"add close events (delete is sent before)"
@@ -179,14 +179,14 @@ GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 		connectDefaultHeight: [ self announceResized: self widget defaultSize ]
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> contentWithSpecLayout: aSpec [
 
 	^ content ifNil: [ 
 		  content := self model presenter buildWithLayout: aSpec ]
 ]
 
-{ #category : #'private deferring' }
+{ #category : #'private - deferring' }
 GtkWindowAdapter >> deferAction: aBlock [ 
 
 	initialized
@@ -194,7 +194,7 @@ GtkWindowAdapter >> deferAction: aBlock [
 		ifFalse: [ self addDeferredAction: aBlock ]
 ]
 
-{ #category : #private }
+{ #category : #'private - building' }
 GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 
 	self connectToGtkSignals: gtkWindow.
@@ -237,7 +237,7 @@ GtkWindowAdapter >> delete [
 		self presenter application windowClosed: self ]
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> infoArea [
 
 	^ infoArea ifNil: [ infoArea := GtkInfoArea new ]
@@ -289,7 +289,7 @@ GtkWindowAdapter >> maximize [
 	self widgetDo: [ :w | w maximize ]
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> menuBarAccelInstalledOn: gtkWindow [
 	
 	^ menuBar ifNil: [ 
@@ -343,11 +343,11 @@ GtkWindowAdapter >> openWithDeferredAction: aBlock [
 	aBlock value
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
+	| windowContent |
 
 	"menu bar"
-
 	self model hasMenu 
 		ifTrue: [ gtkBox append: (self menuBarAccelInstalledOn: gtkWindow) ].
 	"tool bar"
@@ -356,13 +356,15 @@ GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 	"infoArea"
 	contentBox append: self infoArea.
 	"contents"
-	gtkBox append: (self contentWithSpecLayout: aSpec).
+	windowContent := self contentWithSpecLayout: aSpec.
+	gtkBox append: windowContent.
+	windowContent expand: true.
 	"status bar"
 	self model hasStatusBar 
 		ifTrue: [ gtkBox append: self statusBar ]
 ]
 
-{ #category : #'private deferring' }
+{ #category : #'private - deferring' }
 GtkWindowAdapter >> processDeferredActions [
 
 	deferredActions ifNil: [ ^ self ].
@@ -398,7 +400,7 @@ GtkWindowAdapter >> setDecorated: aBoolean [
 	self widgetDo: [ :w | w decorated: aBoolean ]
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> statusBar [
 
 	^ statusBar ifNil: [ statusBar := self model statusBar build ]
@@ -418,7 +420,7 @@ GtkWindowAdapter >> title: aString [
 	self widgetDo: [ :w | w title: (aString ifNotNil: [ :theString | theString localizedForPresenter: self presenter]) ]
 ]
 
-{ #category : #'private building' }
+{ #category : #'private - building' }
 GtkWindowAdapter >> toolbar [ 
 
 	^ toolbar ifNil: [ toolbar  := self presenter toolbar build ]

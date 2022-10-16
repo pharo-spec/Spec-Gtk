@@ -7,7 +7,12 @@ Class {
 { #category : #private }
 GtkBoxAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
-	
+
+	layout direction 
+		applyDirectionConstraintsTo: childWidget 
+		constraints: constraints
+		in: self.	
+
 	constraints isExpand ifFalse: [
 		| min |
 		min := childWidget preferredSizeMinimum.
@@ -29,6 +34,12 @@ GtkBoxAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 ]
 
 { #category : #private }
+GtkBoxAdapter >> applyHorizontalConstraintsTo: aWidget constraints: constraints [
+	
+	aWidget hExpand: constraints isExpand
+]
+
+{ #category : #private }
 GtkBoxAdapter >> applyLayout: aLayout [
 
 	"build of widget was differed up to here (to know what is the direction)"
@@ -39,7 +50,13 @@ GtkBoxAdapter >> applyLayout: aLayout [
 	widget 
 		homogeneous: aLayout isHomogeneous;
 		spacing: aLayout spacing;
-		borderWidth: aLayout borderWidth
+		margin: aLayout borderWidth
+]
+
+{ #category : #private }
+GtkBoxAdapter >> applyVerticalConstraintsTo: aWidget constraints: constraints [
+	
+	aWidget vExpand: constraints isExpand
 ]
 
 { #category : #private }
@@ -50,17 +67,14 @@ GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	self addConstraints: constraints toChild: childWidget.
 	constraints isPlacedAtStart
 		ifTrue: [ 
-			gtkWidget
-				packStart: childWidget
-				expand: constraints isExpand
-				fill: constraints isFill
-				padding: constraints padding ]
+			gtkWidget append: childWidget ]
 		ifFalse: [ 
-			gtkWidget
+			gtkWidget prepend: childWidget
+			"gtkWidget
 				reversePackEnd: childWidget
 				expand: constraints isExpand
 				fill: constraints isFill
-				padding: constraints padding ].
+				padding: constraints padding" ].
 
 	^ gtkWidget
 ]
@@ -101,5 +115,5 @@ GtkBoxAdapter >> replace: aPresenter with: otherPresenter withConstraints: const
 { #category : #updating }
 GtkBoxAdapter >> updateSpacing [
 
-	self widgetDo: [ :w | w borderWidth: layout spacing ]
+	self widgetDo: [ :w | w spacing: layout spacing ]
 ]

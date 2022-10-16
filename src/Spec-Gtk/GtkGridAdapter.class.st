@@ -28,7 +28,7 @@ GtkGridAdapter >> applyLayout: aLayout [
 	
 	self widgetDo: [ :w |
 		w 
-			borderWidth: aLayout borderWidth;
+			margin: aLayout borderWidth;
 			columnSpacing: aLayout columnSpacing;
 			rowSpacing: aLayout rowSpacing;
 			columnHomogeneous: aLayout isColumnHomogeneous;

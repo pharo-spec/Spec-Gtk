@@ -25,22 +25,9 @@ GtkCodeAdapter >> addMonospaceStyleFor: gtkTextView [
 
 { #category : #building }
 GtkCodeAdapter >> addSmartCharactersTo: gtkTextView [
-	| smartChars selection |
 	
-	smartChars := GtkCodeSmartCharacters allChars.	
-	gtkTextView connectKeyPressEvent: [ :event | | char |
-		char := event character.
-		(self presenter hasSmartCharacters 
-			and: [ (smartChars includes: char)  
-			and: [ (selection := self selection) notEmpty ] ])
-			ifTrue: [ 
-				self userActionDuring: [
-					(GtkCodeSmartCharacters findMatching: char) 
-						applyTo: gtkTextView 
-						in: selection ].
-				true ]
-			ifFalse: [ 
-				false ] ]
+	gtkTextView addKeyPressEvent: [ :event | 
+		self handleSmartCharacters: event ]
 ]
 
 { #category : #building }
@@ -169,6 +156,24 @@ GtkCodeAdapter >> doItContext [
 GtkCodeAdapter >> doItReceiver [
 
 	^ self presenter doItReceiver
+]
+
+{ #category : #building }
+GtkCodeAdapter >> handleSmartCharacters: event [
+	| char selection |
+		
+	char := event character.
+	(self presenter hasSmartCharacters 
+		and: [ (GtkCodeSmartCharacters allChars includes: char)  
+		and: [ (selection := self selection) notEmpty ] ])
+		ifTrue: [ 
+			self userActionDuring: [
+				(GtkCodeSmartCharacters findMatching: char) 
+					applyTo: self innerWidget 
+					in: selection ].
+			true ]
+		ifFalse: [ 
+			false ]
 ]
 
 { #category : #'api - shout' }

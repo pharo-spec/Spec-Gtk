@@ -56,7 +56,7 @@ GtkMillerAdapter >> applyLayout: aLayout [
 	innerWidget 
 		homogeneous: true;
 		spacing: aLayout spacing;
-		borderWidth: aLayout borderWidth;
+		margin: aLayout borderWidth;
 		show.
 		
 	widget := GtkScrolledWindow newWidget: innerWidget.

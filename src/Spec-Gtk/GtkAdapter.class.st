@@ -183,7 +183,7 @@ GtkAdapter >> cleanupAfterReplacing [
 GtkAdapter >> configureKeyBindings: gtkWidget [
 
 	dispatcher := GtkKMDispatcher on: self presenter.
-	gtkWidget connectKeyPressEvent: [ :event |
+	gtkWidget addKeyPressEvent: [ :event |
 		self handleKeyEvent: event ]
 ]
 
@@ -332,7 +332,7 @@ GtkAdapter >> installFocusReceivedEvent: anEvent to: aWidget [
 { #category : #'event installing' }
 GtkAdapter >> installKeyDownEvent: anEvent to: aWidget [
 
-	aWidget connectKeyPressEvent: [ :event |
+	aWidget addKeyPressEvent: [ :event |
 		anEvent action value: event.
 		event wasHandled ]
 ]

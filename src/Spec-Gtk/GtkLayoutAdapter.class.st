@@ -303,5 +303,5 @@ GtkLayoutAdapter >> unsubscribed [
 { #category : #protocol }
 GtkLayoutAdapter >> updateBorderWidth [
 
-	self widgetDo: [ :w | w borderWidth: layout borderWidth ]
+	self widgetDo: [ :w | w margin: layout borderWidth ]
 ]

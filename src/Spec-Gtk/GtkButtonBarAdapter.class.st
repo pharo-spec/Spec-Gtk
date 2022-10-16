@@ -16,7 +16,7 @@ GtkButtonBarAdapter >> addModelTo: gtkWidget [
 	self model isPlaceAtStart ifTrue: [ gtkWidget placeAtStart ].
 	self model isPlaceAtEnd ifTrue: [ gtkWidget placeAtEnd ].
 	
-	gtkWidget borderWidth: self class defaultBorderWidth.
+	gtkWidget margin: self class defaultBorderWidth.
 	self model items do: [ :each |
 		gtkWidget packStart: each build ]
 ]

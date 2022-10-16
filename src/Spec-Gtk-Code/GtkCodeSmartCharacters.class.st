@@ -10,6 +10,7 @@ Class {
 		'close'
 	],
 	#classVars : [
+		'AllChars',
 		'SmartCharsTable'
 	],
 	#category : #'Spec-Gtk-Code-Base'
@@ -18,7 +19,22 @@ Class {
 { #category : #accessing }
 GtkCodeSmartCharacters class >> allChars [
 
-	^ self smartCharsTable flatCollect: [ :each | each pairs ]
+	^ AllChars ifNil: [ 
+		AllChars := self smartCharsTable flatCollect: [ :each | each pairs ] ]
+]
+
+{ #category : #private }
+GtkCodeSmartCharacters class >> createSmartCharsTable [
+
+	^ {
+		self newOpen: $( close: $).
+		self newOpen: ${ close: $}.
+		self newOpen: $< close: $>.
+		self newOpen: $[ close: $].
+		self newEnclosing: $".
+		self newEnclosing: $'.
+		self newEnclosing: $|.
+	}
 ]
 
 { #category : #accessing }
@@ -42,18 +58,18 @@ GtkCodeSmartCharacters class >> newOpen: openChar close: closeChar [
 ]
 
 { #category : #accessing }
+GtkCodeSmartCharacters class >> reset [
+	<script>
+	
+	SmartCharsTable := nil.
+	AllChars := nil
+]
+
+{ #category : #accessing }
 GtkCodeSmartCharacters class >> smartCharsTable [
 
 	^ SmartCharsTable ifNil: [ 
-		SmartCharsTable := {
-			self newOpen: $( close: $).
-			self newOpen: ${ close: $}.
-			self newOpen: $< close: $>.
-			self newOpen: $[ close: $].
-			self newEnclosing: $".
-			self newEnclosing: $'.
-			self newEnclosing: $|.
-		} ]
+		SmartCharsTable := self createSmartCharsTable ]
 ]
 
 { #category : #applying }
