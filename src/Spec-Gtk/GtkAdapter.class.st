@@ -245,8 +245,8 @@ GtkAdapter >> getHelpText [
 { #category : #private }
 GtkAdapter >> handleKeyEvent: event [
 
+	event crTrace.
 	event isModifier ifTrue: [ ^ false ].
-
 	dispatcher ifNotNil: [
 		dispatcher dispatchKeyEvent: event.
 		^ event wasHandled ].

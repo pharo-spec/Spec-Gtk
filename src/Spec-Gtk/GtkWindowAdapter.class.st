@@ -47,9 +47,9 @@ GtkWindowAdapter >> addModelTo: gtkWindow [
 	"model is not added here but in #addPresenterIn:withSpecLayout:. 
 	 Spec windows may have just ONE presenter"
 	
-	gtkWindow connectWindowStateEvent: [ :event | 
+	"gtkWindow connectWindowStateEvent: [ :event | 
 		minimized := (event new_window_state & GDK_WINDOW_STATE_ICONIFIED value) = GDK_WINDOW_STATE_ICONIFIED value.
-		false  ]
+		false  ]"
 ]
 
 { #category : #accessing }
@@ -102,10 +102,13 @@ GtkWindowAdapter >> announceResized: newSize [
 
 { #category : #private }
 GtkWindowAdapter >> announceWillClose [
+	| ann |
 
-	self presenter announcer announce: (SpWindowWillClose new
+	ann := SpWindowWillClose new
 		window: self presenter;
-		yourself)
+		yourself.
+	self presenter announce: ann.
+	^ ann canClose
 ]
 
 { #category : #accessing }
@@ -151,18 +154,25 @@ GtkWindowAdapter >> closeFromKeyboard [
 { #category : #private }
 GtkWindowAdapter >> closeFromSignal [
 
+	self flag: #TODO. "I think this should be here"
 	self announceWillClose.
 	self announceClosed
 ]
 
 { #category : #private }
 GtkWindowAdapter >> configureKeyBindings: gtkWindow [
-		
+
 	dispatcher := GtkKMDispatcher on: self presenter.
-	gtkWindow addKeyPressEvent: [ :event |
-		(self handleKeyEvent: event)
-			ifTrue: [ true ]
-			ifFalse: [ gtkWindow propagateKeyEvent: event ] ]
+	gtkWindow addKeyEventControllerWith: [ :keyController |
+		keyController 
+			name: 'key-controller';
+			connectKeyPressed: [ :event |
+				(self handleKeyEvent: event)
+					ifTrue: [ true ]
+					ifFalse: [ 
+						gtkWindow child 
+							ifNotNil: [ :child | keyController forwardTo: child ]
+							ifNil: [ false ] ] ] ]
 ]
 
 { #category : #'private - building' }
@@ -171,9 +181,10 @@ GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 	"add close events (delete is sent before)"
 
 	gtkWindow
-		connectDeleteEvent: [ 
-			self announceWillClose.
-			false ];
+		connectCloseRequest: [ 
+			"true to stop handlers to continue (so, if I want to *not* close it, I need 
+			 to answer true, the oposite of canClose)"
+			self announceWillClose not ];
 		connectHide: [ self closeFromSignal ];
 		connectDefaultWidth: [ self announceResized: self widget defaultSize ];
 		connectDefaultHeight: [ self announceResized: self widget defaultSize ]
@@ -217,7 +228,7 @@ GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 	self add: contentBox toWindow: gtkWindow
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 GtkWindowAdapter >> deferredCenter: gtkWindow relativeTo: aWindowPresenter [
 	| isVisible bounds position |
 	
@@ -336,8 +347,8 @@ GtkWindowAdapter >> openWithDeferredAction: aBlock [
  
 	self hasWidget ifFalse: [ ^ nil ].
 	self widgetDo: [ :w |
-			w show.
-			w present ].
+		w show.
+		w present ].
 	self presenter presenter takeKeyboardFocus.
 	self announceOpened.
 	aBlock value
