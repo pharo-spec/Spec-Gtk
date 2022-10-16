@@ -18,7 +18,7 @@ GtkOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [
 	childWidget := aPresenter buildWithSelector: constraints spec.
 	constraints isOverlay
 		ifFalse: [
-			aWidget add: childWidget ]
+			aWidget child: childWidget ]
 		ifTrue: [
 			childWidget
 				hAlignCenter;
