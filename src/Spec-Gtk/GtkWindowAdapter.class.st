@@ -345,9 +345,8 @@ GtkWindowAdapter >> open [
 GtkWindowAdapter >> openWithDeferredAction: aBlock [
  
 	self hasWidget ifFalse: [ ^ nil ].
-	self widgetDo: [ :w |
-		w show.
-		w present ].
+	self widgetDo: [ :w | w present ].
+	self processInitializationDeferredActions.
 	self presenter presenter takeKeyboardFocus.
 	self announceOpened.
 	aBlock value
@@ -380,6 +379,14 @@ GtkWindowAdapter >> processDeferredActions [
 	deferredActions ifNil: [ ^ self ].
 	deferredActions do: [ :each | each value ].
 	deferredActions := nil
+]
+
+{ #category : #private }
+GtkWindowAdapter >> processInitializationDeferredActions [
+	
+	self presenter traversePresentersDo: [ :each | 
+		each adapter ifNotNil: [ :anAdapter |
+			anAdapter doInitializationDeferredActions ] ] 
 ]
 
 { #category : #building }

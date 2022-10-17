@@ -5,6 +5,9 @@ A paned layout will split (horizontally or vertically) a panel and allow its res
 Class {
 	#name : #GtkPanedAdapter,
 	#superclass : #GtkLayoutAdapter,
+	#instVars : [
+		'initializationDeferredAction'
+	],
 	#category : #'Spec-Gtk-Layout-Box'
 }
 
@@ -31,15 +34,17 @@ GtkPanedAdapter >> applyLayout: aLayout [
 
 { #category : #private }
 GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
-
 	| childWidget position |
+
 	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
 
 	position := layout children indexOf: (aPresenter isSpLayout
-			             ifTrue: [ aPresenter layout ]
-			             ifFalse: [ aPresenter ]).
-	position = 0 ifTrue: [ "Not found, check for symbols. If is symbol, I need to get the presenter"
+		ifTrue: [ aPresenter layout ]
+		ifFalse: [ aPresenter ]).
+
+	position = 0 ifTrue: [ 
+		"Not found, check for symbols. If is symbol, I need to get the presenter"
 		layout children withIndexDo: [ :each :index | 
 			(each isSymbol and: [ 
 				 (layout presenter presenterAt: each) = aPresenter ]) ifTrue: [ 
@@ -54,12 +59,12 @@ GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	position = 1
 		ifTrue: [ 
 			gtkWidget
-				pack1: childWidget
+				startChild: childWidget
 				resize: constraints canResize
 				shrink: constraints canShrink ]
 		ifFalse: [ 
 			gtkWidget
-				pack2: childWidget
+				endChild: childWidget
 				resize: constraints canResize
 				shrink: constraints canShrink ].
 
@@ -68,13 +73,20 @@ GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 
 { #category : #private }
 GtkPanedAdapter >> calculatePercentAtDirectionOf: aWidget extent: aPoint [
-
 	| pos |
+
 	pos := layout isHorizontal
 		ifTrue: [ aPoint x ]
 		ifFalse: [ aPoint y ].
-
 	^ (pos * layout positionOfSlider) asInteger
+]
+
+{ #category : #private }
+GtkPanedAdapter >> doInitializationDeferredActions [
+
+	initializationDeferredAction ifNil: [ ^ self ].
+	initializationDeferredAction ensure: [
+		initializationDeferredAction := nil ].
 ]
 
 { #category : #factory }
@@ -87,6 +99,12 @@ GtkPanedAdapter >> newHorizontal [
 GtkPanedAdapter >> newVertical [
 
 	^ GtkPaned newVertical
+]
+
+{ #category : #private }
+GtkPanedAdapter >> setInitializationDeferredAction: aBlock [
+
+	initializationDeferredAction := aBlock
 ]
 
 { #category : #private }
@@ -106,9 +124,6 @@ GtkPanedAdapter >> setPositionDeferred: aNumber to: aWidget [
 	"executes the sizing in deferred way (once the widget receives the allocated signal, 
 	 marking the widget has been asigned bounds"
 	
-	widget connectSizeAllocate: [ :aRect |
-		aWidget position: (aNumber < 1 
-			ifTrue: [ self calculatePercentAtDirectionOf: aWidget extent: aRect extent ]
-			ifFalse: [ aNumber ]).
-		widget disconnect: 'size-allocate' ]
+	self setInitializationDeferredAction: [
+		self setPosition: aNumber to: aWidget ]
 ]

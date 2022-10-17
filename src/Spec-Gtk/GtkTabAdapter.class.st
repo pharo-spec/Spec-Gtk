@@ -29,6 +29,7 @@ GtkTabAdapter >> applyLayout: aLayout [
 
 	widget := GtkNotebook new.
 	widget beScrollable.
+	
 	self connectToEvents: aLayout. 
 
 	widget connectSwitchPage: [ :aPage | 
