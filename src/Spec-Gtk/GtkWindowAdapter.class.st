@@ -408,7 +408,7 @@ GtkWindowAdapter >> rebuild [
 { #category : #'spec protocol' }
 GtkWindowAdapter >> resize: aPoint [
 
-	self widgetDo: [ :w | w resize: aPoint ]
+	self widgetDo: [ :w | w defaultSize: aPoint ]
 ]
 
 { #category : #private }
