@@ -36,8 +36,8 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 	self presenter whenTextChangedDo: [ :text | 
 		self innerWidgetDo: [ :w | 
 			self setText: text to: w ] ].
-	gtkWidget connectPopulatePopup: [ :menuWidget |
-		self populatePopup: menuWidget  ]
+	"gtkWidget connectPopulatePopup: [ :menuWidget |
+		self populatePopup: menuWidget ]"
 ]
 
 { #category : #building }
