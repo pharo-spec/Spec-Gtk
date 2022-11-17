@@ -6,19 +6,16 @@ Class {
 
 { #category : #emulating }
 GtkRadioButtonAdapter >> addAssociatedTo: gtkWidget [
-	| current |
 	
 	self presenter associatedRadioButtons ifEmpty: [ ^ self ].
-	
-	current := gtkWidget.
+
 	self presenter associatedRadioButtons do: [ :each |  
-		each withWidgetDo: [ :w | 
-			current joinGroupOf: w widget.
-			current := w widget ] ].
-	
+		each withAdapterDo: [ :anAdapter | 
+			anAdapter widgetDo: [ :w | w group: gtkWidget ] ] ].
+
 	self presenter isInitialStateSet ifFalse: [ 
-		GtkRadioButton new 
-			joinGroupOf: gtkWidget;
+		self widgetClass new 
+			group: gtkWidget;
 			hide;
 			active: true ]
 ]
@@ -61,5 +58,5 @@ GtkRadioButtonAdapter >> state [
 { #category : #factory }
 GtkRadioButtonAdapter >> widgetClass [
 
-	^ GtkRadioButton
+	^ GtkCheckButton
 ]
