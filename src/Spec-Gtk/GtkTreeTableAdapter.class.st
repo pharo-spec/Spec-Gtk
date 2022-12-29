@@ -207,7 +207,7 @@ GtkTreeTableAdapter >> firstSelectedPath [
 	^ self innerWidgetDo: [ :w | w selection selectedPath ]
 ]
 
-{ #category : #private }
+{ #category : #initialization }
 GtkTreeTableAdapter >> initialize [
 
 	super initialize.

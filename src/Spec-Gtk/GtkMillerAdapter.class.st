@@ -127,7 +127,7 @@ GtkMillerAdapter >> enableHScrollBar [
 	self widgetDo: [ :w | w hScrollBar show ]
 ]
 
-{ #category : #private }
+{ #category : #initialization }
 GtkMillerAdapter >> initialize [
 
 	super initialize.
