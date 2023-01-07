@@ -421,7 +421,7 @@ GtkAdapter >> keyPressed: keyCode shift: shiftBoolean meta: metaBoolean control:
 		do: [ :aCallback | 
 			aCallback valueWithArguments: { 
 				self innerWidget getHandle. 
-				(GdkEventKey 
+				(GdkKeyEvent 
 					newKeyPressValue: keyCode
 					shift: shiftBoolean
 					meta: metaBoolean
@@ -463,7 +463,7 @@ GtkAdapter >> sendRightClickEvent [
 		do: [ :aCallback |
 			aCallback valueWithArguments: {
 				self innerWidget getHandle.
-				GdkEventButton newRightClick getHandle.
+				GdkButtonEvent newRightClick getHandle.
 				ExternalAddress null } ]
 ]
 

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtkMenuAdapter,
 	#superclass : #GtkMenuBaseAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Adapter-Menu'
 }
 
 { #category : #building }
@@ -29,7 +29,7 @@ GtkMenuAdapter >> openAt: aPosition [
 		self widgetDo: [ :w |
 			w connectHide: [ self presenter application unregisterWindow: self presenter ].
 			w showAll.
-			w popupAtPointer: (GdkEventButton newButtonRelease
+			w popupAtPointer: (GdkButtonEvent newButtonRelease
 				window: self presenter window adapter widget gdkWindow; 
 				device: GdkDisplay default defaultSeat pointer;
 				time: Time millisecondClockValue;

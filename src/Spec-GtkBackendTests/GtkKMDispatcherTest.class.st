@@ -29,7 +29,7 @@ GtkKMDispatcherTest >> eventKey: character alt: aBoolean [
 { #category : #utilities }
 GtkKMDispatcherTest >> eventKey: character alt: useAlt ctrl: useCtrl meta: useMeta shift: useShift [
 	
-	^ GdkEventKey 
+	^ GdkKeyEvent 
 		newKeyPressValue: character asciiValue 
 		shift: useShift 
 		meta: useMeta 

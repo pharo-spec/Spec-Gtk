@@ -1,7 +1,7 @@
 Class {
 	#name : #GtkMenuItemAdapter,
 	#superclass : #GtkMenuBaseAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Adapter-Menu'
 }
 
 { #category : #accessing }
