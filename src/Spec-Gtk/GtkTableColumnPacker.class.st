@@ -142,7 +142,7 @@ GtkTableColumnPacker >> expand: aBoolean [
 	expand := aBoolean
 ]
 
-{ #category : #visiting }
+{ #category : #initialization }
 GtkTableColumnPacker >> initialize [
 
 	super initialize.

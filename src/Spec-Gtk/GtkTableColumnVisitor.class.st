@@ -29,7 +29,7 @@ GtkTableColumnVisitor >> flattenColumns [
 	^ flattenColumns
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 GtkTableColumnVisitor >> initialize [
 
 	super initialize.
