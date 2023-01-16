@@ -17,11 +17,11 @@ GtkBaseListAdapter >> addKeyBindingsTo: gtkWidget [
 GtkBaseListAdapter >> addModelTo: gtkTreeView [
 
 	super addModelTo: gtkTreeView.
-	gtkTreeView activateOnSingleClick: self presenter activatesOnSingleClick.
-	self configureDragAndDrop: gtkTreeView.	
+	gtkTreeView activateOnSingleClick: self presenter isActiveOnSingleClick.
+	self configureDragAndDrop: gtkTreeView.
 	self addSearchTo: gtkTreeView.
 	self presenter contextMenu ifNotNil: [ :menu |
-		self addMenu: menu to: gtkTreeView ].
+		self addMenu: menu to: gtkTreeView ]
 ]
 
 { #category : #building }

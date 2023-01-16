@@ -114,15 +114,15 @@ GtkTreeTableAdapter >> configureDragAndDrop: gtkTreeView [
 GtkTreeTableAdapter >> configureInitialState: gtkWidget [
 
 	gtkWidget headersVisible: self presenter isShowingColumnHeaders.
-	gtkWidget activateOnSingleClick: self presenter activatesOnSingleClick.
-	
-	self presenter selection isMultipleSelection 
+	gtkWidget activateOnSingleClick: self presenter isActiveOnSingleClick.
+
+	self presenter selection isMultipleSelection
 		ifTrue: [ gtkWidget beMultipleSelectionMode ]
 		ifFalse: [ gtkWidget beSingleSelectionMode ].
-	
+
 	self presenter selection isEmpty
 		ifFalse: [ self updateSelectionOf: gtkWidget ]	.
-	
+
 	self presenter contextMenu ifNotNil: [ :menu |
 		self addMenu: menu to: gtkWidget ]
 ]

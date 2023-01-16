@@ -31,30 +31,30 @@ GtkComponentListAdapter >> addKeyBindingsTo: gtkWidget [
 GtkComponentListAdapter >> addModelTo: gtkListBox [
 
 	gtkListBox canFocus: true.
-	gtkListBox activateOnSingleClick: self presenter activatesOnSingleClick.
+	gtkListBox activateOnSingleClick: self presenter isActiveOnSingleClick.
 
-	self model selection isMultipleSelection 
+	self model selection isMultipleSelection
 		ifTrue: [ gtkListBox beMultipleSelectionMode ]
 		ifFalse: [ gtkListBox beSingleSelectionMode ].
 
-	self presenter whenPresentersChangedDo: [ :collection | 
-		self updateWith: collection ].	
-			
+	self presenter whenPresentersChangedDo: [ :collection |
+		self updateWith: collection ].
+
 	self
-		update: gtkListBox 
+		update: gtkListBox
 		with: self presenter presenters.
-		
-	self presenter selection isEmpty ifFalse: [ 
+
+	self presenter selection isEmpty ifFalse: [
 		self refreshWidgetSelectionOf: gtkListBox ].
-	
-	gtkListBox connectSelectedRowsChanged: [ 
+
+	gtkListBox connectSelectedRowsChanged: [
 		self backendUpdatingDo: [
 			self presenter selection selectIndexes: self innerWidget selectedIndexes ] ].
 
-	gtkListBox connectRowActivated: [ :row | 
+	gtkListBox connectRowActivated: [ :row |
 		self doActivateRow: row ].
-	
-	self model contextMenu 
+
+	self model contextMenu
 		ifNotNil: [ :menu | self addMenu: menu to: gtkListBox ]
 ]
 
