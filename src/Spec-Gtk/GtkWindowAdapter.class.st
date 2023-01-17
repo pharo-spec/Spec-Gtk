@@ -284,7 +284,7 @@ GtkWindowAdapter >> isMaximized [
 GtkWindowAdapter >> isMinimized [
 
 	^ self widgetDo: [ :w |
-		w gdkSurface state isMinimized ]
+		w surface state isMinimized ]
 ]
 
 { #category : #'spec protocol' }
