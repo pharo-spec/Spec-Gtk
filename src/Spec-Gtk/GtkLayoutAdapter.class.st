@@ -230,11 +230,11 @@ GtkLayoutAdapter >> rebuild [
 
 { #category : #removing }
 GtkLayoutAdapter >> remove: aPresenter [
-	| widgetToRemove |
-	
-	widgetToRemove := aPresenter adapter widget.
-	self ensureRetained: widgetToRemove.
-	^ self widgetDo: [ :w | 
+
+	^ self widgetDo: [ :w |
+		| widgetToRemove |
+		widgetToRemove := aPresenter adapter widget.
+		self ensureRetained: widgetToRemove.
 		w remove: widgetToRemove ]
 ]
 

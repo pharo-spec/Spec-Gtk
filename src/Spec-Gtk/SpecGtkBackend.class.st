@@ -42,11 +42,10 @@ SpecGtkBackend >> forceDefer: aBlock [
 ]
 
 { #category : #initialization }
-SpecGtkBackend >> initialize [ 
-	
-	GtkEngine ensureRunning.	
-	super initialize.
+SpecGtkBackend >> initialize [
 
+	GtkEngine ensureRunning.
+	super initialize
 ]
 
 { #category : #'ui notifying' }

@@ -15,7 +15,7 @@ Class {
 	#pools : [
 		'GdkWindowState'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Adapter-Window'
 }
 
 { #category : #private }
@@ -250,7 +250,10 @@ GtkWindowAdapter >> delete [
 { #category : #'private - building' }
 GtkWindowAdapter >> infoArea [
 
-	^ infoArea ifNil: [ infoArea := GtkInfoArea new ]
+	^ infoArea ifNil: [
+		infoArea := self presenter instantiate: SpGtkBannerPresenter.
+		infoArea build.
+		infoArea ]
 ]
 
 { #category : #notifying }
@@ -326,13 +329,13 @@ GtkWindowAdapter >> newWidget [
 { #category : #notifying }
 GtkWindowAdapter >> notifyError: aString [
 
-	infoArea addError: aString
+	self infoArea addError: aString
 ]
 
 { #category : #notifying }
 GtkWindowAdapter >> notifyInfo: aString [
 
-	infoArea addInfo: aString
+	self infoArea addInfo: aString
 ]
 
 { #category : #accessing }
@@ -357,19 +360,19 @@ GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 	| windowContent |
 
 	"menu bar"
-	self model hasMenu 
+	self model hasMenu
 		ifTrue: [ gtkBox append: (self menuBarAccelInstalledOn: gtkWindow) ].
 	"tool bar"
-	self model hasToolbar 
+	self model hasToolbar
 		ifTrue: [ gtkBox packStart: self toolbar ].
 	"infoArea"
-	contentBox append: self infoArea.
+	contentBox append: self infoArea adapter widget.
 	"contents"
 	windowContent := self contentWithSpecLayout: aSpec.
 	gtkBox append: windowContent.
 	windowContent expand: true.
 	"status bar"
-	self model hasStatusBar 
+	self model hasStatusBar
 		ifTrue: [ gtkBox append: self statusBar ]
 ]
 

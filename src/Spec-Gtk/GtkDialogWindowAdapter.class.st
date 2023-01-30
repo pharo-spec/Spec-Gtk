@@ -6,7 +6,7 @@ Class {
 		'waitForAnswer',
 		'contentsWidget'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Adapter-Window'
 }
 
 { #category : #private }

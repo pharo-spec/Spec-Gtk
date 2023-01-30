@@ -19,7 +19,7 @@ GtkButtonAdapter >> addModelTo: gtkButton [
 { #category : #events }
 GtkButtonAdapter >> clicked [
 
-	self widgetDo: #clicked
+	self deprecated: #Gtk4
 ]
 
 { #category : #factory }

@@ -22,8 +22,9 @@ GtkCheckBoxAdapter >> addModelTo: gtkWidget [
 
 { #category : #emulating }
 GtkCheckBoxAdapter >> clicked [
-	
-	widget clicked
+
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #private }

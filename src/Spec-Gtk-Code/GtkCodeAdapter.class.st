@@ -19,8 +19,8 @@ GtkCodeAdapter >> addModelTo: gtkTextView [
 
 { #category : #building }
 GtkCodeAdapter >> addMonospaceStyleFor: gtkTextView [
-	
-	gtkTextView styleContext addClass: 'code'
+
+	gtkTextView addClass: 'code'
 ]
 
 { #category : #building }

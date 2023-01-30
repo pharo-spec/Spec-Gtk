@@ -61,11 +61,11 @@ GtkTabAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 
 { #category : #removing }
 GtkTabAdapter >> remove: aPresenter [
-	| widgetToRemove |
-	
-	widgetToRemove := aPresenter adapter widget.
-	self ensureRetained: widgetToRemove.
-	^ self widgetDo: [ :w | 
+
+	^ self widgetDo: [ :w |
+		| widgetToRemove |
+		widgetToRemove := aPresenter adapter widget.
+		self ensureRetained: widgetToRemove.
 		w remove: (w children detect: [ :each | each data = aPresenter ]) ]
 ]
 

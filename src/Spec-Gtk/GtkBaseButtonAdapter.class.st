@@ -29,20 +29,40 @@ GtkBaseButtonAdapter >> icon [
 	^ widget image
 ]
 
+{ #category : #private }
+GtkBaseButtonAdapter >> labelAndIcon [
+	| box |
+
+	box := GtkBox newHorizontal
+		hAlignCenter;
+		spacing: 3;
+		yourself.
+
+	self presenter icon ifNotNil: [ :icon | | gtkIcon |
+		gtkIcon := self presenter icon asGtkImage.
+		gtkIcon hExpand: false.
+		box append: gtkIcon ].
+
+	self getLabelText ifNotNil: [ :label | | gtkLabel |
+		label ifNotEmpty: [
+			gtkLabel := (GtkLabel newLabel: label).
+			box append: gtkLabel ] ].
+
+	^ box
+]
+
 { #category : #updating }
 GtkBaseButtonAdapter >> updateIcon [
 
 	self widgetDo: [ :w |
-		w
-			alwaysShowImage;
-			image: self presenter icon asGtkImage ]
+		w child: self labelAndIcon ]
 ]
 
 { #category : #updating }
 GtkBaseButtonAdapter >> updateLabel [
 
 	self widgetDo: [ :w | 
-		w label: self getLabelText ]
+		w child: self labelAndIcon ]
 ]
 
 { #category : #updating }

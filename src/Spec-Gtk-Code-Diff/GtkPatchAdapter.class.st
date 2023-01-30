@@ -37,7 +37,7 @@ GtkPatchAdapter >> addModelTo: gtkSourceView [
 	super addModelTo: gtkSourceView.
 
 	gtkSourceView monospace: true.
-	gtkSourceView 
+	gtkSourceView
 		showLineNumbers: "self presenter hasLineNumbers" false;
 		showLineMarks: true;
 		autoIndent: true;
@@ -46,10 +46,10 @@ GtkPatchAdapter >> addModelTo: gtkSourceView [
 
 	gtkSourceView editable: false.
 	gtkSourceView beWrapNone.
-	gtkSourceView styleContext addClass: 'code'.
-	
-	self addMarksTo: gtkSourceView. 
-		
+	gtkSourceView addClass: 'code'.
+
+	self addMarksTo: gtkSourceView.
+
 	self setPatchTo: gtkSourceView.
 	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
 ]

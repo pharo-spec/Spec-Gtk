@@ -39,8 +39,9 @@ GtkRadioButtonAdapter >> addModelTo: gtkWidget [
 
 { #category : #emulating }
 GtkRadioButtonAdapter >> clicked [
-	
-	widget clicked
+
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #private }

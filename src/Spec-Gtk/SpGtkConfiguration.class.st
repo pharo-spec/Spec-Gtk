@@ -6,12 +6,7 @@ Class {
 	#name : #SpGtkConfiguration,
 	#superclass : #SpApplicationConfiguration,
 	#instVars : [
-		'textBackgroundColor',
-		'buttonBackgroundColor',
-		'buttonSelectedColor',
-		'listActiveColor',
-		'listSelectedColor',
-		'panelBackgroundColor'
+		'listSelectedColor'
 	],
 	#category : #'Spec-Gtk-Base'
 }
@@ -19,40 +14,36 @@ Class {
 { #category : #private }
 SpGtkConfiguration >> addCSSProviderFromPath: aString [
 
-	GRunLoop defer: [ 	
-		(GtkCssProvider newFromPath: aString) addForApplicationToDefaultScreen ]
+	GRunLoop defer: [
+		(GtkCssProvider newFromPath: aString) addForApplicationToDefaultDisplay ]
 ]
 
 { #category : #private }
 SpGtkConfiguration >> addCSSProviderFromReference: aReference [
 
-	GRunLoop defer: [ 
-		(GtkCssProvider newFromReference: aReference) addForApplicationToDefaultScreen ]
+	GRunLoop defer: [
+		(GtkCssProvider newFromReference: aReference) addForApplicationToDefaultDisplay ]
 ]
 
 { #category : #private }
 SpGtkConfiguration >> addCSSProviderFromString: aString [
 
-	GRunLoop defer: [ 
-		(GtkCssProvider newFromString: aString) addForApplicationToDefaultScreen ]
+	GRunLoop defer: [
+		(GtkCssProvider newFromString: aString) addForApplicationToDefaultDisplay ]
 ]
 
 { #category : #'accessing - colors' }
 SpGtkConfiguration >> buttonBackgroundColor [
-	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a
 	 dark or light theme"
-	
-	^ GRunLoop defer: [ 
-		| widget |
-		widget := GtkButton new. 
-		widget autoRelease. 
-		widget styleContext getBackgroundRGBAColor asColor ]
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #'accessing - colors' }
 SpGtkConfiguration >> buttonSelectedColor [
-	
-	^ buttonSelectedColor ifNil: [ buttonSelectedColor := self getButtonSelectedColor ]
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #configuring }
@@ -78,58 +69,42 @@ SpGtkConfiguration >> detectDarkTheme [
 
 { #category : #private }
 SpGtkConfiguration >> getButtonBackgroundColor [
-	
-	^ buttonBackgroundColor ifNil: [ buttonBackgroundColor := self getButtonBackgroundColor ]
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #private }
 SpGtkConfiguration >> getButtonSelectedColor [
-	
-	^ GRunLoop defer: [ 
-		| widget |
-		widget := GtkButton new. 
-		widget autoRelease. 
-		widget styleContext getSelectedRGBAColor asColor ]
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #private }
 SpGtkConfiguration >> getListActiveColor [
-	
-	^ GRunLoop defer: [ 
-		| widget |
-		widget := GtkTreeView new. 
-		widget autoRelease. 
-		widget styleContext getActiveRGBAColor asColor ]
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #private }
 SpGtkConfiguration >> getListSelectedColor [
-	
-	^ GRunLoop defer: [ 
+
+	^ GRunLoop defer: [
 		| widget |
-		widget := GtkTreeView new. 
-		widget autoRelease. 
+		widget := GtkListView new.
+		widget autoRelease.
 		widget styleContext getSelectedRGBAColor asColor ]
 ]
 
 { #category : #private }
 SpGtkConfiguration >> getPanelBackgroundColor [
-	
-	^ GRunLoop defer: [ 
-		| widget |
-		widget := GtkBox newVertical. 
-		widget autoRelease. 
-		widget styleContext getBackgroundRGBAColor asColor ]
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #private }
 SpGtkConfiguration >> getTextBackgroundColor [
 
-	^ GRunLoop defer: [ 
-		| widget |
-		widget := GtkTextView new. 
-		widget autoRelease. 
-		widget styleContext getBackgroundRGBAColor asColor ]
+	self deprecated: #Gtk4
 ]
 
 { #category : #private }
@@ -146,44 +121,38 @@ SpGtkConfiguration >> isDarkTheme [
 
 { #category : #'accessing - colors' }
 SpGtkConfiguration >> listActiveColor [
-	
-	^ listActiveColor ifNil: [ listActiveColor := self getListActiveColor ]
+
+	self deprecated: #Gtk4
 ]
 
 { #category : #'accessing - colors' }
 SpGtkConfiguration >> listSelectedColor [
-	
+
 	^ listSelectedColor ifNil: [ listSelectedColor := self getListSelectedColor ]
 ]
 
 { #category : #'accessing - colors' }
 SpGtkConfiguration >> panelBackgroundColor [
-	
-	^ panelBackgroundColor ifNil: [ panelBackgroundColor := self getPanelBackgroundColor ]
+
+	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
-SpGtkConfiguration >> reset [ 
+{ #category : #accessing }
+SpGtkConfiguration >> preferDarkTheme: aBoolean [
 
-	super reset.
-	textBackgroundColor := nil. 
-	buttonBackgroundColor  := nil. 
-	buttonSelectedColor  := nil. 
-	listActiveColor  := nil. 
-	listSelectedColor  := nil. 
-	panelBackgroundColor  := nil
+	GRunLoop defer: [ GtkSettings default preferDarkTheme: aBoolean ]
 ]
 
-{ #category : #'private accessing' }
-SpGtkConfiguration >> settings [ 
+{ #category : #'private - accessing' }
+SpGtkConfiguration >> settings [
 
 	^ GtkSettings default
 ]
 
 { #category : #'accessing - colors' }
 SpGtkConfiguration >> textBackgroundColor [
-	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a 
+	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a
 	 dark or light theme"
-	
-	^ textBackgroundColor ifNil: [ textBackgroundColor := self getTextBackgroundColor ]
+
+	self deprecated: #Gtk4
 ]
