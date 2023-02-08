@@ -118,22 +118,25 @@ GtkWindowAdapter >> beep [
 
 { #category : #accessing }
 GtkWindowAdapter >> centered [
-	
-	self deferAction: [ 
-		self widgetDo: [ :w | 
-			w isVisible 
+
+	"Gtk can't do that in fact (because this is a WM task, and gtk has no idea what WM the
+	 user has)"
+	"self deferAction: [
+		self widgetDo: [ :w |
+			w isVisible
 				ifTrue: [ w hide; center; show ]
-				ifFalse: [ w center ] ] ]
+				ifFalse: [ w center ] ] ]"
 ]
 
 { #category : #accessing }
 GtkWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 
-	self deferAction: [
-		self widgetDo: [ :w | 
-			self 
-				deferredCenter: w 
-				relativeTo: aWindowPresenter ] ]
+	'#centeredRelativeTo: This can''t be done in Gtk4' crTrace.
+	"self deferAction: [
+		self widgetDo: [ :w |
+			self
+				deferredCenter: w
+				relativeTo: aWindowPresenter ] ]"
 ]
 
 { #category : #accessing }
@@ -211,32 +214,19 @@ GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 	self addDefaultKeyBindings: gtkWindow.
 
 	"add window properties"
-	self presenter initialExtent
-		ifNotNil: [ :extent |
-			gtkWindow defaultSize: extent ].
-	self presenter initialPosition
-		ifNotNil: [ :position | gtkWindow moveTo: position ].
+	self presenter initialExtent ifNotNil: [ :extent |
+		gtkWindow defaultSize: extent ].
+	"self presenter initialPosition
+		ifNotNil: [ :position | gtkWindow moveTo: position ]."
 	gtkWindow decorated: self presenter hasDecorations.
 	self subscribeDecorations.
 
 	"inner contents of window"
 	contentBox := GtkBox newVertical.
 	self populateContent: contentBox spec: aSpec window: gtkWindow.
-	contentBox show.
+	contentBox beVisible.
 
 	self add: contentBox toWindow: gtkWindow
-]
-
-{ #category : #private }
-GtkWindowAdapter >> deferredCenter: gtkWindow relativeTo: aWindowPresenter [
-	| isVisible bounds position |
-	
-	isVisible := gtkWindow isVisible.
-	isVisible ifTrue:[ gtkWindow hide ].
-	bounds := aWindowPresenter adapter widget bounds.
-	position := bounds topLeft + ((bounds extent - gtkWindow defaultSize) // 2).
-	gtkWindow moveTo: position.
-	isVisible ifTrue: [ gtkWindow show ]
 ]
 
 { #category : #accessing }
@@ -293,7 +283,10 @@ GtkWindowAdapter >> isMinimized [
 { #category : #'spec protocol' }
 GtkWindowAdapter >> isTopWindow [
 
-	^ self widgetDo: [ :w | w hasTopLevelFocus ]
+	^ self widgetDo: [ :w |
+		GEngine current ensureApplication activeWindow
+			ifNotNil: [ :active | active getHandle = w getHandle ]
+			ifNil: [ false ] ]
 ]
 
 { #category : #'spec protocol' }
@@ -304,10 +297,11 @@ GtkWindowAdapter >> maximize [
 
 { #category : #'private - building' }
 GtkWindowAdapter >> menuBarAccelInstalledOn: gtkWindow [
-	
-	^ menuBar ifNil: [ 
+
+	self halt. "replace addAcceleratorGroup"
+	^ menuBar ifNil: [
 		menuBar := self model menu build.
-		self presenter menu shortcutGroup 
+		self presenter menu shortcutGroup
 			ifNotNil: [ :accelGroup | gtkWindow addAcceleratorGroup: accelGroup  ].
 		menuBar ]
 ]

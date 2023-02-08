@@ -104,9 +104,9 @@ GtkAdapter >> addStyle: aStyle [
 GtkAdapter >> addVisibleSettingsTo: gtkWidget [
 
 	self presenter isVisible
-		ifTrue: [ gtkWidget show ]
+		ifTrue: [ gtkWidget beVisible ]
 		ifFalse: [ gtkWidget hide ].
-	self presenter whenVisibleChangedDo: [ :aValuable | 
+	self presenter whenVisibleChangedDo: [ :aValuable |
 		self updateVisibility: aValuable value ]
 ]
 

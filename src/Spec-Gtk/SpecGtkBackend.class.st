@@ -17,10 +17,10 @@ SpecGtkBackend >> adapterBindingsClass [
 ]
 
 { #category : #'clipboard handling' }
-SpecGtkBackend >> copyToClipboard: aString [ 
+SpecGtkBackend >> copyToClipboard: aString [
 
-	GRunLoop defer: [ 
-		GtkClipboard forSelection text: aString ]
+	GRunLoop defer: [
+		GdkClipboard primary text: aString ]
 ]
 
 { #category : #accessing }

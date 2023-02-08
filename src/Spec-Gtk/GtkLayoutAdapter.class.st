@@ -69,9 +69,9 @@ GtkLayoutAdapter >> applyVisibility [
 GtkLayoutAdapter >> applyVisibility: gtkWidget [
 
 	self presenter isVisible
-		ifTrue: [ gtkWidget show ]
-		ifFalse: [ gtkWidget hide ].
-	self presenter whenVisibleChangedDo: [ :aValuable | 
+		ifTrue: [ gtkWidget beVisible ]
+		ifFalse: [ gtkWidget beNotVisible ].
+	self presenter whenVisibleChangedDo: [ :aValuable |
 		self updateVisibility: aValuable value ]
 ]
 

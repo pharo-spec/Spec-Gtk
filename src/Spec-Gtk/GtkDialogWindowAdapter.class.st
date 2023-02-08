@@ -60,10 +60,10 @@ GtkDialogWindowAdapter >> defaultFromKeyboard [
 { #category : #private }
 GtkDialogWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 
-	self model isCentered ifTrue: [ gtkWindow center ].
-	super 
-		deferredAddPresenterIn: gtkWindow 
-		withSpecLayout: aSpec	
+	"self model isCentered ifTrue: [ gtkWindow center ]."
+	super
+		deferredAddPresenterIn: gtkWindow
+		withSpecLayout: aSpec
 ]
 
 { #category : #building }
@@ -77,13 +77,18 @@ GtkDialogWindowAdapter >> newWidget [
 
 { #category : #accessing }
 GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
+	| sem |
 
-	^ self widgetDo: [ :w | 
+	sem := Semaphore new.
+	self widgetDo: [ :w |
+		w beHideOnClose.
+		w connectHide: [ sem signal ].
 		w present.
 		self processInitializationDeferredActions.
-		self presenter presenter takeKeyboardFocus.
-		"To be executed in the event loop of the dialog"
-		GRunLoop forceDefer: [ self announceOpened ].
-		aBlock value.
-		w run ]
+		self presenter presenter takeKeyboardFocus ].
+
+	self announceOpened.
+	aBlock value.
+	sem wait.
+	self widgetDo: [ :w | w objectUnref ]
 ]
