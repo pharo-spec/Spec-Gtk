@@ -23,3 +23,9 @@ SpApplication >> defaultConfigurationForGtk [
 
 	^ SpGtkConfiguration new
 ]
+
+{ #category : #'*Spec-Gtk' }
+SpApplication >> useTheme: aName [
+
+	GRunLoop defer: [ self configuration installTheme: aName ]
+]
