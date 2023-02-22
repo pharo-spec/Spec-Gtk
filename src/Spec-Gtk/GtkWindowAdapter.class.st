@@ -142,9 +142,8 @@ GtkWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 { #category : #accessing }
 GtkWindowAdapter >> close [
 
-	self widgetDo: [ :w | 
-		w hide. 
-		w isAlive ifTrue: [ w destroy ] ]
+	self widgetDo: [ :w |
+		w close ]
 ]
 
 { #category : #private }
