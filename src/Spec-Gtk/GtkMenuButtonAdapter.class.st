@@ -11,15 +11,12 @@ Class {
 GtkMenuButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
-	gtkButton 
+	gtkButton
 		connect: 'button-press-event'
 		signature: #(gboolean (void *widget, void *event, void *data))
-		do: [ :w :event :data | 
+		do: [ :w :event :data |
 			self updateMenu.
-			(GtkMenuButton fromHandle: w) 
-				menuPopup: menuWidget 
-				widgetGravity: GdkGravity GDK_GRAVITY_SOUTH_WEST 
-				menuGravity: GdkGravity GDK_GRAVITY_NORTH_WEST. 
+			(GtkMenuButton fromHandle: w) popup.
 			false ]
 ]
 

@@ -12,14 +12,11 @@ GtkMenuItemAdapter class >> defaultSpacing [
 
 { #category : #private }
 GtkMenuItemAdapter >> addAcceleratorShortcut: shortcut to: gtkWidget [
-	
+
 	self flag: #HACK.	"this is to ensure is not a key combination (gtk does not allows them)"
 	shortcut spGtkCurrentCharacter asString ifEmpty: [ ^ self ].
-
-	gtkWidget
-		addAccelerator: 'activate'
-		group: self shortcutGroup
-		shortcut: shortcut
+	self halt. "What I do with the actions?"
+	gtkWidget addShortcut: shortcut asGtkShortcut
 ]
 
 { #category : #private }

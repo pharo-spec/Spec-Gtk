@@ -1,38 +1,40 @@
 Class {
 	#name : #GtkToggleButtonAdapter,
-	#superclass : #GtkCheckBoxAdapter,
+	#superclass : #GtkButtonAdapter,
 	#category : #'Spec-Gtk-Adapter'
 }
 
-{ #category : #building }
-GtkToggleButtonAdapter >> addModelTo: gtkToggleButton [
+{ #category : #updating }
+GtkToggleButtonAdapter >> addActionTo: gtkToggleButton [
 
-	super addModelTo: gtkToggleButton.
-	
-	self presenter icon ifNotNil: [ 
-		self setIconTo: gtkToggleButton ].
-	
-	self presenter whenIconChangedDo: [ 
-		self setIconTo: gtkToggleButton ].
-	
+	gtkToggleButton connectToggled: [
+		self backendUpdatingDo: [ self updatePresenterState ] ].
+	self presenter whenChangedDo: [
+		self backendDetectCyclesDo: [ self updateState ] ]
 ]
 
 { #category : #building }
 GtkToggleButtonAdapter >> setIconTo: gtkToggleButton [
 
-	gtkToggleButton 
-		alwaysShowImage: true;
-		image: self presenter icon asGtkImage
+	gtkToggleButton image: self presenter icon asGtkImage
 ]
 
 { #category : #updating }
 GtkToggleButtonAdapter >> updatePresenterState [
 
 	self widgetDo: [ :w |
-		self state ifTrue: [ 
-			self presenter associatedToggleButtons 
-				do: [ :each | each state: false ] ]. 
-		super updatePresenterState ]
+		self updatePresenterStateOn: w ]
+]
+
+{ #category : #updating }
+GtkToggleButtonAdapter >> updatePresenterStateOn: gtkToggleButton [
+	| active |
+
+	active := gtkToggleButton isActive.
+	active ifTrue: [
+		self presenter associatedToggleButtons
+			do: [ :each | each state: false ] ].
+	self presenter state: active
 ]
 
 { #category : #updating }

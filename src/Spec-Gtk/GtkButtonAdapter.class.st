@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #building }
+GtkButtonAdapter >> addActionTo: gtkButton [
+
+	gtkButton addClickEvent: [
+		self presenter performAction ]
+]
+
+{ #category : #building }
 GtkButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
@@ -12,8 +19,7 @@ GtkButtonAdapter >> addModelTo: gtkButton [
 	self presenter contextMenu ifNotNil: [ :menu |
 		self addMenu: menu to: gtkButton ].
 
-	gtkButton addClickEvent: [
-		self presenter performAction ]
+	self addActionTo: gtkButton
 ]
 
 { #category : #events }
