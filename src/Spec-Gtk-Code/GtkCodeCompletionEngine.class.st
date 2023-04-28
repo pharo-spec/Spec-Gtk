@@ -61,5 +61,7 @@ GtkCodeCompletionEngine >> scripting: aBoolean [
 { #category : #accessing }
 GtkCodeCompletionEngine >> variableBindingNames [
 
-	^ self doItRequestor variableBindingNames
+	^ self doItRequestor 
+		ifNotNil: [ :aRequestor | aRequestor variableBindingNames ]
+		ifNil: [ #() ]
 ]
