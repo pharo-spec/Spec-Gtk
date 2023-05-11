@@ -46,10 +46,28 @@ GtkLabelAdapter >> applyDecorationsTo: aWidget label: aString [
 ]
 
 { #category : #accessing }
+GtkLabelAdapter >> beNotWrap [
+
+	self widgetDo: [ :w | w wrap: false ]
+]
+
+{ #category : #accessing }
+GtkLabelAdapter >> beWrap [
+
+	self widgetDo: [ :w | w wrap: true ]
+]
+
+{ #category : #accessing }
 GtkLabelAdapter >> getText [
 
 	^ (self presenter label ifNil: ['']) 
 		localizedForPresenter: self presenter
+]
+
+{ #category : #testing }
+GtkLabelAdapter >> isWrap [
+
+	^ self widgetDo: [ :w | w isWrap ]
 ]
 
 { #category : #accessing }
