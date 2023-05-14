@@ -105,7 +105,7 @@ GtkAdapter >> addVisibleSettingsTo: gtkWidget [
 
 	self presenter isVisible
 		ifTrue: [ gtkWidget beVisible ]
-		ifFalse: [ gtkWidget hide ].
+		ifFalse: [ gtkWidget beNotVisible ].
 	self presenter whenVisibleChangedDo: [ :aValuable |
 		self updateVisibility: aValuable value ]
 ]
@@ -232,7 +232,7 @@ GtkAdapter >> doTakeKeyboardFocus: gtkWidget [
 { #category : #accessing }
 GtkAdapter >> enabled [
 
-	^ self innerWidget sensitive
+	^ self innerWidgetDo: [ :w | w sensitive ]
 ]
 
 { #category : #accessing }
@@ -403,8 +403,8 @@ GtkAdapter >> isBackendUpdating [
 
 { #category : #visibility }
 GtkAdapter >> isVisible [
-	
-	^ self innerWidget isConfiguredVisible
+
+	^ self innerWidgetDo: [ :w | w isConfiguredVisible ]
 ]
 
 { #category : #emulating }

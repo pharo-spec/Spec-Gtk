@@ -10,8 +10,7 @@ GtkLabelAdapter >> addModelTo: gtkWidget [
 	super addModelTo: gtkWidget.
 	self setLabelTo: gtkWidget.
 	self presenter whenLabelChangedDo: [
-		self innerWidgetDo: [ :w | 
-			self setLabelTo: w ] ].
+		self updateLabel ]
 ]
 
 { #category : #accessing }
@@ -86,7 +85,16 @@ GtkLabelAdapter >> newWidget [
 GtkLabelAdapter >> setLabelTo: gtkWidget [
 	| label |
 	
-	gtkWidget label: (label := self getText).
-	self applyDecorationsTo: gtkWidget label: label. 
+	label := self getText.
+	gtkWidget label: label.
+	self 
+		applyDecorationsTo: gtkWidget 
+		label: label
+]
 
+{ #category : #'private - updating' }
+GtkLabelAdapter >> updateLabel [
+
+	self innerWidgetDo: [ :w | 
+		self setLabelTo: w ]
 ]

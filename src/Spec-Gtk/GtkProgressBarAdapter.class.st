@@ -32,7 +32,7 @@ GtkProgressBarAdapter >> updateState [
 	
 	self presenter state applyTo: self.
 	GRunLoop current isInCallback 
-		ifTrue: [ GtkPollingRunLoop new processEvents ]
+		ifTrue: [ Gtk3PollingRunLoop new processEvents ]
 ]
 
 { #category : #building }
