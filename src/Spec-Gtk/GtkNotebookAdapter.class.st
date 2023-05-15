@@ -5,15 +5,15 @@ Class {
 }
 
 { #category : #private }
-GtkNotebookAdapter >> addContentPage: gtkPage [	
+GtkNotebookAdapter >> addContentPage: gtkPage [
+
 	| box presenter |
-	
 	box := gtkPage content.
 	box hasChildren ifTrue: [ ^ self ].
-	
+
 	presenter := gtkPage data retrievePresenter.
 	presenter owner: self model.
-	box packStart: (self buildPage: presenter)
+	box append: (self buildPage: presenter)
 ]
 
 { #category : #building }
@@ -46,13 +46,13 @@ GtkNotebookAdapter >> addModelTo: gtkWidget [
 
 { #category : #building }
 GtkNotebookAdapter >> appendPage: aPage to: gtkWidget [
-	| page |
 
+	| page |
 	page := gtkWidget
-		newPageLabel: (self buildLabelForTab: aPage)
-		content: (GtkBox newVertical
-			show;
-			yourself).
+		        newPageLabel: (self buildLabelForTab: aPage)
+		        content: (GtkBox newVertical
+				         beVisible;
+				         yourself).
 	page data: aPage.
 
 	^ gtkWidget append: page

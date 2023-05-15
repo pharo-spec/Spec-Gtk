@@ -46,34 +46,33 @@ GtkMillerAdapter >> addConstraints: constraints toChild: childWidget [
 
 { #category : #private }
 GtkMillerAdapter >> applyLayout: aLayout [
-
 	"build of widget was differed up to here (to know what is the direction)"
+
 	innerWidget := layout direction newWidgetOn: self.
-	innerWidget connectRealize: [ 
+	innerWidget connectRealize: [
 		realised := true.
 		self scrollToShowLastPage ].
 
-	innerWidget 
+	innerWidget
 		homogeneous: true;
 		spacing: aLayout spacing;
 		margin: aLayout borderWidth;
-		show.
-		
+		beVisible.
+
 	widget := GtkScrolledWindow newWidget: innerWidget.
-	widget connectSizeAllocate: [ :aRect | 
-		self widgetResized ].
-		
+	widget connectSizeAllocate: [ :aRect | self widgetResized ].
+
 	self toggleVisible: self presenter isVisible.
-	self presenter whenVisibleChangedDo: [ 	
+	self presenter whenVisibleChangedDo: [
 		self toggleVisible: self presenter isVisible ].
 
 	self presenter hasHorizontalScrollBar
-		ifTrue: [ self enableHScrollBar ] 
+		ifTrue: [ self enableHScrollBar ]
 		ifFalse: [ self disableHScrollBar ].
 	self presenter whenHorizontalScrollBarChangedDo: [ :show |
-		show 
+		show
 			ifTrue: [ self enableHScrollBar ]
-		 	ifFalse: [ self disableHScrollBar ] ]
+			ifFalse: [ self disableHScrollBar ] ]
 ]
 
 { #category : #private }

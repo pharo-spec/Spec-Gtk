@@ -572,6 +572,6 @@ GtkAdapter >> wrapWidget: gtkWidget [
 GtkAdapter >> wrapWithScrollableWindow: gtkWidget [
 
 	^ (GtkScrolledWindow newWidget: gtkWidget)
-		show;
-		yourself
+		  beVisible;
+		  yourself
 ]
