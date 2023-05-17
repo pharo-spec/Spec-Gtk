@@ -3,7 +3,7 @@ A data store to be used in `GtkListViewAdapter`
 "
 Class {
 	#name : #GtkListViewAdapterDataStore,
-	#superclass : #GListDataStore,
+	#superclass : #GListReferenceStore,
 	#instVars : [
 		'presenter'
 	],
@@ -27,7 +27,7 @@ GtkListViewAdapterDataStore >> items [
 { #category : #accessing }
 GtkListViewAdapterDataStore >> items: aCollection [
 
-	self error: 'Should not arrive here'
+	self reset
 ]
 
 { #category : #accessing }

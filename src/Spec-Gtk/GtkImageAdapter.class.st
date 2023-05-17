@@ -10,7 +10,6 @@ GtkImageAdapter >> addModelTo: gtkImage [
 	super addModelTo: gtkImage.
 	
 	self updateForm: self model image into: gtkImage.
-	
 	self model whenImageChangeDo: [ 
 		self widgetDo: [ :w |
 			self updateForm: self model image into: gtkImage ] ]
@@ -35,5 +34,5 @@ GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImage [
 		aGtkImage clear. 
 		^ self ].
 	
-	aGtkImage setFromGdkPixbuf: aFormOrGdkPixbuf asGdkPixbuf.
+	aGtkImage setFromGdkPixbuf: aFormOrGdkPixbuf asGdkPixbuf
 ]

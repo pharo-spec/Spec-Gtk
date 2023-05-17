@@ -50,21 +50,23 @@ GtkListViewAdapterItemFactory >> presenterAtHandle: anAddress [
 GtkListViewAdapterItemFactory >> setup: listItem [
 	| child |
 
-	child := presenter setupAction value.
-	child owner: presenter.
-	
+	child := presenter setupAction cull: presenter.
 	child build.
+
 	self storePresenter: child.
-	
+
 	listItem child: child adapter widget
 ]
 
 { #category : #private }
 GtkListViewAdapterItemFactory >> storePresenter: child [
+	| widget |
 
+	widget := child adapter widget.
 	storedObjects 
-		at: child adapter widget getHandle
+		at: widget getHandle
 		put: child.
+	widget objectRef.
 		
 	^ child
 ]
