@@ -21,7 +21,7 @@ GtkListViewAdapterDataStore class >> newPresenter: aPresenter [
 { #category : #accessing }
 GtkListViewAdapterDataStore >> items [
 
-	^ presenter items
+	^ items ifNil: [ items := presenter items ]
 ]
 
 { #category : #accessing }
@@ -35,4 +35,11 @@ GtkListViewAdapterDataStore >> presenter: aPresenter [
 
 	presenter := aPresenter.
 	self reset
+]
+
+{ #category : #private }
+GtkListViewAdapterDataStore >> reset [
+
+	super reset.
+	items := nil
 ]
