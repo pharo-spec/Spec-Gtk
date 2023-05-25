@@ -7,7 +7,7 @@ Class {
 { #category : #building }
 GtkButtonAdapter >> addActionTo: gtkButton [
 
-	gtkButton addClickEvent: [
+	gtkButton connectClicked: [
 		self presenter performAction ]
 ]
 
