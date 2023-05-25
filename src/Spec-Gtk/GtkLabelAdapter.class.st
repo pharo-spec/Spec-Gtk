@@ -15,33 +15,29 @@ GtkLabelAdapter >> addModelTo: gtkWidget [
 
 { #category : #accessing }
 GtkLabelAdapter >> applyDecorationsTo: aWidget label: aString [
-	| attrs empty |
+	| attrs |
 	
-	empty := true.
-	attrs := PangoAttrList new. 
+	attrs := PangoAttrList newUnowned.
 	self presenter displayColor ifNotNil: [ :block |
 		(block cull: aString) ifNotNil: [ :aColor |
-			empty := false.
 			attrs add: (PangoAttribute newForegroundColor: aColor) ] ].
 	self presenter displayBold ifNotNil: [ :block |
 		(block cull: aString) ifTrue: [ 
-			empty := false.
 			attrs add: PangoAttribute newBold ] ].
 	self presenter displayItalic ifNotNil: [ :block |
 		(block cull: aString) ifTrue: [ 
-			empty := false.
 			attrs add: PangoAttribute newItalic ] ].
 	self presenter displayUnderline ifNotNil: [ :block |
 		(block cull: aString) ifTrue: [ 
-			empty := false.
 			attrs add: PangoAttribute newUnderline ] ].
 	self presenter displayBackgroundColor ifNotNil: [ :block |
 		(block cull: aString) ifNotNil: [ :aColor |
-			empty := false.
 		  	attrs add: (PangoAttribute newBackgroundColor: aColor) ] ].
 
-	empty ifTrue: [ ^ self ].
-	aWidget attributes: attrs
+	attrs isEmpty 
+		ifFalse: [ aWidget attributes: attrs ].
+	
+	attrs unref
 ]
 
 { #category : #accessing }
