@@ -6,6 +6,10 @@ Class {
 	#superclass : #GtkAdapter,
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
+	#instVars : [
+		'deferredAction',
+		'selectionCompanion'
+	],
 	#category : #'Spec-Gtk-Adapter-ListView'
 }
 
@@ -14,8 +18,33 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 
 	super addModelTo: gtkListView.
 		
+	gtkListView autoSelect: false.
+	"gtkListView showSeparators: true."
+	"gtkListView enableRubberband: true."
+
+	gtkListView singleClickActivate: 	self presenter isActiveOnSingleClick.
+	"self configureDragAndDrop: gtkListView".
+	"self addSearchTo: gtkListView"
+	"	self presenter contextMenu ifNotNil: [ :menu |
+		self addMenu: menu to: gtkTreeView ]"
+	
 	gtkListView factory: self newItemFactory.
-	gtkListView selectionModel: self newSelectionModel
+	gtkListView selectionModel: self newSelectionModel.
+		
+	self presenter selection isEmpty 
+		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
+	self presenter selection 
+		whenChangedDo: [ self updateSelectionFromPresenter ].
+
+	gtkListView connectRowActivated: [ :position |
+		self presenter doActivateAtIndex: position ].
+]
+
+{ #category : #private }
+GtkListViewAdapter >> doInitializationDeferredActions [
+
+	deferredAction ifNil: [ ^ self ].
+	deferredAction ensure: [ deferredAction := nil ]
 ]
 
 { #category : #'private - factory' }
@@ -35,8 +64,13 @@ GtkListViewAdapter >> newItemFactory [
 
 { #category : #'private - factory' }
 GtkListViewAdapter >> newSelectionModel [
+	| selectionModel |
+
+	selectionModel := self selectionCompanion newModel: self newStore.
+	selectionModel connectSelectionChanged: [ :position :numItems |
+		self updatePresenterSelection: position numItems: numItems ]. 
 	
-	^ GtkSingleSelection newModel: self newStore
+	^ selectionModel
 ]
 
 { #category : #'private - factory' }
@@ -49,20 +83,58 @@ GtkListViewAdapter >> newStore [
 GtkListViewAdapter >> refreshList [
 
 	self innerWidgetDo: [ :w |
-		w selectionModel: self newSelectionModel ]
+		w selectionModel model: self newStore ]
 ]
 
-{ #category : #accessing }
+{ #category : #'private - updating' }
 GtkListViewAdapter >> refreshWidgetSelection [
 
-	self innerWidgetDo: [ :w |
+	self flag: #TODO. "not sure this is needed?"
+
+	"self innerWidgetDo: [ :w |
 		| rowIndex selection |
 		rowIndex := self presenter selection selectedIndex.
-		selection :=  w selectionModel selected + 1.
+		selection :=  w selectionModel selected.
 		selection = rowIndex ifTrue: [ ^ self ].
 		rowIndex > 0
-			ifTrue: [ w selectionModel select: rowIndex - 1 ]
-			ifFalse: [ w selectionModel unselectAll ] ]
+			ifTrue: [ w selectionModel select: rowIndex ]
+			ifFalse: [ w selectionModel unselectAll ] ]"
+]
+
+{ #category : #private }
+GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
+
+	self innerWidgetDo: [ :w |
+		w scrollToPosition: index ]
+]
+
+{ #category : #private }
+GtkListViewAdapter >> selectionCompanion [
+
+	^ selectionCompanion ifNil: [ 
+		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
+]
+
+{ #category : #private }
+GtkListViewAdapter >> setDeferredAction: aBlock [
+
+	deferredAction := aBlock
+]
+
+{ #category : #'private - updating' }
+GtkListViewAdapter >> updatePresenterSelection: position numItems: numItems [
+	
+	self backendUpdatingDo: [
+		self selectionCompanion 
+			updatePresenterSelection: position 
+			numItems: numItems ]
+]
+
+{ #category : #'private - updating' }
+GtkListViewAdapter >> updateSelectionFromPresenter [
+
+	self backendDetectCyclesDo: [ 
+		self selectionCompanion updateSelectionFromPresenter ]
 ]
 
 { #category : #building }

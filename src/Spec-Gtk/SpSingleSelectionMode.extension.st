@@ -1,6 +1,12 @@
 Extension { #name : #SpSingleSelectionMode }
 
 { #category : #'*Spec-Gtk' }
+SpSingleSelectionMode >> gtkAdapterCompanion [
+
+	^ GtkAdapterSingleSelection
+]
+
+{ #category : #'*Spec-Gtk' }
 SpSingleSelectionMode >> unsubscribe: anObject [ 
 
 	(self observablePropertyNamed: #selectedIndex) unsubscribe: anObject.

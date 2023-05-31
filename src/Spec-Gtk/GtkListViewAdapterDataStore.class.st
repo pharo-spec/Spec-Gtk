@@ -21,7 +21,11 @@ GtkListViewAdapterDataStore class >> newPresenter: aPresenter [
 { #category : #accessing }
 GtkListViewAdapterDataStore >> items [
 
-	^ items ifNil: [ items := presenter items ]
+	self flag: #TODO. "This may be bad? no idea, but it prevents crashes :P"
+	^ items ifNil: [ 
+		items := presenter items 
+			ifNotNil: [ :aCollection | aCollection copy ]
+			ifNil: [ #() ] ]
 ]
 
 { #category : #accessing }

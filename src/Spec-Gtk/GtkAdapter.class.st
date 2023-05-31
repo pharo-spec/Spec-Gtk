@@ -207,7 +207,7 @@ GtkAdapter >> deferredUpdateMenuIn: w [
 	self addMenu: menu to: w
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 GtkAdapter >> doInitializationDeferredActions [
 	"some components can require a deferred action (to be executed when 
 	 window is presented). Override this if this is the case."
