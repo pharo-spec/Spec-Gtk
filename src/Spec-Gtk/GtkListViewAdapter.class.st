@@ -18,7 +18,6 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 
 	super addModelTo: gtkListView.
 		
-	gtkListView autoSelect: false.
 	"gtkListView showSeparators: true."
 	"gtkListView enableRubberband: true."
 
@@ -30,6 +29,10 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 	
 	gtkListView factory: self newItemFactory.
 	gtkListView selectionModel: self newSelectionModel.
+
+	self presenter hasHeaderTitle ifTrue: [ 
+		gtkListView headerFactory: self newHeaderFactory ].
+
 		
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
@@ -45,6 +48,21 @@ GtkListViewAdapter >> doInitializationDeferredActions [
 
 	deferredAction ifNil: [ ^ self ].
 	deferredAction ensure: [ deferredAction := nil ]
+]
+
+{ #category : #'private - factory' }
+GtkListViewAdapter >> newHeaderFactory [
+	| factory |
+
+	factory := GtkListViewAdapterHeaderFactory newPresenter: self presenter.
+	factory connectSetup: [ :listItem | 
+		factory setup: listItem ].
+	factory connectBind: [ :listItem |
+		factory 
+			bind: listItem
+			to: self presenter headerTitle ].
+
+	^ factory
 ]
 
 { #category : #'private - factory' }
