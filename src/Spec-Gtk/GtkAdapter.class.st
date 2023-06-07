@@ -545,8 +545,8 @@ GtkAdapter >> updateVisibility: aBoolean [
 
 	self widgetDo: [ :w |
 		aBoolean
-			ifTrue: [ w show ]
-			ifFalse: [ w hide ] ]
+			ifTrue: [ w beVisible ]
+			ifFalse: [ w beNotVisible ] ]
 ]
 
 { #category : #building }

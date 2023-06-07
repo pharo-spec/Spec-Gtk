@@ -101,7 +101,7 @@ GtkMillerAdapter >> childrenWidgets [
 GtkMillerAdapter >> disableHScrollBar [
 
 	keepShowingPage := true.
-	self widgetDo: [ :w | w hScrollBar hide ]
+	self widgetDo: [ :w | w hScrollBar beNotVisible ]
 ]
 
 { #category : #private }
@@ -254,8 +254,8 @@ GtkMillerAdapter >> selectPage: aNumber [
 GtkMillerAdapter >> toggleVisible: isVisible [
 
 	isVisible 
-		ifTrue: [ widget show ] 
-		ifFalse: [ widget hide ]
+		ifTrue: [ widget beVisible ] 
+		ifFalse: [ widget beNotVisible ]
 ]
 
 { #category : #private }

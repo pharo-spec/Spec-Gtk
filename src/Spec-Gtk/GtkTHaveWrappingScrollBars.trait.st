@@ -6,7 +6,7 @@ Trait {
 	#category : #'Spec-Gtk-Adapter-List'
 }
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkTHaveWrappingScrollBars >> innerWidget [
 	
 	^ innerWidget

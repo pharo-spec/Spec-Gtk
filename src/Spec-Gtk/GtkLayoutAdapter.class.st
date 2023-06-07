@@ -61,8 +61,8 @@ GtkLayoutAdapter >> applyStyle: aWidget [
 GtkLayoutAdapter >> applyVisibility [ 
 	
 	self presenter isVisible 
-		ifTrue: [ widget show ] 
-		ifFalse: [ widget hide ]
+		ifTrue: [ widget beVisible ] 
+		ifFalse: [ widget beNotVisible ]
 ]
 
 { #category : #private }
@@ -212,7 +212,7 @@ GtkLayoutAdapter >> rebuild [
 	"keep old"
 	oldChildren do: [ :each | each objectRef ].
 	"hide"
-	widget hide.
+	widget beNotVisible.
 	"remove all"
 	widget removeAll.
 	"re-add all"
@@ -223,7 +223,7 @@ GtkLayoutAdapter >> rebuild [
 			ifFalse: [ 
 				self add: each forGtkLayoutRebuild constraints: (layout constraintsFor: each) ]].
 	"show"
-	widget show.
+	widget beVisible.
 	"now dispose"
 	oldChildren do: [ :each | each objectUnref ].
 ]

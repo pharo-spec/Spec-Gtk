@@ -32,7 +32,6 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 
 	self presenter hasHeaderTitle ifTrue: [ 
 		gtkListView headerFactory: self newHeaderFactory ].
-
 		
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].

@@ -16,7 +16,7 @@ GtkRadioButtonAdapter >> addAssociatedTo: gtkWidget [
 	self presenter isInitialStateSet ifFalse: [ 
 		self widgetClass new 
 			group: gtkWidget;
-			hide;
+			beNotVisible;
 			active: true ]
 ]
 

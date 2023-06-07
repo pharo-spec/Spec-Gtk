@@ -388,7 +388,7 @@ GtkWindowAdapter >> processInitializationDeferredActions [
 { #category : #building }
 GtkWindowAdapter >> rebuild [
 
-	contentBox hide.
+	contentBox beNotVisible.
 	contentBox children do: [ :each | each ensureObjectRefAndAutoRelease ].
 	contentBox removeAll.
 	content := self model presenter adapter widget.
@@ -398,7 +398,7 @@ GtkWindowAdapter >> rebuild [
 		spec: nil
 		window: self widget.
 		
-	contentBox show
+	contentBox beVisible
 ]
 
 { #category : #'spec protocol' }
