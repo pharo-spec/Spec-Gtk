@@ -33,9 +33,8 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.
 	self addTextTo: gtkWidget. 
-	self presenter whenTextChangedDo: [ :text | 
-		self innerWidgetDo: [ :w | 
-			self setText: text to: w ] ].
+	self presenter whenTextChangedDo: [ :text |
+		self updateTextFromPresenter: text ].
 	"gtkWidget connectPopulatePopup: [ :menuWidget |
 		self populatePopup: menuWidget ]"
 ]
@@ -159,4 +158,12 @@ GtkAbstractTextAdapter >> showContextMenu [
 GtkAbstractTextAdapter >> text: aString [ 
 	
 	self setText: aString to: widget
+]
+
+{ #category : #'private - updating' }
+GtkAbstractTextAdapter >> updateTextFromPresenter: aString [
+	
+	self backendDetectCyclesDo: [  
+		self innerWidgetDo: [ :w | 
+			self setText: aString to: w ] ]
 ]

@@ -14,7 +14,7 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 
 	"sync presenter text and gtk"
 	gtkEntry connectChanged: [ 
-		self presenter text: gtkEntry text ].
+		self updatePresenterText: gtkEntry text ].
 	
 	self presenter placeholder ifNotNil: [ :text | 
 		gtkEntry placeHolderText: (text localizedForPresenter: self presenter) asString ].
@@ -36,8 +36,7 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 		isPassword
 			ifFalse: [ gtkEntry beForAnyCharacter ]
 			ifTrue: [ gtkEntry bePassword ].
-		gtkEntry visibility: isPassword not ].
-
+		gtkEntry visibility: isPassword not ]
 ]
 
 { #category : #'spec protocol' }
@@ -82,6 +81,13 @@ GtkTextInputFieldAdapter >> text: aString [
 	super text: aString.
 	"Changing the text programatically does not throw an event"
 	self model text: aString.
+]
+
+{ #category : #'private - updating' }
+GtkTextInputFieldAdapter >> updatePresenterText: aString [
+
+	self backendUpdatingDo: [ 
+		self presenter text: aString ] 
 ]
 
 { #category : #private }
