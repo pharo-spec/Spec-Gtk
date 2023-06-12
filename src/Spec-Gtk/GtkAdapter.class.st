@@ -110,14 +110,14 @@ GtkAdapter >> addVisibleSettingsTo: gtkWidget [
 		self updateVisibility: aValuable value ]
 ]
 
-{ #category : #'private cycle detection' }
+{ #category : #'private - cycle detection' }
 GtkAdapter >> backendDetectCyclesDo: aBlock [ 
 
 	self isBackendUpdating ifTrue: [ ^ self ].
 	^ aBlock value
 ]
 
-{ #category : #'private cycle detection' }
+{ #category : #'private - cycle detection' }
 GtkAdapter >> backendUpdatingDo: aBlock [ 
 	"This is a general mechanism to avoid colisions. 
 	 I'm adding it for the cases where a presenter can be updated in two directions: from the 
@@ -293,7 +293,7 @@ GtkAdapter >> initialize [
 	backendUpdating := false
 ]
 
-{ #category : #'private accessing' }
+{ #category : #'private - accessing' }
 GtkAdapter >> innerWidget [
 	"this is the widget to be used internally (to operate). 
 	 this is because widgets can be wrapped and we need to use the actual widget to 
@@ -321,17 +321,15 @@ GtkAdapter >> installEvent: anEvent [
 { #category : #'event installing' }
 GtkAdapter >> installFocusLostEvent: anEvent to: aWidget [
 
-	aWidget connectFocusOutEvent: [ 
-		anEvent action value. 
-		false ]
+	aWidget addFocusLeaveEvent: [ :event |
+		anEvent action value: event ]
 ]
 
 { #category : #'event installing' }
 GtkAdapter >> installFocusReceivedEvent: anEvent to: aWidget [
 
-	aWidget connectFocusInEvent: [
-		anEvent action value. 
-		false ]
+	aWidget addFocusEnterEvent: [ :event |
+		anEvent action value: event ]
 ]
 
 { #category : #'event installing' }
@@ -395,7 +393,7 @@ GtkAdapter >> installMouseUpEvent: anEvent to: aWidget [
 		event wasHandled ]
 ]
 
-{ #category : #'private cycle detection' }
+{ #category : #'private - cycle detection' }
 GtkAdapter >> isBackendUpdating [
 
 	^ backendUpdating
@@ -540,7 +538,7 @@ GtkAdapter >> updateMenu [
 		self deferredUpdateMenuIn: w ]
 ]
 
-{ #category : #'private updating' }
+{ #category : #'private - updating' }
 GtkAdapter >> updateVisibility: aBoolean [ 
 
 	self widgetDo: [ :w |
@@ -568,7 +566,7 @@ GtkAdapter >> wrapWidget: gtkWidget [
 	^ gtkWidget
 ]
 
-{ #category : #'private utils' }
+{ #category : #'private - utils' }
 GtkAdapter >> wrapWithScrollableWindow: gtkWidget [
 
 	^ (GtkScrolledWindow newWidget: gtkWidget)
