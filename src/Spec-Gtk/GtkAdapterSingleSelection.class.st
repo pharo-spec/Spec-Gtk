@@ -1,3 +1,6 @@
+"
+adapter to handle simple selections (maps a presenter selection with a gtk selection) 
+"
 Class {
 	#name : #GtkAdapterSingleSelection,
 	#superclass : #GtkAdapterSelection,

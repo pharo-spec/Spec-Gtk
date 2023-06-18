@@ -1,3 +1,6 @@
+"
+adapter to handle multiple selections (maps a presenter selection with a gtk selection) 
+"
 Class {
 	#name : #GtkAdapterMultiSelection,
 	#superclass : #GtkAdapterSelection,

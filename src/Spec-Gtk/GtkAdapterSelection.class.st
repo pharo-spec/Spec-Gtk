@@ -1,3 +1,6 @@
+"
+A base selection adapter.
+"
 Class {
 	#name : #GtkAdapterSelection,
 	#superclass : #Object,
@@ -37,6 +40,12 @@ GtkAdapterSelection >> newModel: aModel [
 GtkAdapterSelection >> presenter [
 
 	^ self adapter presenter
+]
+
+{ #category : #'private - updating' }
+GtkAdapterSelection >> updatePresenterSelection: position numItems: numItems [
+
+	self subclassResponsibility
 ]
 
 { #category : #updating }

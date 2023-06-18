@@ -1,3 +1,6 @@
+"
+Header factory for to be used with `GtkListViewAdapter`
+"
 Class {
 	#name : #GtkListViewAdapterHeaderFactory,
 	#superclass : #GtkSignalListItemFactory,
