@@ -5,29 +5,40 @@ Class {
 	#name : #GtkActionInstaller,
 	#superclass : #GtkActionVisitor,
 	#instVars : [
-		'actionGroup'
+		'actionGroup',
+		'actionMap'
 	],
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : #'Spec-Gtk-Actions'
 }
 
 { #category : #visiting }
 GtkActionInstaller >> visit: anObject [
 
-	actionGroup := GSimpleActionGroup new.
+	actionMap := Dictionary new.
 	super visit: anObject.
-   
-	('installing group: ', self prefix) crTrace.
-	self widget 
-		insertActionGroup: self prefix 
-		actions: actionGroup.
-	^ actionGroup
+	^ actionMap
 ]
 
 { #category : #visiting }
 GtkActionInstaller >> visitCommand: aCommand [
+	| action |
 	
-	aCommand isVisible ifFalse: [ ^ self ].
-	actionGroup insert: ((GSimpleAction newName: aCommand id)
+	action := (GSimpleAction newName: aCommand id)
 		connectActivate: [ aCommand execute ];
-		yourself)
+		yourself.	
+	actionMap at: aCommand put: action.
+	actionGroup insert: action
+]
+
+{ #category : #visiting }
+GtkActionInstaller >> visitCommandGroup: aCommandGroup [
+
+	self pushPrefix: aCommandGroup.
+	[
+		actionGroup := GSimpleActionGroup new.
+		aCommandGroup entries do: [ :entry | entry acceptVisitor: self ].
+		self widget 
+			insertActionGroup: self prefix
+			actions: actionGroup ]
+	ensure: [ self popPrefix ]
 ]

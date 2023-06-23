@@ -8,31 +8,10 @@ Class {
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
 	#instVars : [
 		'deferredAction',
-		'selectionCompanion',
-		'popoverMenu'
+		'selectionCompanion'
 	],
 	#category : #'Spec-Gtk-Adapter-ListView'
 }
-
-{ #category : #building }
-GtkListViewAdapter >> addActionGroup: aGroup to: gtkListView [
-	
-	"install shortcuts"
-	GtkActionShortcutInstaller new
-		widget: gtkListView;
-		visit: aGroup.
-			 		
-	popoverMenu := (GtkPopoverMenu newFromModelFull: GMenu new) ensureObjectRefAndAutoRelease.
-	popoverMenu parent: gtkListView.
-
-	gtkListView addRightClickEvent: [ :position |
-		self showPopoverMenuFor: aGroup at: position ].
-	
-	"install actions"
-	GtkActionInstaller new
-		widget: gtkListView;
-		visit: aGroup.
-]
 
 { #category : #building }
 GtkListViewAdapter >> addModelTo: gtkListView [
@@ -45,8 +24,6 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 	gtkListView singleClickActivate: 	self presenter isActiveOnSingleClick.
 	"self configureDragAndDrop: gtkListView".
 	"self addSearchTo: gtkListView"
-	self presenter actionGroup ifNotNil: [ :aGroup | 
-		self addActionGroup: aGroup to: gtkListView ].
 	
 	gtkListView factory: self newItemFactory.
 	gtkListView selectionModel: self newSelectionModel.
@@ -60,7 +37,7 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 
 	gtkListView connectRowActivated: [ :position |
-		self presenter doActivateAtIndex: position ].
+		self presenter doActivateAtIndex: position ]
 ]
 
 { #category : #private }
@@ -68,6 +45,14 @@ GtkListViewAdapter >> doInitializationDeferredActions [
 
 	deferredAction ifNil: [ ^ self ].
 	deferredAction ensure: [ deferredAction := nil ]
+]
+
+{ #category : #accessing }
+GtkListViewAdapter >> elementAt: index [
+	| item |
+
+	item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ].
+	^ item ifNil: [ self presenter items at: index ]
 ]
 
 { #category : #'private - factory' }
@@ -157,16 +142,6 @@ GtkListViewAdapter >> selectionCompanion [
 GtkListViewAdapter >> setDeferredAction: aBlock [
 
 	deferredAction := aBlock
-]
-
-{ #category : #building }
-GtkListViewAdapter >> showPopoverMenuFor: aGroup at: position [
-
-	self innerWidgetDo: [ :w |
-		popoverMenu
-			menuModel: (GtkActionMenuBuilder new visit: aGroup);
-			pointingTo: (position extent: 1@1);
-			popup ]
 ]
 
 { #category : #'private - updating' }

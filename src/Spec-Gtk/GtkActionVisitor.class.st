@@ -6,9 +6,9 @@ Class {
 	#superclass : #CmVisitor,
 	#instVars : [
 		'widget',
-		'prefix'
+		'prefixes'
 	],
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : #'Spec-Gtk-Actions'
 }
 
 { #category : #private }
@@ -17,16 +17,40 @@ GtkActionVisitor >> actionNameFor: aCommand [
 	^ '{1}.{2}' format: { self prefix. aCommand id }
 ]
 
-{ #category : #accessing }
-GtkActionVisitor >> prefix [
+{ #category : #initialization }
+GtkActionVisitor >> initialize [
 
-	^ prefix ifNil: [ 'action' ]
+	super initialize.
+	prefixes := OrderedCollection new
 ]
 
-{ #category : #accessing }
-GtkActionVisitor >> prefix: aString [
+{ #category : #private }
+GtkActionVisitor >> popPrefix [
 
-	prefix := aString
+	prefixes removeLast
+]
+
+{ #category : #private }
+GtkActionVisitor >> prefix [
+
+	^ String streamContents: [ :stream | 
+		prefixes asStringOn: stream delimiter: '-' ]
+]
+
+{ #category : #private }
+GtkActionVisitor >> pushPrefix: aCommandGroup [
+
+	prefixes add: (aCommandGroup isRoot
+		ifTrue: [ 'action' ]
+		ifFalse: [ aCommandGroup id ])
+]
+
+{ #category : #visiting }
+GtkActionVisitor >> visitCommandGroup: aCommandGroup [
+
+	self pushPrefix: aCommandGroup.
+	[ super visitCommandGroup: aCommandGroup ]
+	ensure: [ self popPrefix ]
 ]
 
 { #category : #accessing }

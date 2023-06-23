@@ -4,7 +4,7 @@ installs the shortcuts defined in the actions into a widget.
 Class {
 	#name : #GtkActionShortcutInstaller,
 	#superclass : #GtkActionVisitor,
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : #'Spec-Gtk-Actions'
 }
 
 { #category : #visiting }

@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'lastShownMenu',
 		'backendUpdating',
-		'dispatcher'
+		'dispatcher',
+		'actionMap',
+		'popoverContextMenu'
 	],
 	#category : #'Spec-Gtk-Adapter'
 }
@@ -33,6 +35,21 @@ GtkAdapter class >> isAbstract [
 GtkAdapter >> adapt: aPresenter [
 
 	^ GRunLoop defer: [ super adapt: aPresenter ]
+]
+
+{ #category : #building }
+GtkAdapter >> addActionsTo: gtkWidget [
+	
+	self presenter actionGroup ifNil: [ ^ self ].
+
+	"install actions"
+	self installActionsOn: gtkWidget.	
+	"install shortcuts"
+	self installShortcutsOn: gtkWidget.
+	"install context menu (but just if any action is visible, because they can be 
+	 just keybindings)"
+	(self presenter actionGroup allCommands anySatisfy: [ :each | each isVisible ]) 
+		ifTrue: [ self installContextMenuOn: gtkWidget ]
 ]
 
 { #category : #building }
@@ -167,9 +184,11 @@ GtkAdapter >> buildWidget [
 	
 	gtkWidget := self newWidget.
 	self addSettingsTo: gtkWidget.
-	self addKeyBindingsTo: gtkWidget.
+	"self addKeyBindingsTo: gtkWidget."
 	self addEventsTo: gtkWidget.
 	self addModelTo: gtkWidget.
+	self addActionsTo: gtkWidget.
+	
 	^ self wrapWidget: gtkWidget
 ]
 
@@ -311,6 +330,30 @@ GtkAdapter >> innerWidgetDo: aBlock [
 		aBlock value: self innerWidget ]
 ]
 
+{ #category : #'private - actions' }
+GtkAdapter >> installActionsOn: gtkWidget [
+	
+	"keeping an actionMap to be able to perform operations later (like enable/disable)"
+	actionMap := GtkActionInstaller new
+		widget: gtkWidget;
+		visit: self presenter actionGroup.
+
+]
+
+{ #category : #'private - actions' }
+GtkAdapter >> installContextMenuOn: gtkWidget [
+
+	popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new) ensureObjectRefAndAutoRelease.
+	popoverContextMenu hasArrow: false.
+	popoverContextMenu parent: gtkWidget.
+
+	gtkWidget addRightClickEvent: [ :position |
+		self updateEnabledActions.
+		self 
+			showPopoverMenuFor: self presenter actionGroup
+			at: position ]
+]
+
 { #category : #'event installing' }
 GtkAdapter >> installEvent: anEvent [
 
@@ -391,6 +434,14 @@ GtkAdapter >> installMouseUpEvent: anEvent to: aWidget [
 	aWidget connectButtonReleaseEvent: [ :event |
 		anEvent action value: event.
 		event wasHandled ]
+]
+
+{ #category : #'private - actions' }
+GtkAdapter >> installShortcutsOn: gtkWidget [
+	
+	GtkActionShortcutInstaller new
+		widget: gtkWidget;
+		visit: self presenter actionGroup
 ]
 
 { #category : #'private - cycle detection' }
@@ -496,6 +547,17 @@ GtkAdapter >> showMenu: aValuable event: event [
 		popupAtPointer: event.
 ]
 
+{ #category : #'private - actions' }
+GtkAdapter >> showPopoverMenuFor: aGroup at: position [
+
+	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].
+	self innerWidgetDo: [ :w |
+		popoverContextMenu
+			menuModel: (GtkActionMenuBuilder new visit: aGroup);
+			pointingTo: (position extent: 1@1);
+			popup ]
+]
+
 { #category : #protocol }
 GtkAdapter >> takeKeyboardFocus [
 
@@ -515,6 +577,14 @@ GtkAdapter >> update: aSymbol with: anArray [
 GtkAdapter >> updateEnabled [
 	
 	self widgetDo: [ :w | w sensitive: self presenter isEnabled value ]
+]
+
+{ #category : #'private - actions' }
+GtkAdapter >> updateEnabledActions [
+	
+	self innerWidgetDo: [ :w | 
+		actionMap keysAndValuesDo: [ :command :action | 
+			action enable: command isEnabled ] ]
 ]
 
 { #category : #updating }

@@ -8,8 +8,24 @@ Class {
 		'menu',
 		'root'
 	],
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : #'Spec-Gtk-Actions'
 }
+
+{ #category : #visiting }
+GtkActionMenuBuilder >> appendSection: aMenu label: aName to: parentMenu [
+	
+	parentMenu 
+		appendLabel: aName 
+		submenu: menu
+]
+
+{ #category : #visiting }
+GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
+	
+	parentMenu 
+		appendLabel: aName 
+		section: menu
+]
 
 { #category : #visiting }
 GtkActionMenuBuilder >> visit: anObject [
@@ -38,10 +54,13 @@ GtkActionMenuBuilder >> visitCommandGroup: aCommandGroup [
 		ifNil: [ root ].
 	[ 
 		super visitCommandGroup: aCommandGroup.
-	  	oldMenu ifNotNil: [ 
-			oldMenu 
-				appendLabel: aCommandGroup name 
-				submenu: menu ] ]	
+	  	oldMenu ifNotNil: [
+			aCommandGroup displayStrategy 
+				appendGroup: menu 
+				label: aCommandGroup name
+				to: oldMenu
+				in: self ] 
+	]	
 	ensure: [ 
 		menu := oldMenu ]
 ]
