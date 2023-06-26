@@ -39,7 +39,7 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 		gtkEntry visibility: isPassword not ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : #accessing }
 GtkTextInputFieldAdapter >> cursorPositionIndex: index [
 	
 	^ self innerWidgetDo: [ :w | w position: index ]
@@ -49,30 +49,6 @@ GtkTextInputFieldAdapter >> cursorPositionIndex: index [
 GtkTextInputFieldAdapter >> getPlaceholderText [
 
 	^ self presenter placeholder ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
-]
-
-{ #category : #'private - actions' }
-GtkTextInputFieldAdapter >> installContextMenuOn: gtkEntry [
-	
-	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].
-	gtkEntry extraMenu: (GtkActionMenuBuilder new visit: self presenter actionGroup)
-]
-
-{ #category : #'private - actions' }
-GtkTextInputFieldAdapter >> installShortcutsOn: gtkEntry [
-	| enter |
-	
-	super installShortcutsOn: gtkEntry.
-	"GtkEntry implements the activation signal, which means if we have a CR shortcut 
-	 defined (Pharo can do this time to time), it will not work, because it will send 
-	 the signal instead. To fix this (since spec does not implement activation signal 
-	 for input fields), I detect if I have defined it and if that's the case, I install 
-	 the shortcut as a signal"
-	enter := KeyboardKey enter asKeyCombination.
-	actionMap keysDo: [ :each | 
-		(each hasShortcutKey and: [ each shortcutKey  = enter ])
-			ifTrue: [ 
-				gtkEntry connectActivate: [ each execute ] ] ]
 ]
 
 { #category : #testing }
@@ -106,7 +82,7 @@ GtkTextInputFieldAdapter >> setSelectionFromModel: aSelection [
 		w selectFrom: (aSelection first - 1) to: aSelection last ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : #accessing }
 GtkTextInputFieldAdapter >> takeKeyboardFocusWithoutSelecting [
 
 	self innerWidgetDo: [ :w | w grabFocus ]

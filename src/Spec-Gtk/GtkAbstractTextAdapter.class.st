@@ -64,6 +64,13 @@ GtkAbstractTextAdapter >> cursorPositionIndex [
 	^ self innerWidgetDo: [ :w | w textBuffer cursorPosition ]
 ]
 
+{ #category : #testing }
+GtkAbstractTextAdapter >> hasActions [
+
+	"it has at least one (the extra)"
+	^ true
+]
+
 { #category : #'spec protocol' }
 GtkAbstractTextAdapter >> insert: aString at: positionIndex [
 
@@ -71,6 +78,12 @@ GtkAbstractTextAdapter >> insert: aString at: positionIndex [
 		w textBuffer 
 			insertText: aString 
 			at: positionIndex ]
+]
+
+{ #category : #building }
+GtkAbstractTextAdapter >> newActionManager [
+
+	^ GtkAdapterActionTextManager on: self
 ]
 
 { #category : #building }
@@ -144,14 +157,6 @@ GtkAbstractTextAdapter >> setSelectionFromModel: aSelection [
 GtkAbstractTextAdapter >> setText: aString to: gtkWidget [
 
 	gtkWidget text: aString asString
-]
-
-{ #category : #private }
-GtkAbstractTextAdapter >> showContextMenu [
-
-	self presenter contextMenu ifNil: [ ^ self ].
-	self innerWidgetDo: [ :w | 
-		w emitSignalByName: 'popup-menu' ]
 ]
 
 { #category : #accessing }

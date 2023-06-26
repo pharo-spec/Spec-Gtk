@@ -11,6 +11,18 @@ Class {
 	#category : #'Spec-Gtk-Actions'
 }
 
+{ #category : #accessing }
+GtkActionInstaller >> actionGroup [
+
+	^ actionGroup ifNil: [ actionGroup := GSimpleActionGroup new ]
+]
+
+{ #category : #accessing }
+GtkActionInstaller >> actionGroup: anActionGroup [
+
+	actionGroup := anActionGroup
+]
+
 { #category : #visiting }
 GtkActionInstaller >> visit: anObject [
 
@@ -27,7 +39,7 @@ GtkActionInstaller >> visitCommand: aCommand [
 		connectActivate: [ aCommand execute ];
 		yourself.	
 	actionMap at: aCommand put: action.
-	actionGroup insert: action
+	self actionGroup insert: action
 ]
 
 { #category : #visiting }
@@ -35,10 +47,9 @@ GtkActionInstaller >> visitCommandGroup: aCommandGroup [
 
 	self pushPrefix: aCommandGroup.
 	[
-		actionGroup := GSimpleActionGroup new.
 		aCommandGroup entries do: [ :entry | entry acceptVisitor: self ].
 		self widget 
 			insertActionGroup: self prefix
-			actions: actionGroup ]
+			actions: self actionGroup ]
 	ensure: [ self popPrefix ]
 ]
