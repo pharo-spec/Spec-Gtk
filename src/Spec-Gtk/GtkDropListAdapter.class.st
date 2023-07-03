@@ -10,13 +10,9 @@ GtkDropListAdapter >> addModelTo: gtkComboBox [
 	super addModelTo: gtkComboBox.
 	self setModelTo: gtkComboBox.
 	
-	gtkComboBox connectChanged: [ self selectionChanged ].
-	"self presenter whenSelectionChangedDo: [ 
-		gtkComboBox activeIndex: self presenter selectedIndex - 1 ]."
-	self presenter model whenChangedDo: [ 
-		self
-			disconnectSelectionEventsOf: gtkComboBox
-			during: [ self setModelTo: gtkComboBox ] ].
+	gtkComboBox connectChanged: [ self selectionChangedOnGtk ].
+	self presenter whenSelectionChangedDo: [ self selectionChangedOnPresenter ].
+	self presenter model whenChangedDo: [ self modelChangedOnPresenter ].
 	
 	(self presenter isStartWithSelection
 		and: [ self presenter model isEmpty not
@@ -57,6 +53,15 @@ GtkDropListAdapter >> elementAt: index [
 GtkDropListAdapter >> hasIcons [
 
 	^ self presenter hasIcons
+]
+
+{ #category : #private }
+GtkDropListAdapter >> modelChangedOnPresenter [
+			
+	self innerWidgetDo: [ :w |
+		self
+			disconnectSelectionEventsOf: w
+			during: [ self setModelTo: w ] ]
 ]
 
 { #category : #building }
@@ -107,6 +112,20 @@ GtkDropListAdapter >> selectionChanged [
 
 	self widgetDo: [ :w |
 		self presenter selectIndex: w activeIndex + 1 ] 
+]
+
+{ #category : #private }
+GtkDropListAdapter >> selectionChangedOnGtk [
+
+	self backendDetectCyclesDo: [ 
+		self selectionChanged ]
+]
+
+{ #category : #private }
+GtkDropListAdapter >> selectionChangedOnPresenter [
+			
+	self backendUpdatingDo: [
+		self innerWidgetDo: [ :w | w activeIndex: self presenter selectedIndex - 1 ] ]
 ]
 
 { #category : #building }
