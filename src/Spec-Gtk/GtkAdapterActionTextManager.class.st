@@ -17,10 +17,10 @@ GtkAdapterActionTextManager >> hasContextMenu [
 ]
 
 { #category : #'private - actions' }
-GtkAdapterActionTextManager >> installContextMenuOn: gtkEntry [
-	
-	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].
-	gtkEntry extraMenu: (GtkActionMenuBuilder new visit: self presenter actionGroup)
+GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
+
+	hasContextMenu := true.	
+	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self presenter actionGroup)
 ]
 
 { #category : #'private - actions' }
@@ -49,6 +49,6 @@ GtkAdapterActionTextManager >> maybeInstallCROn: gtkEntry [
 { #category : #actions }
 GtkAdapterActionTextManager >> showContextMenu [
 
-	self adapter innerWidgetDo: [ :w | 
+	self adapter innerWidgetDo: [ :w |
 		w activateAction: 'menu.popup' ]
 ]

@@ -44,6 +44,12 @@ GtkAdapterActionManager >> adapter: anObject [
 	adapter := anObject
 ]
 
+{ #category : #'private - testing' }
+GtkAdapterActionManager >> anyCommandVisible [
+		
+	^ self presenter actionGroup allCommands anySatisfy: [ :each | each isVisible ]
+]
+
 { #category : #accessing }
 GtkAdapterActionManager >> hasContextMenu [
 
@@ -70,6 +76,8 @@ GtkAdapterActionManager >> installActionsOn: gtkWidget [
 { #category : #'private - actions' }
 GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 
+	"already installed?"
+	hasContextMenu ifTrue: [ ^ self ]. 
 	hasContextMenu := true.
 
 	popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new) ensureObjectRefAndAutoRelease.
@@ -92,8 +100,9 @@ GtkAdapterActionManager >> installOn: gtkWidget [
 	self installShortcutsOn: gtkWidget.
 	"install context menu (but just if any action is visible, because they can be 
 	 just keybindings)"
-	(self presenter actionGroup allCommands anySatisfy: [ :each | each isVisible ]) 
-		ifTrue: [ self installContextMenuOn: gtkWidget ]
+	self anyCommandVisible ifTrue: [ 
+		hasContextMenu := true.
+		self installContextMenuOn: gtkWidget ]
 ]
 
 { #category : #'private - actions' }
@@ -136,4 +145,16 @@ GtkAdapterActionManager >> updateEnabledActions [
 	self adapter innerWidgetDo: [ :w | 
 		actionMap keysAndValuesDo: [ :command :action | 
 			action enable: command isEnabled ] ]
+]
+
+{ #category : #actions }
+GtkAdapterActionManager >> updateOn: gtkWidget [
+
+	"remove shortcuts"
+	gtkWidget removeAllShortcuts.
+	"remove actions"
+	gtkWidget removeAllActions.
+	
+	self installOn: gtkWidget.
+
 ]

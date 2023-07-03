@@ -41,7 +41,7 @@ GtkAdapter >> addActionsTo: gtkWidget [
 	
 	self hasActions ifFalse: [ ^ self ].
 
-	actionManager := self newActionManager.
+	actionManager := self ensureActionManager.
 	actionManager installOn: gtkWidget
 ]
 
@@ -163,7 +163,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget
 		toAction: aBlock
 ]
 
-{ #category : #building }
+{ #category : #KEYBINDINGS }
 GtkAdapter >> buildMenu: aMenuPresenter [
 
 	^ aMenuPresenter 
@@ -251,6 +251,12 @@ GtkAdapter >> enabled: aBoolean [
 
 	self widgetDo: [ :w |
 		w sensitive: aBoolean ]
+]
+
+{ #category : #'private - actions' }
+GtkAdapter >> ensureActionManager [
+
+	^ actionManager ifNil: [ actionManager := self newActionManager ]
 ]
 
 { #category : #private }
@@ -517,6 +523,7 @@ GtkAdapter >> takeKeyboardFocus [
 GtkAdapter >> update: aSymbol with: anArray [
 
 	self flag: #TODO. "I'm not sure I want to do this :("
+	self halt. "in fact no, I do not want, I will stop here to change the occurences, then remove"
 	self 
 		perform: aSymbol 
 		withArguments: anArray
@@ -526,14 +533,7 @@ GtkAdapter >> update: aSymbol with: anArray [
 GtkAdapter >> updateActions [
 
 	self innerWidgetDo: [ :w |
-		"remove shortcuts"
-		w removeAllShortcuts.
-		"remove actions"
-		w removeAllActions.
-		
-		self installActionsOn: w.
-		self installShortcutsOn: w
-	 ].
+		self ensureActionManager updateOn: w ]
 ]
 
 { #category : #updating }
