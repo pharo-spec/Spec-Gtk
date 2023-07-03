@@ -85,7 +85,7 @@ GtkTextInputFieldAdapter >> setSelectionFromModel: aSelection [
 { #category : #accessing }
 GtkTextInputFieldAdapter >> takeKeyboardFocusWithoutSelecting [
 
-	self innerWidgetDo: [ :w | w grabFocus ]
+	self innerWidgetDo: [ :w | w grabFocusWithoutSelecting ]
 ]
 
 { #category : #visiting }
