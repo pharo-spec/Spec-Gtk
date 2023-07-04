@@ -101,7 +101,6 @@ GtkAdapterActionManager >> installOn: gtkWidget [
 	"install context menu (but just if any action is visible, because they can be 
 	 just keybindings)"
 	self anyCommandVisible ifTrue: [ 
-		hasContextMenu := true.
 		self installContextMenuOn: gtkWidget ]
 ]
 
@@ -132,6 +131,7 @@ GtkAdapterActionManager >> showContextMenu [
 GtkAdapterActionManager >> showPopoverMenuFor: aGroup at: position [
 
 	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].
+	
 	self adapter innerWidgetDo: [ :w |
 		popoverContextMenu
 			menuModel: (GtkActionMenuBuilder new visit: aGroup);

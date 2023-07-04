@@ -15,8 +15,8 @@ Class {
 GtkActionMenuBuilder >> appendSection: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
-		appendLabel: aName 
-		submenu: menu
+		appendLabel: nil
+		section: menu
 ]
 
 { #category : #visiting }
@@ -24,7 +24,7 @@ GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
 		appendLabel: aName 
-		section: menu
+		submenu: menu
 ]
 
 { #category : #visiting }

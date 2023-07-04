@@ -21,12 +21,13 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 	"gtkListView showSeparators: true."
 	"gtkListView enableRubberband: true."
 
-	gtkListView singleClickActivate: 	self presenter isActiveOnSingleClick.
 	"self configureDragAndDrop: gtkListView".
 	"self addSearchTo: gtkListView"
 	
 	gtkListView factory: self newItemFactory.
 	gtkListView selectionModel: self newSelectionModel.
+
+	gtkListView singleClickActivate: 	self presenter isActiveOnSingleClick.
 
 	self presenter hasHeaderTitle ifTrue: [ 
 		gtkListView headerFactory: self newHeaderFactory ].

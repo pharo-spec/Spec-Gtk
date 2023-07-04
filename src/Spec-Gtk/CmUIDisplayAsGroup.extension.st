@@ -4,7 +4,7 @@ Extension { #name : #CmUIDisplayAsGroup }
 CmUIDisplayAsGroup >> appendGroup: aMenu label: aLabel to: parentMenu in: aVisitor [
 
 	^ aVisitor 
-		appendSubmenu: aMenu 
+		appendSection: aMenu 
 		label: aLabel 
 		to: parentMenu
 ]
