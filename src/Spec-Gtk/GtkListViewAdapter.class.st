@@ -38,7 +38,20 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 
 	gtkListView connectRowActivated: [ :position |
-		self presenter doActivateAtIndex: position ]
+		self presenter doActivateAtIndex: position ].
+	
+	self configureScrolling
+]
+
+{ #category : #building }
+GtkListViewAdapter >> configureScrolling [
+	| vAlignment |
+
+	vAlignment := self presenter verticalAlignment.
+	vAlignment whenChangedDo: [ 
+		self scrollToSelectionIfNeeded: vAlignment desiredVisibleRow ].
+	self presenter whenDisplayDo: [
+		self scrollToSelectionIfNeeded: vAlignment desiredVisibleRow ]
 ]
 
 { #category : #private }

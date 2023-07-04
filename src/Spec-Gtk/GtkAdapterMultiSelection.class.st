@@ -36,7 +36,5 @@ GtkAdapterMultiSelection >> updateSelectionFromPresenter [
 	
 	self adapter innerWidgetDo: [ :w |
 		removedIndexes do: [ :index | w selectionModel unselectItem: index ].
-		newIndexes do: [ :index | w selectionModel selectItem: index unselectRest: false ].
-		rowIndexes ifNotEmpty: [ 
-			self adapter scrollToSelectionIfNeeded: rowIndexes first ] ]
+		newIndexes do: [ :index | w selectionModel selectItem: index unselectRest: false ] ]
 ]

@@ -31,8 +31,7 @@ GtkAdapterSingleSelection >> updateSelectionFromPresenter [
 	self adapter innerWidgetDo: [ :w |
 		index > 0 
 			ifTrue: [ 
-				w selectionModel selectItem: index unselectRest: true.
-				self adapter scrollToSelectionIfNeeded: index ]
+				w selectionModel selectItem: index unselectRest: true ]
 			ifFalse: [ 
 				w selectionModel unselectAll ] ]
 ]
