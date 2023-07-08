@@ -105,7 +105,7 @@ GtkListViewAdapter >> newSelectionModel [
 
 	selectionModel := self selectionCompanion newModel: self newStore.
 	selectionModel connectSelectionChanged: [ :position :numItems |
-		self updatePresenterSelection: position numItems: numItems ]. 
+		self updatePresenterSelection: position numItems: numItems ].
 	
 	^ selectionModel
 ]
