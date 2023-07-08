@@ -10,7 +10,9 @@ Class {
 { #category : #'instance creation' }
 GtkAdapterSingleSelection >> newModel: aModel [ 
 
-	^ GtkSingleSelection newModel: aModel
+	^ (GtkSingleSelection newModel: aModel)
+		autoSelect: false;
+		yourself
 ]
 
 { #category : #'private - updating' }
