@@ -15,10 +15,6 @@ GtkButtonAdapter >> addActionTo: gtkButton [
 GtkButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
-
-	self presenter contextMenu ifNotNil: [ :menu |
-		self addMenu: menu to: gtkButton ].
-
 	self addActionTo: gtkButton
 ]
 
