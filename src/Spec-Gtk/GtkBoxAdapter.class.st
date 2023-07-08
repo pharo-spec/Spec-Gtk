@@ -65,17 +65,9 @@ GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
-	constraints isPlacedAtStart
-		ifTrue: [ 
-			gtkWidget append: childWidget ]
-		ifFalse: [ 
-			gtkWidget prepend: childWidget
-			"gtkWidget
-				reversePackEnd: childWidget
-				expand: constraints isExpand
-				fill: constraints isFill
-				padding: constraints padding" ].
-
+	self flag: #TODO. "constraints isPlacedAtStart does not has any meaning in gtk4" 
+	gtkWidget append: childWidget.
+	
 	^ gtkWidget
 ]
 
