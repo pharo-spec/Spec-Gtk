@@ -1,7 +1,7 @@
 Class {
 	#name : #GtkToolbarToggleButtonAdapter,
 	#superclass : #GtkToolbarBaseButtonAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Adapter-Toolbar'
 }
 
 { #category : #building }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'menuWidget'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Adapter-Toolbar'
 }
 
 { #category : #private }

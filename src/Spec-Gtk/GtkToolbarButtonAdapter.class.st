@@ -1,20 +1,13 @@
 Class {
 	#name : #GtkToolbarButtonAdapter,
 	#superclass : #GtkToolbarBaseButtonAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Adapter-Toolbar'
 }
 
-{ #category : #building }
-GtkToolbarButtonAdapter >> addModelTo: gtkToolButton [
-	
-	super addModelTo: gtkToolButton.
-	gtkToolButton connectClicked: self presenter action	
-]
-
-{ #category : #building }
+{ #category : #factory }
 GtkToolbarButtonAdapter >> newWidget [
-	
-	^ GtkToolButton 
-		newForm: self presenter icon 
-		label: self presenter label
+ 
+	^ super newWidget
+		addClass: 'toolbar-button';
+		yourself
 ]

@@ -1,59 +1,47 @@
 Class {
 	#name : #GtkToolbarBaseButtonAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#superclass : #GtkBaseButtonAdapter,
+	#category : #'Spec-Gtk-Adapter-Toolbar'
 }
 
 { #category : #building }
-GtkToolbarBaseButtonAdapter >> addModelTo: gtkToolButton [
-	
-	"Show all to ensure icons are shown if they are not"
-	gtkToolButton showAll.
-	
-	gtkToolButton tooltipText: self presenter help.
-	
-	self presenter contextMenu 
-		ifNotNil: [ :menu | self addMenu: menu to: gtkToolButton ].
-	
-	self presenter 
-		whenLabelChangedDo: [ self updateLabel ];
-		whenIconChangedDo: [ self updateIcon ]
+GtkToolbarBaseButtonAdapter >> addActionTo: gtkButton [
+
+	gtkButton connectClicked: [
+		self presenter performAction ]
 ]
 
-{ #category : #accessing }
-GtkToolbarBaseButtonAdapter >> icon [ 
+{ #category : #building }
+GtkToolbarBaseButtonAdapter >> addModelTo: gtkButton [
 
-	^ self presenter icon
-		ifNotNil: [ :icon | icon asGtkImage show ]
-		ifNil: [ GtkImage null ]
+	super addModelTo: gtkButton.
+	self addActionTo: gtkButton
 ]
 
 { #category : #private }
-GtkToolbarBaseButtonAdapter >> ownerWidget [
+GtkToolbarBaseButtonAdapter >> labelAndIcon [
+	| box |
+
+	box := GtkBox newVertical
+		vAlignCenter;
+		spacing: 3;
+		yourself.
+
+	self presenter icon ifNotNil: [ :icon | | gtkIcon |
+		gtkIcon := self presenter icon asGtkImage.
+		gtkIcon vExpand: false.
+		box append: gtkIcon ].
+
+	self getLabelText ifNotNil: [ :label | | gtkLabel |
+		label ifNotEmpty: [
+			gtkLabel := (GtkLabel newLabel: label).
+			box append: gtkLabel ] ].
+
+	^ box
+]
+
+{ #category : #factory }
+GtkToolbarBaseButtonAdapter >> newWidget [ 
 	
-	"A horrible way to get the widget of the owner. 
-	 It may fail at any pont :("
-	^ self presenter owner adapter widget
-]
-
-{ #category : #updating }
-GtkToolbarBaseButtonAdapter >> updateEnabled [
-
-	"It it is not included in owner, it will be collected by GTK, causing a crash"
-	(self ownerWidget includes: self widget) ifFalse: [ ^ self ].
-	super updateEnabled
-]
-
-{ #category : #updating }
-GtkToolbarBaseButtonAdapter >> updateIcon [ 
-
-	self widgetDo: [ :w |
-		w iconWidget: self icon ]
-]
-
-{ #category : #updating }
-GtkToolbarBaseButtonAdapter >> updateLabel [ 
-
-	self widgetDo: [ :w | 
-		w label: self presenter label ]
+	^ GtkButton newLabel: self getLabelText 
 ]
