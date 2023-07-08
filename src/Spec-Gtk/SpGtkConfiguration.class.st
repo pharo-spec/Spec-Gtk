@@ -6,30 +6,40 @@ Class {
 	#name : #SpGtkConfiguration,
 	#superclass : #SpApplicationConfiguration,
 	#instVars : [
-		'listSelectedColor'
+		'listSelectedColor',
+		'providers'
 	],
 	#category : #'Spec-Gtk-Base'
 }
 
-{ #category : #private }
+{ #category : #'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromPath: aString [
+	| provider |
 
 	GRunLoop defer: [
-		(GtkCssProvider newFromPath: aString) addForApplicationToDefaultDisplay ]
+		provider := GtkCssProvider newFromPath: aString. 
+		provider addForApplicationToDefaultDisplay.
+		self keepProvider: provider ]
 ]
 
-{ #category : #private }
+{ #category : #'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromReference: aReference [
+	| provider |
 
 	GRunLoop defer: [
-		(GtkCssProvider newFromReference: aReference) addForApplicationToDefaultDisplay ]
+		provider := GtkCssProvider newFromReference: aReference.
+		provider addForApplicationToDefaultDisplay.
+		self keepProvider: provider ]
 ]
 
-{ #category : #private }
+{ #category : #'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromString: aString [
+	| provider |
 
 	GRunLoop defer: [
-		(GtkCssProvider newFromString: aString) addForApplicationToDefaultDisplay ]
+		provider := GtkCssProvider newFromString: aString. 
+		provider addForApplicationToDefaultDisplay.
+		self keepProvider: provider ]
 ]
 
 { #category : #'accessing - colors' }
@@ -117,6 +127,13 @@ SpGtkConfiguration >> installTheme: aString [
 SpGtkConfiguration >> isDarkTheme [
 
 	^ self detectDarkTheme
+]
+
+{ #category : #private }
+SpGtkConfiguration >> keepProvider: aProvider [
+
+	providers ifNil: [ providers := #() ].
+	providers := providers copyWith: aProvider
 ]
 
 { #category : #'accessing - colors' }
