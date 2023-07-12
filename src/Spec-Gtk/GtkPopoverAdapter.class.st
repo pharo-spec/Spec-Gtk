@@ -7,15 +7,18 @@ Class {
 { #category : #building }
 GtkPopoverAdapter >> addModelTo: gtkPopover [
 
-	gtkPopover setConstraintTo: GtkPopoverConstraint GTK_POPOVER_CONSTRAINT_NONE.
-	gtkPopover add: self presenterWidget showAll.	
-	gtkPopover beRelativeTo: self presenter relativeTo adapter innerWidget. 
-	gtkPopover beNotModal.
+	gtkPopover child: self presenterWidget.	
+	gtkPopover autohide: false. "true to dismiss on click"
 	gtkPopover connectHide: [ self unregister: gtkPopover ].
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
 		self replaceChildPresenterOn: gtkPopover ]
+]
+
+{ #category : #building }
+GtkPopoverAdapter >> addVisibleSettingsTo: gtkWidget [
+	"popovers fo not have visibility settings, they are shown or hide"
 ]
 
 { #category : #building }
@@ -40,7 +43,8 @@ GtkPopoverAdapter >> popup [
 
 	self widgetDo: [ :w | 
 		self register: w.
-		w popup; beModal ]
+		w parent: self presenter relativeTo adapter innerWidget.
+		w popup ]
 ]
 
 { #category : #api }
@@ -48,9 +52,9 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 
 	self widgetDo: [ :w | 
 		self register: w.
-		w 
-			setPointingTo: aRectangle asGdkRectangle;
-			popup ]
+		w parent: self presenter relativeTo adapter innerWidget.
+		w setPointingTo: aRectangle asGdkRectangle.
+		w popup ]
 ]
 
 { #category : #building }
