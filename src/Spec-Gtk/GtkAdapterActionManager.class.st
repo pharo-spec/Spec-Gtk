@@ -45,7 +45,13 @@ GtkAdapterActionManager >> adapter: anObject [
 ]
 
 { #category : #'private - testing' }
-GtkAdapterActionManager >> anyCommandVisible [
+GtkAdapterActionManager >> anyCommandHasShortcut [
+
+	^ self presenter actionGroup allCommands anySatisfy: [ :each | each hasShortcutKey ]
+]
+
+{ #category : #'private - testing' }
+GtkAdapterActionManager >> anyCommandIsVisible [
 		
 	^ self presenter actionGroup allCommands anySatisfy: [ :each | each isVisible ]
 ]
@@ -84,11 +90,11 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	popoverContextMenu hasArrow: false.
 	popoverContextMenu parent: gtkWidget.
 
-	gtkWidget addRightClickEvent: [ :position |
+	gtkWidget addRightClickEvent: [ :event |
 		self updateEnabledActions.
 		self 
 			showPopoverMenuFor: self presenter actionGroup
-			at: position ]
+			at: event position ]
 ]
 
 { #category : #actions }
@@ -100,7 +106,7 @@ GtkAdapterActionManager >> installOn: gtkWidget [
 	self installShortcutsOn: gtkWidget.
 	"install context menu (but just if any action is visible, because they can be 
 	 just keybindings)"
-	self anyCommandVisible ifTrue: [ 
+	self anyCommandIsVisible ifTrue: [ 
 		self installContextMenuOn: gtkWidget ]
 ]
 

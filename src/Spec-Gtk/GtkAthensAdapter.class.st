@@ -14,9 +14,7 @@ GtkAthensAdapter >> addModelTo: gtkDrawingArea [
 	self presenter
 		whenDrawBlockChangedDo: [ :newBlock | self updateDrawBlock: newBlock ].
 	self presenter
-		whenExtentChangedDo: [ :newExtent | self widget extent: newExtent ].
-	self model contextMenu 
-		ifNotNil: [ :menu | self addMenu: menu to: gtkDrawingArea ]
+		whenExtentChangedDo: [ :newExtent | self widget extent: newExtent ]
 ]
 
 { #category : #private }
@@ -24,6 +22,12 @@ GtkAthensAdapter >> ensureCanAnswerEvents: gtkDrawingArea [
 
 	gtkDrawingArea canFocus: true.
 	gtkDrawingArea registerToAllEvents
+]
+
+{ #category : #'private - actions' }
+GtkAthensAdapter >> newActionManager [
+
+	^ GtkAdapterActionDrawingAreaManager on: self
 ]
 
 { #category : #drawing }
