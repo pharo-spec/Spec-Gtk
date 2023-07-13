@@ -3,10 +3,7 @@ Header factory for to be used with `GtkListViewAdapter`
 "
 Class {
 	#name : #GtkListViewAdapterHeaderFactory,
-	#superclass : #GtkSignalListItemFactory,
-	#instVars : [
-		'presenter'
-	],
+	#superclass : #GtkListViewAdapterBaseFactory,
 	#category : #'Spec-Gtk-Adapter-ListView'
 }
 
@@ -14,14 +11,6 @@ Class {
 GtkListViewAdapterHeaderFactory class >> gtkNew [ 
 
 	self ffiCall: #(#GtkListViewAdapterHeaderFactory *gtk_signal_list_item_factory_new())
-]
-
-{ #category : #'instance creation' }
-GtkListViewAdapterHeaderFactory class >> newPresenter: aPresenter [
-
-	^ self new
-		presenter: aPresenter;
-		yourself
 ]
 
 { #category : #accessing }
@@ -38,18 +27,6 @@ GtkListViewAdapterHeaderFactory >> itemClass [
 	^ GtkListHeader
 ]
 
-{ #category : #initialization }
-GtkListViewAdapterHeaderFactory >> presenter: aPresenter [
-
-	presenter := aPresenter
-]
-
-{ #category : #private }
-GtkListViewAdapterHeaderFactory >> presenterAtHandle: anAddress [
-
-	^ storedObjects at: anAddress
-]
-
 { #category : #accessing }
 GtkListViewAdapterHeaderFactory >> setup: listItem [
 	| child |
@@ -60,17 +37,4 @@ GtkListViewAdapterHeaderFactory >> setup: listItem [
 	self storePresenter: child.
 
 	listItem child: child adapter widget
-]
-
-{ #category : #private }
-GtkListViewAdapterHeaderFactory >> storePresenter: child [
-	| widget |
-
-	widget := child adapter widget.
-	storedObjects 
-		at: widget getHandle
-		put: child.
-	widget objectRef.
-		
-	^ child
 ]
