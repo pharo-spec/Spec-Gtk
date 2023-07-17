@@ -22,21 +22,12 @@ GtkAbstractTextAdapter >> addKeyBindingsTo: gtkWidget [
 ]
 
 { #category : #building }
-GtkAbstractTextAdapter >> addMenu: aValuable to: gtkWidget [ 
-	"for texts, this is solved with #populatePopup:, see there to follow 
-	 how it works."
-	self shouldNotImplement
-]
-
-{ #category : #building }
 GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.
 	self addTextTo: gtkWidget. 
 	self presenter whenTextChangedDo: [ :text |
-		self updateTextFromPresenter: text ].
-	"gtkWidget connectPopulatePopup: [ :menuWidget |
-		self populatePopup: menuWidget ]"
+		self updateTextFromPresenter: text ]
 ]
 
 { #category : #building }
@@ -84,28 +75,6 @@ GtkAbstractTextAdapter >> insert: aString at: positionIndex [
 GtkAbstractTextAdapter >> newActionManager [
 
 	^ GtkAdapterActionTextManager on: self
-]
-
-{ #category : #building }
-GtkAbstractTextAdapter >> populatePopup: menuWidget [
-	| newMenu menuPresenter |
-	
-	menuPresenter := self presenter contextMenu value.
-	menuPresenter ifNil: [ ^ self ].
-	
-	"self addEditionContextMenuTo: menuPresenter."
-	
-	lastShownMenu := menuWidget.
-	newMenu := self buildMenu: menuPresenter.
-	newMenu children ifEmpty: [ ^ self ].
-	
-	menuWidget addFirst: GtkSeparatorMenuItem new show.
-	newMenu children reverseDo: [ :each |
-		each objectRef.
-		newMenu remove: each.
-		menuWidget addFirst: each.
-		each objectUnref.
-		each show ]
 ]
 
 { #category : #selection }

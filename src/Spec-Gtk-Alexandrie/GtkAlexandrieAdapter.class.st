@@ -1,17 +1,17 @@
 Class {
-	#name : #GtkAthensAdapter,
+	#name : #GtkAlexandrieAdapter,
 	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#category : #'Spec-Gtk-Alexandrie'
 }
 
 { #category : #building }
-GtkAthensAdapter >> addModelTo: gtkDrawingArea [
+GtkAlexandrieAdapter >> addModelTo: gtkDrawingArea [
 
 	super addModelTo: gtkDrawingArea.
 	self ensureCanAnswerEvents: gtkDrawingArea.
 	gtkDrawingArea drawBlock: [ :cr :boundingBox | 
 		self presenter drawBlock
-			value: (AthensCairoCanvas fromHandle: cr)
+			value: (AeCairoContext fromHandle: cr)
 			value: boundingBox ].
 	gtkDrawingArea extent: self presenter surfaceExtent.
 	"gtkDrawingArea addVerticalScrollEvent: [ :event | event crTrace. false ]."
@@ -22,26 +22,26 @@ GtkAthensAdapter >> addModelTo: gtkDrawingArea [
 ]
 
 { #category : #private }
-GtkAthensAdapter >> ensureCanAnswerEvents: gtkDrawingArea [
+GtkAlexandrieAdapter >> ensureCanAnswerEvents: gtkDrawingArea [
 
 	gtkDrawingArea canFocus: true.
 	gtkDrawingArea registerToAllEvents
 ]
 
 { #category : #'private - actions' }
-GtkAthensAdapter >> newActionManager [
+GtkAlexandrieAdapter >> newActionManager [
 
 	^ GtkAdapterActionDrawingAreaManager on: self
 ]
 
 { #category : #drawing }
-GtkAthensAdapter >> redraw [
+GtkAlexandrieAdapter >> redraw [
 
 	self widgetDo: [ :w | w queueDraw ]
 ]
 
 { #category : #private }
-GtkAthensAdapter >> updateDrawBlock: aBlock [
+GtkAlexandrieAdapter >> updateDrawBlock: aBlock [
 
 	self widgetDo: [ :w |
 		w 
@@ -50,7 +50,7 @@ GtkAthensAdapter >> updateDrawBlock: aBlock [
 ]
 
 { #category : #building }
-GtkAthensAdapter >> widgetClass [
+GtkAlexandrieAdapter >> widgetClass [
 
 	^ GtkBlockBasedDrawingArea 
 ]

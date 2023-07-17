@@ -98,8 +98,6 @@ GtkAdapter >> addSettingsTo: gtkWidget [
 		self backendUpdatingDo: [ self updateHelp ] ].
 	self presenter whenEnabledChangedDo: [ 
 		self backendUpdatingDo: [ self updateEnabled ] ].
-	self presenter whenContextKeyBindingsChangedDo: [ 
-		self updateKeyBindings ].
 	
 	self addVisibleSettingsTo: gtkWidget
 ]
