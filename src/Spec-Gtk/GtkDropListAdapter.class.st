@@ -5,22 +5,22 @@ Class {
 }
 
 { #category : #building }
-GtkDropListAdapter >> addModelTo: gtkComboBox [
+GtkDropListAdapter >> addModelTo: gtkDropDown [
 	
-	super addModelTo: gtkComboBox.
-	self setModelTo: gtkComboBox.
+	super addModelTo: gtkDropDown.
+	self setModelTo: gtkDropDown.
 	
-	gtkComboBox connectChanged: [ self selectionChangedOnGtk ].
+	gtkDropDown connectChanged: [ self selectionChangedOnGtk ].
 	self presenter whenSelectionChangedDo: [ self selectionChangedOnPresenter ].
 	self presenter model whenChangedDo: [ self modelChangedOnPresenter ].
 	
 	(self presenter isStartWithSelection
 		and: [ self presenter model isEmpty not
 		and: [ self presenter selectedIndex = 0 ] ]) 
-		ifTrue: [ gtkComboBox selectIndex: 1 ]
+		ifTrue: [ gtkDropDown selectIndex: 1 ]
 		ifFalse: [ 
 			self presenter selectedIndex 
-				ifNotNil: [ :index | gtkComboBox activeIndex: index - 1 ] ]
+				ifNotNil: [ :index | gtkDropDown activeIndex: index - 1 ] ]
 ]
 
 { #category : #private }
@@ -129,17 +129,13 @@ GtkDropListAdapter >> selectionChangedOnPresenter [
 ]
 
 { #category : #building }
-GtkDropListAdapter >> setModelTo: gtkComboBox [
-	| columnIndex |
+GtkDropListAdapter >> setModelTo: gtkDrowDown [
 
-	columnIndex := 0.
-	gtkComboBox clear.
-	self hasIcons ifTrue: [ 
-		gtkComboBox appendPixbufColumn: columnIndex.
-		columnIndex := columnIndex + 1 ].
-	gtkComboBox appendTextColumn: columnIndex.
-	gtkComboBox model: self newTreeStore
-
+	self hasIcons 
+		ifTrue: [  ]
+		ifFalse: [ ].
+	
+	gtkDrowDown model: self newTreeStore
 ]
 
 { #category : #building }
@@ -156,11 +152,11 @@ GtkDropListAdapter >> unsubscribe [
 	"unsubscribe subscription made in SpCollectionListModel>>#whenChangedDo:"
 	self presenter model announcer unsubscribe: self presenter model.
 	
-	super unsubscribe.
+	super unsubscribe
 ]
 
 { #category : #building }
 GtkDropListAdapter >> widgetClass [
-	
-	^ GtkComboBox
+
+	^ GtkDropDown
 ]

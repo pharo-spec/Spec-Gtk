@@ -10,9 +10,10 @@ GtkAthensAdapter >> addModelTo: gtkDrawingArea [
 	super addModelTo: gtkDrawingArea.
 	self ensureCanAnswerEvents: gtkDrawingArea.
 	gtkDrawingArea drawBlock: [ :cr :boundingBox | 
-		self presenter drawBlock
-			value: (AthensCairoCanvas fromHandle: cr)
-			value: boundingBox ].
+		(AthensCairoCanvas fromHandle: cr) surface drawDuring: [ :canvas |
+			self presenter drawBlock
+				value: canvas
+				value: boundingBox ] ].
 	gtkDrawingArea extent: self presenter surfaceExtent.
 	"gtkDrawingArea addVerticalScrollEvent: [ :event | event crTrace. false ]."
 	self presenter
