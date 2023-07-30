@@ -5,8 +5,7 @@ Class {
 	#name : #GtkDropDownAdapter,
 	#superclass : #GtkAdapter,
 	#instVars : [
-		'deferredAction',
-		'selectionCompanion'
+		'deferredAction'
 	],
 	#category : #'Spec-Gtk-Adapter-ListView'
 }
@@ -19,8 +18,17 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 	gtkDropDown listFactory: self newItemFactory.
 	gtkDropDown model: self newStore.
 	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
-		(gtkDropDown model itemAtHandle: handle) 
-			ifNotNil: [ :item | self presenter display value: item ] ])
+		(gtkDropDown model itemAtHandle: handle)
+			ifNotNil: [ :item | self presenter display value: item ] ]).
+		
+	self presenter selection isEmpty 
+		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
+	self presenter selection 
+		whenChangedDo: [ self updateSelectionFromPresenter ].
+		
+	gtkDropDown connectSelectedItem: [ 
+		self updatePresenterSelectionFromGtk ]
+	
 ]
 
 { #category : #private }
@@ -34,7 +42,7 @@ GtkDropDownAdapter >> doInitializationDeferredActions [
 GtkDropDownAdapter >> elementAt: index [
 	| item |
 
-	item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ].
+	item := self innerWidgetDo: [ :w | w model itemAt: index ].
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
@@ -65,22 +73,14 @@ GtkDropDownAdapter >> newStore [
 { #category : #updating }
 GtkDropDownAdapter >> refreshList [
 
-	self innerWidgetDo: [ :w |
-		w model: self newStore ]
+	"self innerWidgetDo: [ :w |
+		w model: self newStore ]"
 ]
 
-{ #category : #private }
-GtkDropDownAdapter >> scrollToSelectionIfNeeded: index [
+{ #category : #accessing }
+GtkDropDownAdapter >> selectIndex: anIndex [
 
-	self innerWidgetDo: [ :w |
-		w scrollToPosition: index ]
-]
-
-{ #category : #private }
-GtkDropDownAdapter >> selectionCompanion [
-
-	^ selectionCompanion ifNil: [ 
-		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
+	self innerWidgetDo: [ :w | w select: anIndex - 1]
 ]
 
 { #category : #private }
@@ -90,22 +90,25 @@ GtkDropDownAdapter >> setDeferredAction: aBlock [
 ]
 
 { #category : #'private - updating' }
-GtkDropDownAdapter >> updatePresenterSelection: position numItems: numItems [
+GtkDropDownAdapter >> updatePresenterSelectionFromGtk [
 	
-	self backendUpdatingDo: [		
+	self backendUpdatingDo: [
 		| index |
 		"Do not use the position received because is information about the change not 
-	 	indicating the real selected index"	
-		index := self widgetDo: [ :w | w selected ].
-		self presenter selection selectIndex: index ]
+		 indicating the real selected index"	
+		index := self innerWidgetDo: [ :w | w selected ].
+		self presenter selection selectIndex: index + 1 ]
 ]
 
 { #category : #'private - updating' }
 GtkDropDownAdapter >> updateSelectionFromPresenter [
 
 	self backendDetectCyclesDo: [ 
-		self widgetDo: [ :w |
-			w selected: self presenter selectedIndex ] ]
+		| index |
+		index := self presenter selection selectedIndex. 
+		self innerWidgetDo: [ :w |
+			index > 0 
+				ifTrue: [ w select: index - 1 ] ] ]
 ]
 
 { #category : #building }
