@@ -94,8 +94,6 @@ GtkDropDownAdapter >> updatePresenterSelectionFromGtk [
 	
 	self backendUpdatingDo: [
 		| index |
-		"Do not use the position received because is information about the change not 
-		 indicating the real selected index"	
 		index := self innerWidgetDo: [ :w | w selected ].
 		self presenter selection selectIndex: index + 1 ]
 ]

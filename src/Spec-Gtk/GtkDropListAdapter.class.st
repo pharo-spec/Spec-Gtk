@@ -1,6 +1,9 @@
+"
+Gtk adapter for `SpDropListPresenter`
+"
 Class {
 	#name : #GtkDropListAdapter,
-	#superclass : #GtkAbstractListAdapter,
+	#superclass : #GtkAdapter,
 	#category : #'Spec-Gtk-Adapter-List'
 }
 
@@ -8,19 +11,23 @@ Class {
 GtkDropListAdapter >> addModelTo: gtkDropDown [
 	
 	super addModelTo: gtkDropDown.
-	self setModelTo: gtkDropDown.
 	
-	gtkDropDown connectChanged: [ self selectionChangedOnGtk ].
+	self setModelTo: gtkDropDown.
+
+	gtkDropDown listFactory: self newItemFactory.	
+	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
+		(gtkDropDown model itemAtHandle: handle)
+			ifNotNil: [ :item | self presenter displayForItem: item ] ]).
+	
+	gtkDropDown connectSelectedItem: [ self selectionChangedOnGtk ].
 	self presenter whenSelectionChangedDo: [ self selectionChangedOnPresenter ].
 	self presenter model whenChangedDo: [ self modelChangedOnPresenter ].
 	
 	(self presenter isStartWithSelection
 		and: [ self presenter model isEmpty not
 		and: [ self presenter selectedIndex = 0 ] ]) 
-		ifTrue: [ gtkDropDown selectIndex: 1 ]
-		ifFalse: [ 
-			self presenter selectedIndex 
-				ifNotNil: [ :index | gtkDropDown activeIndex: index - 1 ] ]
+		ifTrue: [ gtkDropDown select: 1 ]
+		ifFalse: [ gtkDropDown unselectAll ]
 ]
 
 { #category : #private }
@@ -29,18 +36,6 @@ GtkDropListAdapter >> disconnectSelectionEventsOf: aWidget during: aBlock [
 	aWidget 
 		blockCallback: GChangedCallback signalName
 		during: aBlock
-]
-
-{ #category : #accessing }
-GtkDropListAdapter >> displayedIcon [
-	| selectedIndex |
-
-	selectedIndex := widget activeIndex.
-	
-	selectedIndex = -1 ifTrue: [ ^ nil ].
-
-	self hasIcons ifFalse: [ ^ nil ].
-	^ (widget model iteratorFromString: selectedIndex asString) gdkPixbufAt: 0 
 ]
 
 { #category : #accessing }
@@ -64,78 +59,61 @@ GtkDropListAdapter >> modelChangedOnPresenter [
 			during: [ self setModelTo: w ] ]
 ]
 
-{ #category : #building }
-GtkDropListAdapter >> modelItemsAsDisplay [
-	
-	^ self presenter model items 
-		collect: [ :each | self presenter displayForItem: each ]
+{ #category : #'private - factory' }
+GtkDropListAdapter >> newItemFactory [
+	| factory |
+
+	factory := GtkDropListAdapterItemFactory newPresenter: self presenter.
+	factory connectSetup: [ :listItem | 
+		factory setup: listItem ].
+	factory connectBind: [ :listItem |
+		factory 
+			bind: listItem
+			to: (self presenter getList at: (listItem position + 1)) ].
+
+	^ factory
 ]
 
-{ #category : #building }
-GtkDropListAdapter >> newTreeStore [
+{ #category : #'private - factory' }
+GtkDropListAdapter >> newStore [
 
-	self hasIcons 
-		ifFalse: [ ^ GtkTreeStore newStrings: self modelItemsAsDisplay ].
-		
-	^ self newTreeStoreWithIcons
-]
-
-{ #category : #building }
-GtkDropListAdapter >> newTreeStoreWithIcons [
-	| store |
-
-	store := GtkTreeStore newColumnTypes: { GType GDK_TYPE_PIXBUF. GType G_TYPE_STRING }.
-
-	self presenter model items do: [ :each | 
-		store appendNew
-			at: 0 putObject: (GdkPixbuf newForm: (self model getIconFor: each));
-			at: 1 putString: (self model displayForItem: each)].
-
-	^ store
+	^ GListReferenceStore new
+		items: self presenter getList;
+		yourself
 ]
 
 { #category : #accessing }
-GtkDropListAdapter >> selectIndex: anInteger [ 
+GtkDropListAdapter >> selectIndex: index [ 
 	
 	self widgetDo: [ :w |
-		w selectIndex: anInteger ]
+		w select: index + 1 ]
 ]
 
-{ #category : #accessing }
-GtkDropListAdapter >> selectedIndexes [
-	
-	^ self widgetDo: #selectedIndexes 
-]
-
-{ #category : #private }
+{ #category : #'private - updating' }
 GtkDropListAdapter >> selectionChanged [
 
 	self widgetDo: [ :w |
-		self presenter selectIndex: w activeIndex + 1 ] 
+		self presenter selectIndex: w selected + 1 ] 
 ]
 
-{ #category : #private }
+{ #category : #'private - updating' }
 GtkDropListAdapter >> selectionChangedOnGtk [
 
 	self backendDetectCyclesDo: [ 
 		self selectionChanged ]
 ]
 
-{ #category : #private }
+{ #category : #'private - updating' }
 GtkDropListAdapter >> selectionChangedOnPresenter [
 			
 	self backendUpdatingDo: [
-		self innerWidgetDo: [ :w | w activeIndex: self presenter selectedIndex - 1 ] ]
+		self innerWidgetDo: [ :w | w select: self presenter selectedIndex - 1 ] ]
 ]
 
 { #category : #building }
-GtkDropListAdapter >> setModelTo: gtkDrowDown [
+GtkDropListAdapter >> setModelTo: gtkDropDown [
 
-	self hasIcons 
-		ifTrue: [  ]
-		ifFalse: [ ].
-	
-	gtkDrowDown model: self newTreeStore
+	gtkDropDown model: self newStore
 ]
 
 { #category : #building }
