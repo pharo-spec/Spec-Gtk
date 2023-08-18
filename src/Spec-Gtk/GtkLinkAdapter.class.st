@@ -22,6 +22,23 @@ GtkLinkAdapter >> addModelTo: gtkButton [
 	model whenLabelChangedDo: [ self updateLabel ]
 ]
 
+{ #category : #private }
+GtkLinkAdapter >> labelAndIcon [
+	| box |
+
+	box := GtkBox newHorizontal
+		hAlignCenter;
+		spacing: 3;
+		yourself.
+
+	self getLabelText ifNotNil: [ :label | | gtkLabel |
+		label ifNotEmpty: [
+			gtkLabel := (GtkLabel newLabel: label).
+			box append: gtkLabel ] ].
+
+	^ box
+]
+
 { #category : #factory }
 GtkLinkAdapter >> newWidget [ 
 	
