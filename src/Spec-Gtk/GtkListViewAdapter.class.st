@@ -116,11 +116,15 @@ GtkListViewAdapter >> newStore [
 	^ GtkListViewAdapterDataStore newPresenter: self presenter
 ]
 
-{ #category : #updating }
+{ #category : #'private - updating' }
 GtkListViewAdapter >> refreshList [
 
-	self innerWidgetDo: [ :w |
-		w selectionModel model: self newStore ]
+	self backendUpdatingDo: [
+		self innerWidgetDo: [ :w |
+			"do not attempt to change the inner model of the selection model!
+			 gtk will try to inform/notice the removal/addition of elements on it (and calling 
+			 back a non existing anymore model reference objects), causing a crash."
+			w selectionModel: self newSelectionModel ] ]
 ]
 
 { #category : #'private - updating' }

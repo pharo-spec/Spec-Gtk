@@ -54,14 +54,14 @@ GtkListViewAdapterBaseFactory >> setup: listItem [
 ]
 
 { #category : #private }
-GtkListViewAdapterBaseFactory >> storePresenter: child [
+GtkListViewAdapterBaseFactory >> storePresenter: aPresenter [
 	| widget |
 
-	widget := child adapter widget.
+	widget := aPresenter adapter widget.
 	storedObjects 
 		at: widget getHandle
-		put: child.
+		put: aPresenter.
 	widget objectRef.
 		
-	^ child
+	^ aPresenter
 ]
