@@ -18,6 +18,13 @@ Class {
 	#category : #'Spec-Gtk-Adapter-Window'
 }
 
+{ #category : #'spec protocol' }
+GtkWindowAdapter >> activate [
+
+	self widgetDo: [ :w |
+		w present ]
+]
+
 { #category : #private }
 GtkWindowAdapter >> add: gtkBox toWindow: gtkWindow [
 
