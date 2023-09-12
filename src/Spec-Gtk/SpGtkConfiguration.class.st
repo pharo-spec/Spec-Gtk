@@ -7,7 +7,9 @@ Class {
 	#superclass : #SpApplicationConfiguration,
 	#instVars : [
 		'listSelectedColor',
-		'providers'
+		'providers',
+		'syntaxHighlightThemeName',
+		'styleScheme'
 	],
 	#category : #'Spec-Gtk-Base'
 }
@@ -69,12 +71,19 @@ SpGtkConfiguration >> configureGeneral: anApplication [
 	"A hook to configure a gtk application for all platforms"
 ]
 
+{ #category : #'private - accessing' }
+SpGtkConfiguration >> defaultStyleScheme [
+
+	^ self isDarkTheme
+		ifTrue: [ 'Adwaita-dark' ]
+		ifFalse: [ 'Adwaita' ]
+]
+
 { #category : #private }
 SpGtkConfiguration >> detectDarkTheme [
 
-	"Taking the background color of a GtkTextView is a hack to determine if we are 
-	 in presence of a dark or light theme"
-	^ self textBackgroundColor luminance < 0.5
+	self flag: #TODO. "Find a way to actually detect this"
+	^ false
 ]
 
 { #category : #private }
@@ -164,6 +173,33 @@ SpGtkConfiguration >> preferDarkTheme: aBoolean [
 SpGtkConfiguration >> settings [
 
 	^ GtkSettings default
+]
+
+{ #category : #'accessing - style' }
+SpGtkConfiguration >> styleScheme [
+
+	^ styleScheme ifNil: [ self defaultStyleScheme ]
+]
+
+{ #category : #'accessing - style' }
+SpGtkConfiguration >> styleScheme: aName [
+	"The name of the style scheme theme to use (e.g. 'Adwaita', 'Adwaita-dark', 'classic', 'classic-dark', 'cobalt', 'cobalt-light', 'kate', 'kate-dark', 'oblivion', 'solarized-dark', 'solarized-light', 'tango'"
+
+	styleScheme := aName
+]
+
+{ #category : #'accessing - style' }
+SpGtkConfiguration >> syntaxHighlightTheme [
+	"Name of theme: Blue, Dark, Vintage, Solarized, Tango"
+
+	^ syntaxHighlightThemeName
+]
+
+{ #category : #'accessing - style' }
+SpGtkConfiguration >> syntaxHighlightTheme: aName [
+	"Name of theme: Blue, Dark, Vintage, Solarized, Tango"
+
+	syntaxHighlightThemeName := aName
 ]
 
 { #category : #'accessing - colors' }

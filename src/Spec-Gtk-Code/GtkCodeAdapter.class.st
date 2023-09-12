@@ -252,6 +252,7 @@ GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 { #category : #'private - factory' }
 GtkCodeAdapter >> newTagTable [
 	
+	self flag: #TODO. "highlight color in a setting"
 	^ (GtkTextTagTable newForCode: self styleTable)
 		add: ((GtkTextTag newName: 'highlight')
 			background: (Color orange alpha: 0.2);
@@ -284,6 +285,8 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 	textBuffer := self model hasSyntaxHighlight 
 		ifTrue: [ self newTextBufferForHighlight ]
 		ifFalse: [ self newTextBuffer ].
+
+	textBuffer styleScheme: self styleScheme.
 
 	aString ifNotNil: [ 
 		textBuffer text: aString ].
@@ -416,6 +419,15 @@ GtkCodeAdapter >> startSearch: aSearchContext [
 		forwardAsync: start 
 		onFirstPositionDo: [ :matchStart :matchEnd |
 			self scrollToIter: matchStart in: self innerWidget ]
+]
+
+{ #category : #private }
+GtkCodeAdapter >> styleScheme [
+	| schemeName |
+
+	schemeName := self presenter styleScheme 
+		ifNil: [ self presenter application styleScheme ]. 
+	^ GtkSourceStyleSchemeManager default schemeWithId: schemeName
 ]
 
 { #category : #'private - factory' }
