@@ -404,8 +404,6 @@ GtkCodeAdapter >> setText: aString to: gtkWidget [
 		| textBuffer |
 		textBuffer := self newTextBufferForText: aString.
 		gtkWidget textBuffer: textBuffer.
-		"the widget will take ownership"
-		textBuffer objectUnref.
 		self userActionDo: [ :action | action registerChange ] ]
 ]
 
