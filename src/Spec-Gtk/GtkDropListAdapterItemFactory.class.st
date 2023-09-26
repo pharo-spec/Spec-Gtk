@@ -22,6 +22,12 @@ GtkDropListAdapterItemFactory >> bind: listItem to: anObject [
 	child model: anObject
 ]
 
+{ #category : #private }
+GtkDropListAdapterItemFactory >> itemAt: aPosition [
+
+	^ self presenter getList at: aPosition
+]
+
 { #category : #accessing }
 GtkDropListAdapterItemFactory >> setup: listItem [
 	| child |
