@@ -22,7 +22,13 @@ GtkListViewAdapterHeaderFactory >> bind: listItem to: anObject [
 ]
 
 { #category : #private }
-GtkListViewAdapterHeaderFactory >> itemClass [
+GtkListViewAdapterHeaderFactory >> itemAt: aPosition [ 
+
+	^ self presenter headerTitle
+]
+
+{ #category : #private }
+GtkListViewAdapterHeaderFactory >> listItemClass [
 	
 	^ GtkListHeader
 ]

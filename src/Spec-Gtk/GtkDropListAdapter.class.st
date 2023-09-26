@@ -61,17 +61,8 @@ GtkDropListAdapter >> modelChangedOnPresenter [
 
 { #category : #'private - factory' }
 GtkDropListAdapter >> newItemFactory [
-	| factory |
 
-	factory := GtkDropListAdapterItemFactory newPresenter: self presenter.
-	factory connectSetup: [ :listItem | 
-		factory setup: listItem ].
-	factory connectBind: [ :listItem |
-		factory 
-			bind: listItem
-			to: (self presenter getList at: (listItem position + 1)) ].
-
-	^ factory
+	^ GtkDropListAdapterItemFactory newPresenter: self presenter
 ]
 
 { #category : #'private - factory' }

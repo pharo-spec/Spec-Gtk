@@ -71,32 +71,14 @@ GtkListViewAdapter >> elementAt: index [
 
 { #category : #'private - factory' }
 GtkListViewAdapter >> newHeaderFactory [
-	| factory |
 
-	factory := GtkListViewAdapterHeaderFactory newPresenter: self presenter.
-	factory connectSetup: [ :listItem | 
-		factory setup: listItem ].
-	factory connectBind: [ :listItem |
-		factory 
-			bind: listItem
-			to: self presenter headerTitle ].
-
-	^ factory
+	^ GtkListViewAdapterHeaderFactory newPresenter: self presenter
 ]
 
 { #category : #'private - factory' }
 GtkListViewAdapter >> newItemFactory [
-	| factory |
 
-	factory := GtkListViewAdapterItemFactory newPresenter: self presenter.
-	factory connectSetup: [ :listItem | 
-		factory setup: listItem ].
-	factory connectBind: [ :listItem |
-		factory 
-			bind: listItem
-			to: (self presenter items at: (listItem position + 1)) ].
-
-	^ factory
+	^ GtkListViewAdapterItemFactory newPresenter: self presenter
 ]
 
 { #category : #'private - factory' }

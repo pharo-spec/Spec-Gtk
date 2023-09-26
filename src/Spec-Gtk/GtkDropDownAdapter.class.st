@@ -48,17 +48,9 @@ GtkDropDownAdapter >> elementAt: index [
 
 { #category : #'private - factory' }
 GtkDropDownAdapter >> newItemFactory [
-	| factory |
 
-	factory := GtkListViewAdapterItemFactory newPresenter: self presenter.
-	factory connectSetup: [ :listItem | 
-		factory setup: listItem ].
-	factory connectBind: [ :listItem |
-		factory 
-			bind: listItem
-			to: (self presenter items at: (listItem position + 1)) ].
+	^ GtkListViewAdapterItemFactory newPresenter: self presenter
 
-	^ factory
 ]
 
 { #category : #'private - factory' }
