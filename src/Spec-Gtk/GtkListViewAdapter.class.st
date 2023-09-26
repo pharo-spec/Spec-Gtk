@@ -105,12 +105,8 @@ GtkListViewAdapter >> refreshList [
 		self innerWidgetDo: [ :w |
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
-			 back a non existing anymore model reference objects), causing a crash.
-			 ALSO: Apparently I need to change the factory along with the model to prevent 
-			 some weird behavior on the factory referenced elements."
-			w 
-				selectionModel: self newSelectionModel;
-				factory: self newItemFactory ] ]
+			 back a non existing anymore model reference objects), causing a crash."
+			w selectionModel: self newSelectionModel ] ]
 ]
 
 { #category : #'private - updating' }
