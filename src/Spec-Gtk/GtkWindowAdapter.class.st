@@ -193,7 +193,7 @@ GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 			"true to stop handlers to continue (so, if I want to *not* close it, I need 
 			 to answer true, the oposite of canClose)"
 			self announceWillClose not ];
-		connectHide: [ self closeFromSignal ];
+		connectDestroy: [ self closeFromSignal ];
 		connectDefaultWidth: [ self announceResized: self widget defaultSize ];
 		connectDefaultHeight: [ self announceResized: self widget defaultSize ]
 ]
