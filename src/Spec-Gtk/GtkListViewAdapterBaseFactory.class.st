@@ -54,8 +54,6 @@ GtkListViewAdapterBaseFactory >> finalizedOnGtk [
 { #category : #finalization }
 GtkListViewAdapterBaseFactory >> freeStoredObjects [
 
-	'freeing' crTrace.
-	storedObjects size crTrace.
 	mutex critical: [ 
 		storedObjects 
 			"keysDo: [ :key | 
