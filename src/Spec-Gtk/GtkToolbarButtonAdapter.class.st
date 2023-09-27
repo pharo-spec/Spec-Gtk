@@ -8,6 +8,7 @@ Class {
 GtkToolbarButtonAdapter >> newWidget [
  
 	^ super newWidget
+		addClass: 'image-button';
 		addClass: 'toolbar-button';
 		yourself
 ]

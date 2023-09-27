@@ -18,6 +18,18 @@ GtkToolbarBaseButtonAdapter >> addModelTo: gtkButton [
 	self addActionTo: gtkButton
 ]
 
+{ #category : #testing }
+GtkToolbarBaseButtonAdapter >> hasIcon [
+
+	^ self presenter icon notNil and: [ self presenter owner displayMode hasIcon ]
+]
+
+{ #category : #testing }
+GtkToolbarBaseButtonAdapter >> hasLabel [
+
+	^ self presenter owner displayMode hasLabel
+]
+
 { #category : #private }
 GtkToolbarBaseButtonAdapter >> labelAndIcon [
 	| box |
@@ -27,13 +39,14 @@ GtkToolbarBaseButtonAdapter >> labelAndIcon [
 		spacing: 3;
 		yourself.
 
-	self presenter icon ifNotNil: [ :icon | | gtkIcon |
+	self hasIcon ifTrue: [ 
+		| gtkIcon |
 		gtkIcon := self presenter icon asGtkImage.
 		gtkIcon vExpand: false.
 		box append: gtkIcon ].
 
-	self getLabelText ifNotNil: [ :label | | gtkLabel |
-		label ifNotEmpty: [
+	self hasLabel ifTrue: [ 
+		self getLabelText ifNotEmpty: [ :label | | gtkLabel |
 			gtkLabel := (GtkLabel newLabel: label).
 			box append: gtkLabel ] ].
 
@@ -43,5 +56,5 @@ GtkToolbarBaseButtonAdapter >> labelAndIcon [
 { #category : #factory }
 GtkToolbarBaseButtonAdapter >> newWidget [ 
 	
-	^ GtkButton newLabel: self getLabelText 
+	^ GtkButton new
 ]

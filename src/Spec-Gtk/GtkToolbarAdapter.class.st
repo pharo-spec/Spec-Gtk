@@ -13,6 +13,12 @@ GtkToolbarAdapter >> addModelTo: gtkToolbar [
 	self updateItems: gtkToolbar 
 ]
 
+{ #category : #building }
+GtkToolbarAdapter >> buildButton: aButtonPresenter [ 
+
+	^ aButtonPresenter build
+]
+
 { #category : #testing }
 GtkToolbarAdapter >> hasButtonWithLabel: aString [ 
 	
@@ -39,7 +45,9 @@ GtkToolbarAdapter >> updateItems: gtkToolbar [
 
 	gtkToolbar removeAll.
 
-	self model leftItems do: [ :each | gtkToolbar append: each build ].
+	self model leftItems 
+		do: [ :each | gtkToolbar append: (self buildButton: each) ].
 	self model rightItems 
-		reverseDo: [ :each | gtkToolbar append: each build ]
+		reverseDo: [ :each | 
+			gtkToolbar append: (self buildButton: each) ]
 ]
