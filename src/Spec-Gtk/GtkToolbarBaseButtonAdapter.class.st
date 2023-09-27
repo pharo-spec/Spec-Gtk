@@ -8,7 +8,7 @@ Class {
 GtkToolbarBaseButtonAdapter >> addActionTo: gtkButton [
 
 	gtkButton connectClicked: [
-		self presenter performAction ]
+		self performAction ]
 ]
 
 { #category : #building }
@@ -57,4 +57,10 @@ GtkToolbarBaseButtonAdapter >> labelAndIcon [
 GtkToolbarBaseButtonAdapter >> newWidget [ 
 	
 	^ GtkButton new
+]
+
+{ #category : #private }
+GtkToolbarBaseButtonAdapter >> performAction [
+
+	self presenter performAction
 ]

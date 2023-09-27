@@ -7,26 +7,25 @@ Class {
 { #category : #building }
 GtkToolbarToggleButtonAdapter >> addModelTo: gtkToolButton [
 	
-	super addModelTo: gtkToolButton.
-
-	gtkToolButton connectToggled: [ self updateState ].
-	self presenter whenToggledDo: [ self updatePresenterState ].
-	
+	super addModelTo: gtkToolButton.	
 	gtkToolButton active: self presenter state
 ]
 
 { #category : #building }
 GtkToolbarToggleButtonAdapter >> newWidget [
-	| button  |
 	
-	button := GtkToggleToolButton new 
-		label: self presenter label;
-		yourself.
-		
-	self presenter icon ifNotNil: [ :icon | 
-		button iconWidget: icon asGtkImage ].
+	^ GtkToggleButton new 
+		addClass: 'image-button';
+		addClass: 'toolbar-button';
+		yourself
+]
 
-	^ button 
+{ #category : #private }
+GtkToolbarToggleButtonAdapter >> performAction [
+
+	self widgetDo: [ :w | 
+		self presenter state: w isActive ]. 
+	super performAction
 ]
 
 { #category : #building }
