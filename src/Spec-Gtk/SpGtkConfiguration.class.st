@@ -44,6 +44,15 @@ SpGtkConfiguration >> addCSSProviderFromString: aString [
 		self keepProvider: provider ]
 ]
 
+{ #category : #configuring }
+SpGtkConfiguration >> addPredefinedStyles [
+	
+	self addCSSProviderFromString: self styleForToolbar.
+	self addCSSProviderFromString: (self isDarkTheme 
+		ifTrue: [ self styleForToolbarDark ]
+		ifFalse: [ self styleForToolbarLight ])
+]
+
 { #category : #'accessing - colors' }
 SpGtkConfiguration >> buttonBackgroundColor [
 	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a
@@ -62,6 +71,7 @@ SpGtkConfiguration >> buttonSelectedColor [
 SpGtkConfiguration >> configure: anApplication [
 
 	GRunLoop defer: [
+		self addPredefinedStyles.
 		self configureGeneral: anApplication.
 		super configure: anApplication ]
 ]
@@ -173,6 +183,29 @@ SpGtkConfiguration >> preferDarkTheme: aBoolean [
 SpGtkConfiguration >> settings [
 
 	^ GtkSettings default
+]
+
+{ #category : #configuring }
+SpGtkConfiguration >> styleForToolbar [
+
+	^ '
+/* compact toolbar */
+box.toolbar { font-size: 0.7em }
+box.toolbar .toolbarButton > button { padding: 2px; margin: 2px; }
+'
+]
+
+{ #category : #configuring }
+SpGtkConfiguration >> styleForToolbarDark [
+		
+	^ 'box.toolbar label { color: #C0C0C0; }'
+]
+
+{ #category : #configuring }
+SpGtkConfiguration >> styleForToolbarLight [
+		
+	^ 'box.toolbar label { color: #808080; }'
+
 ]
 
 { #category : #'accessing - style' }
