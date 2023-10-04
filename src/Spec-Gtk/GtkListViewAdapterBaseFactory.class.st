@@ -39,6 +39,7 @@ GtkListViewAdapterBaseFactory >> bind: listItem to: aPosition [
 { #category : #finalization }
 GtkListViewAdapterBaseFactory >> finalize [
 
+	self isValidHandle ifFalse: [ ^ self ].
 	GRunLoop defer: [
 		self freeStoredObjects.
 		super finalize ]
