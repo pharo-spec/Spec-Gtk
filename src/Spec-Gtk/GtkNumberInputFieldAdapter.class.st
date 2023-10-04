@@ -1,23 +1,29 @@
 Class {
 	#name : #GtkNumberInputFieldAdapter,
-	#superclass : #GtkTextInputFieldAdapter,
+	#superclass : #GtkAbstractTextAdapter,
 	#category : #'Spec-Gtk-Adapter'
 }
 
 { #category : #building }
 GtkNumberInputFieldAdapter >> addModelTo: gtkSpinButton [
 
-	super addModelTo: gtkSpinButton.
-	
+	"set this first because max/min and digits set may affect the value (and super 
+	 will take care of setting it)"
 	gtkSpinButton 
 		beNumber;
 		rangeMinimum: (self model minimum ifNil: [ Float fmin ]) 
 			maximum: (self model maximum ifNil: [ Float fmax ]).
+
+	self presenter isFloat
+		ifTrue: [ gtkSpinButton digits: (self presenter digits max: 1) ].
+
+	super addModelTo: gtkSpinButton.
+
+	gtkSpinButton connectValueChanged: [ 
+		self updatePresenterText: gtkSpinButton text ].
 	
-	self model isFloat ifTrue: [ 
-		gtkSpinButton digits: self model digits ].
-	self model climbRate ifNotNil: [ :rate |
-		gtkSpinButton climbRate: rate ]
+	self presenter climbRate 
+		ifNotNil: [ :rate | gtkSpinButton climbRate: rate ]
 ]
 
 { #category : #building }
@@ -42,6 +48,13 @@ GtkNumberInputFieldAdapter >> setText: aStringOrNumber to: gtkWidget [
 	gtkWidget value: (aStringOrNumber isString 
 		ifTrue: [ (Number readFrom: aStringOrNumber ifFail: [ 0.0 ]) asFloat ]
 		ifFalse: [ aStringOrNumber ])
+]
+
+{ #category : #private }
+GtkNumberInputFieldAdapter >> updatePresenterText: aString [
+
+	self backendUpdatingDo: [ 
+		self presenter text: aString ] 
 ]
 
 { #category : #building }
