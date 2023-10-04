@@ -12,7 +12,6 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 	
 	super addModelTo: gtkEntry.
 
-	"sync presenter text and gtk"
 	gtkEntry connectChanged: [ 
 		self updatePresenterText: gtkEntry text ].
 	
@@ -20,7 +19,7 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 		gtkEntry placeHolderText: (text localizedForPresenter: self presenter) asString ].
 	self presenter whenPlaceholderChangedDo: [ :text | 
 		gtkEntry placeHolderText: (text localizedForPresenter: self presenter) asString ].
-	
+		
 	gtkEntry maxLength: self model maxLength.
 	self model whenMaxLengthChangedDo: [ gtkEntry maxLength: self presenter maxLength ].
 	
