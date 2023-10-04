@@ -67,16 +67,43 @@ GtkAdapterActionManager >> hasContextMenu [
 GtkAdapterActionManager >> initialize [
 
 	super initialize.
+	actionMap := Dictionary new.
 	hasContextMenu := false
 ]
 
 { #category : #'private - actions' }
+GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
+	| actionGroup action | 
+
+	actionGroup := gtkWidget actionGroups at: 'global' ifAbsent: [ nil ]. 
+	actionGroup ifNil: [ 
+		actionGroup := GSimpleActionGroup new.
+		gtkWidget insertActionGroup: 'global' actions: actionGroup ].
+	
+	action := (GSimpleAction newName: aCommand id)
+		connectActivate: [ aCommand execute ];
+		yourself.	
+	actionMap at: aCommand put: action.
+	actionGroup insert: action.
+	
+	aCommand hasShortcutKey ifTrue: [ 
+		gtkWidget addShortcut: (GtkShortcut 
+			newKeyCombination: aCommand shortcutKey 
+			actionName: ('global.', aCommand id)) ].	
+	
+	aCommand isVisible ifTrue: [ 
+		self installContextMenuOn: gtkWidget ]
+]
+
+{ #category : #'private - actions' }
 GtkAdapterActionManager >> installActionsOn: gtkWidget [
+	| map |
 
 	"keeping an actionMap to be able to perform operations later (like enable/disable)"
-	actionMap := GtkActionInstaller new
+	map := GtkActionInstaller new
 		widget: gtkWidget;
-		visit: self presenter actionGroup
+		visit: self presenter actionGroup.
+	actionMap addAll: map
 ]
 
 { #category : #'private - actions' }
