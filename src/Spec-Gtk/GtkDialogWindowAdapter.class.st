@@ -12,14 +12,24 @@ Class {
 
 { #category : #private }
 GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
+	| containerBox buttonBox |
+	
+	containerBox := GtkBox newVertical.
+	containerBox spacing: 2.
+	containerBox append: gtkBox.
+	
+	buttonBox := GtkBox newHorizontal.
+	buttonBox spacing: 2.
+	self presenter buttons
+		do: [ :buttonPresenter | 
+			buttonBox append: (buttonPresenter build
+				hExpand: true;
+				yourself) ].
+	buttonBox vExpand: false.
+	containerBox append: buttonBox.
+	
+	super add: containerBox toWindow: gtkDialog
 
-	gtkDialog contentArea packStart: gtkBox.
-	self model buttons do: [ :buttonPresenter |
-		gtkDialog 
-			addButton: buttonPresenter label asString
-			do: buttonPresenter action ].
-	gtkDialog buttonBox showAll.
-	gtkDialog defaultResponse: self model buttons size
 ]
 
 { #category : #'private building' }
@@ -44,10 +54,11 @@ GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 	self widgetDo: [ :w | w transientTo: aWindowPresenter window ]
 ]
 
-{ #category : #accessing }
-GtkDialogWindowAdapter >> close [
+{ #category : #private }
+GtkDialogWindowAdapter >> closeFromSignal [
 
-	self widgetDo: [ :w | w respond ]
+	super closeFromSignal.
+	waitSemaphore signal	
 ]
 
 { #category : #'private building' }
@@ -70,26 +81,23 @@ GtkDialogWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpe
 { #category : #building }
 GtkDialogWindowAdapter >> newWidget [
 
-	^ GtkDialogWindow new 
-		autoRelease
-		resize: self model initialExtent;
+	^ GtkWindow new 
+		autoRelease;
+		defaultSize: self presenter initialExtent;
 		yourself
 ]
 
 { #category : #accessing }
 GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
-	| sem |
 
-	sem := Semaphore new.
+	waitSemaphore := Semaphore new.
 	self widgetDo: [ :w |
-		w beHideOnClose.
-		w connectHide: [ sem signal ].
+		w beModal.
 		w present.
 		self processInitializationDeferredActions.
 		self presenter presenter takeKeyboardFocus ].
-
 	self announceOpened.
-	aBlock value.
-	sem wait.
-	self widgetDo: [ :w | w objectUnref ]
+	"the semaphore will be signaled when closing the modal (see #closeFromSignal)"
+	waitSemaphore wait.
+	aBlock value
 ]

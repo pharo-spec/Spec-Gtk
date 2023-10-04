@@ -161,9 +161,7 @@ GtkWindowAdapter >> closeFromKeyboard [
 
 { #category : #private }
 GtkWindowAdapter >> closeFromSignal [
-
-	self flag: #TODO. "I think this should be here"
-	self announceWillClose.
+	"this is called from connectDestroy (just one time)"
 	self announceClosed
 ]
 
