@@ -113,10 +113,6 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	hasContextMenu ifTrue: [ ^ self ]. 
 	hasContextMenu := true.
 
-	popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new) ensureObjectRefAndAutoRelease.
-	popoverContextMenu hasArrow: false.
-	popoverContextMenu parent: gtkWidget.
-
 	gtkWidget addRightClickEvent: [ :event |
 		self updateEnabledActions.
 		self 
@@ -163,9 +159,18 @@ GtkAdapterActionManager >> showContextMenu [
 { #category : #'private - actions' }
 GtkAdapterActionManager >> showPopoverMenuFor: aGroup at: position [
 
-	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].
-	
+	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].	
 	self adapter innerWidgetDo: [ :w |
+		
+		popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new)
+			ensureObjectRefAndAutoRelease.
+		popoverContextMenu hasArrow: false.
+		popoverContextMenu parent: w.
+		popoverContextMenu connectClosed: [ 
+			"release when closed, to ensure a finalize will happen before 
+			 close the window."
+			popoverContextMenu := nil ].
+		
 		popoverContextMenu
 			menuModel: (GtkActionMenuBuilder new visit: aGroup);
 			pointingTo: (position extent: 1@1);
