@@ -12,22 +12,27 @@ GtkDropListAdapter >> addModelTo: gtkDropDown [
 	
 	super addModelTo: gtkDropDown.
 	
-	self setModelTo: gtkDropDown.
-
 	gtkDropDown listFactory: self newItemFactory.	
 	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
 		(gtkDropDown model itemAtHandle: handle)
 			ifNotNil: [ :item | self presenter displayForItem: item ] ]).
 	
+	self setModelTo: gtkDropDown.
+	
 	gtkDropDown connectSelectedItem: [ self selectionChangedOnGtk ].
 	self presenter whenSelectionChangedDo: [ self selectionChangedOnPresenter ].
 	self presenter model whenChangedDo: [ self modelChangedOnPresenter ].
 	
-	(self presenter isStartWithSelection
-		and: [ self presenter model isEmpty not
-		and: [ self presenter selectedIndex = 0 ] ]) 
-		ifTrue: [ gtkDropDown select: 1 ]
-		ifFalse: [ gtkDropDown unselectAll ]
+	self presenter selection selectedIndex ~= 0
+		ifTrue: [ 
+			gtkDropDown select: self presenter selection selectedIndex - 1 ]
+		ifFalse: [
+			self flag: #TODO. "This may lead to a desync between component value and widget? VERIFY!"
+			(self presenter isStartWithSelection
+				and: [ self presenter model isEmpty not
+				and: [ self presenter selectedIndex = 0 ] ]) 
+				ifTrue: [ gtkDropDown select: 1 ]
+				ifFalse: [ gtkDropDown unselectAll ] ]
 ]
 
 { #category : #private }

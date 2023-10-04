@@ -56,17 +56,14 @@ GtkDropDownAdapter >> newItemFactory [
 { #category : #'private - factory' }
 GtkDropDownAdapter >> newStore [
 	
-	"^ GtkListViewAdapterDataStore newPresenter: self presenter"
-	^ GListReferenceStore new
-		items: self presenter items;
-		yourself
+	^ GtkListViewAdapterDataStore newPresenter: self presenter
 ]
 
 { #category : #updating }
 GtkDropDownAdapter >> refreshList [
 
-	"self innerWidgetDo: [ :w |
-		w model: self newStore ]"
+	self innerWidgetDo: [ :w |
+		w model: self newStore ]
 ]
 
 { #category : #accessing }
