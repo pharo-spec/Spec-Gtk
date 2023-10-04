@@ -11,6 +11,14 @@ Class {
 	#category : #'Spec-Gtk-Actions'
 }
 
+{ #category : #'instance creation' }
+GtkActionVisitor class >> newWidget: aGtkWidget [
+
+	^ self new 
+		widget: aGtkWidget;
+		yourself
+]
+
 { #category : #private }
 GtkActionVisitor >> actionNameFor: aCommand [
 
