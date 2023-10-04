@@ -9,7 +9,7 @@ SpCommand >> id [
 		name := self name 
 			ifNil: [ 
 				self shortcutKey
-					ifNotNil: [ 'shortcut ', self shortcutKey asString ]
+					ifNotNil: [ 'shortcut ', (KMShortcutPrinter toString: self shortcutKey) ]
 					ifNil: [ 'unknown' ] ].
 		parts := name substrings.
 		stream << parts first asLowercase.
