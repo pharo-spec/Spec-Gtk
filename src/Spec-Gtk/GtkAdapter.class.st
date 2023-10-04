@@ -503,13 +503,6 @@ GtkAdapter >> sendRightClickEvent [
 				ExternalAddress null } ]
 ]
 
-{ #category : #TOREMOVE }
-GtkAdapter >> setBalloonText: aString [ 
-	
-	self innerWidgetDo: [ :w | 
-		w tooltipText: self getHelpText ]
-]
-
 { #category : #'private - actions' }
 GtkAdapter >> showContextMenu [
 
