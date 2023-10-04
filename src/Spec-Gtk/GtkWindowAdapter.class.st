@@ -36,9 +36,9 @@ GtkWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 	
 	self flag: #TODO. "Take this from a configuration."
 	self 
-		bindKeyCombination: $w command mac | $w control win | $w control unix 
-		toAction: [ self closeFromKeyboard ]
-		inWidget: gtkWindow
+		addKeyCombination: $w actionModifier 
+		action: [ self closeFromKeyboard ]
+		toWidget: gtkWindow
 ]
 
 { #category : #'private - deferring' }

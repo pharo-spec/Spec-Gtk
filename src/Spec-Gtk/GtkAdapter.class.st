@@ -36,6 +36,14 @@ GtkAdapter >> adapt: aPresenter [
 	^ GRunLoop defer: [ super adapt: aPresenter ]
 ]
 
+{ #category : #'private - actions' }
+GtkAdapter >> addAction: action toWidget: aWidget [
+
+	self ensureActionManager 
+		installAction: action 
+		on: aWidget
+]
+
 { #category : #building }
 GtkAdapter >> addActionsTo: gtkWidget [
 	
@@ -71,6 +79,14 @@ GtkAdapter >> addKeyBindingsTo: gtkWidget [
 	self presenter contextKeyBindings ifNotNil: [ :aCategory | 
 		self configureKeyBindings: gtkWidget. 
 		self addKeyBindingCategory: aCategory to: gtkWidget ]
+]
+
+{ #category : #'private - actions' }
+GtkAdapter >> addKeyCombination: aShortcut action: aBlock toWidget: aWidget [
+
+	self ensureActionManager 
+		installAction: (SpAction newShortcut: aShortcut action: aBlock) 
+		on: aWidget
 ]
 
 { #category : #KEYBINDINGS }

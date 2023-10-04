@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'wasModal',
 		'waitForAnswer',
-		'contentsWidget'
+		'contentsWidget',
+		'waitSemaphore'
 	],
 	#category : #'Spec-Gtk-Adapter-Window'
 }
@@ -26,12 +27,12 @@ GtkDialogWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 
 	super addDefaultKeyBindings: gtkWindow.
 	self 
-		bindKeyCombination: Character escape asKeyCombination 
-			toAction: [ self closeFromKeyboard ]
-			inWidget: gtkWindow;
-		bindKeyCombination: $s command mac | $s control win | $s control unix
-			toAction: [ self defaultFromKeyboard ]
-			inWidget: gtkWindow
+		addKeyCombination: Character escape asKeyCombination 
+			action: [ self closeFromKeyboard ]
+			toWidget: gtkWindow;
+		addKeyCombination: $s actionModifier
+			action: [ self defaultFromKeyboard ]
+			toWidget: gtkWindow
 ]
 
 { #category : #accessing }
