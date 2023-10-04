@@ -190,7 +190,7 @@ SpGtkConfiguration >> styleForToolbar [
 
 	^ '
 /* compact toolbar */
-box.toolbar { font-size: 0.7em }
+box.toolbar { font-size: 0.7em; }
 box.toolbar .toolbarButton > button { padding: 2px; margin: 2px; }
 '
 ]
