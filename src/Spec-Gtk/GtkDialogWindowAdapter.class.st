@@ -2,10 +2,7 @@ Class {
 	#name : #GtkDialogWindowAdapter,
 	#superclass : #GtkWindowAdapter,
 	#instVars : [
-		'wasModal',
-		'waitForAnswer',
-		'contentsWidget',
-		'waitSemaphore'
+		'runLoop'
 	],
 	#category : #'Spec-Gtk-Adapter-Window'
 }
@@ -21,7 +18,9 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 	buttonBox := GtkBox newHorizontal.
 	buttonBox spacing: 2.
 	self presenter buttons
-		do: [ :buttonPresenter | 
+		do: [ :buttonPresenter |
+			buttonPresenter = self presenter defaultButton
+				ifTrue: [ buttonPresenter addStyle: 'suggested-action' ]. 
 			buttonBox append: (buttonPresenter build
 				hExpand: true;
 				yourself) ].
@@ -58,7 +57,7 @@ GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 GtkDialogWindowAdapter >> closeFromSignal [
 
 	super closeFromSignal.
-	waitSemaphore signal	
+	runLoop done
 ]
 
 { #category : #'private building' }
@@ -90,14 +89,17 @@ GtkDialogWindowAdapter >> newWidget [
 { #category : #accessing }
 GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 
-	waitSemaphore := Semaphore new.
+	runLoop := GtkContextRunLoop new.
 	self widgetDo: [ :w |
+		self presenter owner 
+			ifNotNil: [ :parent | w transientTo: parent adapter widget ].
 		w beModal.
 		w present.
 		self processInitializationDeferredActions.
 		self presenter presenter takeKeyboardFocus ].
 	self announceOpened.
-	"the semaphore will be signaled when closing the modal (see #closeFromSignal)"
-	waitSemaphore wait.
-	aBlock value
+	aBlock value.	
+	"This will block until dialog is closed (see `closeFromSignal`"
+	GRunLoop defer: [ runLoop run ].
+
 ]
