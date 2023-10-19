@@ -1,15 +1,17 @@
 Class {
-	#name : #GMenuCompound,
-	#superclass : #Object,
+	#name : 'GMenuCompound',
+	#superclass : 'Object',
 	#instVars : [
 		'menu',
 		'actionGroup',
 		'menuItemActions'
 	],
-	#category : #'Spec-Gtk-Adapter-Menu'
+	#category : 'Spec-Gtk-Adapter-Menu',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Menu'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GMenuCompound class >> newMenu: aMenu [
 
 	^ self new 
@@ -17,39 +19,39 @@ GMenuCompound class >> newMenu: aMenu [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuCompound >> actionGroup [
 
 	^ actionGroup
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuCompound >> addMenuItemAction: aMenuItemAction [
 
 	actionGroup insert: aMenuItemAction action.
 	menuItemActions add: aMenuItemAction
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GMenuCompound >> initialize [
 
 	super initialize.
 	menuItemActions := Set new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuCompound >> menu [
 
 	^ menu
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GMenuCompound >> menu: anObject [
 
 	menu := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuCompound >> menuItemActions [
 
 	^ menuItemActions

@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkBoxAdapter,
-	#superclass : #GtkLayoutAdapter,
-	#category : #'Spec-Gtk-Layout-Box'
+	#name : 'GtkBoxAdapter',
+	#superclass : 'GtkLayoutAdapter',
+	#category : 'Spec-Gtk-Layout-Box',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Box'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkBoxAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 
@@ -24,7 +26,7 @@ GtkBoxAdapter >> addConstraints: constraints toChild: childWidget [
 	^ childWidget
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkBoxAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 
  	layout vAlign
@@ -33,7 +35,7 @@ GtkBoxAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 		ifNotNil: [ :align | gtkWidget hAlign: align asGtkAlign ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkBoxAdapter >> applyHorizontalConstraintsTo: aWidget constraints: constraints [
 	
 	constraints isPlacedAtStart 
@@ -41,7 +43,7 @@ GtkBoxAdapter >> applyHorizontalConstraintsTo: aWidget constraints: constraints 
 	aWidget hExpand: constraints isExpand
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkBoxAdapter >> applyLayout: aLayout [
 
 	"build of widget was differed up to here (to know what is the direction)"
@@ -55,7 +57,7 @@ GtkBoxAdapter >> applyLayout: aLayout [
 		margin: aLayout borderWidth
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkBoxAdapter >> applyVerticalConstraintsTo: aWidget constraints: constraints [
 	
 	constraints isPlacedAtStart 
@@ -63,7 +65,7 @@ GtkBoxAdapter >> applyVerticalConstraintsTo: aWidget constraints: constraints [
 	aWidget vExpand: constraints isExpand
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 
 	| childWidget |
@@ -75,25 +77,25 @@ GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	^ gtkWidget
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBoxAdapter >> childrenWidgets [
 	
 	^ self widget children
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkBoxAdapter >> newHorizontal [
 
 	^ GtkBox newHorizontal
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkBoxAdapter >> newVertical [
 
 	^ GtkBox newVertical
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkBoxAdapter >> replace: aPresenter with: otherPresenter withConstraints: constraints [
 	| index |
 	
@@ -108,7 +110,7 @@ GtkBoxAdapter >> replace: aPresenter with: otherPresenter withConstraints: const
 		w reorderChild: otherPresenter adapter widget position: index ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkBoxAdapter >> updateSpacing [
 
 	self widgetDo: [ :w | w spacing: layout spacing ]

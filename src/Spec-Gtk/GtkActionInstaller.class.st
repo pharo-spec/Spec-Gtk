@@ -2,28 +2,30 @@
 installs the actions into a presenter.
 "
 Class {
-	#name : #GtkActionInstaller,
-	#superclass : #GtkActionVisitor,
+	#name : 'GtkActionInstaller',
+	#superclass : 'GtkActionVisitor',
 	#instVars : [
 		'actionGroup',
 		'actionMap'
 	],
-	#category : #'Spec-Gtk-Actions'
+	#category : 'Spec-Gtk-Actions',
+	#package : 'Spec-Gtk',
+	#tag : 'Actions'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkActionInstaller >> actionGroup [
 
 	^ actionGroup ifNil: [ actionGroup := GSimpleActionGroup new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkActionInstaller >> actionGroup: anActionGroup [
 
 	actionGroup := anActionGroup
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionInstaller >> visit: anObject [
 
 	actionMap := Dictionary new.
@@ -31,7 +33,7 @@ GtkActionInstaller >> visit: anObject [
 	^ actionMap
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionInstaller >> visitCommand: aCommand [
 	| action |
 	
@@ -42,7 +44,7 @@ GtkActionInstaller >> visitCommand: aCommand [
 	self actionGroup insert: action
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionInstaller >> visitCommandGroup: aCommandGroup [
 
 	self pushPrefix: aCommandGroup.

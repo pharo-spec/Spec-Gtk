@@ -3,18 +3,20 @@ A presenter to show the `SpDropListPresenter` list item.
 It can show an icon or not.
 "
 Class {
-	#name : #SpDropListItemPresenter,
-	#superclass : #SpPresenter,
+	#name : 'SpDropListItemPresenter',
+	#superclass : 'SpPresenter',
 	#traits : 'SpTModel',
 	#classTraits : 'SpTModel classTrait',
 	#instVars : [
 		'iconPresenter',
 		'labelPresenter'
 	],
-	#category : #'Spec-Gtk-Adapter-List'
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 SpDropListItemPresenter >> defaultLayout [
 
 	^ self owner hasIcons
@@ -22,7 +24,7 @@ SpDropListItemPresenter >> defaultLayout [
 		ifFalse: [ self labelLayout ]
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 SpDropListItemPresenter >> iconLayout [
 
 	^ SpBoxLayout newHorizontal
@@ -32,14 +34,14 @@ SpDropListItemPresenter >> iconLayout [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SpDropListItemPresenter >> initializePresenters [
 
 	iconPresenter := self newImage.
 	labelPresenter := self newLabel
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 SpDropListItemPresenter >> labelLayout [
 
 	^ SpBoxLayout newHorizontal
@@ -47,7 +49,7 @@ SpDropListItemPresenter >> labelLayout [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SpDropListItemPresenter >> updatePresenter [
 
 	self model ifNil: [ ^ self ].
@@ -57,13 +59,13 @@ SpDropListItemPresenter >> updatePresenter [
 	labelPresenter label: (self owner displayForItem: self model)
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 SpDropListItemPresenter >> useIconLayout [
 
 	self layout: self iconLayout
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 SpDropListItemPresenter >> useLabelLayout [
 
 	self layout: self labelLayout

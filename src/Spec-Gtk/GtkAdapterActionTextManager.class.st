@@ -5,32 +5,34 @@ A manager for texts, they have some differences with the standar manager:
 - the CR keybinding, if present, needs to be handled different (using the ""activate"" signal).
 "
 Class {
-	#name : #GtkAdapterActionTextManager,
-	#superclass : #GtkAdapterActionManager,
-	#category : #'Spec-Gtk-Actions'
+	#name : 'GtkAdapterActionTextManager',
+	#superclass : 'GtkAdapterActionManager',
+	#category : 'Spec-Gtk-Actions',
+	#package : 'Spec-Gtk',
+	#tag : 'Actions'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapterActionTextManager >> hasContextMenu [
 
 	^ true
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
 
 	hasContextMenu := true.	
 	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self presenter actionGroup)
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionTextManager >> installShortcutsOn: gtkWidget [
 
 	super installShortcutsOn: gtkWidget.
 	self maybeInstallCROn: gtkWidget
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionTextManager >> maybeInstallCROn: gtkEntry [
 	| enter |
 
@@ -46,7 +48,7 @@ GtkAdapterActionTextManager >> maybeInstallCROn: gtkEntry [
 				gtkEntry connectActivate: [ each execute ] ] ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtkAdapterActionTextManager >> showContextMenu [
 
 	self adapter innerWidgetDo: [ :w |

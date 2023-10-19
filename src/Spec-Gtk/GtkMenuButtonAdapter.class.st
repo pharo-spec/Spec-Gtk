@@ -1,13 +1,15 @@
 Class {
-	#name : #GtkMenuButtonAdapter,
-	#superclass : #GtkBaseButtonAdapter,
+	#name : 'GtkMenuButtonAdapter',
+	#superclass : 'GtkBaseButtonAdapter',
 	#instVars : [
 		'menuWidget'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMenuButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
@@ -20,7 +22,7 @@ GtkMenuButtonAdapter >> addModelTo: gtkButton [
 			false ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMenuButtonAdapter >> buildMenu: menuPresenter [
 
 	self halt. 
@@ -34,7 +36,7 @@ GtkMenuButtonAdapter >> buildMenu: menuPresenter [
 	^ menuWidget
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkMenuButtonAdapter >> updateMenu [
 
 	self halt. 
@@ -48,7 +50,7 @@ GtkMenuButtonAdapter >> updateMenu [
 			self widgetDo: [ :w | w menuModel: (self buildMenu: aMenu) ] ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMenuButtonAdapter >> widgetClass [
 
 	^ GtkMenuButton

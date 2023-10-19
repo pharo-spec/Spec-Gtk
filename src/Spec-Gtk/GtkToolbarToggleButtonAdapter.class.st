@@ -1,17 +1,19 @@
 Class {
-	#name : #GtkToolbarToggleButtonAdapter,
-	#superclass : #GtkToolbarBaseButtonAdapter,
-	#category : #'Spec-Gtk-Adapter-Toolbar'
+	#name : 'GtkToolbarToggleButtonAdapter',
+	#superclass : 'GtkToolbarBaseButtonAdapter',
+	#category : 'Spec-Gtk-Adapter-Toolbar',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Toolbar'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarToggleButtonAdapter >> addModelTo: gtkToolButton [
 	
 	super addModelTo: gtkToolButton.	
 	gtkToolButton active: self presenter state
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarToggleButtonAdapter >> newWidget [
 	
 	^ GtkToggleButton new 
@@ -20,7 +22,7 @@ GtkToolbarToggleButtonAdapter >> newWidget [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkToolbarToggleButtonAdapter >> performAction [
 
 	self widgetDo: [ :w | 
@@ -28,7 +30,7 @@ GtkToolbarToggleButtonAdapter >> performAction [
 	super performAction
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarToggleButtonAdapter >> updatePresenterState [
 	| state |
 
@@ -40,7 +42,7 @@ GtkToolbarToggleButtonAdapter >> updatePresenterState [
 		w active: state ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarToggleButtonAdapter >> updateState [
 	| state |
 

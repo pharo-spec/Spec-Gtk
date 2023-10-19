@@ -3,18 +3,20 @@ Item factory to be used on `GtkDropListAdapter`.
 It serves `SpDropListItemPresenter` instances.
 "
 Class {
-	#name : #GtkDropListAdapterItemFactory,
-	#superclass : #GtkListViewAdapterBaseFactory,
-	#category : #'Spec-Gtk-Adapter-List'
+	#name : 'GtkDropListAdapterItemFactory',
+	#superclass : 'GtkListViewAdapterBaseFactory',
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDropListAdapterItemFactory class >> gtkNew [ 
 
 	self ffiCall: #(GtkDropListAdapterItemFactory *gtk_signal_list_item_factory_new())
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDropListAdapterItemFactory >> bind: listItem to: anObject [
 	| child |
 
@@ -22,13 +24,13 @@ GtkDropListAdapterItemFactory >> bind: listItem to: anObject [
 	child model: anObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDropListAdapterItemFactory >> itemAt: aPosition [
 
 	^ self presenter getList at: aPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDropListAdapterItemFactory >> setup: listItem [
 	| child |
 

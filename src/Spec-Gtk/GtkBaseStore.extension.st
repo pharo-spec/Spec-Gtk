@@ -1,6 +1,6 @@
-Extension { #name : #GtkBaseStore }
+Extension { #name : 'GtkBaseStore' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 GtkBaseStore >> roots: aCollection [
 	"Compatibility with GtkTreeDataStore, it should just be used when removing... hence 
 	 not really needed."

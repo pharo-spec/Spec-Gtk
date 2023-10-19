@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkBaseButtonAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkBaseButtonAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkBaseButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
@@ -18,18 +20,18 @@ GtkBaseButtonAdapter >> addModelTo: gtkButton [
 	model whenIconChangedDo: [ self updateIcon ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkBaseButtonAdapter >> getLabelText [
 
 	^ self presenter label ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkBaseButtonAdapter >> icon [
 	^ widget image
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkBaseButtonAdapter >> labelAndIcon [
 	| box |
 
@@ -51,21 +53,21 @@ GtkBaseButtonAdapter >> labelAndIcon [
 	^ box
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkBaseButtonAdapter >> updateIcon [
 
 	self widgetDo: [ :w |
 		w child: self labelAndIcon ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkBaseButtonAdapter >> updateLabel [
 
 	self widgetDo: [ :w | 
 		w child: self labelAndIcon ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkBaseButtonAdapter >> updateTooltip [
 
 	self widgetDo: [ :w | 

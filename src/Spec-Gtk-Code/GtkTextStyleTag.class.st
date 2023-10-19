@@ -1,15 +1,17 @@
 Class {
-	#name : #GtkTextStyleTag,
-	#superclass : #Object,
+	#name : 'GtkTextStyleTag',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'start',
 		'stop'
 	],
-	#category : #'Spec-Gtk-Code-Base'
+	#category : 'Spec-Gtk-Code-Base',
+	#package : 'Spec-Gtk-Code',
+	#tag : 'Base'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkTextStyleTag class >> newName: aString from: start to: stop [
 
 	^ self basicNew 
@@ -17,7 +19,7 @@ GtkTextStyleTag class >> newName: aString from: start to: stop [
 		yourself
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTextStyleTag >> acceptTextBuffer: textBuffer [
 
 	textBuffer 
@@ -26,7 +28,7 @@ GtkTextStyleTag >> acceptTextBuffer: textBuffer [
 		end: self stop
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkTextStyleTag >> initializeName: aString from: startNumber to: stopNumber [
 
 	self initialize.
@@ -35,25 +37,25 @@ GtkTextStyleTag >> initializeName: aString from: startNumber to: stopNumber [
 	stop := stopNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTextStyleTag >> name [
 
 	^ name
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtkTextStyleTag >> printOn: aStream [ 
 	
 	aStream << self name << ' (' << self start asString << '-' << self stop asString << ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTextStyleTag >> start [
 
 	^ start
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTextStyleTag >> stop [
 
 	^ stop

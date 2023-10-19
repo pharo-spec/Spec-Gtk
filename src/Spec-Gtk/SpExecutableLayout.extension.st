@@ -1,6 +1,6 @@
-Extension { #name : #SpExecutableLayout }
+Extension { #name : 'SpExecutableLayout' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpExecutableLayout >> forGtkLayoutRebuild [ 
 
 	^ self adapter

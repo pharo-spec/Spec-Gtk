@@ -1,6 +1,6 @@
-Extension { #name : #SpProgressBarState }
+Extension { #name : 'SpProgressBarState' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpProgressBarState >> applyTo: anAdapter [
 
 	self subclassResponsibility

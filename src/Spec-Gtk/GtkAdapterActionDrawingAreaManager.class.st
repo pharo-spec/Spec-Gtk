@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkAdapterActionDrawingAreaManager,
-	#superclass : #GtkAdapterActionManager,
-	#category : #'Spec-Gtk-Actions'
+	#name : 'GtkAdapterActionDrawingAreaManager',
+	#superclass : 'GtkAdapterActionManager',
+	#category : 'Spec-Gtk-Actions',
+	#package : 'Spec-Gtk',
+	#tag : 'Actions'
 }
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionDrawingAreaManager >> installShortcutsOn: gtkDrawingArea [
 
 	self anyCommandHasShortcut ifFalse: [ ^ self ].

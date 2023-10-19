@@ -1,18 +1,20 @@
 Trait {
-	#name : #GtkTHaveWrappingScrollBars,
+	#name : 'GtkTHaveWrappingScrollBars',
 	#instVars : [
 		'innerWidget'
 	],
-	#category : #'Spec-Gtk-Adapter-List'
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkTHaveWrappingScrollBars >> innerWidget [
 	
 	^ innerWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTHaveWrappingScrollBars >> wrapWidget: gtkWidget [
 	| wrapWidget |
 

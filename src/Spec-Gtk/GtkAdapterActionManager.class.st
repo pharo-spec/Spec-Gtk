@@ -7,24 +7,26 @@ Actions define different things:
 - potentially just ""actions"" (things to execute, add-ons to the presenters)
 "
 Class {
-	#name : #GtkAdapterActionManager,
-	#superclass : #Object,
+	#name : 'GtkAdapterActionManager',
+	#superclass : 'Object',
 	#instVars : [
 		'adapter',
 		'actionMap',
 		'popoverContextMenu',
 		'hasContextMenu'
 	],
-	#category : #'Spec-Gtk-Actions'
+	#category : 'Spec-Gtk-Actions',
+	#package : 'Spec-Gtk',
+	#tag : 'Actions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkAdapterActionManager class >> new [
 
 	self error: 'Use #on:'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkAdapterActionManager class >> on: anAdapter [
 
 	^ super new 
@@ -32,38 +34,38 @@ GtkAdapterActionManager class >> on: anAdapter [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapterActionManager >> adapter [
 
 	^ adapter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkAdapterActionManager >> adapter: anObject [
 
 	adapter := anObject
 ]
 
-{ #category : #'private - testing' }
+{ #category : 'private - testing' }
 GtkAdapterActionManager >> anyCommandHasShortcut [
 
 	^ self presenter actionGroup allCommands anySatisfy: [ :each | each hasShortcutKey ]
 ]
 
-{ #category : #'private - testing' }
+{ #category : 'private - testing' }
 GtkAdapterActionManager >> anyCommandIsVisible [
 		
 	^ self presenter actionGroup allCommands anySatisfy: [ :each | each isVisible ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapterActionManager >> hasContextMenu [
 
 	^ hasContextMenu
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkAdapterActionManager >> initialize [
 
 	super initialize.
@@ -71,7 +73,7 @@ GtkAdapterActionManager >> initialize [
 	hasContextMenu := false
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
 	| actionGroup action | 
 
@@ -95,7 +97,7 @@ GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
 		self installContextMenuOn: gtkWidget ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionManager >> installActionsOn: gtkWidget [
 	| map |
 
@@ -106,7 +108,7 @@ GtkAdapterActionManager >> installActionsOn: gtkWidget [
 	actionMap addAll: map
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 
 	"already installed?"
@@ -120,7 +122,7 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 			at: event position ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtkAdapterActionManager >> installOn: gtkWidget [
 
 	"install actions"
@@ -133,7 +135,7 @@ GtkAdapterActionManager >> installOn: gtkWidget [
 		self installContextMenuOn: gtkWidget ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionManager >> installShortcutsOn: gtkWidget [
 	
 	GtkActionShortcutInstaller new
@@ -141,13 +143,13 @@ GtkAdapterActionManager >> installShortcutsOn: gtkWidget [
 		visit: self presenter actionGroup
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapterActionManager >> presenter [
 
 	^ self adapter presenter
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtkAdapterActionManager >> showContextMenu [
 
 	self adapter innerWidgetDo: [ :w |
@@ -156,7 +158,7 @@ GtkAdapterActionManager >> showContextMenu [
 			at: w surface positionOfPointer ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapterActionManager >> showPopoverMenuFor: aGroup at: position [
 
 	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].	
@@ -177,7 +179,7 @@ GtkAdapterActionManager >> showPopoverMenuFor: aGroup at: position [
 			popup ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapterActionManager >> updateEnabledActions [
 	
 	self adapter innerWidgetDo: [ :w | 
@@ -185,7 +187,7 @@ GtkAdapterActionManager >> updateEnabledActions [
 			action enable: command isEnabled ] ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtkAdapterActionManager >> updateOn: gtkWidget [
 
 	"remove shortcuts"

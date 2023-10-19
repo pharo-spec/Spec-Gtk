@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkMenuBarAdapter,
-	#superclass : #GtkMenuAdapter,
-	#category : #'Spec-Gtk-Adapter-Menu'
+	#name : 'GtkMenuBarAdapter',
+	#superclass : 'GtkMenuAdapter',
+	#category : 'Spec-Gtk-Adapter-Menu',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Menu'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuBarAdapter >> widgetClass [
 	
 	^ GtkMenuBar

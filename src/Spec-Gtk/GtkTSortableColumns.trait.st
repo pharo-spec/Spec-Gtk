@@ -2,14 +2,16 @@
 I add the ""sortable columns"" trait to adapters who can use it (tables, trees, etc.)
 "
 Trait {
-	#name : #GtkTSortableColumns,
+	#name : 'GtkTSortableColumns',
 	#instVars : [
 		'currentSortingColumnIndex'
 	],
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTSortableColumns >> addSortableColumnsTo: gtkTreeView [
 
 	self columns withIndexDo: [ :each :index |
@@ -19,13 +21,13 @@ GtkTSortableColumns >> addSortableColumnsTo: gtkTreeView [
 				model: each ] ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkTSortableColumns >> columns [ 
 
 	^ self required
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTSortableColumns >> makeSortableColumn: gtkColumn model: aTableColumn [
 	| id |
 
@@ -36,7 +38,7 @@ GtkTSortableColumns >> makeSortableColumn: gtkColumn model: aTableColumn [
 		connectClicked: [ self toggleSort: gtkColumn model: aTableColumn ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTSortableColumns >> toggleSort: gtkColumn model: aTableColumn [
 	| sortFunction wasVisible columnIndex |
 

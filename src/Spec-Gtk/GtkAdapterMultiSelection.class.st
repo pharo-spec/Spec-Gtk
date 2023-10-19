@@ -2,21 +2,23 @@
 adapter to handle multiple selections (maps a presenter selection with a gtk selection) 
 "
 Class {
-	#name : #GtkAdapterMultiSelection,
-	#superclass : #GtkAdapterSelection,
+	#name : 'GtkAdapterMultiSelection',
+	#superclass : 'GtkAdapterSelection',
 	#instVars : [
 		'oldIndexes'
 	],
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : 'Spec-Gtk-Adapter-ListView',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-ListView'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkAdapterMultiSelection >> newModel: aModel [ 
 
 	^ GtkMultiSelection newModel: aModel
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkAdapterMultiSelection >> updatePresenterSelection: position numItems: numItems [
 	| indexes |
 	
@@ -24,7 +26,7 @@ GtkAdapterMultiSelection >> updatePresenterSelection: position numItems: numItem
 	self presenter selection selectIndexes: indexes
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapterMultiSelection >> updateSelectionFromPresenter [
 	| rowIndexes newIndexes removedIndexes |
 

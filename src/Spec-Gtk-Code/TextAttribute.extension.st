@@ -1,5 +1,5 @@
-Extension { #name : #TextAttribute }
+Extension { #name : 'TextAttribute' }
 
-{ #category : #'*Spec-Gtk-Code' }
+{ #category : '*Spec-Gtk-Code' }
 TextAttribute >> acceptTag: aTag [
 ]

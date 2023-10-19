@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkMenuAdapter,
-	#superclass : #GtkMenuBaseAdapter,
-	#category : #'Spec-Gtk-Adapter-Menu'
+	#name : 'GtkMenuAdapter',
+	#superclass : 'GtkMenuBaseAdapter',
+	#category : 'Spec-Gtk-Adapter-Menu',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Menu'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMenuAdapter >> addModelTo: gtkWidget [
 
 	self model menuGroups 
@@ -17,7 +19,7 @@ GtkMenuAdapter >> addModelTo: gtkWidget [
 				yourself) ]	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuAdapter >> openAt: aPosition [
 
 	self presenter application registerWindow: self presenter.
@@ -39,13 +41,13 @@ GtkMenuAdapter >> openAt: aPosition [
 	] schedule
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuAdapter >> openAtPointer [
 
 	self openAt: GdkDisplay default defaultSeat pointer position
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuAdapter >> widgetClass [
 
 	^ GtkMenu

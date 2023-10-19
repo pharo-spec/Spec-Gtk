@@ -1,19 +1,21 @@
 Class {
-	#name : #GtkBaseListAdapter,
-	#superclass : #GtkAbstractListAdapter,
+	#name : 'GtkBaseListAdapter',
+	#superclass : 'GtkAbstractListAdapter',
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
-	#category : #'Spec-Gtk-Adapter-List'
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkBaseListAdapter >> addKeyBindingsTo: gtkWidget [
 
 	super addKeyBindingsTo: gtkWidget.
 	self addContextMenuKeyBindings: gtkWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkBaseListAdapter >> addModelTo: gtkTreeView [
 
 	super addModelTo: gtkTreeView.
@@ -24,7 +26,7 @@ GtkBaseListAdapter >> addModelTo: gtkTreeView [
 		self addMenu: menu to: gtkTreeView ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkBaseListAdapter >> addSearchTo: gtkTreeView [
 	
 	self presenter isSearchEnabled ifFalse: [ ^ self ].
@@ -38,13 +40,13 @@ GtkBaseListAdapter >> addSearchTo: gtkTreeView [
 				matching: key ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBaseListAdapter >> columns [
 	
 	^ innerWidget columns
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkBaseListAdapter >> configureDragAndDrop: gtkTreeView [
 	"Configure drag&drop. This is related to GtkTreeDataStore too, if you want to understand how 
 	 it works you need to check for GtkTreeDataStore creation/configuration too (e.g. #newTreeStore)"
@@ -56,30 +58,30 @@ GtkBaseListAdapter >> configureDragAndDrop: gtkTreeView [
 		ifTrue: [ gtkTreeView enableModelDragDestDefault ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBaseListAdapter >> isNonEditableRow: aRow column: aColumn [
 	
 	^ (innerWidget columns at: aColumn) isEditable not
 ]
 
-{ #category : #'widget API' }
+{ #category : 'widget API' }
 GtkBaseListAdapter >> refreshWidgetList [
 
 	self refreshList
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBaseListAdapter >> selectedIndexes [
 	^ innerWidget selection allSelected collect: #first as: Array
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBaseListAdapter >> selection [
 	
 	^ innerWidget selection
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkBaseListAdapter >> type: aString [
 	"this will be used to test search"
 	| entry |
@@ -89,7 +91,7 @@ GtkBaseListAdapter >> type: aString [
 	entry isNull inspect
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBaseListAdapter >> unselectAll [
 	
 	innerWidget selection unselectAll

@@ -1,21 +1,23 @@
 Class {
-	#name : #GtkTableColumnPacker,
-	#superclass : #GtkTableColumnVisitor,
+	#name : 'GtkTableColumnPacker',
+	#superclass : 'GtkTableColumnVisitor',
 	#instVars : [
 		'builder',
 		'column',
 		'expand'
 	],
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkTableColumnPacker class >> on: aModel [
 
 	^ self new model: aModel
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtkTableColumnPacker >> addAlignmentAttribute: aTableColumn column: aColumn renderer: aRenderer [
 	
 	aTableColumn displayAlignment ifNil: [ ^ self ].
@@ -25,7 +27,7 @@ GtkTableColumnPacker >> addAlignmentAttribute: aTableColumn column: aColumn rend
 		renderer: aRenderer
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtkTableColumnPacker >> addBackgroundColorAttribute: aTableColumn column: aColumn renderer: aRenderer [
 
 	aTableColumn displayBackgroundColor ifNil: [ ^ self ].
@@ -35,7 +37,7 @@ GtkTableColumnPacker >> addBackgroundColorAttribute: aTableColumn column: aColum
 		renderer: aRenderer
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtkTableColumnPacker >> addBoldAttribute: aTableColumn column: aColumn renderer: aRenderer [
 
 	aTableColumn displayBold ifNil: [ ^ self ]. 
@@ -45,7 +47,7 @@ GtkTableColumnPacker >> addBoldAttribute: aTableColumn column: aColumn renderer:
 		renderer: aRenderer
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtkTableColumnPacker >> addColorAttribute: aTableColumn column: aColumn renderer: aRenderer [
 	
 	aTableColumn displayColor ifNil: [ ^ self ]. 
@@ -55,7 +57,7 @@ GtkTableColumnPacker >> addColorAttribute: aTableColumn column: aColumn renderer
 		renderer: aRenderer
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtkTableColumnPacker >> addItalicAttribute: aTableColumn column: aColumn renderer: aRenderer [
 
 	aTableColumn displayItalic ifNil: [ ^ self ]. 
@@ -65,7 +67,7 @@ GtkTableColumnPacker >> addItalicAttribute: aTableColumn column: aColumn rendere
 		renderer: aRenderer
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableColumnPacker >> addRendererPropertiesTo: renderer column: aTableColumn [
 	
 	aTableColumn width ifNotNil: [ :w | 
@@ -73,7 +75,7 @@ GtkTableColumnPacker >> addRendererPropertiesTo: renderer column: aTableColumn [
 
 ]
 
-{ #category : #'private - attributes' }
+{ #category : 'private - attributes' }
 GtkTableColumnPacker >> addUnderlineAttribute: aTableColumn column: aColumn renderer: aRenderer [
 
 	aTableColumn displayUnderline ifNil: [ ^ self ].
@@ -83,39 +85,39 @@ GtkTableColumnPacker >> addUnderlineAttribute: aTableColumn column: aColumn rend
 		renderer: aRenderer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> builder [
 	^ builder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> builder: anObject [
 	builder := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> column [
 	^ column
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> column: anObject [
 	column := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> columnIndexOf: aTableColumn [
 
 	^ (self store indexOf: aTableColumn) - 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> columnIndexOf: aTableColumn tag: anObject [
 
 	^ (self store indexOf: aTableColumn tag: anObject) - 1
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableColumnPacker >> doToggle: pathString column: aTableColumn [
 	| path iter item store status | 
 
@@ -136,26 +138,26 @@ GtkTableColumnPacker >> doToggle: pathString column: aTableColumn [
 		ifNotNil: [ :aValuable | aValuable cull: item ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> expand: aBoolean [
 
 	expand := aBoolean
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkTableColumnPacker >> initialize [
 
 	super initialize.
 	self expand: true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTableColumnPacker >> isExpand [
 
 	^ expand
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkTableColumnPacker >> newEditableTextRendererFor: aTableColumn [
 	| renderer |
 	
@@ -170,31 +172,31 @@ GtkTableColumnPacker >> newEditableTextRendererFor: aTableColumn [
 	^ renderer
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkTableColumnPacker >> newImageRenderer [
 
 	^ GtkCellRendererPixbuf new
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkTableColumnPacker >> newTextRenderer [
 
 	^ GtkCellRendererText new
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkTableColumnPacker >> newToggleRenderer [
 
 	^ GtkCellRendererToggle new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnPacker >> store [
 
 	^ self builder store
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnPacker >> visitCheckboxColumn: aTableColumn [
 	| renderer |
 
@@ -214,13 +216,13 @@ GtkTableColumnPacker >> visitCheckboxColumn: aTableColumn [
 	self addAlignmentAttribute: aTableColumn column: column renderer: renderer.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnPacker >> visitCompositeColumn: aTableColumn [
 	
 	self error: 'Should now arrive here!'
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnPacker >> visitImageColumn: aTableColumn [
 	| renderer |
 
@@ -235,7 +237,7 @@ GtkTableColumnPacker >> visitImageColumn: aTableColumn [
 	self addAlignmentAttribute: aTableColumn column: column renderer: renderer
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnPacker >> visitIndexColumn: aTableColumn [
 	| renderer index |
 	
@@ -251,7 +253,7 @@ GtkTableColumnPacker >> visitIndexColumn: aTableColumn [
 	self addAlignmentAttribute: aTableColumn column: column renderer: renderer
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnPacker >> visitLinkColumn: aTableColumn [
 	| renderer index |
 	
@@ -271,7 +273,7 @@ GtkTableColumnPacker >> visitLinkColumn: aTableColumn [
 	self addAlignmentAttribute: aTableColumn column: column renderer: renderer
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnPacker >> visitStringColumn: aTableColumn [
 	| renderer index |
 	

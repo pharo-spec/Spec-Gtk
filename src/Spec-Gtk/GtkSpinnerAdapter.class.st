@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkSpinnerAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkSpinnerAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkSpinnerAdapter >> addModelTo: aSpinner [
 
 	super addModelTo: aSpinner.
@@ -13,7 +15,7 @@ GtkSpinnerAdapter >> addModelTo: aSpinner [
 		self updateSpinner: aSpinner withState: state. ]"
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkSpinnerAdapter >> updateSpinner: aSpinner withState: state [
 
 	state
@@ -21,7 +23,7 @@ GtkSpinnerAdapter >> updateSpinner: aSpinner withState: state [
 		ifFalse: [ aSpinner stop ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkSpinnerAdapter >> widgetClass [
 
 	^ GtkSpinner

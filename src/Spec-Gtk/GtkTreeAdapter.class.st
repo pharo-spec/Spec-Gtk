@@ -1,23 +1,25 @@
 Class {
-	#name : #GtkTreeAdapter,
-	#superclass : #GtkTreeTableAdapter,
+	#name : 'GtkTreeAdapter',
+	#superclass : 'GtkTreeTableAdapter',
 	#instVars : [
 		'columns'
 	],
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkTreeAdapter >> columns [
 
 	^ columns ifNil: [ columns := { self defaultColumn } ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeAdapter >> connectToSpecColumnsChangedEventTo: gtkWidget [
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkTreeAdapter >> defaultColumn [
 	| column |
 
@@ -45,7 +47,7 @@ GtkTreeAdapter >> defaultColumn [
 		ifNil: [ column ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkTreeAdapter >> unsubscirbeSelectionMode [
  
 	"do nothing here"

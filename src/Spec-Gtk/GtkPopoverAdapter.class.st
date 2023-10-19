@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkPopoverAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkPopoverAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPopoverAdapter >> addModelTo: gtkPopover [
 
 	gtkPopover child: self presenterWidget.	
@@ -16,18 +18,18 @@ GtkPopoverAdapter >> addModelTo: gtkPopover [
 		self replaceChildPresenterOn: gtkPopover ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPopoverAdapter >> addVisibleSettingsTo: gtkWidget [
 	"popovers fo not have visibility settings, they are shown or hide"
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPopoverAdapter >> buildWidget [
 	
 	^ super buildWidget ensureObjectRefAndAutoRelease
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkPopoverAdapter >> dismiss [ 
 
 	self widgetDo: [ :w | 
@@ -38,7 +40,7 @@ GtkPopoverAdapter >> dismiss [
 		w disconnectAll ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkPopoverAdapter >> popup [
 
 	self widgetDo: [ :w | 
@@ -47,7 +49,7 @@ GtkPopoverAdapter >> popup [
 		w popup ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkPopoverAdapter >> popupPointingTo: aRectangle [
 
 	self widgetDo: [ :w | 
@@ -57,27 +59,27 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 		w popup ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPopoverAdapter >> presenterWidget [
 
 	^ self presenter presenter build
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPopoverAdapter >> rebuild [
 	
 	self widgetDo: [ :w |
 		self replaceChildPresenterOn: w ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPopoverAdapter >> register: gtkPopover [
 
 	(GEngine current isWindowRegistered: gtkPopover) ifTrue: [ ^ self ].
 	GEngine current registerWindow: gtkPopover
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 
 	gtkPopover 
@@ -85,19 +87,19 @@ GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 		add: self presenterWidget showAll
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 		
 	^ self presenter position applyTo: gtkPopover
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 
 	GEngine current unregisterWindow: gtkPopover
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPopoverAdapter >> widgetClass [
 
 	^ GtkPopover

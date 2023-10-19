@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkNotebookAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkNotebookAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNotebookAdapter >> addContentPage: gtkPage [
 
 	| box presenter |
@@ -16,7 +18,7 @@ GtkNotebookAdapter >> addContentPage: gtkPage [
 	box append: (self buildPage: presenter)
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNotebookAdapter >> addModelTo: gtkWidget [
 
 	gtkWidget beScrollable.
@@ -44,7 +46,7 @@ GtkNotebookAdapter >> addModelTo: gtkWidget [
 	self presenter whenPagesChangedDo: [ :pages | self updatePagesWith: pages ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNotebookAdapter >> appendPage: aPage to: gtkWidget [
 
 	| page |
@@ -58,7 +60,7 @@ GtkNotebookAdapter >> appendPage: aPage to: gtkWidget [
 	^ gtkWidget append: page
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNotebookAdapter >> buildLabelForTab: aPage [
 	| labelPresenter |
 
@@ -68,7 +70,7 @@ GtkNotebookAdapter >> buildLabelForTab: aPage [
 		during: [ labelPresenter build ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNotebookAdapter >> buildPage: aPresenter [
 
 	^ SpBindings 
@@ -76,20 +78,20 @@ GtkNotebookAdapter >> buildPage: aPresenter [
 		during: [ aPresenter build ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNotebookAdapter >> clickTab: index [
 	"used for testing purposes"
 	
 	(self widget children at: index) select
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNotebookAdapter >> numberOfTabs [
 
 	^ self widget children size
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNotebookAdapter >> removePageContent: gtkPage [
 	| box |
 
@@ -98,27 +100,27 @@ GtkNotebookAdapter >> removePageContent: gtkPage [
 	box removeAll
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkNotebookAdapter >> selectPage: aPage [ 
 	
 	self widgetDo: [ :w |
 		self selectPage: aPage on: w ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNotebookAdapter >> selectPage: aPage on: aWidget [
 	
 	aPage ifNil: [ ^ self ].
 	(aWidget pageWithData: aPage) select
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkNotebookAdapter >> selectedPage [ 
 	
 	self selectPage: self model selectedPage
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNotebookAdapter >> selectedPageName [
 	"used for testing purposes"
 	| index |
@@ -129,7 +131,7 @@ GtkNotebookAdapter >> selectedPageName [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkNotebookAdapter >> updatePageContent: aPage [
 
 	self widgetDo: [ :w | | widgetPage |
@@ -139,7 +141,7 @@ GtkNotebookAdapter >> updatePageContent: aPage [
 			self addContentPage: widgetPage ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkNotebookAdapter >> updatePageTitle: aPage [
 
 	self widgetDo: [ :w | | widgetPage |
@@ -147,7 +149,7 @@ GtkNotebookAdapter >> updatePageTitle: aPage [
 		widgetPage updateLabel: (self buildLabelForTab: aPage) ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNotebookAdapter >> updatePagesWith: aCollection [
 
 	self widgetDo: [ :w | | pagesToRemove |
@@ -159,7 +161,7 @@ GtkNotebookAdapter >> updatePagesWith: aCollection [
 			thenDo: [ :page | self appendPage: page to: w ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNotebookAdapter >> widgetClass [
 
 	^ GtkNotebook

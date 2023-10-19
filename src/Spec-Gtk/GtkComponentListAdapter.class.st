@@ -1,6 +1,6 @@
 Class {
-	#name : #GtkComponentListAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkComponentListAdapter',
+	#superclass : 'GtkAdapter',
 	#traits : 'GtkTDisconnectSelectionEvents',
 	#classTraits : 'GtkTDisconnectSelectionEvents classTrait',
 	#instVars : [
@@ -11,23 +11,25 @@ Class {
 		'gtkWidget',
 		'realWidget'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 GtkComponentListAdapter class >> adaptingAliases [
 
 	^ #(FastTableAdapter)
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkComponentListAdapter >> addKeyBindingsTo: gtkWidget [
 
 	super addKeyBindingsTo: gtkWidget.
 	self addContextMenuKeyBindings: gtkWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkComponentListAdapter >> addModelTo: gtkListBox [
 
 	gtkListBox canFocus: true.
@@ -58,7 +60,7 @@ GtkComponentListAdapter >> addModelTo: gtkListBox [
 		ifNotNil: [ :menu | self addMenu: menu to: gtkListBox ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkComponentListAdapter >> disconnectSelectionEventsOf: aWidget during: aBlock [
 
 	aWidget 
@@ -66,7 +68,7 @@ GtkComponentListAdapter >> disconnectSelectionEventsOf: aWidget during: aBlock [
 		during: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkComponentListAdapter >> doActivateRow: rowHandle [
 	| row |
 
@@ -74,7 +76,7 @@ GtkComponentListAdapter >> doActivateRow: rowHandle [
 	self presenter doActivateAtIndex: (self innerWidget children indexOf: row)
 ]
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkComponentListAdapter >> doTakeKeyboardFocus: gtkListBox [
 
 	gtkListBox hasChildren ifFalse: [ ^ super doTakeKeyboardFocus: gtkListBox ].
@@ -83,7 +85,7 @@ GtkComponentListAdapter >> doTakeKeyboardFocus: gtkListBox [
 		grabFocus
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkComponentListAdapter >> elementAt: index [
 	| item |
 
@@ -95,26 +97,26 @@ GtkComponentListAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkComponentListAdapter >> innerWidget [
 
 	^ widget child
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkComponentListAdapter >> isNonEditableRow: aRow column: aColumn [ 
 	"no rows are directly editable in a component list (they can be 
 	 if defined like that in the inner presenters, but it is handled different)"
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkComponentListAdapter >> items [
 
 	^ innerWidget items
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkComponentListAdapter >> refreshList [
 	
 	self innerWidgetDo: [ :w |
@@ -123,14 +125,14 @@ GtkComponentListAdapter >> refreshList [
 			during: [ self update: w with: self presenter items ] ]
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkComponentListAdapter >> refreshWidgetSelection [
 
 	self innerWidgetDo: [ :w |
 		self refreshWidgetSelectionOf: w ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkComponentListAdapter >> refreshWidgetSelectionOf: gtkListBox [
 
 	self 
@@ -138,7 +140,7 @@ GtkComponentListAdapter >> refreshWidgetSelectionOf: gtkListBox [
 		indexes: self presenter selection selectedIndexes
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkComponentListAdapter >> refreshWidgetSelectionOf: gtkListBox indexes: aCollection [
 
 	self 
@@ -148,7 +150,7 @@ GtkComponentListAdapter >> refreshWidgetSelectionOf: gtkListBox indexes: aCollec
 				gtkListBox selectIndex: rowIndex ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkComponentListAdapter >> selectIndex: rowIndex [
 
 	self innerWidgetDo: [ :w |
@@ -161,13 +163,13 @@ GtkComponentListAdapter >> selectIndex: rowIndex [
 				w unselectAll ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkComponentListAdapter >> selectedIndexes [
 
 	^ self innerWidget selectedIndexes
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkComponentListAdapter >> showMenu: aValuable event: event [
 
 	self innerWidgetDo: [ :w |
@@ -178,7 +180,7 @@ GtkComponentListAdapter >> showMenu: aValuable event: event [
 		super showMenu: aValuable event: event ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkComponentListAdapter >> update: gtkWidget with: aCollection [
 
 	"This is a workaround to prevent double geneation of list. If I am updating 
@@ -228,20 +230,20 @@ GtkComponentListAdapter >> update: gtkWidget with: aCollection [
 	gtkWidget showAll"
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkComponentListAdapter >> updateWith: aCollection [
 
 	self innerWidgetDo: [ :w |
 		self update: w with: aCollection ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkComponentListAdapter >> widgetClass [
 	
 	^ GtkListBox
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkComponentListAdapter >> wrapWidget: gtkWidget [
 
 	innerWidget := gtkWidget.

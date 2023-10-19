@@ -1,6 +1,6 @@
-Extension { #name : #SpCommand }
+Extension { #name : 'SpCommand' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpCommand >> id [
 
 	^ String streamContents: [ :stream |

@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkRichTextAdapter,
-	#superclass : #GtkTextAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkRichTextAdapter',
+	#superclass : 'GtkTextAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkRichTextAdapter >> addTextTo: gtkTextView [
 	| table attributes |
 	table := GtkTextTagTable new.
@@ -20,7 +22,7 @@ GtkRichTextAdapter >> addTextTo: gtkTextView [
 	super addTextTo: gtkTextView
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkRichTextAdapter >> applyStyleTo: textBuffer [
 	| tags visitor |
 	visitor := GtkTextStyleTagsVisitor new.
@@ -29,7 +31,7 @@ GtkRichTextAdapter >> applyStyleTo: textBuffer [
 	tags do: [ :tag | tag acceptTextBuffer: textBuffer textBuffer ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkRichTextAdapter >> setText: text to: gtkWidget [
 	
 	super 
@@ -37,7 +39,7 @@ GtkRichTextAdapter >> setText: text to: gtkWidget [
 		to: gtkWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkRichTextAdapter >> widgetClass [
 
 	^ GtkRichTextView

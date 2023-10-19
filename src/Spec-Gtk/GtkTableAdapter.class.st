@@ -2,14 +2,16 @@
 I'm an adapter to render a TablePresenter with Gtk3.
 "
 Class {
-	#name : #GtkTableAdapter,
-	#superclass : #GtkBaseListAdapter,
+	#name : 'GtkTableAdapter',
+	#superclass : 'GtkBaseListAdapter',
 	#traits : 'GtkTTableAccessing',
 	#classTraits : 'GtkTTableAccessing classTrait',
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTableAdapter >> addModelTo: gtkTreeView [
 		
 	super addModelTo: gtkTreeView.
@@ -55,7 +57,7 @@ GtkTableAdapter >> addModelTo: gtkTreeView [
 		self presenter selection selectIndexes: gtkTreeView allSelected flattened ].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableAdapter >> appendAddedColumns [
 	| columns |
 
@@ -72,33 +74,33 @@ GtkTableAdapter >> appendAddedColumns [
 					visit: aTableColumn ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTableAdapter >> columns [
 
 	^ self presenter columns
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTableAdapter >> doRefreshList: gtkWidget [
 
 	super doRefreshList: gtkWidget.
 	self addSortableColumnsTo: gtkWidget
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTableAdapter >> isShowColumnHeaders [
 
 	^ self innerWidget isHeadersVisible
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 GtkTableAdapter >> refreshWidgetHeaderTitle [
 	
 	self innerWidgetDo: [ :w |
 		self refreshWidgetHeaderTitleTo: w ]
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 GtkTableAdapter >> refreshWidgetHeaderTitleTo: gtkTreeView [
 	
 	"By now I only accept to add columns, as the data should be all generated. It is not so easy"
@@ -110,12 +112,12 @@ GtkTableAdapter >> refreshWidgetHeaderTitleTo: gtkTreeView [
 		do: [ :modelColumn :widgetColumn | widgetColumn title: modelColumn title ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTableAdapter >> unselectAll [
 	innerWidget selection unselectAll
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTableAdapter >> unsubscribe [
 
 	| aSelectionMode |

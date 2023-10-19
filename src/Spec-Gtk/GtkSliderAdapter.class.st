@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkSliderAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkSliderAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkSliderAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.
@@ -20,7 +22,7 @@ GtkSliderAdapter >> addModelTo: gtkWidget [
 		self backendDetectCyclesDo: [ self updateValue: newValue ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkSliderAdapter >> marks: newValue into: gtkWidget [
 
 	gtkWidget clearMarks.
@@ -32,7 +34,7 @@ GtkSliderAdapter >> marks: newValue into: gtkWidget [
 				withText: m text ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkSliderAdapter >> newWidget [
 
 	^ self presenter isHorizontal
@@ -48,21 +50,21 @@ GtkSliderAdapter >> newWidget [
 				step: (self presenter quantum / self presenter max) asFloat ]
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkSliderAdapter >> updateMarks: newValue [ 
 
 	self widgetDo: [ :w | 
 		self marks: newValue into: w ]
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkSliderAdapter >> updateValue: newValue [
 
 	self widgetDo: [ :w | 
 		w setValue: newValue asFloat ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkSliderAdapter >> widgetClass [
 
 	^ GtkScale

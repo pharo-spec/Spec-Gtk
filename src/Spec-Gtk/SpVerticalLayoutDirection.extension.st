@@ -1,6 +1,6 @@
-Extension { #name : #SpVerticalLayoutDirection }
+Extension { #name : 'SpVerticalLayoutDirection' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpVerticalLayoutDirection >> applyDirectionConstraintsTo: aWidget constraints: constraints in: layout [
 
 	^ layout 
@@ -8,7 +8,7 @@ SpVerticalLayoutDirection >> applyDirectionConstraintsTo: aWidget constraints: c
 		constraints: constraints
 ]
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpVerticalLayoutDirection >> applyDirectionConstraintsTo: aWidget in: layout [
 
 	^ layout applyVerticalConstraintsTo: aWidget

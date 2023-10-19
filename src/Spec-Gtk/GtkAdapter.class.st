@@ -1,16 +1,18 @@
 Class {
-	#name : #GtkAdapter,
-	#superclass : #SpAbstractAdapter,
+	#name : 'GtkAdapter',
+	#superclass : 'SpAbstractAdapter',
 	#instVars : [
 		'lastShownMenu',
 		'backendUpdating',
 		'dispatcher',
 		'actionManager'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 GtkAdapter class >> adaptingName [
 	"Answers the name this component adapts."
 
@@ -18,25 +20,25 @@ GtkAdapter class >> adaptingName [
 	^ (self name allButFirst: 3) asSymbol
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtkAdapter class >> allAdapters [
 
 	^ self allSubclasses
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkAdapter class >> isAbstract [ 
 
 	^ self = GtkAdapter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkAdapter >> adapt: aPresenter [
 
 	^ GRunLoop defer: [ super adapt: aPresenter ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapter >> addAction: action toWidget: aWidget [
 
 	self ensureActionManager 
@@ -44,7 +46,7 @@ GtkAdapter >> addAction: action toWidget: aWidget [
 		on: aWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> addActionsTo: gtkWidget [
 	
 	self hasActions ifFalse: [ ^ self ].
@@ -53,7 +55,7 @@ GtkAdapter >> addActionsTo: gtkWidget [
 	actionManager installOn: gtkWidget
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> addContextMenuKeyBindings: gtkWidget [
 	
 	self flag: #TODO. "Take this from a configuration"
@@ -63,7 +65,7 @@ GtkAdapter >> addContextMenuKeyBindings: gtkWidget [
 		inWidget: gtkWidget
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> addKeyBindingCategory: aCategory to: gtkWidget [
 
 	aCategory allEntries keymaps do: [ :each |
@@ -73,7 +75,7 @@ GtkAdapter >> addKeyBindingCategory: aCategory to: gtkWidget [
 			inWidget: gtkWidget ]
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> addKeyBindingsTo: gtkWidget [
 
 	self presenter contextKeyBindings ifNotNil: [ :aCategory | 
@@ -81,7 +83,7 @@ GtkAdapter >> addKeyBindingsTo: gtkWidget [
 		self addKeyBindingCategory: aCategory to: gtkWidget ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapter >> addKeyCombination: aShortcut action: aBlock toWidget: aWidget [
 
 	self ensureActionManager 
@@ -89,7 +91,7 @@ GtkAdapter >> addKeyCombination: aShortcut action: aBlock toWidget: aWidget [
 		on: aWidget
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> addMenu: aValuable to: gtkWidget [
 
 	gtkWidget connectRightClicked: [ :event |
@@ -97,11 +99,11 @@ GtkAdapter >> addMenu: aValuable to: gtkWidget [
 		true ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> addModelTo: gtkWidget [
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> addSettingsTo: gtkWidget [
 	"A secondary initialization generic to all widgets"
 
@@ -118,13 +120,13 @@ GtkAdapter >> addSettingsTo: gtkWidget [
 	self addVisibleSettingsTo: gtkWidget
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 GtkAdapter >> addStyle: aStyle [
 
 	self innerWidgetDo: [ :w | w addClass: aStyle ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> addVisibleSettingsTo: gtkWidget [
 
 	self presenter isVisible
@@ -134,14 +136,14 @@ GtkAdapter >> addVisibleSettingsTo: gtkWidget [
 		self updateVisibility: aValuable value ]
 ]
 
-{ #category : #'private - cycle detection' }
+{ #category : 'private - cycle detection' }
 GtkAdapter >> backendDetectCyclesDo: aBlock [ 
 
 	self isBackendUpdating ifTrue: [ ^ self ].
 	^ aBlock value
 ]
 
-{ #category : #'private - cycle detection' }
+{ #category : 'private - cycle detection' }
 GtkAdapter >> backendUpdatingDo: aBlock [ 
 	"This is a general mechanism to avoid colisions. 
 	 I'm adding it for the cases where a presenter can be updated in two directions: from the 
@@ -156,7 +158,7 @@ GtkAdapter >> backendUpdatingDo: aBlock [
 		backendUpdating := oldStatus ]
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [ 
 	
 	self 
@@ -165,7 +167,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
 		inWidget: self innerWidget
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget [
 	
 	dispatcher ifNil: [ 
@@ -177,7 +179,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget
 		toAction: aBlock
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> buildMenu: aMenuPresenter [
 
 	^ aMenuPresenter 
@@ -185,7 +187,7 @@ GtkAdapter >> buildMenu: aMenuPresenter [
 		build
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> buildWidget [ 
 	| gtkWidget |
 	
@@ -198,13 +200,13 @@ GtkAdapter >> buildWidget [
 	^ self wrapWidget: gtkWidget
 ]
 
-{ #category : #releasing }
+{ #category : 'releasing' }
 GtkAdapter >> cleanupAfterReplacing [ 
 
 	widget := nil
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> configureKeyBindings: gtkWidget [
 
 	dispatcher := GtkKMDispatcher on: self presenter.
@@ -212,7 +214,7 @@ GtkAdapter >> configureKeyBindings: gtkWidget [
 		self handleKeyEvent: event ]
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> deferredUpdateMenuIn: gtkWidget [
 	| existingCallbacks menu |
 
@@ -232,13 +234,13 @@ GtkAdapter >> deferredUpdateMenuIn: gtkWidget [
 	self addMenu: menu to: gtkWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAdapter >> doInitializationDeferredActions [
 	"some components can require a deferred action (to be executed when 
 	 window is presented). Override this if this is the case."
 ]
 
-{ #category : #'accessing - focus' }
+{ #category : 'accessing - focus' }
 GtkAdapter >> doTakeKeyboardFocus [
 
 	self innerWidgetDo: [ :w | 
@@ -248,38 +250,38 @@ GtkAdapter >> doTakeKeyboardFocus [
 				ifNil: [ w deferAction: [ self doTakeKeyboardFocus: w ] ] ] ]
 ]
 
-{ #category : #'accessing - focus' }
+{ #category : 'accessing - focus' }
 GtkAdapter >> doTakeKeyboardFocus: gtkWidget [
 
 	gtkWidget grabFocus
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapter >> enabled [
 
 	^ self innerWidgetDo: [ :w | w sensitive ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapter >> enabled: aBoolean [
 
 	self widgetDo: [ :w |
 		w sensitive: aBoolean ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapter >> ensureActionManager [
 
 	^ actionManager ifNil: [ actionManager := self newActionManager ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAdapter >> getHelpText [
 
 	^ self presenter help ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> handleKeyEvent: event [
 
 	event isModifier ifTrue: [ ^ false ].
@@ -290,20 +292,20 @@ GtkAdapter >> handleKeyEvent: event [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkAdapter >> hasActions [
 
 	^ self presenter actionGroup notNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkAdapter >> hasContextMenu [
 
 	^ actionManager notNil
 		and: [ actionManager hasContextMenu ]
 ]
 
-{ #category : #'accessing - focus' }
+{ #category : 'accessing - focus' }
 GtkAdapter >> hasKeyboardFocus [
 	| focus |
 	
@@ -312,26 +314,26 @@ GtkAdapter >> hasKeyboardFocus [
 	^ focus
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkAdapter >> hasWidget [
 
 	^ widget notNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapter >> helpText [
 
 	^ self innerWidget tooltipText
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkAdapter >> initialize [
 
 	super initialize.
 	backendUpdating := false
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkAdapter >> innerWidget [
 	"this is the widget to be used internally (to operate). 
 	 this is because widgets can be wrapped and we need to use the actual widget to 
@@ -341,7 +343,7 @@ GtkAdapter >> innerWidget [
 	^ widget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAdapter >> innerWidgetDo: aBlock [
 
 	self hasWidget ifFalse: [ ^ nil ].
@@ -349,28 +351,28 @@ GtkAdapter >> innerWidgetDo: aBlock [
 		aBlock value: self innerWidget ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installEvent: anEvent [
 
 	self widgetDo: [ :w |
 		anEvent installOn: self target: w ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installFocusLostEvent: anEvent to: aWidget [
 
 	aWidget addFocusLeaveEvent: [ :event |
 		anEvent action value: event ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installFocusReceivedEvent: anEvent to: aWidget [
 
 	aWidget addFocusEnterEvent: [ :event |
 		anEvent action value: event ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installKeyDownEvent: anEvent to: aWidget [
 
 	aWidget addKeyPressEvent: [ :event |
@@ -378,7 +380,7 @@ GtkAdapter >> installKeyDownEvent: anEvent to: aWidget [
 		event wasHandled ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installKeyUpEvent: anEvent to: aWidget [
 
 	aWidget connectKeyReleaseEvent: [ :event |
@@ -386,7 +388,7 @@ GtkAdapter >> installKeyUpEvent: anEvent to: aWidget [
 		event wasHandled ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installMouseDoubleClickEvent: anEvent to: aWidget [
 
 	aWidget addDoubleClickEvent: [ :event |
@@ -394,7 +396,7 @@ GtkAdapter >> installMouseDoubleClickEvent: anEvent to: aWidget [
 		event wasHandled ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installMouseDownEvent: anEvent to: aWidget [
 
 	aWidget addButtonPressEvent: [ :event |
@@ -402,28 +404,28 @@ GtkAdapter >> installMouseDownEvent: anEvent to: aWidget [
 		event wasHandled ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installMouseEnterEvent: anEvent to: aWidget [
 
 	aWidget addEnterEvent: [ :event |
 		anEvent action value: event ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installMouseLeaveEvent: anEvent to: aWidget [
 
 	aWidget addLeaveEvent: [ :event |
 		anEvent action value: event ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installMouseMoveEvent: anEvent to: aWidget [
 
 	aWidget addMotionEvent: [ :event |
 		anEvent action value: event ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkAdapter >> installMouseUpEvent: anEvent to: aWidget [
 
 	aWidget addButtonReleaseEvent: [ :event |
@@ -431,19 +433,19 @@ GtkAdapter >> installMouseUpEvent: anEvent to: aWidget [
 		event wasHandled ]
 ]
 
-{ #category : #'private - cycle detection' }
+{ #category : 'private - cycle detection' }
 GtkAdapter >> isBackendUpdating [
 
 	^ backendUpdating
 ]
 
-{ #category : #visibility }
+{ #category : 'visibility' }
 GtkAdapter >> isVisible [
 
 	^ self innerWidgetDo: [ :w | w isConfiguredVisible ]
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkAdapter >> keyPressed: keyCode shift: shiftBoolean meta: metaBoolean control: controlBoolean option: optionBoolean [
 
 	self innerWidget 
@@ -461,37 +463,37 @@ GtkAdapter >> keyPressed: keyCode shift: shiftBoolean meta: metaBoolean control:
 				ExternalAddress null } ]
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> kmDispatcher [
 
 	^ dispatcher
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAdapter >> layout: aSpecLayoutFrame [ 
 	
 	self flag: #TODO.
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapter >> newActionManager [
 
 	^ GtkAdapterActionManager on: self
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> newWidget [
 
 	^ self widgetClass new
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 GtkAdapter >> removeStyle: aStyle [
 
 	self innerWidgetDo: [ :w | w removeClass: aStyle ]
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkAdapter >> sendRightClickEvent [
 	
 	self innerWidget 
@@ -503,14 +505,14 @@ GtkAdapter >> sendRightClickEvent [
 				ExternalAddress null } ]
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAdapter >> showContextMenu [
 
 	self hasContextMenu ifFalse: [ ^ self ].
 	actionManager showContextMenu
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> showMenu: aValuable event: event [
 	
 	lastShownMenu := self buildMenu: aValuable value.
@@ -520,13 +522,13 @@ GtkAdapter >> showMenu: aValuable event: event [
 		popupAtPointer: event.
 ]
 
-{ #category : #'accessing - focus' }
+{ #category : 'accessing - focus' }
 GtkAdapter >> takeKeyboardFocus [
 
 	self doTakeKeyboardFocus
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapter >> update: aSymbol with: anArray [
 
 	self flag: #TODO. "I'm not sure I want to do this :("
@@ -536,26 +538,26 @@ GtkAdapter >> update: aSymbol with: anArray [
 		withArguments: anArray
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapter >> updateActions [
 
 	self innerWidgetDo: [ :w |
 		self ensureActionManager updateOn: w ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapter >> updateEnabled [
 	
 	self widgetDo: [ :w | w sensitive: self presenter isEnabled value ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapter >> updateHelp [
 	
 	self widgetDo: [ :w | w tooltipText: self presenter help  ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapter >> updateKeyBindings [
 
 	dispatcher ifNotNil: [ dispatcher detachAllKeymapCategories ].
@@ -563,14 +565,14 @@ GtkAdapter >> updateKeyBindings [
 		ifNotNil: [ :aCategory | self addKeyBindingCategory: aCategory to: self innerWidget ]
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> updateMenu [
 
 	self innerWidgetDo: [ :w |
 		self deferredUpdateMenuIn: w ]
 ]
 
-{ #category : #KEYBINDINGS }
+{ #category : 'KEYBINDINGS' }
 GtkAdapter >> updateVisibility: aBoolean [ 
 
 	self widgetDo: [ :w |
@@ -579,26 +581,26 @@ GtkAdapter >> updateVisibility: aBoolean [
 			ifFalse: [ w beNotVisible ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> widgetClass [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAdapter >> widgetDo: aBlock [ 
 
 	self hasWidget ifFalse: [ ^ nil ].
 	^ GRunLoop defer: [ aBlock value: widget ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAdapter >> wrapWidget: gtkWidget [
 
 	^ gtkWidget
 ]
 
-{ #category : #'private - utils' }
+{ #category : 'private - utils' }
 GtkAdapter >> wrapWithScrollableWindow: gtkWidget [
 
 	^ (GtkScrolledWindow newWidget: gtkWidget)

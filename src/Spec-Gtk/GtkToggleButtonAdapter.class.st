@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkToggleButtonAdapter,
-	#superclass : #GtkButtonAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkToggleButtonAdapter',
+	#superclass : 'GtkButtonAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkToggleButtonAdapter >> addActionTo: gtkToggleButton [
 
 	gtkToggleButton connectToggled: [
@@ -13,20 +15,20 @@ GtkToggleButtonAdapter >> addActionTo: gtkToggleButton [
 		self backendDetectCyclesDo: [ self updateState ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToggleButtonAdapter >> setIconTo: gtkToggleButton [
 
 	gtkToggleButton image: self presenter icon asGtkImage
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkToggleButtonAdapter >> updatePresenterState [
 
 	self widgetDo: [ :w |
 		self updatePresenterStateOn: w ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkToggleButtonAdapter >> updatePresenterStateOn: gtkToggleButton [
 	| active |
 
@@ -37,7 +39,7 @@ GtkToggleButtonAdapter >> updatePresenterStateOn: gtkToggleButton [
 	self presenter state: active
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkToggleButtonAdapter >> updateState [
 
 	self widgetDo: [ :w |
@@ -47,7 +49,7 @@ GtkToggleButtonAdapter >> updateState [
 		super updateState ]
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkToggleButtonAdapter >> widgetClass [
 
 	^ GtkToggleButton

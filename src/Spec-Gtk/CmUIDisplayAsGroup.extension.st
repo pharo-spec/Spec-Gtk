@@ -1,6 +1,6 @@
-Extension { #name : #CmUIDisplayAsGroup }
+Extension { #name : 'CmUIDisplayAsGroup' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 CmUIDisplayAsGroup >> appendGroup: aMenu label: aLabel to: parentMenu in: aVisitor [
 
 	^ aVisitor 

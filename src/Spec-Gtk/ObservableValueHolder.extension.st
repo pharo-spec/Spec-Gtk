@@ -1,6 +1,6 @@
-Extension { #name : #ObservableValueHolder }
+Extension { #name : 'ObservableValueHolder' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 ObservableValueHolder >> unsubscribeOuterContextReceiver: anObject [ 
 
 	"This is a hackish way how to unsubscribe a block with a given recevier that is encapsulated in another outer context. 

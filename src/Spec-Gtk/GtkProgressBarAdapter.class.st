@@ -1,31 +1,33 @@
 Class {
-	#name : #GtkProgressBarAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkProgressBarAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkProgressBarAdapter >> addModelTo: gtkWidget [
 
 	gtkWidget showText.
 	self updateState
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkProgressBarAdapter >> fixedValue: aNumber [
 
 	self innerWidgetDo: [ :w | 
 		w progress: aNumber asFloat ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkProgressBarAdapter >> indeterminateValue [
 
 	self innerWidgetDo: [ :w | 
 		w pulse ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkProgressBarAdapter >> updateState [
 
 	self presenter state ifNil: [ ^ self ].
@@ -35,7 +37,7 @@ GtkProgressBarAdapter >> updateState [
 		ifTrue: [ Gtk3PollingRunLoop new processEvents ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkProgressBarAdapter >> widgetClass [
 
 	^ GtkProgressBar

@@ -1,6 +1,6 @@
-Extension { #name : #SpAbstractSelectionMode }
+Extension { #name : 'SpAbstractSelectionMode' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpAbstractSelectionMode >> gtkAdapterCompanion [
 
 	^ self subclassResponsibility

@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkCheckBoxAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkCheckBoxAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCheckBoxAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.
@@ -20,39 +22,39 @@ GtkCheckBoxAdapter >> addModelTo: gtkWidget [
 	self presenter whenLabelChangedDo: [ self updateLabel ]
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkCheckBoxAdapter >> clicked [
 
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkCheckBoxAdapter >> getLabelText [
 
 	^ self presenter label ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCheckBoxAdapter >> state [
 	
 	^ widget isActive
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkCheckBoxAdapter >> updateLabel [
 
 	self widgetDo: [ :w |
 		w label: self getLabelText ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkCheckBoxAdapter >> updatePresenterState [
 	
 	self presenter state: self state
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkCheckBoxAdapter >> updateState [
 
 	self widgetDo: [ :w | 
@@ -60,7 +62,7 @@ GtkCheckBoxAdapter >> updateState [
 			ifFalse: [ w active: self presenter state ] ]
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkCheckBoxAdapter >> widgetClass [
 
 	^ GtkCheckButton

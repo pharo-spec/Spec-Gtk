@@ -1,13 +1,13 @@
-Extension { #name : #SpWindowPresenter }
+Extension { #name : 'SpWindowPresenter' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpWindowPresenter >> inform: aString [
 
 	self withAdapterDo: [ :anAdapter | 
 		anAdapter inform: aString ]
 ]
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpWindowPresenter >> informError: aString [
 
 	self withAdapterDo: [ :anAdapter | 

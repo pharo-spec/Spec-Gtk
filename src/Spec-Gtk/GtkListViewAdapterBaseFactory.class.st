@@ -1,20 +1,22 @@
 Class {
-	#name : #GtkListViewAdapterBaseFactory,
-	#superclass : #GtkPharoListItemFactory,
+	#name : 'GtkListViewAdapterBaseFactory',
+	#superclass : 'GtkPharoListItemFactory',
 	#instVars : [
 		'presenter',
 		'mutex'
 	],
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : 'Spec-Gtk-Adapter-ListView',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-ListView'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkListViewAdapterBaseFactory class >> isAbstract [
 
 	^ super isAbstract or: [ self = GtkListViewAdapterBaseFactory ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkListViewAdapterBaseFactory class >> newPresenter: aPresenter [
 
 	^ self new
@@ -22,7 +24,7 @@ GtkListViewAdapterBaseFactory class >> newPresenter: aPresenter [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> bind: listItem [
 
 	self 
@@ -30,13 +32,13 @@ GtkListViewAdapterBaseFactory >> bind: listItem [
 		to: (self itemAt: (listItem position + 1))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> bind: listItem to: aPosition [
 
 	self subclassResponsibility
 ]
 
-{ #category : #finalization }
+{ #category : 'finalization' }
 GtkListViewAdapterBaseFactory >> finalize [
 
 	self isValidHandle ifFalse: [ ^ self ].
@@ -45,14 +47,14 @@ GtkListViewAdapterBaseFactory >> finalize [
 		super finalize ]
 ]
 
-{ #category : #finalization }
+{ #category : 'finalization' }
 GtkListViewAdapterBaseFactory >> finalizedOnGtk [
 
 	self freeStoredObjects.	
 	super finalizedOnGtk
 ]
 
-{ #category : #finalization }
+{ #category : 'finalization' }
 GtkListViewAdapterBaseFactory >> freeStoredObjects [
 
 	mutex critical: [ 
@@ -63,38 +65,38 @@ GtkListViewAdapterBaseFactory >> freeStoredObjects [
 			removeAll ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkListViewAdapterBaseFactory >> initialize [
 
 	super initialize.
 	mutex := Mutex new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapterBaseFactory >> itemAt: aPosition [ 
 
 	^ self presenter items at: aPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> presenter [
 
 	^ presenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkListViewAdapterBaseFactory >> presenter: aPresenter [
 
 	presenter := aPresenter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapterBaseFactory >> presenterAtHandle: anAddress [
 
 	^ storedObjects at: anAddress ifAbsent: [ nil ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapterBaseFactory >> removeStoredPresenterAtHandle: aHandle [
 
 	mutex critical: [ 
@@ -102,7 +104,7 @@ GtkListViewAdapterBaseFactory >> removeStoredPresenterAtHandle: aHandle [
 		storedObjects removeKey: aHandle ifAbsent: [ ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapterBaseFactory >> storePresenter: aPresenter [
 	| widget |
 
@@ -116,13 +118,13 @@ GtkListViewAdapterBaseFactory >> storePresenter: aPresenter [
 	^ aPresenter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> teardown: item [
 
 	"no idea what to do here"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> unbind: listItem [
 	| childHandle |
 

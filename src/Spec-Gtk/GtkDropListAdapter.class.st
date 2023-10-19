@@ -2,12 +2,14 @@
 Gtk adapter for `SpDropListPresenter`
 "
 Class {
-	#name : #GtkDropListAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter-List'
+	#name : 'GtkDropListAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDropListAdapter >> addModelTo: gtkDropDown [
 	
 	super addModelTo: gtkDropDown.
@@ -35,7 +37,7 @@ GtkDropListAdapter >> addModelTo: gtkDropDown [
 				ifFalse: [ gtkDropDown unselectAll ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDropListAdapter >> disconnectSelectionEventsOf: aWidget during: aBlock [
 
 	aWidget 
@@ -43,19 +45,19 @@ GtkDropListAdapter >> disconnectSelectionEventsOf: aWidget during: aBlock [
 		during: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDropListAdapter >> elementAt: index [
 
 	^ self presenter model at: index
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkDropListAdapter >> hasIcons [
 
 	^ self presenter hasIcons
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDropListAdapter >> modelChangedOnPresenter [
 			
 	self innerWidgetDo: [ :w |
@@ -64,13 +66,13 @@ GtkDropListAdapter >> modelChangedOnPresenter [
 			during: [ self setModelTo: w ] ]
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkDropListAdapter >> newItemFactory [
 
 	^ GtkDropListAdapterItemFactory newPresenter: self presenter
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkDropListAdapter >> newStore [
 
 	^ GListReferenceStore new
@@ -78,47 +80,47 @@ GtkDropListAdapter >> newStore [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDropListAdapter >> selectIndex: index [ 
 	
 	self widgetDo: [ :w |
 		w select: index + 1 ]
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkDropListAdapter >> selectionChanged [
 
 	self widgetDo: [ :w |
 		self presenter selectIndex: w selected + 1 ] 
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkDropListAdapter >> selectionChangedOnGtk [
 
 	self backendDetectCyclesDo: [ 
 		self selectionChanged ]
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkDropListAdapter >> selectionChangedOnPresenter [
 			
 	self backendUpdatingDo: [
 		self innerWidgetDo: [ :w | w select: self presenter selectedIndex - 1 ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDropListAdapter >> setModelTo: gtkDropDown [
 
 	gtkDropDown model: self newStore
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDropListAdapter >> takeKeyboardFocus [ 
 
 	^ self doTakeKeyboardFocus
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDropListAdapter >> unsubscribe [ 
 
 	self presenter selection unsubscribeOuterContextReceiver: self.
@@ -129,7 +131,7 @@ GtkDropListAdapter >> unsubscribe [
 	super unsubscribe
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDropListAdapter >> widgetClass [
 
 	^ GtkDropDown

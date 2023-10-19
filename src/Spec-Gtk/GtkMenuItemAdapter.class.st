@@ -1,16 +1,18 @@
 Class {
-	#name : #GtkMenuItemAdapter,
-	#superclass : #GtkMenuBaseAdapter,
-	#category : #'Spec-Gtk-Adapter-Menu'
+	#name : 'GtkMenuItemAdapter',
+	#superclass : 'GtkMenuBaseAdapter',
+	#category : 'Spec-Gtk-Adapter-Menu',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Menu'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuItemAdapter class >> defaultSpacing [
 
 	^ 5
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMenuItemAdapter >> addAcceleratorShortcut: shortcut to: gtkWidget [
 
 	self flag: #HACK.	"this is to ensure is not a key combination (gtk does not allows them)"
@@ -19,7 +21,7 @@ GtkMenuItemAdapter >> addAcceleratorShortcut: shortcut to: gtkWidget [
 	gtkWidget addShortcut: shortcut asGtkShortcut
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMenuItemAdapter >> addAcceleratorShortcutLabel: shortcut to: gtkBox [
 	
 	self flag: #HACK. "this is to ensure is not a key combination (gtk does not allows them)"
@@ -32,7 +34,7 @@ GtkMenuItemAdapter >> addAcceleratorShortcutLabel: shortcut to: gtkBox [
 		padding: 0
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMenuItemAdapter >> addModelTo: gtkWidget [
 	"label (and icon if there)"
 
@@ -61,14 +63,14 @@ GtkMenuItemAdapter >> addModelTo: gtkWidget [
 		ifNotNil: [ :menuPresenter | gtkWidget submenu: menuPresenter build ]
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkMenuItemAdapter >> getNameText [
 
 	^ self presenter name ifNotNil: [ :aString | 
 		aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMenuItemAdapter >> menuLabelWithIconAndAccelFor: gtkWidget [
 	| gtkBox gtkLabel |
 	
@@ -98,7 +100,7 @@ GtkMenuItemAdapter >> menuLabelWithIconAndAccelFor: gtkWidget [
 	^ gtkBox
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMenuItemAdapter >> shortcutGroup [ 
 	| root |
 	
@@ -109,7 +111,7 @@ GtkMenuItemAdapter >> shortcutGroup [
 		group ]
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkMenuItemAdapter >> updateIcon [
 
 	self innerWidgetDo: [ :w |
@@ -117,7 +119,7 @@ GtkMenuItemAdapter >> updateIcon [
 		w add: (self menuLabelWithIconAndAccelFor: w) ].
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkMenuItemAdapter >> updateName [
 
 	self innerWidgetDo: [ :w |
@@ -130,7 +132,7 @@ GtkMenuItemAdapter >> updateName [
 				w label: self presenter name ] ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuItemAdapter >> widgetClass [
 
 	^ GtkMenuItem

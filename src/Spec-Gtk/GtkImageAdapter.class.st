@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkImageAdapter,
-	#superclass : #GtkMiscAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkImageAdapter',
+	#superclass : 'GtkMiscAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkImageAdapter >> addModelTo: gtkImage [
 
 	super addModelTo: gtkImage.
@@ -15,19 +17,19 @@ GtkImageAdapter >> addModelTo: gtkImage [
 			self updateForm: self model image into: gtkImage ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkImageAdapter >> image [
 	
 	^ self widget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkImageAdapter >> newWidget [
 
 	^ GtkImage newEmpty 
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImage [
 	
 	aFormOrGdkPixbuf ifNil: [ 

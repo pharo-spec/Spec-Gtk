@@ -1,6 +1,6 @@
-Extension { #name : #KMSingleKeyCombination }
+Extension { #name : 'KMSingleKeyCombination' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 KMSingleKeyCombination >> spGtkCurrentCharacter [
 
 	^ key

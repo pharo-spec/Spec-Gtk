@@ -1,13 +1,15 @@
 Class {
-	#name : #GtkCodeUserAction,
-	#superclass : #Object,
+	#name : 'GtkCodeUserAction',
+	#superclass : 'Object',
 	#instVars : [
 		'registerChange'
 	],
-	#category : #'Spec-Gtk-Code-Base'
+	#category : 'Spec-Gtk-Code-Base',
+	#package : 'Spec-Gtk-Code',
+	#tag : 'Base'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkCodeUserAction >> hasChanged [
 
 	^ registerChange > 0
@@ -15,20 +17,20 @@ GtkCodeUserAction >> hasChanged [
 	
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkCodeUserAction >> initialize [
 
 	super initialize.
 	self reset
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeUserAction >> registerChange [
 
 	registerChange := registerChange + 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeUserAction >> reset [
 
 	registerChange := 0

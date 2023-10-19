@@ -1,13 +1,15 @@
 Class {
-	#name : #GtkTextInputFieldAdapter,
-	#superclass : #GtkAbstractTextAdapter,
+	#name : 'GtkTextInputFieldAdapter',
+	#superclass : 'GtkAbstractTextAdapter',
 	#pools : [
 		'GdkKeyCodes'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 	
 	super addModelTo: gtkEntry.
@@ -38,56 +40,56 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 		gtkEntry visibility: isPassword not ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTextInputFieldAdapter >> cursorPositionIndex: index [
 	
 	^ self innerWidgetDo: [ :w | w position: index ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTextInputFieldAdapter >> getPlaceholderText [
 
 	^ self presenter placeholder ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTextInputFieldAdapter >> isPassword [
 	
 	^ widget isPassword 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTextInputFieldAdapter >> placeHolderText [
 	
 	^ widget placeHolderText 
 ]
 
-{ #category : #selection }
+{ #category : 'selection' }
 GtkTextInputFieldAdapter >> selectAll [
 	
 	self innerWidgetDo: [ :w | w selectAll ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTextInputFieldAdapter >> setEditable: aBoolean [ 
 
 	self innerWidgetDo: [ :w | w editable: aBoolean ]
 ]
 
-{ #category : #selection }
+{ #category : 'selection' }
 GtkTextInputFieldAdapter >> setSelectionFromModel: aSelection [
  
 	self innerWidgetDo: [ :w | 
 		w selectFrom: (aSelection first - 1) to: aSelection last ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTextInputFieldAdapter >> takeKeyboardFocusWithoutSelecting [
 
 	self innerWidgetDo: [ :w | w grabFocusWithoutSelecting ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTextInputFieldAdapter >> text: aString [ 
 	
 	super text: aString.
@@ -95,20 +97,20 @@ GtkTextInputFieldAdapter >> text: aString [
 	self model text: aString.
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkTextInputFieldAdapter >> updatePresenterText: aString [
 
 	self backendUpdatingDo: [ 
 		self presenter text: aString ] 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTextInputFieldAdapter >> widgetClass [
 
 	^ GtkEntry
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextInputFieldAdapter >> wrapWidget: gtkWidget [
 
 	^ gtkWidget

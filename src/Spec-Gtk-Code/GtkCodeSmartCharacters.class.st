@@ -3,8 +3,8 @@ A model to process smart characters in the code editor.
 ""Smart characters"" are the auto enclosing characters (like, it adds comments when you press "" and you have something selected).  
 "
 Class {
-	#name : #GtkCodeSmartCharacters,
-	#superclass : #Object,
+	#name : 'GtkCodeSmartCharacters',
+	#superclass : 'Object',
 	#instVars : [
 		'open',
 		'close'
@@ -13,17 +13,19 @@ Class {
 		'AllChars',
 		'SmartCharsTable'
 	],
-	#category : #'Spec-Gtk-Code-Base'
+	#category : 'Spec-Gtk-Code-Base',
+	#package : 'Spec-Gtk-Code',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeSmartCharacters class >> allChars [
 
 	^ AllChars ifNil: [ 
 		AllChars := self smartCharsTable flatCollect: [ :each | each pairs ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkCodeSmartCharacters class >> createSmartCharsTable [
 
 	^ {
@@ -37,19 +39,19 @@ GtkCodeSmartCharacters class >> createSmartCharsTable [
 	}
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeSmartCharacters class >> findMatching: aChar [ 
 
 	^ self smartCharsTable detect: [ :each | each matches: aChar ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkCodeSmartCharacters class >> newEnclosing: aChar [
 
 	^ self newOpen: aChar close: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkCodeSmartCharacters class >> newOpen: openChar close: closeChar [
 
 	^ self new 
@@ -57,7 +59,7 @@ GtkCodeSmartCharacters class >> newOpen: openChar close: closeChar [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeSmartCharacters class >> reset [
 	<script>
 	
@@ -65,14 +67,14 @@ GtkCodeSmartCharacters class >> reset [
 	AllChars := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeSmartCharacters class >> smartCharsTable [
 
 	^ SmartCharsTable ifNil: [ 
 		SmartCharsTable := self createSmartCharsTable ]
 ]
 
-{ #category : #applying }
+{ #category : 'applying' }
 GtkCodeSmartCharacters >> applyTo: gtkTextView in: selection [
 	| buffer |
 
@@ -82,20 +84,20 @@ GtkCodeSmartCharacters >> applyTo: gtkTextView in: selection [
 		insertText: open asString at: selection first - 1
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkCodeSmartCharacters >> matches: aChar [ 
 
 	^ open = aChar or: [ close = aChar ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkCodeSmartCharacters >> open: openChar close: closeChar [
 
 	open := openChar.
 	close := closeChar
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeSmartCharacters >> pairs [
 
 	^ close 
@@ -103,7 +105,7 @@ GtkCodeSmartCharacters >> pairs [
 		ifNil: [ { open } ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 GtkCodeSmartCharacters >> printOn: stream [
 
 	super printOn: stream.

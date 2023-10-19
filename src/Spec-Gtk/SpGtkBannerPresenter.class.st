@@ -4,12 +4,14 @@ This simulates AdwBanner from libadwaita (https://gnome.pages.gitlab.gnome.org/l
 We will add any component, but they need to take into account this is intended to be a simple text with (maybe) some operations.
 "
 Class {
-	#name : #SpGtkBannerPresenter,
-	#superclass : #SpPresenter,
-	#category : #'Spec-Gtk-Adapter-Window'
+	#name : 'SpGtkBannerPresenter',
+	#superclass : 'SpPresenter',
+	#category : 'Spec-Gtk-Adapter-Window',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Window'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerPresenter >> add: aContentPresenter [
 
 	self layout
@@ -18,7 +20,7 @@ SpGtkBannerPresenter >> add: aContentPresenter [
 	aContentPresenter startTimer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerPresenter >> addError: aString [
 
 	self add: ((self instantiate: SpGtkBannerContentPresenter)
@@ -27,7 +29,7 @@ SpGtkBannerPresenter >> addError: aString [
 		yourself)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerPresenter >> addInfo: aString [
 
 	self add: ((self instantiate: SpGtkBannerContentPresenter)
@@ -36,19 +38,19 @@ SpGtkBannerPresenter >> addInfo: aString [
 		yourself)
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 SpGtkBannerPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SpGtkBannerPresenter >> initializePresenters [
 
 	self addStyle: 'banner'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerPresenter >> remove: aContentPresenter [
 
 	self layout remove: aContentPresenter

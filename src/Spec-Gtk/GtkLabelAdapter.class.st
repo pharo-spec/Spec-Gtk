@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkLabelAdapter,
-	#superclass : #GtkMiscAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkLabelAdapter',
+	#superclass : 'GtkMiscAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLabelAdapter >> addModelTo: gtkWidget [
 	
 	super addModelTo: gtkWidget.
@@ -13,7 +15,7 @@ GtkLabelAdapter >> addModelTo: gtkWidget [
 		self updateLabel ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLabelAdapter >> applyDecorationsTo: aWidget label: aString [
 	| attrs |
 	
@@ -40,44 +42,44 @@ GtkLabelAdapter >> applyDecorationsTo: aWidget label: aString [
 	attrs unref
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLabelAdapter >> beNotWrap [
 
 	self widgetDo: [ :w | w wrap: false ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLabelAdapter >> beWrap [
 
 	self widgetDo: [ :w | w wrap: true ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLabelAdapter >> getText [
 
 	^ (self presenter label ifNil: ['']) 
 		localizedForPresenter: self presenter
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkLabelAdapter >> isWrap [
 
 	^ self widgetDo: [ :w | w isWrap ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLabelAdapter >> label [
 
 	^ self getText
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkLabelAdapter >> newWidget [
 
 	^ GtkLabel new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLabelAdapter >> setLabelTo: gtkWidget [
 	| label |
 	
@@ -88,7 +90,7 @@ GtkLabelAdapter >> setLabelTo: gtkWidget [
 		label: label
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkLabelAdapter >> updateLabel [
 
 	self innerWidgetDo: [ :w | 

@@ -1,6 +1,6 @@
 Class {
-	#name : #SpecFormExample,
-	#superclass : #SpPresenter,
+	#name : 'SpecFormExample',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'textInputLabel',
 		'textInput',
@@ -11,10 +11,12 @@ Class {
 		'checkBoxLabel',
 		'checkBox'
 	],
-	#category : #'Spec-Gtk-Examples'
+	#category : 'Spec-Gtk-Examples',
+	#package : 'Spec-Gtk',
+	#tag : 'Examples'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 SpecFormExample class >> defaultSpec [ 
 	<spec: #grid>
 	
@@ -30,34 +32,34 @@ SpecFormExample class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 SpecFormExample class >> show [ 
 	<example>
 	
 	self new openWithSpec
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> checkBox [
 	^ checkBox
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> checkBox: anObject [
 	checkBox := anObject
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> checkBoxLabel [
 	^ checkBoxLabel
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> checkBoxLabel: anObject [
 	checkBoxLabel := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SpecFormExample >> initializePresenters [
 	
 	textInputLabel := self newLabel label: 'Text input'.
@@ -84,62 +86,62 @@ SpecFormExample >> initializePresenters [
 		add: self checkBox
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> numberInput [
 	^ numberInput
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> numberInput: anObject [
 	numberInput := anObject
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> numberInputLabel [
 	^ numberInputLabel
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> numberInputLabel: anObject [
 	numberInputLabel := anObject
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textArea [
 	^ textArea
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textArea: anObject [
 	textArea := anObject
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textAreaLabel [
 	^ textAreaLabel
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textAreaLabel: anObject [
 	textAreaLabel := anObject
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textInput [
 	^ textInput
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textInput: anObject [
 	textInput := anObject
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textInputLabel [
 	^ textInputLabel
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing ui' }
 SpecFormExample >> textInputLabel: anObject [
 	textInputLabel := anObject
 ]

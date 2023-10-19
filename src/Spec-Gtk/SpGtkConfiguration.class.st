@@ -3,18 +3,20 @@ I'm a base configuration for GTK applications.
 I have some convenience methods useful to configure GTK applications
 "
 Class {
-	#name : #SpGtkConfiguration,
-	#superclass : #SpApplicationConfiguration,
+	#name : 'SpGtkConfiguration',
+	#superclass : 'SpApplicationConfiguration',
 	#instVars : [
 		'listSelectedColor',
 		'providers',
 		'syntaxHighlightThemeName',
 		'styleScheme'
 	],
-	#category : #'Spec-Gtk-Base'
+	#category : 'Spec-Gtk-Base',
+	#package : 'Spec-Gtk',
+	#tag : 'Base'
 }
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromPath: aString [
 	| provider |
 
@@ -24,7 +26,7 @@ SpGtkConfiguration >> addCSSProviderFromPath: aString [
 		self keepProvider: provider ]
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromReference: aReference [
 	| provider |
 
@@ -34,7 +36,7 @@ SpGtkConfiguration >> addCSSProviderFromReference: aReference [
 		self keepProvider: provider ]
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromString: aString [
 	| provider |
 
@@ -44,7 +46,7 @@ SpGtkConfiguration >> addCSSProviderFromString: aString [
 		self keepProvider: provider ]
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SpGtkConfiguration >> addPredefinedStyles [
 	
 	self addCSSProviderFromString: self styleForToolbar.
@@ -53,7 +55,7 @@ SpGtkConfiguration >> addPredefinedStyles [
 		ifFalse: [ self styleForToolbarLight ])
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 SpGtkConfiguration >> buttonBackgroundColor [
 	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a
 	 dark or light theme"
@@ -61,13 +63,13 @@ SpGtkConfiguration >> buttonBackgroundColor [
 	self deprecated: #Gtk4
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 SpGtkConfiguration >> buttonSelectedColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SpGtkConfiguration >> configure: anApplication [
 
 	GRunLoop defer: [
@@ -76,12 +78,12 @@ SpGtkConfiguration >> configure: anApplication [
 		super configure: anApplication ]
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SpGtkConfiguration >> configureGeneral: anApplication [
 	"A hook to configure a gtk application for all platforms"
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SpGtkConfiguration >> defaultStyleScheme [
 
 	^ self isDarkTheme
@@ -89,32 +91,32 @@ SpGtkConfiguration >> defaultStyleScheme [
 		ifFalse: [ 'Adwaita' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> detectDarkTheme [
 
 	self flag: #TODO. "Find a way to actually detect this"
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> getButtonBackgroundColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> getButtonSelectedColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> getListActiveColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> getListSelectedColor [
 
 	^ GRunLoop defer: [
@@ -124,68 +126,68 @@ SpGtkConfiguration >> getListSelectedColor [
 		widget styleContext getSelectedRGBAColor asColor ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> getPanelBackgroundColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> getTextBackgroundColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> installTheme: aString [
 
 	self settings themeName: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 SpGtkConfiguration >> isDarkTheme [
 
 	^ self detectDarkTheme
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkConfiguration >> keepProvider: aProvider [
 
 	providers ifNil: [ providers := #() ].
 	providers := providers copyWith: aProvider
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 SpGtkConfiguration >> listActiveColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 SpGtkConfiguration >> listSelectedColor [
 
 	^ listSelectedColor ifNil: [ listSelectedColor := self getListSelectedColor ]
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 SpGtkConfiguration >> panelBackgroundColor [
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkConfiguration >> preferDarkTheme: aBoolean [
 
 	GRunLoop defer: [ GtkSettings default preferDarkTheme: aBoolean ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SpGtkConfiguration >> settings [
 
 	^ GtkSettings default
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SpGtkConfiguration >> styleForToolbar [
 
 	^ '
@@ -195,47 +197,47 @@ box.toolbar .toolbarButton > button { padding: 2px; margin: 2px; }
 '
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SpGtkConfiguration >> styleForToolbarDark [
 		
 	^ 'box.toolbar label { color: #C0C0C0; }'
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 SpGtkConfiguration >> styleForToolbarLight [
 		
 	^ 'box.toolbar label { color: #808080; }'
 
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 SpGtkConfiguration >> styleScheme [
 
 	^ styleScheme ifNil: [ self defaultStyleScheme ]
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 SpGtkConfiguration >> styleScheme: aName [
 	"The name of the style scheme theme to use (e.g. 'Adwaita', 'Adwaita-dark', 'classic', 'classic-dark', 'cobalt', 'cobalt-light', 'kate', 'kate-dark', 'oblivion', 'solarized-dark', 'solarized-light', 'tango'"
 
 	styleScheme := aName
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 SpGtkConfiguration >> syntaxHighlightTheme [
 	"Name of theme: Blue, Dark, Vintage, Solarized, Tango"
 
 	^ syntaxHighlightThemeName
 ]
 
-{ #category : #'accessing - style' }
+{ #category : 'accessing - style' }
 SpGtkConfiguration >> syntaxHighlightTheme: aName [
 	"Name of theme: Blue, Dark, Vintage, Solarized, Tango"
 
 	syntaxHighlightThemeName := aName
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 SpGtkConfiguration >> textBackgroundColor [
 	"Taking the background color of a GtkTextView is a hack to determine if we are in presence of a
 	 dark or light theme"

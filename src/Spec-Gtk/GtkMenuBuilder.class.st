@@ -1,40 +1,42 @@
 Class {
-	#name : #GtkMenuBuilder,
-	#superclass : #Object,
+	#name : 'GtkMenuBuilder',
+	#superclass : 'Object',
 	#instVars : [
 		'currentMenu',
 		'menu',
 		'actionNumber',
 		'groupName'
 	],
-	#category : #'Spec-Gtk-Adapter-Menu'
+	#category : 'Spec-Gtk-Adapter-Menu',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Menu'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuBuilder class >> defaultGroupName [
 
 	^ 'action'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuBuilder >> groupName [
 
 	^ groupName ifNil: [ groupName := self class defaultGroupName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkMenuBuilder >> groupName: aName [
 
 	groupName := aName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMenuBuilder >> nextActionName [
 
 	^ 'action_{1}' format: { actionNumber := actionNumber + 1 }
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkMenuBuilder >> visitMenu: aMenuPresenter [
 	
 	self 
@@ -47,7 +49,7 @@ GtkMenuBuilder >> visitMenu: aMenuPresenter [
 				do: [ :each | each accept: self ] ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkMenuBuilder >> visitMenuGroup: aMenuGroupPresenter [
 	| section |
 
@@ -60,7 +62,7 @@ GtkMenuBuilder >> visitMenuGroup: aMenuGroupPresenter [
 				do: [ :each | each accept: self ] ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkMenuBuilder >> visitMenuItem: aMenuItemPresenter [
 	| action |
 
@@ -81,7 +83,7 @@ GtkMenuBuilder >> visitMenuItem: aMenuItemPresenter [
 			action menuItem subMenu: subMenu ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMenuBuilder >> withCurrentMenu: aMenu do: aBlock [
 	| oldMenu |
 	

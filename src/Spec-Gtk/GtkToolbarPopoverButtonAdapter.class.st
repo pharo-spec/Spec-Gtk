@@ -1,20 +1,22 @@
 Class {
-	#name : #GtkToolbarPopoverButtonAdapter,
-	#superclass : #GtkToolbarBaseButtonAdapter,
+	#name : 'GtkToolbarPopoverButtonAdapter',
+	#superclass : 'GtkToolbarBaseButtonAdapter',
 	#instVars : [
 		'menuWidget'
 	],
-	#category : #'Spec-Gtk-Adapter-Toolbar'
+	#category : 'Spec-Gtk-Adapter-Toolbar',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Toolbar'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarPopoverButtonAdapter >> addModelTo: gtkToolButton [
 	
 	super addModelTo: gtkToolButton.
 	gtkToolButton connectClicked: [ self showPopover ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarPopoverButtonAdapter >> newWidget [
 	
 	^ GtkToolButton 
@@ -22,7 +24,7 @@ GtkToolbarPopoverButtonAdapter >> newWidget [
 		label: self presenter label
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarPopoverButtonAdapter >> showPopover [
 
 	self presenter newPopover

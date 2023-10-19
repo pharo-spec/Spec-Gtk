@@ -1,6 +1,6 @@
-Extension { #name : #SpColumnAlignment }
+Extension { #name : 'SpColumnAlignment' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpColumnAlignment >> asXAlign [
 
 	self subclassResponsibility

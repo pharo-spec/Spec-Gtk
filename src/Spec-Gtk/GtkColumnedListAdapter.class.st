@@ -1,12 +1,14 @@
 Class {
-	#name : #GtkColumnedListAdapter,
-	#superclass : #GtkBaseListAdapter,
+	#name : 'GtkColumnedListAdapter',
+	#superclass : 'GtkBaseListAdapter',
 	#traits : 'GtkTTableAccessing',
 	#classTraits : 'GtkTTableAccessing classTrait',
-	#category : #'Spec-Gtk-Adapter-List'
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkColumnedListAdapter >> addModelTo: gtkList [
 		
 	super addModelTo: gtkList.
@@ -26,7 +28,7 @@ GtkColumnedListAdapter >> addModelTo: gtkList [
 		self presenter selection selectIndexes: gtkList allSelected flattened ]
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 GtkColumnedListAdapter >> doRefreshList: gtkWidget [
 
 	super doRefreshList: gtkWidget.

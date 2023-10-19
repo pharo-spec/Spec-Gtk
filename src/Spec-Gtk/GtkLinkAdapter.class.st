@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkLinkAdapter,
-	#superclass : #GtkButtonAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkLinkAdapter',
+	#superclass : 'GtkButtonAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLinkAdapter >> addModelTo: gtkButton [
 
 	widget := gtkButton.
@@ -22,7 +24,7 @@ GtkLinkAdapter >> addModelTo: gtkButton [
 	model whenLabelChangedDo: [ self updateLabel ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLinkAdapter >> labelAndIcon [
 	| box |
 
@@ -39,7 +41,7 @@ GtkLinkAdapter >> labelAndIcon [
 	^ box
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkLinkAdapter >> newWidget [ 
 	
 	^ GtkLinkButton 

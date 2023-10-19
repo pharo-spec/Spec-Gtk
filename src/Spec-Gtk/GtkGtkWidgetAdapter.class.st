@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkGtkWidgetAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkGtkWidgetAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkGtkWidgetAdapter >> doTakeKeyboardFocus: aWidget [
 
 	self 
@@ -13,7 +15,7 @@ GtkGtkWidgetAdapter >> doTakeKeyboardFocus: aWidget [
 		
 ]
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkGtkWidgetAdapter >> firstNotContainer: aWidget ifFound: aBlock [
 
 	(aWidget isKindOf: GtkContainer) 
@@ -26,7 +28,7 @@ GtkGtkWidgetAdapter >> firstNotContainer: aWidget ifFound: aBlock [
 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkGtkWidgetAdapter >> newWidget [
 
 	^ self presenter widget

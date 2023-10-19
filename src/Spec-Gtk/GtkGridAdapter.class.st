@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkGridAdapter,
-	#superclass : #GtkLayoutAdapter,
-	#category : #'Spec-Gtk-Layout-Grid'
+	#name : 'GtkGridAdapter',
+	#superclass : 'GtkLayoutAdapter',
+	#category : 'Spec-Gtk-Layout-Grid',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Grid'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkGridAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 	
@@ -19,7 +21,7 @@ GtkGridAdapter >> addConstraints: constraints toChild: childWidget [
 	self basicApplyAlignmentTo: childWidget constraints: constraints
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkGridAdapter >> applyLayout: aLayout [
 	
 	widget := GtkGrid new.
@@ -35,7 +37,7 @@ GtkGridAdapter >> applyLayout: aLayout [
 			rowHomogeneous: aLayout isRowHomogeneous ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkGridAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
@@ -50,7 +52,7 @@ GtkGridAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	^ gtkWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkGridAdapter >> basicApplyAlignmentTo: childWidget constraints: constraints [
 
 	constraints hAlign ifNotNil: [ :hAlign | childWidget hAlign: hAlign asGtkAlign ].

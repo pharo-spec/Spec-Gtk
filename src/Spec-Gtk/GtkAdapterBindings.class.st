@@ -1,16 +1,18 @@
 Class {
-	#name : #GtkAdapterBindings,
-	#superclass : #SpAdapterBindings,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkAdapterBindings',
+	#superclass : 'SpAdapterBindings',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtkAdapterBindings >> allAdapters [
 	
 	^ GtkAdapter allAdapters
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GtkAdapterBindings >> initializeBindings [
 	
 	GtkAdapter allSubclasses 

@@ -1,9 +1,11 @@
 Trait {
-	#name : #GtkTDisconnectSelectionEvents,
-	#category : #'Spec-Gtk-Adapter-Table'
+	#name : 'GtkTDisconnectSelectionEvents',
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTDisconnectSelectionEvents >> disconnectSelectionEventsOf: aWidget during: aBlock [
 
 	aWidget selection 

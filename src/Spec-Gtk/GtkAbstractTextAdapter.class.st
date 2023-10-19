@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkAbstractTextAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkAbstractTextAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractTextAdapter >> addEditionContextMenuTo: menuPresenter [
 	
 
@@ -14,14 +16,14 @@ GtkAbstractTextAdapter >> addEditionContextMenuTo: menuPresenter [
 		do: [ :each | menuPresenter addMenuGroup: each ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractTextAdapter >> addKeyBindingsTo: gtkWidget [
 
 	super addKeyBindingsTo: gtkWidget.
 	self addContextMenuKeyBindings: gtkWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.
@@ -30,7 +32,7 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 		self updateTextFromPresenter: text ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractTextAdapter >> addTextTo: gtkWidget [
 	
 	self model text ifNotNil: [ :text | 
@@ -38,31 +40,31 @@ GtkAbstractTextAdapter >> addTextTo: gtkWidget [
 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractTextAdapter >> buildMenu: menuPresenterOrBlock [
 
 	^ super buildMenu: menuPresenterOrBlock value
 ]
 
-{ #category : #'undo-redo' }
+{ #category : 'undo-redo' }
 GtkAbstractTextAdapter >> clearUndoManager [
 	"do nothing, it does not has sense in gtk"
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkAbstractTextAdapter >> cursorPositionIndex [
 
 	^ self innerWidgetDo: [ :w | w textBuffer cursorPosition ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkAbstractTextAdapter >> hasActions [
 
 	"it has at least one (the extra)"
 	^ true
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkAbstractTextAdapter >> insert: aString at: positionIndex [
 
 	self innerWidgetDo: [ :w |
@@ -71,25 +73,25 @@ GtkAbstractTextAdapter >> insert: aString at: positionIndex [
 			at: positionIndex ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractTextAdapter >> newActionManager [
 
 	^ GtkAdapterActionTextManager on: self
 ]
 
-{ #category : #selection }
+{ #category : 'selection' }
 GtkAbstractTextAdapter >> selectAll [
 	
 	self innerWidgetDo: [ :w | w textBuffer selectAll ]
 ]
 
-{ #category : #selection }
+{ #category : 'selection' }
 GtkAbstractTextAdapter >> selectLine [
 
 	self innerWidgetDo: [ :w | w textBuffer selectLineAtCursor ].
 ]
 
-{ #category : #selection }
+{ #category : 'selection' }
 GtkAbstractTextAdapter >> selection [ 
 	| selection |
 
@@ -101,7 +103,7 @@ GtkAbstractTextAdapter >> selection [
 	^ selection ifNil: [ 1 to: 0 ]
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkAbstractTextAdapter >> sendRightClickEvent [
 	
 	self innerWidget 
@@ -113,7 +115,7 @@ GtkAbstractTextAdapter >> sendRightClickEvent [
 				ExternalAddress null } ]
 ]
 
-{ #category : #selection }
+{ #category : 'selection' }
 GtkAbstractTextAdapter >> setSelectionFromModel: aSelection [
  
 	self innerWidgetDo: [ :w | 
@@ -122,19 +124,19 @@ GtkAbstractTextAdapter >> setSelectionFromModel: aSelection [
 			to: aSelection last ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAbstractTextAdapter >> setText: aString to: gtkWidget [
 
 	gtkWidget text: aString asString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAbstractTextAdapter >> text: aString [ 
 	
 	self setText: aString to: widget
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkAbstractTextAdapter >> updateTextFromPresenter: aString [
 	
 	self backendDetectCyclesDo: [  

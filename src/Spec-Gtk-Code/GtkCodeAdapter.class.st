@@ -1,15 +1,17 @@
 Class {
-	#name : #GtkCodeAdapter,
-	#superclass : #GtkTextAdapter,
+	#name : 'GtkCodeAdapter',
+	#superclass : 'GtkTextAdapter',
 	#instVars : [
 		'completionProvider',
 		'lastPopover',
 		'userAction'
 	],
-	#category : #'Spec-Gtk-Code-Base'
+	#category : 'Spec-Gtk-Code-Base',
+	#package : 'Spec-Gtk-Code',
+	#tag : 'Base'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> addModelTo: gtkTextView [ 
 
 	self addSourceFeaturesTo: gtkTextView.	
@@ -17,20 +19,20 @@ GtkCodeAdapter >> addModelTo: gtkTextView [
 	super addModelTo: gtkTextView
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> addMonospaceStyleFor: gtkTextView [
 
 	gtkTextView addClass: 'code'
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> addSmartCharactersTo: gtkTextView [
 	
 	gtkTextView addKeyPressEvent: [ :event | 
 		self handleSmartCharacters: event ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> addSourceCompletionProviderTo: gtkSourceView [
 
 	gtkSourceView completion
@@ -41,7 +43,7 @@ GtkCodeAdapter >> addSourceCompletionProviderTo: gtkSourceView [
 			yourself)
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 
 	self flag: #TODO. "Find a better way to validate this"
@@ -61,13 +63,13 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		gtkSourceView showLineNumbers: hasLineNumbers ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> addTextBufferTo: gtkTextView [
 
 	"this is solved in #newTextBufferForText:"
 ]
 
-{ #category : #'api - segments' }
+{ #category : 'api - segments' }
 GtkCodeAdapter >> addTextSegmentDecoration: aDecoration [
 	
 	self innerWidgetDo: [ :w | 
@@ -77,7 +79,7 @@ GtkCodeAdapter >> addTextSegmentDecoration: aDecoration [
 			end: aDecoration stop ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> addTextTo: gtkTextView [
 	
 	"gtkTextView monospace: true."
@@ -85,7 +87,7 @@ GtkCodeAdapter >> addTextTo: gtkTextView [
 	super addTextTo: gtkTextView
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkCodeAdapter >> applyFullStyleTo: textBuffer [
 
 	"If I am in an user action, I will not do anything now, just register for change (it 
@@ -98,7 +100,7 @@ GtkCodeAdapter >> applyFullStyleTo: textBuffer [
 		self applyStyleTo: textBuffer ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkCodeAdapter >> applyStyleTo: textBuffer [
 
 	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
@@ -117,19 +119,19 @@ GtkCodeAdapter >> applyStyleTo: textBuffer [
 				toBuffer: textBuffer ]
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> behavior [
 
 	^ self presenter behavior
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> bindingOf: aString [
 
 	^ self presenter bindingOf: aString
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> bufferClass [
 
 	^ GtkSourceViewLibrary uniqueInstance isAvailable 
@@ -137,7 +139,7 @@ GtkCodeAdapter >> bufferClass [
 		ifFalse: [ super bufferClass ]
 ]
 
-{ #category : #'private - shout' }
+{ #category : 'private - shout' }
 GtkCodeAdapter >> classOrMetaClass: aClass [
 	"I will take the behavior from model, I just need to fire a refresh"
 
@@ -146,19 +148,19 @@ GtkCodeAdapter >> classOrMetaClass: aClass [
 	self updateCompletionProvider
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> doItContext [ 
 
 	^ self presenter doItContext
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> doItReceiver [
 
 	^ self presenter doItReceiver
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> handleSmartCharacters: event [
 	| char selection |
 		
@@ -176,33 +178,33 @@ GtkCodeAdapter >> handleSmartCharacters: event [
 			false ]
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> hasBindingOf: aString [
 
 	^ self presenter hasBindingOf: aString
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> hasBindingThatBeginsWith: aString [
 
 	^ self presenter hasBindingThatBeginsWith: aString
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkCodeAdapter >> hasSyntaxHighlightEnabled [
 	"this is used just for testing"
 	
 	^ self presenter hasSyntaxHighlight
 ]
 
-{ #category : #'api - search' }
+{ #category : 'api - search' }
 GtkCodeAdapter >> highlightSearchText: aBoolean [ 
 
 	self innerWidgetDo: [ :w |
 		w textBuffer searchContext highlight: aBoolean ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleName [
 
 	self innerWidgetDo: [ :w | | endIter |
@@ -226,19 +228,19 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 		lastPopover takeKeyboardFocus ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkCodeAdapter >> interactionModel: anInteractionModel [
 
 	self classOrMetaClass: anInteractionModel behavior
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> isScripting [
 
 	^ self presenter isScripting
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 
 	^ GtkCodeCompletionEngine new 
@@ -249,7 +251,7 @@ GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 		yourself
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkCodeAdapter >> newTagTable [
 	
 	self flag: #TODO. "highlight color in a setting"
@@ -260,13 +262,13 @@ GtkCodeAdapter >> newTagTable [
 		yourself
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkCodeAdapter >> newTextBuffer [
 
 	^ self bufferClass new
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkCodeAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
@@ -277,7 +279,7 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 	^ textBuffer
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkCodeAdapter >> newTextBufferForText: aString [
 	| textBuffer |
 
@@ -304,13 +306,13 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 	^ textBuffer
 ]
 
-{ #category : #'interactive error protocol' }
+{ #category : 'interactive error protocol' }
 GtkCodeAdapter >> notify: aString at: aNumber in: anObject [
 	
 	self flag: #TODO. "What to do here?"
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkCodeAdapter >> refreshStyling [
 
 	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
@@ -318,13 +320,13 @@ GtkCodeAdapter >> refreshStyling [
 		self applyStyleTo: w textBuffer ]
 ]
 
-{ #category : #'api - segments' }
+{ #category : 'api - segments' }
 GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	
 	self flag: #TODO.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkCodeAdapter >> scrollToIter: iter in: gtkWidget [
 
 	gtkWidget 
@@ -335,7 +337,7 @@ GtkCodeAdapter >> scrollToIter: iter in: gtkWidget [
 		yalign: 0.0 
 ]
 
-{ #category : #'api - search' }
+{ #category : 'api - search' }
 GtkCodeAdapter >> searchBackward [
 
 	self innerWidgetDo: [ :w |
@@ -348,7 +350,7 @@ GtkCodeAdapter >> searchBackward [
 					bound: end ] ]
 ]
 
-{ #category : #'api - search' }
+{ #category : 'api - search' }
 GtkCodeAdapter >> searchForward [
 
 	self innerWidgetDo: [ :w |
@@ -360,7 +362,7 @@ GtkCodeAdapter >> searchForward [
 				self scrollToIter: start in: w ] ]
 ]
 
-{ #category : #'api - search' }
+{ #category : 'api - search' }
 GtkCodeAdapter >> searchText: aString [
 
 	self innerWidgetDo: [ :w | | searchContext |
@@ -369,13 +371,13 @@ GtkCodeAdapter >> searchText: aString [
 		self startSearch: searchContext ]
 ]
 
-{ #category : #'api - shout' }
+{ #category : 'api - shout' }
 GtkCodeAdapter >> selectedClassOrMetaClass [
 
 	^ self presenter selectedClassOrMetaClass
 ]
 
-{ #category : #'private - shout' }
+{ #category : 'private - shout' }
 GtkCodeAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer [ 
 
 	(GtkTextStyleVisitor new 
@@ -386,7 +388,7 @@ GtkCodeAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer 
 
 ]
 
-{ #category : #'private - shout' }
+{ #category : 'private - shout' }
 GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [ 
 
 	(GtkTextStyleVisitor new
@@ -397,7 +399,7 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> setText: aString to: gtkWidget [
 
 	self backendDetectCyclesDo: [
@@ -407,7 +409,7 @@ GtkCodeAdapter >> setText: aString to: gtkWidget [
 		self userActionDo: [ :action | action registerChange ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkCodeAdapter >> startSearch: aSearchContext [
 	| start |
 
@@ -419,7 +421,7 @@ GtkCodeAdapter >> startSearch: aSearchContext [
 			self scrollToIter: matchStart in: self innerWidget ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkCodeAdapter >> styleScheme [
 	| schemeName |
 
@@ -428,7 +430,7 @@ GtkCodeAdapter >> styleScheme [
 	^ GtkSourceStyleSchemeManager default schemeWithId: schemeName
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkCodeAdapter >> styleTable [
 	| styleTableName |	
 
@@ -443,27 +445,27 @@ GtkCodeAdapter >> styleTable [
 	^ SHRBTextStyler newAttributesForStyleTableNamed: styleTableName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkCodeAdapter >> textWithStyle [
 
 	^ self innerWidget textBuffer asText
 ]
 
-{ #category : #'private - shout' }
+{ #category : 'private - shout' }
 GtkCodeAdapter >> updateCompletionProvider [	
 	
 	completionProvider ifNotNil: [ :p | 
 		p completionEngine completionClass: self behavior ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkCodeAdapter >> userActionDo: aBlock [
 
 	userAction ifNil: [ ^ self ].
 	aBlock value: userAction
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkCodeAdapter >> userActionDuring: aBlock [
 
 	userAction := GtkCodeUserAction new.
@@ -477,7 +479,7 @@ GtkCodeAdapter >> userActionDuring: aBlock [
 					self applyFullStyleTo: w textBuffer ] ] ].
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkCodeAdapter >> widgetClass [
 
 	^ GtkSourceViewLibrary uniqueInstance isAvailable 

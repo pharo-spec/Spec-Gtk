@@ -21,8 +21,8 @@ Which will ensure ""A"" will show the expand arrow (since it has children). Now,
 After processing, we will the full tree.  
 "
 Class {
-	#name : #GtkTreeTableAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkTreeTableAdapter',
+	#superclass : 'GtkAdapter',
 	#traits : 'GtkTDisconnectSelectionEvents + GtkTHaveWrappingScrollBars + GtkTSortableColumns',
 	#classTraits : 'GtkTDisconnectSelectionEvents classTrait + GtkTHaveWrappingScrollBars classTrait + GtkTSortableColumns classTrait',
 	#instVars : [
@@ -30,17 +30,19 @@ Class {
 		'objectCache',
 		'defaultColumn'
 	],
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> addKeyBindingsTo: gtkWidget [
 
 	super addKeyBindingsTo: gtkWidget.
 	self addContextMenuKeyBindings: gtkWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> addModelTo: gtkTreeView [
 	
 	super addModelTo: gtkTreeView.
@@ -59,7 +61,7 @@ GtkTreeTableAdapter >> addModelTo: gtkTreeView [
 	self connectToSpecEvents: gtkTreeView
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> addSearchTo: gtkTreeView [
 
 	self presenter isSearchEnabled ifFalse: [ ^ self ].
@@ -73,32 +75,32 @@ GtkTreeTableAdapter >> addSearchTo: gtkTreeView [
 				matching: key ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> collapseAll [
 
 	self innerWidgetDo: [ :w | w collapseAll ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> collapsePath: aPath [ 
 
 	self innerWidgetDo: [ :w | 
 		w collapseToPath: aPath ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> columnCount [
 	
 	^ self innerWidget model numberOfColumns
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkTreeTableAdapter >> columns [
 
 	^ self presenter columns ifEmpty: [ { self defaultColumn } ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> configureDragAndDrop: gtkTreeView [
 	"Configure drag&drop. This is related to GtkTreeDataStore too, if you want to understand how 
 	 it works you need to check for GtkTreeDataStore creation/configuration too (e.g. #newTreeStore)"
@@ -110,7 +112,7 @@ GtkTreeTableAdapter >> configureDragAndDrop: gtkTreeView [
 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> configureInitialState: gtkWidget [
 
 	gtkWidget headersVisible: self presenter isShowingColumnHeaders.
@@ -127,7 +129,7 @@ GtkTreeTableAdapter >> configureInitialState: gtkWidget [
 		self addMenu: menu to: gtkWidget ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> connectToGtkSignals: gtkWidget [
 	
 	gtkWidget connectSelectionChanged: [ 
@@ -137,13 +139,13 @@ GtkTreeTableAdapter >> connectToGtkSignals: gtkWidget [
 		self presenter doActivateAtPath: path toArray ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> connectToSpecColumnsChangedEventTo: gtkWidget [
 
 	self presenter whenColumnsChangedDo: [ self updateColumns ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> connectToSpecEvents: gtkWidget [
 
 	self presenter 
@@ -155,14 +157,14 @@ GtkTreeTableAdapter >> connectToSpecEvents: gtkWidget [
 	self connectToSpecColumnsChangedEventTo: gtkWidget
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkTreeTableAdapter >> defaultColumn [
 			
 	^ defaultColumn ifNil: [ 
 		defaultColumn := SpStringTableColumn evaluated: #asString ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTreeTableAdapter >> doRecreateColumns: gtkTreeView [
 	| columnBuilder |
 
@@ -174,26 +176,26 @@ GtkTreeTableAdapter >> doRecreateColumns: gtkTreeView [
 	self columns do: [ :each | columnBuilder visit: each ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTreeTableAdapter >> doRecreateStore: gtkTreeView [
 
 	gtkTreeView model: (self newTreeStoreFrom: self items)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> expandAll [
 
 	self innerWidgetDo: [ :w | w expandAll ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> expandPath: aPath [ 
 
 	self innerWidgetDo: [ :w | 
 		w expandToPath: aPath ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> expandRoots [ 
 
 	self innerWidgetDo: [ :w |
@@ -201,39 +203,39 @@ GtkTreeTableAdapter >> expandRoots [
 			w expandToPath: { index } ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> firstSelectedPath [
 	
 	^ self innerWidgetDo: [ :w | w selection selectedPath ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkTreeTableAdapter >> initialize [
 
 	super initialize.
 	levelsAdded := Set new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTreeTableAdapter >> isNonEditableRow: aRow column: aColumn [ 
 	"no rows are directly editable in a component list (they can be 
 	 if defined like that in the inner presenters, but it is handled different)"
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> itemAtPath: anArray [
  	
 	^ self innerWidgetDo: [ :w | w model itemAtPath: anArray ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTreeTableAdapter >> items [
 
 	^ self model roots
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private factory' }
 GtkTreeTableAdapter >> newColumnBuilder [
 
 	^ GtkTreeTableColumnBuilder new 
@@ -242,7 +244,7 @@ GtkTreeTableAdapter >> newColumnBuilder [
 		yourself
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private factory' }
 GtkTreeTableAdapter >> newTreeStoreFrom: items [
 	| store |
 	
@@ -264,7 +266,7 @@ GtkTreeTableAdapter >> newTreeStoreFrom: items [
 	^ store
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> recreateStore: gtkTreeView	generateColumns: doesGenerateColumns [
 
 	self doRecreateStore: gtkTreeView.	
@@ -273,7 +275,7 @@ GtkTreeTableAdapter >> recreateStore: gtkTreeView	generateColumns: doesGenerateC
 	self addSortableColumnsTo: gtkTreeView
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkTreeTableAdapter >> refreshList [
 
 	self halt.
@@ -281,18 +283,18 @@ GtkTreeTableAdapter >> refreshList [
 		w model: (self newStoreFrom: self presenter items) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTreeTableAdapter >> rowsSelected: pathColl [
 
 	self model selection selectPaths: pathColl
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> scrollToSelection [
 	"not needed, in gtk it will always scroll to selection"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> selectItemIn: gtkWidget path: aPath [
 
 	(aPath isNil or: [ aPath isEmpty ]) ifTrue: [ 
@@ -307,7 +309,7 @@ GtkTreeTableAdapter >> selectItemIn: gtkWidget path: aPath [
 		ifFalse: [ gtkWidget selection unselectAll ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> selectPath: aPath [
 
 	self innerWidgetDo: [ :w |
@@ -316,7 +318,7 @@ GtkTreeTableAdapter >> selectPath: aPath [
 			ifEmpty: [ w selection unselectAll ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> selectedItem [
 	| selectedPath |
 	
@@ -327,19 +329,19 @@ GtkTreeTableAdapter >> selectedItem [
 	^ self model itemAtPath: selectedPath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTreeTableAdapter >> selectedPaths [
 	
 	^ self innerWidgetDo: [ :w | w allSelected ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTreeTableAdapter >> store [ 
 
 	^ self innerWidgetDo: [ :w | w model ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTreeTableAdapter >> takeKeyboardFocus [
 
 	self innerWidgetDo: [ :w |
@@ -358,13 +360,13 @@ GtkTreeTableAdapter >> takeKeyboardFocus [
 				self doTakeKeyboardFocus ] ]
 ]
 
-{ #category : #releasing }
+{ #category : 'releasing' }
 GtkTreeTableAdapter >> unsubscirbeSelectionMode [
  
 	self presenter selectionMode unsubscribe: self.
 ]
 
-{ #category : #releasing }
+{ #category : 'releasing' }
 GtkTreeTableAdapter >> unsubscribe [
 
 	| aSelection |
@@ -385,14 +387,14 @@ GtkTreeTableAdapter >> unsubscribe [
 	widget := nil.
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkTreeTableAdapter >> updateColumnHeaders [
 
 	self innerWidgetDo: [ :w |
 		w headersVisible: self presenter isShowingColumnHeaders ]
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkTreeTableAdapter >> updateColumns [
 
 	self innerWidgetDo: [ :w |
@@ -401,7 +403,7 @@ GtkTreeTableAdapter >> updateColumns [
 			during: [ self recreateStore: w generateColumns: true ] ]
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkTreeTableAdapter >> updateMultiSelection [
 	
 	self innerWidgetDo: [ :w | 
@@ -410,14 +412,14 @@ GtkTreeTableAdapter >> updateMultiSelection [
 			ifFalse: [ w beSingleSelectionMode ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkTreeTableAdapter >> updatePresenterSelection [
 	
 	self innerWidgetDo: [ :w |
 		self rowsSelected: w allSelected ]
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkTreeTableAdapter >> updateRoots [
 
 	self innerWidgetDo: [ :w |
@@ -426,7 +428,7 @@ GtkTreeTableAdapter >> updateRoots [
 			during: [ self recreateStore: w generateColumns: false ] ]
 ]
 
-{ #category : #'private updating' }
+{ #category : 'private updating' }
 GtkTreeTableAdapter >> updateSelection [
 
 	self innerWidgetDo: [ :w | 
@@ -436,7 +438,7 @@ GtkTreeTableAdapter >> updateSelection [
 				during: [ self updateSelectionOf: w ] ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkTreeTableAdapter >> updateSelectionOf: gtkWidget [
 
 	GRunLoop defer: [ 
@@ -444,7 +446,7 @@ GtkTreeTableAdapter >> updateSelectionOf: gtkWidget [
 			do: [ :selectedPath | self selectItemIn: gtkWidget path: selectedPath ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTreeTableAdapter >> widgetClass [
 	
 	^ GtkTreeView

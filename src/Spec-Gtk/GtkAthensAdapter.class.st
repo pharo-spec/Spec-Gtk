@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkAthensAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkAthensAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAthensAdapter >> addModelTo: gtkDrawingArea [
 
 	super addModelTo: gtkDrawingArea.
@@ -22,26 +24,26 @@ GtkAthensAdapter >> addModelTo: gtkDrawingArea [
 		whenExtentChangedDo: [ :newExtent | self widget extent: newExtent ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAthensAdapter >> ensureCanAnswerEvents: gtkDrawingArea [
 
 	gtkDrawingArea canFocus: true.
 	gtkDrawingArea registerToAllEvents
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtkAthensAdapter >> newActionManager [
 
 	^ GtkAdapterActionDrawingAreaManager on: self
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 GtkAthensAdapter >> redraw [
 
 	self widgetDo: [ :w | w queueDraw ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAthensAdapter >> updateDrawBlock: aBlock [
 
 	self widgetDo: [ :w |
@@ -50,7 +52,7 @@ GtkAthensAdapter >> updateDrawBlock: aBlock [
 			queueDraw ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAthensAdapter >> widgetClass [
 
 	^ GtkBlockBasedDrawingArea 

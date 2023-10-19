@@ -2,12 +2,14 @@
 adapter to handle simple selections (maps a presenter selection with a gtk selection) 
 "
 Class {
-	#name : #GtkAdapterSingleSelection,
-	#superclass : #GtkAdapterSelection,
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#name : 'GtkAdapterSingleSelection',
+	#superclass : 'GtkAdapterSelection',
+	#category : 'Spec-Gtk-Adapter-ListView',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-ListView'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkAdapterSingleSelection >> newModel: aModel [ 
 
 	^ GtkSingleSelection new
@@ -16,7 +18,7 @@ GtkAdapterSingleSelection >> newModel: aModel [
 		yourself
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkAdapterSingleSelection >> updatePresenterSelection: position numItems: numItems [
 	| index |
 
@@ -26,7 +28,7 @@ GtkAdapterSingleSelection >> updatePresenterSelection: position numItems: numIte
 	self presenter selection selectIndex: index
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkAdapterSingleSelection >> updateSelectionFromPresenter [
 	| index |
 

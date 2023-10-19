@@ -1,16 +1,18 @@
 Class {
-	#name : #GtkButtonBarAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkButtonBarAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkButtonBarAdapter class >> defaultBorderWidth [
 
 	^ 5
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkButtonBarAdapter >> addModelTo: gtkWidget [
 	
 	self model isPlaceAtStart ifTrue: [ gtkWidget placeAtStart ].
@@ -21,7 +23,7 @@ GtkButtonBarAdapter >> addModelTo: gtkWidget [
 		gtkWidget packStart: each build ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkButtonBarAdapter >> newWidget [ 
 
 	^ GtkButtonBox newHorizontal

@@ -1,21 +1,23 @@
 Class {
-	#name : #GtkListAdapter,
-	#superclass : #GtkBaseListAdapter,
+	#name : 'GtkListAdapter',
+	#superclass : 'GtkBaseListAdapter',
 	#traits : 'GtkTTableAccessing - {#addColumns:to:}',
 	#classTraits : 'GtkTTableAccessing classTrait',
 	#instVars : [
 		'listColumn'
 	],
-	#category : #'Spec-Gtk-Adapter-List'
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 GtkListAdapter class >> adaptingAliases [
 
 	^ #(FastTableAdapter)
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkListAdapter >> addColumn: aTableColumn to: aGtkTreeView [ 
 	| addColumnVisitor |
 	
@@ -29,13 +31,13 @@ GtkListAdapter >> addColumn: aTableColumn to: aGtkTreeView [
 	aTableColumn acceptColumnVisitor: addColumnVisitor
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkListAdapter >> addColumnsTo: gtkWidget [
 
 	self error: 'Should not arrrive here. A list does not has columns'
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkListAdapter >> addModelTo: gtkList [
 
 	super addModelTo: gtkList.
@@ -72,19 +74,19 @@ GtkListAdapter >> addModelTo: gtkList [
 	self refreshWidgetHeaderTitleTo: gtkList
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkListAdapter >> isShowColumnHeaders [
 	
 	^ self innerWidget isHeadersVisible
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListAdapter >> listColumn [
 
 	^ listColumn ifNil: [ listColumn := self newListColumn ]
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkListAdapter >> newListColumn [
 	| column |
 		
@@ -113,7 +115,7 @@ GtkListAdapter >> newListColumn [
 	^ column
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListAdapter >> newTreeStoreOld [
 	| store |
 
@@ -139,14 +141,14 @@ GtkListAdapter >> newTreeStoreOld [
 	^ store
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 GtkListAdapter >> refreshWidgetHeaderTitle [
 	
 	self innerWidgetDo: [ :w |
 		self refreshWidgetHeaderTitleTo: w ]
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 GtkListAdapter >> refreshWidgetHeaderTitleTo: gtkTreeView [
 	
 	self model headerTitle ifNotNil: [
@@ -154,7 +156,7 @@ GtkListAdapter >> refreshWidgetHeaderTitleTo: gtkTreeView [
 	gtkTreeView headersVisible: self model headerTitle isNotNil
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkListAdapter >> setModelTo: gtkList [
 
 	gtkList model: self newTreeStore.
@@ -162,13 +164,13 @@ GtkListAdapter >> setModelTo: gtkList [
 	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListAdapter >> tableColumns [
 
 	^ { self listColumn }
 ]
 
-{ #category : #releasing }
+{ #category : 'releasing' }
 GtkListAdapter >> unsubscribe [ 
 
 	self widgetDo: [:w | w children

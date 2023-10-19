@@ -1,36 +1,38 @@
 Class {
-	#name : #GtkToolbarBaseButtonAdapter,
-	#superclass : #GtkBaseButtonAdapter,
-	#category : #'Spec-Gtk-Adapter-Toolbar'
+	#name : 'GtkToolbarBaseButtonAdapter',
+	#superclass : 'GtkBaseButtonAdapter',
+	#category : 'Spec-Gtk-Adapter-Toolbar',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Toolbar'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarBaseButtonAdapter >> addActionTo: gtkButton [
 
 	gtkButton connectClicked: [
 		self performAction ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkToolbarBaseButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
 	self addActionTo: gtkButton
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkToolbarBaseButtonAdapter >> hasIcon [
 
 	^ self presenter icon notNil and: [ self presenter owner displayMode hasIcon ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkToolbarBaseButtonAdapter >> hasLabel [
 
 	^ self presenter owner displayMode hasLabel
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkToolbarBaseButtonAdapter >> labelAndIcon [
 	| box |
 
@@ -53,13 +55,13 @@ GtkToolbarBaseButtonAdapter >> labelAndIcon [
 	^ box
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkToolbarBaseButtonAdapter >> newWidget [ 
 	
 	^ GtkButton new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkToolbarBaseButtonAdapter >> performAction [
 
 	self presenter performAction

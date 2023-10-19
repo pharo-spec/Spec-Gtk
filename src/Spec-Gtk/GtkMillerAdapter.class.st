@@ -1,6 +1,6 @@
 Class {
-	#name : #GtkMillerAdapter,
-	#superclass : #GtkLayoutAdapter,
+	#name : 'GtkMillerAdapter',
+	#superclass : 'GtkLayoutAdapter',
 	#instVars : [
 		'innerWidget',
 		'lastExtent',
@@ -9,16 +9,18 @@ Class {
 		'keepShowingPage',
 		'firstShowingWidget'
 	],
-	#category : #'Spec-Gtk-Layout-Box'
+	#category : 'Spec-Gtk-Layout-Box',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Box'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 GtkMillerAdapter >> add: aPresenter [
 
 	self add: aPresenter constraints: SpLayoutConstraints new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> add: aPresenter constraints: constraints [
 	
 	aPresenter owner: self model. 
@@ -37,14 +39,14 @@ GtkMillerAdapter >> add: aPresenter constraints: constraints [
 		self scrollToShowLastPage ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 	
 	^ childWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> applyLayout: aLayout [
 	"build of widget was differed up to here (to know what is the direction)"
 
@@ -75,7 +77,7 @@ GtkMillerAdapter >> applyLayout: aLayout [
 			ifFalse: [ self disableHScrollBar ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
@@ -91,20 +93,20 @@ GtkMillerAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget 
 	^ gtkWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> childrenWidgets [
 	
 	^ innerWidget children
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> disableHScrollBar [
 
 	keepShowingPage := true.
 	self widgetDo: [ :w | w hScrollBar beNotVisible ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> doScrollToShow: aWidget [
 	| pos |
 
@@ -119,39 +121,39 @@ GtkMillerAdapter >> doScrollToShow: aWidget [
 	self widget vAdjustment value: pos y asFloat
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> enableHScrollBar [
 
 	keepShowingPage := true.
 	self widgetDo: [ :w | w hScrollBar show ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkMillerAdapter >> initialize [
 
 	super initialize.
 	realised := false
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkMillerAdapter >> innerWidget [
 
 	^ innerWidget
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkMillerAdapter >> newHorizontal [
 
 	^ GtkBox newHorizontal
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkMillerAdapter >> newVertical [
 
 	^ GtkBox newVertical
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> recalculatePageHeights [
 	| newHeight widgets height |
 
@@ -166,7 +168,7 @@ GtkMillerAdapter >> recalculatePageHeights [
 	widgets first sizeRequest: (widgets first preferredSizeMinimum x)@newHeight
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> recalculatePageWidths [
 	| newWidth widgets width |
 
@@ -182,7 +184,7 @@ GtkMillerAdapter >> recalculatePageWidths [
 	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> recalculatePages [
 
 	self widget ifNil: [ ^ self ].
@@ -197,7 +199,7 @@ GtkMillerAdapter >> recalculatePages [
 		lastPageSize := self childrenWidgets size ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkMillerAdapter >> remove: aPresenter [
 	| childWidget |
 
@@ -209,7 +211,7 @@ GtkMillerAdapter >> remove: aPresenter [
 			self scrollToShowLastPage ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> scrollToShow: aWidget [
 
 	realised ifFalse: [ ^ self ].
@@ -230,7 +232,7 @@ GtkMillerAdapter >> scrollToShow: aWidget [
 	] asTask schedule: TKTNewProcessTaskRunner new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> scrollToShowLastPage [
 
 	realised ifFalse: [ ^ self ].
@@ -240,7 +242,7 @@ GtkMillerAdapter >> scrollToShowLastPage [
 	self scrollToShow: innerWidget children last
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkMillerAdapter >> selectPage: aNumber [
 	| child |
 
@@ -250,7 +252,7 @@ GtkMillerAdapter >> selectPage: aNumber [
 	self widgetDo: [ :w | self scrollToShow: child ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> toggleVisible: isVisible [
 
 	isVisible 
@@ -258,7 +260,7 @@ GtkMillerAdapter >> toggleVisible: isVisible [
 		ifFalse: [ widget beNotVisible ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkMillerAdapter >> widgetResized [
 
 	self recalculatePages.

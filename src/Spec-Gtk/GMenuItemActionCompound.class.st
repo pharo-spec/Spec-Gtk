@@ -1,16 +1,18 @@
 Class {
-	#name : #GMenuItemActionCompound,
-	#superclass : #Object,
+	#name : 'GMenuItemActionCompound',
+	#superclass : 'Object',
 	#instVars : [
 		'presenter',
 		'menuItem',
 		'action',
 		'actionName'
 	],
-	#category : #'Spec-Gtk-Adapter-Menu'
+	#category : 'Spec-Gtk-Adapter-Menu',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Menu'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GMenuItemActionCompound class >> newPresenter: aPresenter action: aName [
 
 	^ self basicNew 
@@ -18,19 +20,19 @@ GMenuItemActionCompound class >> newPresenter: aPresenter action: aName [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuItemActionCompound >> action [
 
 	^ action
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuItemActionCompound >> actionName [
 
 	^ actionName
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GMenuItemActionCompound >> build [
 
 	"menu item"
@@ -54,7 +56,7 @@ GMenuItemActionCompound >> build [
 	self halt
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GMenuItemActionCompound >> initializePresenter: aPresenter action: aName [
 
 	presenter := aPresenter.
@@ -63,26 +65,26 @@ GMenuItemActionCompound >> initializePresenter: aPresenter action: aName [
 	self build
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuItemActionCompound >> menuItem [
 
 	^ menuItem
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GMenuItemActionCompound >> presenter [
 
 	^ presenter
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GMenuItemActionCompound >> updateIcon [
 	
 	GRunLoop defer: [ 
 		menuItem icon: self presenter icon asGdkPixbuf ]
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 GMenuItemActionCompound >> updateName [
 	
 	GRunLoop defer: [ 

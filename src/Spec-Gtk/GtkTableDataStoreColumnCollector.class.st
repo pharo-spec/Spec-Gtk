@@ -4,15 +4,17 @@
 A visitor to add columns (*class:GtkTreeDataColumn*) to a *class:GtkTreeDataStore*
 "
 Class {
-	#name : #GtkTableDataStoreColumnCollector,
-	#superclass : #GtkTableColumnVisitor,
+	#name : 'GtkTableDataStoreColumnCollector',
+	#superclass : 'GtkTableColumnVisitor',
 	#instVars : [
 		'store'
 	],
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableDataStoreColumnCollector >> addAlignmentColumn: aTableColumn [
 
 	aTableColumn displayAlignment ifNil: [ ^ self ]. 
@@ -23,7 +25,7 @@ GtkTableDataStoreColumnCollector >> addAlignmentColumn: aTableColumn [
 			(aTableColumn displayAlignment cull: aClass) asXAlign ]).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableDataStoreColumnCollector >> addBackgroundColorColumn: aTableColumn [
 
 	aTableColumn displayBackgroundColor ifNil: [ ^ self ]. 
@@ -35,7 +37,7 @@ GtkTableDataStoreColumnCollector >> addBackgroundColorColumn: aTableColumn [
 				ifNotNil: [ :color | '#', (color asHexString) ] ]).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableDataStoreColumnCollector >> addBoldColumn: aTableColumn [
 
 	aTableColumn displayBold ifNil: [ ^ self ]. 
@@ -48,7 +50,7 @@ GtkTableDataStoreColumnCollector >> addBoldColumn: aTableColumn [
 				ifFalse: [ 400 "PANGO_WEIGHT_NORMAL" ] ]).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableDataStoreColumnCollector >> addColorColumn: aTableColumn [
 
 	aTableColumn displayColor ifNil: [ ^ self ]. 
@@ -60,7 +62,7 @@ GtkTableDataStoreColumnCollector >> addColorColumn: aTableColumn [
 				ifNotNil: [ :color | '#', (color asHexString) ] ]).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableDataStoreColumnCollector >> addItalicColumn: aTableColumn [
 
 	aTableColumn displayItalic ifNil: [ ^ self ]. 
@@ -73,7 +75,7 @@ GtkTableDataStoreColumnCollector >> addItalicColumn: aTableColumn [
 				ifFalse: [ 0 "PANGO_STYLE_NORMAL" ] ]).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableDataStoreColumnCollector >> addUnderlineColumn: aTableColumn [
 
 	aTableColumn displayUnderline ifNil: [ ^ self ]. 
@@ -87,33 +89,33 @@ GtkTableDataStoreColumnCollector >> addUnderlineColumn: aTableColumn [
 				ifFalse: [ 0 "PANGO_UNDERLINE_NONE" ] ]).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableDataStoreColumnCollector >> store [
 
 	^ store
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableDataStoreColumnCollector >> store: aStore [
 
 	store := aStore
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableDataStoreColumnCollector >> visitCheckboxColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataBooleanColumn on: aTableColumn).
 	self addAlignmentColumn: aTableColumn
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableDataStoreColumnCollector >> visitImageColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataPixbufColumn on: aTableColumn).
 	self addAlignmentColumn: aTableColumn	
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableDataStoreColumnCollector >> visitIndexColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataIndexColumn new 
@@ -122,14 +124,14 @@ GtkTableDataStoreColumnCollector >> visitIndexColumn: aTableColumn [
 	self addAlignmentColumn: aTableColumn		
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableDataStoreColumnCollector >> visitLinkColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataStringColumn on: aTableColumn).
 	self addAlignmentColumn: aTableColumn	
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableDataStoreColumnCollector >> visitStringColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataStringColumn on: aTableColumn).

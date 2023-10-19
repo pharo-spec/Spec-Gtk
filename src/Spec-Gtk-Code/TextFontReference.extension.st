@@ -1,6 +1,6 @@
-Extension { #name : #TextFontReference }
+Extension { #name : 'TextFontReference' }
 
-{ #category : #'*Spec-Gtk-Code' }
+{ #category : '*Spec-Gtk-Code' }
 TextFontReference >> acceptTag: aTag [
 	aTag
 		fontFamily: font familyName 

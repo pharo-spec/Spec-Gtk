@@ -2,15 +2,17 @@
 Gtk adapter for `SpDropDownPresenter`
 "
 Class {
-	#name : #GtkDropDownAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkDropDownAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'deferredAction'
 	],
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : 'Spec-Gtk-Adapter-ListView',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-ListView'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDropDownAdapter >> addModelTo: gtkDropDown [
 
 	super addModelTo: gtkDropDown.
@@ -31,14 +33,14 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDropDownAdapter >> doInitializationDeferredActions [
 
 	deferredAction ifNil: [ ^ self ].
 	deferredAction ensure: [ deferredAction := nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDropDownAdapter >> elementAt: index [
 	| item |
 
@@ -46,39 +48,39 @@ GtkDropDownAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkDropDownAdapter >> newItemFactory [
 
 	^ GtkListViewAdapterItemFactory newPresenter: self presenter
 
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkDropDownAdapter >> newStore [
 	
 	^ GtkListViewAdapterDataStore newPresenter: self presenter
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkDropDownAdapter >> refreshList [
 
 	self innerWidgetDo: [ :w |
 		w model: self newStore ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDropDownAdapter >> selectIndex: anIndex [
 
 	self innerWidgetDo: [ :w | w select: anIndex - 1]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDropDownAdapter >> setDeferredAction: aBlock [
 
 	deferredAction := aBlock
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkDropDownAdapter >> updatePresenterSelectionFromGtk [
 	
 	self backendUpdatingDo: [
@@ -87,7 +89,7 @@ GtkDropDownAdapter >> updatePresenterSelectionFromGtk [
 		self presenter selection selectIndex: index + 1 ]
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkDropDownAdapter >> updateSelectionFromPresenter [
 
 	self backendDetectCyclesDo: [ 
@@ -98,7 +100,7 @@ GtkDropDownAdapter >> updateSelectionFromPresenter [
 				ifTrue: [ w select: index - 1 ] ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDropDownAdapter >> widgetClass [
 
 	^ GtkDropDown

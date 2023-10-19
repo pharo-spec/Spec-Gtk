@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkListViewAdapterItemFactory,
-	#superclass : #GtkListViewAdapterBaseFactory,
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#name : 'GtkListViewAdapterItemFactory',
+	#superclass : 'GtkListViewAdapterBaseFactory',
+	#category : 'Spec-Gtk-Adapter-ListView',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-ListView'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapterItemFactory >> bind: listItem to: anObject [
 	| child |
 
@@ -16,7 +18,7 @@ GtkListViewAdapterItemFactory >> bind: listItem to: anObject [
 		value: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapterItemFactory >> setup: listItem [
 	| child |
 

@@ -1,26 +1,28 @@
 Class {
-	#name : #GtkTableColumnVisitor,
-	#superclass : #Object,
+	#name : 'GtkTableColumnVisitor',
+	#superclass : 'Object',
 	#instVars : [
 		'columns',
 		'flattenColumns'
 	],
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> columns [
 
 	^ columns
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> columns: aCollection [
 
 	columns := aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> flattenColumns [
 
 	flattenColumns ifNil: [ 
@@ -29,21 +31,21 @@ GtkTableColumnVisitor >> flattenColumns [
 	^ flattenColumns
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkTableColumnVisitor >> initialize [
 
 	super initialize.
 	self resetColumnIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> nextColumnIndex [
 
 	self flag: #REMOVE.
 	"columnIndex := columnIndex + 1"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> obtainFlattenColumns: aCollection [
 	
 	self 
@@ -52,7 +54,7 @@ GtkTableColumnVisitor >> obtainFlattenColumns: aCollection [
 	^ aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> obtainFlattenColumns: columnsCollection in: aCollection [
 
 	columnsCollection do: [ :each |
@@ -62,60 +64,60 @@ GtkTableColumnVisitor >> obtainFlattenColumns: columnsCollection in: aCollection
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> prevColumnIndex [
 
 	self flag: #REMOVE.
 	"columnIndex := columnIndex - 1"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnVisitor >> resetColumnIndex [
 
 	self flag: #REMOVE.
 	"columnIndex := 0"
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visit: aTableColumn [
 
 	aTableColumn acceptColumnVisitor: self.
 	self nextColumnIndex
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visitAll: aCollection [
 
 	aCollection do: [ :each |
 		self visit: each ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visitCheckboxColumn: aTableColumn [
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visitCompositeColumn: aTableColumn [
 	
 	aTableColumn columns do: [ :each |
 		self visit: each  ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visitImageColumn: aTableColumn [
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visitIndexColumn: aTableColumn [
 	
 	^ self visitStringColumn: aTableColumn
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visitLinkColumn: aColumn [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnVisitor >> visitStringColumn: aTableColumn [
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #TextColor }
+Extension { #name : 'TextColor' }
 
-{ #category : #'*Spec-Gtk-Code' }
+{ #category : '*Spec-Gtk-Code' }
 TextColor >> acceptTag: aTag [
 
 	aTag foreground: self color

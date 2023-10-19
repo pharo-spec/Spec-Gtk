@@ -1,17 +1,19 @@
 Class {
-	#name : #GtkScrollableAdapter,
-	#superclass : #GtkLayoutAdapter,
-	#category : #'Spec-Gtk-Layout-Box'
+	#name : 'GtkScrollableAdapter',
+	#superclass : 'GtkLayoutAdapter',
+	#category : 'Spec-Gtk-Layout-Box',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Box'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkScrollableAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 
 	^ childWidget
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkScrollableAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 
  	layout vAlign
@@ -20,14 +22,14 @@ GtkScrollableAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 		ifNotNil: [ :align | gtkWidget hAlign: align asGtkAlign ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkScrollableAdapter >> applyLayout: aLayout [
 
 	widget := GtkScrolledWindow new.
 	self connectToEvents: aLayout
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkScrollableAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
@@ -37,7 +39,7 @@ GtkScrollableAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWid
 	^ gtkWidget
 ]
 
-{ #category : #scrolling }
+{ #category : 'scrolling' }
 GtkScrollableAdapter >> scrollTo: aPoint [
 
 	self widgetDo: [ :w |

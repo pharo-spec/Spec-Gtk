@@ -1,6 +1,6 @@
-Extension { #name : #SpCollectionListModel }
+Extension { #name : 'SpCollectionListModel' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpCollectionListModel >> unsubscribe: anObject [
 
 	self announcer unsubscribe: anObject

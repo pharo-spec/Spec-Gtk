@@ -1,6 +1,6 @@
-Extension { #name : #SpTPresenterBuilder }
+Extension { #name : 'SpTPresenterBuilder' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpTPresenterBuilder >> newGtkWidget [
 
 	^ self instantiate: SpGtkWidgetPresenter

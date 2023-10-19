@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkActionBarAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkActionBarAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkActionBarAdapter >> addModelTo: gtkWidget [
 	
 	(self itemsAt: #start) 
@@ -13,7 +15,7 @@ GtkActionBarAdapter >> addModelTo: gtkWidget [
 		reverseDo: [ :each | gtkWidget packEnd: each build ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkActionBarAdapter >> itemsAt: placeSymbol [
 
 	^ self model items 
@@ -22,7 +24,7 @@ GtkActionBarAdapter >> itemsAt: placeSymbol [
 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkActionBarAdapter >> widgetClass [
 
 	^ GtkActionBar

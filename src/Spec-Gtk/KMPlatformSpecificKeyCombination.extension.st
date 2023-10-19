@@ -1,6 +1,6 @@
-Extension { #name : #KMPlatformSpecificKeyCombination }
+Extension { #name : 'KMPlatformSpecificKeyCombination' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 KMPlatformSpecificKeyCombination >> spGtkCurrentCharacter [
 
 	^ (self platform = #all or: [ self platform = OSPlatform current platformFamily ])

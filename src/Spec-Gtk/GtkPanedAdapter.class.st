@@ -3,22 +3,24 @@ I'm an adapter for Paned Layouts.
 A paned layout will split (horizontally or vertically) a panel and allow its resize. 
 "
 Class {
-	#name : #GtkPanedAdapter,
-	#superclass : #GtkLayoutAdapter,
+	#name : 'GtkPanedAdapter',
+	#superclass : 'GtkLayoutAdapter',
 	#instVars : [
 		'initializationDeferredAction'
 	],
-	#category : #'Spec-Gtk-Layout-Box'
+	#category : 'Spec-Gtk-Layout-Box',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Box'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 
 	^ childWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> applyLayout: aLayout [
 
 	widget := aLayout direction newWidgetOn: self.
@@ -32,7 +34,7 @@ GtkPanedAdapter >> applyLayout: aLayout [
 	widget wideHandle: true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget position |
 
@@ -71,7 +73,7 @@ GtkPanedAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	^ gtkWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> calculatePercentAtDirectionOf: aWidget extent: aPoint [
 	| pos |
 
@@ -81,7 +83,7 @@ GtkPanedAdapter >> calculatePercentAtDirectionOf: aWidget extent: aPoint [
 	^ (pos * layout positionOfSlider) asInteger
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> doInitializationDeferredActions [
 
 	initializationDeferredAction ifNil: [ ^ self ].
@@ -89,25 +91,25 @@ GtkPanedAdapter >> doInitializationDeferredActions [
 		initializationDeferredAction := nil ].
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkPanedAdapter >> newHorizontal [
 
 	^ GtkPaned newHorizontal
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkPanedAdapter >> newVertical [
 
 	^ GtkPaned newVertical
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> setInitializationDeferredAction: aBlock [
 
 	initializationDeferredAction := aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> setPosition: aNumber to: aWidget [
 
 	aWidget position: (aNumber < 1 
@@ -119,7 +121,7 @@ GtkPanedAdapter >> setPosition: aNumber to: aWidget [
 			aNumber ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPanedAdapter >> setPositionDeferred: aNumber to: aWidget [
 	"executes the sizing in deferred way (once the widget receives the allocated signal, 
 	 marking the widget has been asigned bounds"

@@ -1,18 +1,20 @@
 Class {
-	#name : #GtkAbstractListAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkAbstractListAdapter',
+	#superclass : 'GtkAdapter',
 	#traits : 'GtkTDisconnectSelectionEvents + GtkTSortableColumns',
 	#classTraits : 'GtkTDisconnectSelectionEvents classTrait + GtkTSortableColumns classTrait',
-	#category : #'Spec-Gtk-Adapter-List'
+	#category : 'Spec-Gtk-Adapter-List',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-List'
 }
 
-{ #category : #events }
+{ #category : 'events' }
 GtkAbstractListAdapter >> doRefreshList: gtkWidget [
 
 	gtkWidget model: self newTreeStore
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAbstractListAdapter >> elementAt: index [
 	| item |
 
@@ -20,13 +22,13 @@ GtkAbstractListAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAbstractListAdapter >> newTreeStore [
 
 	self subclassResponsibility
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 GtkAbstractListAdapter >> refreshList [
 	
 	self innerWidgetDo: [ :w |
@@ -35,7 +37,7 @@ GtkAbstractListAdapter >> refreshList [
 			during: [ self doRefreshList: w ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAbstractListAdapter >> refreshWidgetSelection [
 	| rowIndexes selection |
 
@@ -54,20 +56,20 @@ GtkAbstractListAdapter >> refreshWidgetSelection [
 				ifEmpty: [ self innerWidget selection unselectAll ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractListAdapter >> resetSelection [
 
 	self innerWidget selection unselectAll
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkAbstractListAdapter >> scrollToSelectionIfNeeded: index [
 
 	self innerWidgetDo: [ :w |
 		w scrollToPath: { index } ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkAbstractListAdapter >> selectIndex: anInteger [ 
 	
 	self innerWidgetDo: [ :w |
@@ -79,7 +81,7 @@ GtkAbstractListAdapter >> selectIndex: anInteger [
 				self resetSelection ] ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractListAdapter >> takeKeyboardFocus [
 	| needToCleanUP |
 
@@ -96,7 +98,7 @@ GtkAbstractListAdapter >> takeKeyboardFocus [
 			self doTakeKeyboardFocus ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkAbstractListAdapter >> widgetClass [
 	
 	^ GtkTreeView

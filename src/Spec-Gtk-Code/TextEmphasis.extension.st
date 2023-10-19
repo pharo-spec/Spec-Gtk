@@ -1,16 +1,16 @@
-Extension { #name : #TextEmphasis }
+Extension { #name : 'TextEmphasis' }
 
-{ #category : #'*Spec-Gtk-Code' }
+{ #category : '*Spec-Gtk-Code' }
 TextEmphasis >> acceptTag: aTag [
 	aTag perform: self attributeSelector 
 ]
 
-{ #category : #'*Spec-Gtk-Code' }
+{ #category : '*Spec-Gtk-Code' }
 TextEmphasis >> attributeSelector [ 
 	^ self attributeSelectors at: emphasisCode 
 ]
 
-{ #category : #'*Spec-Gtk-Code' }
+{ #category : '*Spec-Gtk-Code' }
 TextEmphasis >> attributeSelectors [
 	^  {   	
 		1	-> #beBold.

@@ -1,22 +1,24 @@
 Class {
-	#name : #GtkTableColumnBuilder,
-	#superclass : #GtkTableColumnVisitor,
+	#name : 'GtkTableColumnBuilder',
+	#superclass : 'GtkTableColumnVisitor',
 	#instVars : [
 		'model',
 		'view',
 		'sortColumnId',
 		'resizable'
 	],
-	#category : #'Spec-Gtk-Adapter-Table'
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkTableColumnBuilder class >> on: aModel [
 
 	^ self new model: aModel
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableColumnBuilder >> columnEdited: aTableColumn path: path text: text [
 	| node iter |
 	
@@ -33,30 +35,30 @@ GtkTableColumnBuilder >> columnEdited: aTableColumn path: path text: text [
 		putString: (aTableColumn readObject: node)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnBuilder >> columnIndexOf: aTableColumn [
 
 	^ (self store indexOf: aTableColumn) - 1
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkTableColumnBuilder >> isResizable [
 
 	^ resizable ifNil: [ self model isResizable ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnBuilder >> model [
 
 	^ model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnBuilder >> model: anObject [
 	model := anObject
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private factory' }
 GtkTableColumnBuilder >> newColumnFor: aTableColumn [
 	| column |
 
@@ -70,7 +72,7 @@ GtkTableColumnBuilder >> newColumnFor: aTableColumn [
 	^ column
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private factory' }
 GtkTableColumnBuilder >> newColumnPackerFor: column [
 
 	^ GtkTableColumnPacker new 
@@ -80,41 +82,41 @@ GtkTableColumnBuilder >> newColumnPackerFor: column [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableColumnBuilder >> nodeFromPath: path [
 	
 	^ self model itemAt: 	((path substrings: ':') first asNumber + 1)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnBuilder >> resizable: aBoolean [ 
 
 	resizable := aBoolean
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTableColumnBuilder >> store [
 
 	^ self view model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnBuilder >> view [
 	^ view
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTableColumnBuilder >> view: anObject [
 	view := anObject
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnBuilder >> visitCheckboxColumn: aTableColumn [
 	
 	self visitStringColumn: aTableColumn
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnBuilder >> visitCompositeColumn: aTableColumn [
 	| column packer |
 	
@@ -131,19 +133,19 @@ GtkTableColumnBuilder >> visitCompositeColumn: aTableColumn [
 	self view appendColumn: column
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnBuilder >> visitImageColumn: aTableColumn [
 	
 	self visitStringColumn: aTableColumn
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnBuilder >> visitLinkColumn: aColumn [
 
 	self visitStringColumn: aColumn
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTableColumnBuilder >> visitStringColumn: aTableColumn [
 	| column |
 

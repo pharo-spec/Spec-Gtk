@@ -1,64 +1,66 @@
 Class {
-	#name : #GtkCodeCompletionEngine,
-	#superclass : #Object,
+	#name : 'GtkCodeCompletionEngine',
+	#superclass : 'Object',
 	#instVars : [
 		'scripting',
 		'completionClass',
 		'doItContext',
 		'doItRequestor'
 	],
-	#category : #'Spec-Gtk-Code-Base'
+	#category : 'Spec-Gtk-Code-Base',
+	#package : 'Spec-Gtk-Code',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> completionClass [
 
 	^ completionClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> completionClass: anObject [
 
 	completionClass := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> doItContext [
 
 	^ doItContext
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> doItContext: aContext [
 
 	doItContext := aContext
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> doItRequestor [
 
 	^ doItRequestor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> doItRequestor: aRequestor [
 
 	doItRequestor := aRequestor
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkCodeCompletionEngine >> isScripting [
 
 	^ scripting
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> scripting: aBoolean [ 
 
 	scripting := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkCodeCompletionEngine >> variableBindingNames [
 
 	^ self doItRequestor 

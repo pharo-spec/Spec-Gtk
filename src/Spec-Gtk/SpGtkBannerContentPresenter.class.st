@@ -2,42 +2,44 @@
 A simple content for `SpGtkBannerPresenter`.
 "
 Class {
-	#name : #SpGtkBannerContentPresenter,
-	#superclass : #SpPresenter,
+	#name : 'SpGtkBannerContentPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'messageLabel',
 		'closeButton',
 		'showTime',
 		'process'
 	],
-	#category : #'Spec-Gtk-Adapter-Window'
+	#category : 'Spec-Gtk-Adapter-Window',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Window'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkBannerContentPresenter class >> defaultShowTime [
 
 	^ 5 seconds
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerContentPresenter >> beError [
 
 	self addStyle: 'error'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerContentPresenter >> beInformation [
 
 	self addStyle: 'info'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerContentPresenter >> beRequest [
 
 	self addStyle: 'request'
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 SpGtkBannerContentPresenter >> defaultLayout [
 
 	^ SpBoxLayout newLeftToRight
@@ -47,13 +49,13 @@ SpGtkBannerContentPresenter >> defaultLayout [
 		yourself
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 SpGtkBannerContentPresenter >> doClose [
 
 	self owner remove: self
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SpGtkBannerContentPresenter >> initializePresenters [
 
 	messageLabel := self newLabel.
@@ -66,31 +68,31 @@ SpGtkBannerContentPresenter >> initializePresenters [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerContentPresenter >> message: aString [
 
 	messageLabel label: aString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkBannerContentPresenter >> schedule: aTaskOrBlock [
 
 	process := aTaskOrBlock forkNamed: 'Banner'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerContentPresenter >> showTime [
 
 	^ showTime ifNil: [ self class defaultShowTime ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerContentPresenter >> showTime: aTime [
 
 	showTime := aTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkBannerContentPresenter >> startTimer [
 
 	self schedule: [
@@ -98,7 +100,7 @@ SpGtkBannerContentPresenter >> startTimer [
 		self doClose ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpGtkBannerContentPresenter >> terminateTimerProcess [
 
 	process ifNil: [ ^ self ].

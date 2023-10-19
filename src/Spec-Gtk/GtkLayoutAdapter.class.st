@@ -1,27 +1,29 @@
 Class {
-	#name : #GtkLayoutAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkLayoutAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'layout',
 		'changeLayoutSubscription',
 		'subscribedLayout'
 	],
-	#category : #'Spec-Gtk-Layout-Base'
+	#category : 'Spec-Gtk-Layout-Base',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Base'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkLayoutAdapter class >> isAbstract [ 
 
 	^ super isAbstract 
 		or: [ self = GtkLayoutAdapter ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLayoutAdapter >> adapterWasBuilt [
 	"hook to add after-build opeations (for example, initial status, etc.)"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLayoutAdapter >> add: aPresenter constraints: constraints [
 
 	aPresenter owner: self model. 
@@ -37,27 +39,27 @@ GtkLayoutAdapter >> add: aPresenter constraints: constraints [
 		childWidget data: aPresenter ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLayoutAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 
  	"for the moment, just Box Layout implements alignment. 
 	 keep this empty but ready for the future :)"
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> applyLayout: aLayout [
 
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> applyStyle: aWidget [
 
 	self presenter styles do: [ :each | 
 		aWidget addClass: each ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> applyVisibility [ 
 	
 	self presenter isVisible 
@@ -65,7 +67,7 @@ GtkLayoutAdapter >> applyVisibility [
 		ifFalse: [ widget beNotVisible ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> applyVisibility: gtkWidget [
 
 	self presenter isVisible
@@ -75,39 +77,39 @@ GtkLayoutAdapter >> applyVisibility: gtkWidget [
 		self updateVisibility: aValuable value ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: aPanel [ 
 
 	self subclassResponsibility
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLayoutAdapter >> build [
 	
 	^ self widget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLayoutAdapter >> buildWidget [
 	"We defer this until layout: (because then I will know what I have to create)"
 	
 	^ nil
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLayoutAdapter >> buildWithLayout: aSpecLayout [
 	"This provides some polymorphism with regular presenters to allow composition of layouts."
 	
 	^ self widget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLayoutAdapter >> buildWithSelector: aSelector [
  
 	^ self build
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLayoutAdapter >> buildWithSpec [
 	"This provides some polymorphism with regular presenters to allow composition of layouts."
 
@@ -119,7 +121,7 @@ GtkLayoutAdapter >> buildWithSpec [
 	^ self build
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkLayoutAdapter >> buildWithSpec: aSpec [
 	"This provides some polymorphism with regular presenters to allow composition of layouts."
 
@@ -131,7 +133,7 @@ GtkLayoutAdapter >> buildWithSpec: aSpec [
 	^ self buildWithLayout: aSpec
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> cleanupAfterReplacing [ 
 	
 	widget children do: [ :aChild |
@@ -139,7 +141,7 @@ GtkLayoutAdapter >> cleanupAfterReplacing [
 	widget := nil.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> connectToEvents: aLayout [
 
 	self presenter whenVisibleChangedDo: [ 	
@@ -156,7 +158,7 @@ GtkLayoutAdapter >> connectToEvents: aLayout [
 	subscribedLayout := aLayout.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> deferredLayout: aLayout [
 
 	layout := aLayout.
@@ -168,14 +170,14 @@ GtkLayoutAdapter >> deferredLayout: aLayout [
 	self addActionsTo: widget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> ensureAllChildrenAreRetained [
 	
 	self widget children do: [ :each |
 		self ensureRetained: each ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> ensureRetained: aWidget [
 	"When removing a widget from a container, GTK3 will decrement the reference count, 
 	 maybe causing a GC of the widget removed. Since we don't know what will happen with this 
@@ -186,26 +188,26 @@ GtkLayoutAdapter >> ensureRetained: aWidget [
 	aWidget ensureObjectRefAndAutoRelease
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkLayoutAdapter >> isSpLayout [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLayoutAdapter >> layout [
 
 	^ layout
 ]
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkLayoutAdapter >> layout: aLayout [
 
 	GRunLoop defer: [
 		self deferredLayout: aLayout ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkLayoutAdapter >> rebuild [ 
 	| oldChildren |
 
@@ -229,7 +231,7 @@ GtkLayoutAdapter >> rebuild [
 	oldChildren do: [ :each | each objectUnref ].
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 GtkLayoutAdapter >> remove: aPresenter [
 
 	^ self widgetDo: [ :w |
@@ -239,7 +241,7 @@ GtkLayoutAdapter >> remove: aPresenter [
 		w remove: widgetToRemove ]
 ]
 
-{ #category : #'accessing children' }
+{ #category : 'accessing children' }
 GtkLayoutAdapter >> removeAll [
 
 	self widgetDo: [ :w | 
@@ -247,14 +249,14 @@ GtkLayoutAdapter >> removeAll [
 		w removeAll ]
 ]
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkLayoutAdapter >> removeSubWidgets [
 
 	self widgetDo: [ :w |
 		w removeAll ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 
 	GRunLoop defer: [ 
@@ -267,7 +269,7 @@ GtkLayoutAdapter >> replaceLayoutWith: aLayout [
 		self presenter owner adapter rebuild ]
 ]
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkLayoutAdapter >> takeKeyboardFocus [
 	| presenters |
 
@@ -279,7 +281,7 @@ GtkLayoutAdapter >> takeKeyboardFocus [
 		ifFound: [ :aPresenter | aPresenter takeKeyboardFocus ]
 ]
 
-{ #category : #releasing }
+{ #category : 'releasing' }
 GtkLayoutAdapter >> unsubscribe [ 
 	
 	self unsubscribed ifTrue: [ ^ self ].
@@ -295,13 +297,13 @@ GtkLayoutAdapter >> unsubscribe [
 	super unsubscribe.
 ]
 
-{ #category : #releasing }
+{ #category : 'releasing' }
 GtkLayoutAdapter >> unsubscribed [ 
 
 	^ unsubscribed ifNil: [ unsubscribed := false ]
 ]
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkLayoutAdapter >> updateBorderWidth [
 
 	self widgetDo: [ :w | w margin: layout borderWidth ]

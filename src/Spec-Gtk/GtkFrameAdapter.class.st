@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkFrameAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkFrameAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkFrameAdapter >> addModelTo: gtkFrame [
 
 	gtkFrame label: self presenter label.
@@ -16,7 +18,7 @@ GtkFrameAdapter >> addModelTo: gtkFrame [
 		gtkFrame child: self presenterWidget ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkFrameAdapter >> presenterWidget [
 
 	^ self presenter presenter adapter 
@@ -24,7 +26,7 @@ GtkFrameAdapter >> presenterWidget [
 		ifNil: [ self presenter presenter build ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkFrameAdapter >> widgetClass [
 
 	^ GtkFrame

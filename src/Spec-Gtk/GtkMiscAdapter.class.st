@@ -1,19 +1,21 @@
 Class {
-	#name : #GtkMiscAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkMiscAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'innerWidget'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkMiscAdapter >> innerWidget [
 
 	^ innerWidget ifNil: [ super innerWidget ]
 ]
 
-{ #category : #'event installing' }
+{ #category : 'event installing' }
 GtkMiscAdapter >> installEvent: anEvent [
 
 	"If innerWidget is nil, it means component needs to be wrapped"
@@ -25,13 +27,13 @@ GtkMiscAdapter >> installEvent: anEvent [
 	super installEvent: anEvent
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkMiscAdapter >> widget: aWidget [
 
 	widget := aWidget
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMiscAdapter >> wrapWidget: aWidget [
 	| eventBox |
 

@@ -1,6 +1,6 @@
-Extension { #name : #SpIndeterminatedProgressBarState }
+Extension { #name : 'SpIndeterminatedProgressBarState' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpIndeterminatedProgressBarState >> applyTo: anAdapter [
 
 	^ anAdapter indeterminateValue

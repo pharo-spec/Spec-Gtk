@@ -1,66 +1,68 @@
 Class {
-	#name : #SpecGtkBackend,
-	#superclass : #SpApplicationBackend,
-	#category : #'Spec-Gtk-Base'
+	#name : 'SpecGtkBackend',
+	#superclass : 'SpApplicationBackend',
+	#category : 'Spec-Gtk-Base',
+	#package : 'Spec-Gtk',
+	#tag : 'Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpecGtkBackend class >> backendName [
 	
 	^ #Gtk
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpecGtkBackend >> adapterBindingsClass [
 
 	^ GtkAdapterBindings
 ]
 
-{ #category : #'clipboard handling' }
+{ #category : 'clipboard handling' }
 SpecGtkBackend >> copyToClipboard: aString [
 
 	GRunLoop defer: [
 		GdkClipboard primary text: aString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpecGtkBackend >> defaultConfigurationFor: anApplication [
 
 	^ anApplication defaultConfigurationForGtk
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpecGtkBackend >> defer: aBlock [ 
 
 	GRunLoop defer: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpecGtkBackend >> forceDefer: aBlock [ 
 
 	GRunLoop forceDefer: aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SpecGtkBackend >> initialize [
 
 	GtkEngine ensureRunning.
 	super initialize
 ]
 
-{ #category : #'ui notifying' }
+{ #category : 'ui notifying' }
 SpecGtkBackend >> notifyError: aSpecNotification [
 
 	GtkErrorDialog runMessage: aSpecNotification message
 ]
 
-{ #category : #'ui notifying' }
+{ #category : 'ui notifying' }
 SpecGtkBackend >> notifyInfo: aSpecNotification [
 
 	GtkInformDialog runMessage: aSpecNotification message
 ]
 
-{ #category : #'ui dialogs' }
+{ #category : 'ui dialogs' }
 SpecGtkBackend >> selectDirectoryTitle: aString [
 	| dialog |
 
@@ -74,14 +76,14 @@ SpecGtkBackend >> selectDirectoryTitle: aString [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpecGtkBackend >> setCursor: cursor toAll: aCollection [ 
 
 	aCollection do: [ :each | 
 			each adapter widget gdkWindow cursor: cursor ].
 ]
 
-{ #category : #ui }
+{ #category : 'ui' }
 SpecGtkBackend >> showWaitCursorWhile: aBlock inApplication: anApplication [
 
 	self forceDefer: [

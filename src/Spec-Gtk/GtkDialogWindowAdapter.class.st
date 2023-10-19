@@ -1,13 +1,15 @@
 Class {
-	#name : #GtkDialogWindowAdapter,
-	#superclass : #GtkWindowAdapter,
+	#name : 'GtkDialogWindowAdapter',
+	#superclass : 'GtkWindowAdapter',
 	#instVars : [
 		'runLoop'
 	],
-	#category : #'Spec-Gtk-Adapter-Window'
+	#category : 'Spec-Gtk-Adapter-Window',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Window'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 	| containerBox buttonBox |
 	
@@ -31,7 +33,7 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 
 ]
 
-{ #category : #'private building' }
+{ #category : 'private building' }
 GtkDialogWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 
 	super addDefaultKeyBindings: gtkWindow.
@@ -44,7 +46,7 @@ GtkDialogWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 			toWidget: gtkWindow
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 
 	"in dialogs, centering a window relative to a presenter would mean 
@@ -53,14 +55,14 @@ GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 	self widgetDo: [ :w | w transientTo: aWindowPresenter window ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDialogWindowAdapter >> closeFromSignal [
 
 	super closeFromSignal.
 	runLoop done
 ]
 
-{ #category : #'private building' }
+{ #category : 'private building' }
 GtkDialogWindowAdapter >> defaultFromKeyboard [
 
 	self presenter hasDefaultButton ifFalse: [ ^ self ].
@@ -70,7 +72,7 @@ GtkDialogWindowAdapter >> defaultFromKeyboard [
 		beOk
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkDialogWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 
 	"self model isCentered ifTrue: [ gtkWindow center ]."
@@ -79,7 +81,7 @@ GtkDialogWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpe
 		withSpecLayout: aSpec
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkDialogWindowAdapter >> newWidget [
 
 	^ GtkWindow new 
@@ -88,7 +90,7 @@ GtkDialogWindowAdapter >> newWidget [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 
 	runLoop := GtkContextRunLoop new.

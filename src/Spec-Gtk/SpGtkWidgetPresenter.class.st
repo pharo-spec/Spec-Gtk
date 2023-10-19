@@ -1,30 +1,32 @@
 Class {
-	#name : #SpGtkWidgetPresenter,
-	#superclass : #SpAbstractWidgetPresenter,
+	#name : 'SpGtkWidgetPresenter',
+	#superclass : 'SpAbstractWidgetPresenter',
 	#instVars : [
 		'widget'
 	],
-	#category : #'Spec-Gtk-Widgets'
+	#category : 'Spec-Gtk-Widgets',
+	#package : 'Spec-Gtk',
+	#tag : 'Widgets'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 SpGtkWidgetPresenter class >> adapterName [
 
 	^ #GtkWidgetAdapter
 ]
 
-{ #category : #documentation }
+{ #category : 'documentation' }
 SpGtkWidgetPresenter class >> documentFactoryMethodSelector [
 
 	^ #newGtkWidget
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkWidgetPresenter >> widget [
 	^ widget
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpGtkWidgetPresenter >> widget: anObject [
 	widget := anObject
 ]

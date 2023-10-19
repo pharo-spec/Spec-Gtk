@@ -1,13 +1,15 @@
 Class {
-	#name : #GtkStatusBarAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkStatusBarAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'contextName'
 	],
-	#category : #'Spec-Gtk-Adapter'
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkStatusBarAdapter >> addModelTo: gtkStatusBar [
 
 	self model message ifNotNil: [ :message | 
@@ -17,7 +19,7 @@ GtkStatusBarAdapter >> addModelTo: gtkStatusBar [
 	unsubscribed := false.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkStatusBarAdapter >> contextName [
 	"Answer a the current context name."
 	 
@@ -26,7 +28,7 @@ GtkStatusBarAdapter >> contextName [
 	^ contextName ifNil: [  contextName := UUID new asString ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkStatusBarAdapter >> popMessage [
 
 	unsubscribed ifTrue: [ ^ self ].
@@ -36,7 +38,7 @@ GtkStatusBarAdapter >> popMessage [
 			popMessage ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkStatusBarAdapter >> pushMessage [
 
 	unsubscribed ifTrue: [ ^ self ].
@@ -46,7 +48,7 @@ GtkStatusBarAdapter >> pushMessage [
 			pushMessage: self model message ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkStatusBarAdapter >> unsubscribe [ 
 
 	super unsubscribe.
@@ -54,7 +56,7 @@ GtkStatusBarAdapter >> unsubscribe [
 	unsubscribed := true.
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkStatusBarAdapter >> update: aSymbol [ 
 
 	aSymbol = #pushMessage ifTrue: [ self pushMessage ].
@@ -63,7 +65,7 @@ GtkStatusBarAdapter >> update: aSymbol [
 	^ super update: aSymbol
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkStatusBarAdapter >> widgetClass [
 
 	^ GtkStatusBar

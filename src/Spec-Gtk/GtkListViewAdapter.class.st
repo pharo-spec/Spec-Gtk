@@ -2,18 +2,20 @@
 Gtk adaptor for `SpListViewPresenter`.
 "
 Class {
-	#name : #GtkListViewAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkListViewAdapter',
+	#superclass : 'GtkAdapter',
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
 	#instVars : [
 		'deferredAction',
 		'selectionCompanion'
 	],
-	#category : #'Spec-Gtk-Adapter-ListView'
+	#category : 'Spec-Gtk-Adapter-ListView',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-ListView'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkListViewAdapter >> addModelTo: gtkListView [
 
 	super addModelTo: gtkListView.
@@ -43,7 +45,7 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 	self configureScrolling
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkListViewAdapter >> configureScrolling [
 	| vAlignment |
 
@@ -54,14 +56,14 @@ GtkListViewAdapter >> configureScrolling [
 		self scrollToSelectionIfNeeded: vAlignment desiredVisibleRow ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapter >> doInitializationDeferredActions [
 
 	deferredAction ifNil: [ ^ self ].
 	deferredAction ensure: [ deferredAction := nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkListViewAdapter >> elementAt: index [
 	| item |
 
@@ -69,19 +71,19 @@ GtkListViewAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkListViewAdapter >> newHeaderFactory [
 
 	^ GtkListViewAdapterHeaderFactory newPresenter: self presenter
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkListViewAdapter >> newItemFactory [
 
 	^ GtkListViewAdapterItemFactory newPresenter: self presenter
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkListViewAdapter >> newSelectionModel [
 	| selectionModel |
 
@@ -92,13 +94,13 @@ GtkListViewAdapter >> newSelectionModel [
 	^ selectionModel
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkListViewAdapter >> newStore [
 	
 	^ GtkListViewAdapterDataStore newPresenter: self presenter
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkListViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
@@ -109,7 +111,7 @@ GtkListViewAdapter >> refreshList [
 			w selectionModel: self newSelectionModel ] ]
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkListViewAdapter >> refreshWidgetSelection [
 
 	self flag: #TODO. "not sure this is needed?"
@@ -124,27 +126,27 @@ GtkListViewAdapter >> refreshWidgetSelection [
 			ifFalse: [ w selectionModel unselectAll ] ]"
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
 
 	self innerWidgetDo: [ :w |
 		w scrollToPosition: index ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapter >> selectionCompanion [
 
 	^ selectionCompanion ifNil: [ 
 		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkListViewAdapter >> setDeferredAction: aBlock [
 
 	deferredAction := aBlock
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkListViewAdapter >> updatePresenterSelection: position numItems: numItems [
 	
 	self backendUpdatingDo: [
@@ -153,14 +155,14 @@ GtkListViewAdapter >> updatePresenterSelection: position numItems: numItems [
 			numItems: numItems ]
 ]
 
-{ #category : #'private - updating' }
+{ #category : 'private - updating' }
 GtkListViewAdapter >> updateSelectionFromPresenter [
 
 	self backendDetectCyclesDo: [ 
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkListViewAdapter >> widgetClass [
 
 	^ GtkListView

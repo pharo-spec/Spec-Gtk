@@ -1,6 +1,6 @@
-Extension { #name : #CmUICommandGroupDisplayStrategy }
+Extension { #name : 'CmUICommandGroupDisplayStrategy' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 CmUICommandGroupDisplayStrategy >> appendGroup: aMenu label: aLabel to: parentMenu in: aVisitor [
 
 	self subclassResponsibility

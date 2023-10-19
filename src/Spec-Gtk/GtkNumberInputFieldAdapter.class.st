@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkNumberInputFieldAdapter,
-	#superclass : #GtkAbstractTextAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkNumberInputFieldAdapter',
+	#superclass : 'GtkAbstractTextAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNumberInputFieldAdapter >> addModelTo: gtkSpinButton [
 
 	"set this first because max/min and digits set may affect the value (and super 
@@ -26,7 +28,7 @@ GtkNumberInputFieldAdapter >> addModelTo: gtkSpinButton [
 		ifNotNil: [ :rate | gtkSpinButton climbRate: rate ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNumberInputFieldAdapter >> newWidget [ 
 
 	^ self widgetClass 
@@ -35,14 +37,14 @@ GtkNumberInputFieldAdapter >> newWidget [
 		digits: 0
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNumberInputFieldAdapter >> refreshText [
 	
 	self widgetDo: [ :w |
 		w value: self model number ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkNumberInputFieldAdapter >> setText: aStringOrNumber to: gtkWidget [
 
 	gtkWidget value: (aStringOrNumber isString 
@@ -50,14 +52,14 @@ GtkNumberInputFieldAdapter >> setText: aStringOrNumber to: gtkWidget [
 		ifFalse: [ aStringOrNumber ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkNumberInputFieldAdapter >> updatePresenterText: aString [
 
 	self backendUpdatingDo: [ 
 		self presenter text: aString ] 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkNumberInputFieldAdapter >> widgetClass [ 
 
 	^ GtkSpinButton

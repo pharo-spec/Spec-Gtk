@@ -1,6 +1,6 @@
 Class {
-	#name : #GtkWindowAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkWindowAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'infoArea',
 		'initialized',
@@ -15,23 +15,25 @@ Class {
 	#pools : [
 		'GdkWindowState'
 	],
-	#category : #'Spec-Gtk-Adapter-Window'
+	#category : 'Spec-Gtk-Adapter-Window',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Window'
 }
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> activate [
 
 	self widgetDo: [ :w |
 		w present ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> add: gtkBox toWindow: gtkWindow [
 
 	gtkWindow child: gtkBox
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 	
 	self flag: #TODO. "Take this from a configuration."
@@ -41,14 +43,14 @@ GtkWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 		toWidget: gtkWindow
 ]
 
-{ #category : #'private - deferring' }
+{ #category : 'private - deferring' }
 GtkWindowAdapter >> addDeferredAction: aBlock [
 
 	deferredActions ifNil: [ deferredActions := #() ].
 	deferredActions := deferredActions copyWith: aBlock
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkWindowAdapter >> addModelTo: gtkWindow [
 	"model is not added here but in #addPresenterIn:withSpecLayout:. 
 	 Spec windows may have just ONE presenter"
@@ -58,7 +60,7 @@ GtkWindowAdapter >> addModelTo: gtkWindow [
 		false  ]"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> addPresenterIn: gtkWindow withSpecLayout: aSpec [
 	
 	initialized := false.
@@ -68,25 +70,25 @@ GtkWindowAdapter >> addPresenterIn: gtkWindow withSpecLayout: aSpec [
 		self processDeferredActions ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkWindowAdapter >> addVisibleSettingsTo: gtkWidget [
 	"windows fo not have visibility settings, they are shown or hide"
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> announceClosed [
 
 	self presenter windowIsClosing.
 	self presenter windowClosed
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> announceOpened [
 
 	self model windowIsOpened
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> announceResized: newSize [
 	| windowSize |
 
@@ -106,7 +108,7 @@ GtkWindowAdapter >> announceResized: newSize [
 		yourself)	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> announceWillClose [
 	| ann |
 
@@ -117,13 +119,13 @@ GtkWindowAdapter >> announceWillClose [
 	^ ann canClose
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> beep [
 
 	self widgetDo: [ :w | w beep ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> centered [
 
 	"Gtk can't do that in fact (because this is a WM task, and gtk has no idea what WM the
@@ -135,7 +137,7 @@ GtkWindowAdapter >> centered [
 				ifFalse: [ w center ] ] ]"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 
 	'#centeredRelativeTo: This can''t be done in Gtk4' crTrace.
@@ -146,26 +148,26 @@ GtkWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 				relativeTo: aWindowPresenter ] ]"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> close [
 
 	self widgetDo: [ :w |
 		w close ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> closeFromKeyboard [
 
 	self presenter close
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> closeFromSignal [
 	"this is called from connectDestroy (just one time)"
 	self announceClosed
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> configureKeyBindings: gtkWindow [
 
 	dispatcher := GtkKMDispatcher on: self presenter.
@@ -181,7 +183,7 @@ GtkWindowAdapter >> configureKeyBindings: gtkWindow [
 							ifNil: [ false ] ] ] ]
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 
 	"add close events (delete is sent before)"
@@ -196,14 +198,14 @@ GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 		connectDefaultHeight: [ self announceResized: self widget defaultSize ]
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> contentWithSpecLayout: aSpec [
 
 	^ content ifNil: [ 
 		  content := self model presenter buildWithLayout: aSpec ]
 ]
 
-{ #category : #'private - deferring' }
+{ #category : 'private - deferring' }
 GtkWindowAdapter >> deferAction: aBlock [ 
 
 	initialized
@@ -211,7 +213,7 @@ GtkWindowAdapter >> deferAction: aBlock [
 		ifFalse: [ self addDeferredAction: aBlock ]
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 
 	self connectToGtkSignals: gtkWindow.
@@ -233,7 +235,7 @@ GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 	self add: contentBox toWindow: gtkWindow
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> delete [
 
 	self widgetDo: [ :w | 
@@ -241,7 +243,7 @@ GtkWindowAdapter >> delete [
 		self presenter application windowClosed: self ]
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> infoArea [
 
 	^ infoArea ifNil: [
@@ -250,26 +252,26 @@ GtkWindowAdapter >> infoArea [
 		infoArea ]
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 GtkWindowAdapter >> inform: aString [
 
 	self notifyInfo: aString
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkWindowAdapter >> initialize [
 
 	initialized := false.
 	super initialize
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> isDisplayed [ 
 
 	^ self widgetDo: [ :w | w isVisible ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> isMaximized [
 	| maximized |
 
@@ -277,14 +279,14 @@ GtkWindowAdapter >> isMaximized [
 	^ maximized ifNil: [ false ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> isMinimized [
 
 	^ self widgetDo: [ :w |
 		w surface state isMinimized ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> isTopWindow [
 
 	^ self widgetDo: [ :w |
@@ -293,13 +295,13 @@ GtkWindowAdapter >> isTopWindow [
 			ifNil: [ false ] ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> maximize [
 
 	self widgetDo: [ :w | w maximize ]
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> menuBarAccelInstalledOn: gtkWindow [
 
 	self halt. "replace addAcceleratorGroup"
@@ -310,13 +312,13 @@ GtkWindowAdapter >> menuBarAccelInstalledOn: gtkWindow [
 		menuBar ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> minimize [
 
 	self widgetDo: [ :w | w minimize ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkWindowAdapter >> newWidget [
 
 	^ GtkWindow new 
@@ -324,25 +326,25 @@ GtkWindowAdapter >> newWidget [
 		yourself
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 GtkWindowAdapter >> notifyError: aString [
 
 	self infoArea addError: aString
 ]
 
-{ #category : #notifying }
+{ #category : 'notifying' }
 GtkWindowAdapter >> notifyInfo: aString [
 
 	self infoArea addInfo: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> open [
 
 	self openWithDeferredAction: [ ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> openWithDeferredAction: aBlock [
  
 	self hasWidget ifFalse: [ ^ nil ].
@@ -353,7 +355,7 @@ GtkWindowAdapter >> openWithDeferredAction: aBlock [
 	aBlock value
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 	| windowContent |
 
@@ -374,7 +376,7 @@ GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 		ifTrue: [ gtkBox append: self statusBar ]
 ]
 
-{ #category : #'private - deferring' }
+{ #category : 'private - deferring' }
 GtkWindowAdapter >> processDeferredActions [
 
 	deferredActions ifNil: [ ^ self ].
@@ -382,7 +384,7 @@ GtkWindowAdapter >> processDeferredActions [
 	deferredActions := nil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> processInitializationDeferredActions [
 	
 	self presenter traversePresentersDo: [ :each | 
@@ -390,7 +392,7 @@ GtkWindowAdapter >> processInitializationDeferredActions [
 			anAdapter doInitializationDeferredActions ] ] 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkWindowAdapter >> rebuild [
 
 	contentBox beNotVisible.
@@ -406,33 +408,33 @@ GtkWindowAdapter >> rebuild [
 	contentBox beVisible
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkWindowAdapter >> resize: aPoint [
 
 	self widgetDo: [ :w | w defaultSize: aPoint ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> setDecorated: aBoolean [
 
 	self widgetDo: [ :w | w decorated: aBoolean ]
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> statusBar [
 
 	^ statusBar ifNil: [ statusBar := self model statusBar build ]
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkWindowAdapter >> subscribeDecorations [
 	self presenter whenDecorationsChangedDo: [ :aBoolean |
 		self setDecorated: aBoolean ].
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkWindowAdapter >> title: aString [ 
 
 	self widgetDo: [ :w | 
@@ -440,7 +442,7 @@ GtkWindowAdapter >> title: aString [
 			theString localizedForPresenter: self presenter]) ]
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 GtkWindowAdapter >> toolbar [ 
 
 	^ toolbar ifNil: [ toolbar  := self presenter toolbar build ]

@@ -1,6 +1,6 @@
-Extension { #name : #SpLayoutWidgetAlignment }
+Extension { #name : 'SpLayoutWidgetAlignment' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpLayoutWidgetAlignment >> asGtkAlign [
 
 	^ self subclassResponsibility

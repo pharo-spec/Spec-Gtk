@@ -1,13 +1,15 @@
 Class {
-	#name : #GtkTabAdapter,
-	#superclass : #GtkLayoutAdapter,
+	#name : 'GtkTabAdapter',
+	#superclass : 'GtkLayoutAdapter',
 	#instVars : [
 		'lastPage'
 	],
-	#category : #'Spec-Gtk-Layout-Box'
+	#category : 'Spec-Gtk-Layout-Box',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Box'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTabAdapter >> adapterWasBuilt [
 
 	layout children ifEmpty: [ ^ self ]. 
@@ -17,14 +19,14 @@ GtkTabAdapter >> adapterWasBuilt [
 			w currentPage: layout initialPageIndex ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTabAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 
 	^ childWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTabAdapter >> applyLayout: aLayout [
 
 	widget := GtkNotebook new.
@@ -39,7 +41,7 @@ GtkTabAdapter >> applyLayout: aLayout [
 		aLayout announce: (SpTabSelected newPresenter: aPage data) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTabAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 
 	| childWidget labelPresenter labelWidget page |
@@ -59,7 +61,7 @@ GtkTabAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	^ gtkWidget
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 GtkTabAdapter >> remove: aPresenter [
 
 	^ self widgetDo: [ :w |
@@ -69,7 +71,7 @@ GtkTabAdapter >> remove: aPresenter [
 		w remove: (w children detect: [ :each | each data = aPresenter ]) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTabAdapter >> selectIndex: index [
 
 	lastPage := layout children at: index.

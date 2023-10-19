@@ -1,17 +1,19 @@
 Class {
-	#name : #GtkOverlayAdapter,
-	#superclass : #GtkLayoutAdapter,
-	#category : #'Spec-Gtk-Layout-Box'
+	#name : 'GtkOverlayAdapter',
+	#superclass : 'GtkLayoutAdapter',
+	#category : 'Spec-Gtk-Layout-Box',
+	#package : 'Spec-Gtk',
+	#tag : 'Layout-Box'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkOverlayAdapter >> applyLayout: aLayout [
 
 	widget := GtkOverlay new.
 	self connectToEvents: aLayout
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [ 
 	| childWidget |
 
@@ -30,7 +32,7 @@ GtkOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [
 	^ aWidget
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkOverlayAdapter >> basicApplyAlignmentTo: childWidget constraints: constraints [
 
 	constraints hAlign ifNotNil: [ :hAlign | childWidget hAlign: hAlign asGtkAlign ].

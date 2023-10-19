@@ -1,6 +1,6 @@
-Extension { #name : #SpLayoutWidgetAlignmentEnd }
+Extension { #name : 'SpLayoutWidgetAlignmentEnd' }
 
-{ #category : #'*Spec-Gtk' }
+{ #category : '*Spec-Gtk' }
 SpLayoutWidgetAlignmentEnd >> asGtkAlign [
 
 	^ GtkAlign GTK_ALIGN_END

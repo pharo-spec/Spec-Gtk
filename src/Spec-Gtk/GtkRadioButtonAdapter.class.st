@@ -1,10 +1,12 @@
 Class {
-	#name : #GtkRadioButtonAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkRadioButtonAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkRadioButtonAdapter >> addAssociatedTo: gtkWidget [
 	
 	self presenter associatedRadioButtons ifEmpty: [ ^ self ].
@@ -20,7 +22,7 @@ GtkRadioButtonAdapter >> addAssociatedTo: gtkWidget [
 			active: true ]
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkRadioButtonAdapter >> addModelTo: gtkWidget [
 	
 	super addModelTo: gtkWidget.
@@ -37,26 +39,26 @@ GtkRadioButtonAdapter >> addModelTo: gtkWidget [
 	self model whenChangedDo: [ gtkWidget active: self presenter state ]
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkRadioButtonAdapter >> clicked [
 
 
 	self deprecated: #Gtk4
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkRadioButtonAdapter >> getLabelText [
 
 	^ self presenter label ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkRadioButtonAdapter >> state [
 	
 	^ widget isActive
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkRadioButtonAdapter >> widgetClass [
 
 	^ GtkCheckButton

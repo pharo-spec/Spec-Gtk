@@ -1,9 +1,11 @@
 Trait {
-	#name : #GtkTTableAccessing,
-	#category : #'Spec-Gtk-Adapter-Table'
+	#name : 'GtkTTableAccessing',
+	#category : 'Spec-Gtk-Adapter-Table',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-Table'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTTableAccessing >> addColumn: aTableColumn to: aGtkTreeView [ 
 	| addColumnVisitor |
 	
@@ -17,20 +19,20 @@ GtkTTableAccessing >> addColumn: aTableColumn to: aGtkTreeView [
 	aTableColumn acceptColumnVisitor: addColumnVisitor
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTTableAccessing >> addColumnsTo: gtkWidget [
 
 	self model columns do: [ :aColumn | 
 		self addColumn: aColumn to: gtkWidget ].	
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkTTableAccessing >> newTreeStore [
 	
 	^ self newTreeStoreFrom: self presenter model items
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkTTableAccessing >> newTreeStoreFrom: items [
 	| store |
 	
@@ -52,7 +54,7 @@ GtkTTableAccessing >> newTreeStoreFrom: items [
 	^ store
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkTTableAccessing >> tableColumns [
 	
 	^ self model columns

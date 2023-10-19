@@ -1,19 +1,21 @@
 Class {
-	#name : #GtkTextAdapter,
-	#superclass : #GtkAbstractTextAdapter,
+	#name : 'GtkTextAdapter',
+	#superclass : 'GtkAbstractTextAdapter',
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
-	#category : #'Spec-Gtk-Adapter'
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkTextAdapter >> accept [
 
 	self innerWidgetDo: [ :w | 
 		self model acceptText: w text ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextAdapter >> addEditionContextMenuTo: menuPresenter [
 	
 
@@ -22,7 +24,7 @@ GtkTextAdapter >> addEditionContextMenuTo: menuPresenter [
 	menuPresenter addMenuGroup: self presenter editionContextMenu menuGroups last 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextAdapter >> addModelTo: gtkTextView [
 
 	super addModelTo: gtkTextView.
@@ -45,61 +47,61 @@ GtkTextAdapter >> addModelTo: gtkTextView [
 		ifFalse: [ "do something else" ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextAdapter >> addTextBufferTo: gtkTextView [
 
 	gtkTextView textBuffer connectChanged: [
 		self updatePresenterText: gtkTextView text ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTextAdapter >> backendIncludesEditionMenu [
 
 	^ true
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextAdapter >> bufferClass [
 
 	^ GtkTextBuffer
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkTextAdapter >> cursorPosition [
 	
 	^ self innerWidgetDo: [ :w |
 		w textBuffer cursorPositionAtLine ]
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkTextAdapter >> cursorPositionIndex: index [
 	
 	^ self innerWidgetDo: [ :w |
 		w textBuffer cursorPosition: index ]
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 GtkTextAdapter >> cutText [
 
 ]
 
-{ #category : #'spec protocol' }
+{ #category : 'spec protocol' }
 GtkTextAdapter >> lineAtCursorPosition [
 
 	^ self innerWidgetDo: [ :w | w textBuffer lineAtCursorPosition ]
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 GtkTextAdapter >> pasteText [
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTextAdapter >> setEditable: aBoolean [ 
 
 	self innerWidgetDo: [ :w | w editable: aBoolean ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextAdapter >> setText: aString to: gtkWidget [
 
 	gtkWidget textBuffer 
@@ -109,7 +111,7 @@ GtkTextAdapter >> setText: aString to: gtkWidget [
 				super setText: aString to: gtkWidget	] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTextAdapter >> setWrapWord: value to: gtkTextView [
 
 	self presenter isWrapWord 
@@ -117,20 +119,20 @@ GtkTextAdapter >> setWrapWord: value to: gtkTextView [
 		ifFalse: [ gtkTextView beWrapNone ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtkTextAdapter >> updateEnabled [	
 	
 	self innerWidgetDo: [ :w | w sensitive: self presenter isEnabled value ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTextAdapter >> updatePresenterText: aString [
 
 	self backendUpdatingDo: [ 
 		self presenter text: aString ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTextAdapter >> widgetClass [
 
 	^ GtkTextView

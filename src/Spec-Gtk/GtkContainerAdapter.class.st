@@ -1,17 +1,19 @@
 Class {
-	#name : #GtkContainerAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Adapter'
+	#name : 'GtkContainerAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Adapter',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter'
 }
 
-{ #category : #protocol }
+{ #category : 'protocol' }
 GtkContainerAdapter >> add: anAdapter [ 
 	
 	self widgetDo: [ :w | 
 		w packStart: anAdapter widget ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkContainerAdapter >> newWidget [
 
 	^ GtkBox newVertical

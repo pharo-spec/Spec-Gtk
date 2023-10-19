@@ -2,16 +2,18 @@
 creates a `GMenu` from the defined actions and groups. 
 "
 Class {
-	#name : #GtkActionMenuBuilder,
-	#superclass : #GtkActionVisitor,
+	#name : 'GtkActionMenuBuilder',
+	#superclass : 'GtkActionVisitor',
 	#instVars : [
 		'menu',
 		'root'
 	],
-	#category : #'Spec-Gtk-Actions'
+	#category : 'Spec-Gtk-Actions',
+	#package : 'Spec-Gtk',
+	#tag : 'Actions'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionMenuBuilder >> appendSection: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
@@ -19,7 +21,7 @@ GtkActionMenuBuilder >> appendSection: aMenu label: aName to: parentMenu [
 		section: menu
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
@@ -27,7 +29,7 @@ GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
 		submenu: menu
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionMenuBuilder >> visit: anObject [
 
 	root := GMenu new.
@@ -35,7 +37,7 @@ GtkActionMenuBuilder >> visit: anObject [
 	^ root
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionMenuBuilder >> visitCommand: aCommand [
 	
 	aCommand isVisible ifFalse: [ ^ self ].
@@ -44,7 +46,7 @@ GtkActionMenuBuilder >> visitCommand: aCommand [
 		actionName: (self actionNameFor: aCommand)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkActionMenuBuilder >> visitCommandGroup: aCommandGroup [
 	| oldMenu |
 	
