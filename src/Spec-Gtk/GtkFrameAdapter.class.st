@@ -8,14 +8,12 @@ Class {
 GtkFrameAdapter >> addModelTo: gtkFrame [
 
 	gtkFrame label: self presenter label.
-	gtkFrame add: self presenterWidget.
+	gtkFrame child: self presenterWidget.
 		
 	self presenter whenLabelChangedDo: [ 
 		gtkFrame label: self presenter label ].
 	self presenter whenPresenterChangedDo: [ 
-		gtkFrame 
-			removeAll;
-			add: self presenterWidget ]
+		gtkFrame child: self presenterWidget ]
 ]
 
 { #category : #building }

@@ -32,20 +32,7 @@ GtkFrameLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWi
 	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraits: constraints toChild: childWidget.
 	
-	gtkWidget add: childWidget.
-	"constraints isPlacedAtStart
-		ifTrue: [ 
-			gtkWidget 
-				packStart: childWidget 
-				expand: constraints isExpand 
-				fill: constraints isFill
-				padding: constraints padding ]
-		ifFalse: [ 
-			gtkWidget 
-				packEnd: childWidget 
-				expand: constraints isExpand 
-				fill: constraints isFill 
-				padding: constraints padding ]."
+	gtkWidget child: childWidget.
 
 	^ gtkWidget
 ]
