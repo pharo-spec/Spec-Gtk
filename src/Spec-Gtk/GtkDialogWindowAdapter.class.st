@@ -33,7 +33,7 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 
 ]
 
-{ #category : 'private building' }
+{ #category : 'private - building' }
 GtkDialogWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 
 	super addDefaultKeyBindings: gtkWindow.
@@ -62,7 +62,7 @@ GtkDialogWindowAdapter >> closeFromSignal [
 	runLoop done
 ]
 
-{ #category : 'private building' }
+{ #category : 'private - building' }
 GtkDialogWindowAdapter >> defaultFromKeyboard [
 
 	self presenter hasDefaultButton ifFalse: [ ^ self ].
