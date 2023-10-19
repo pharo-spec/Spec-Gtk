@@ -39,7 +39,7 @@ GtkDialogWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 		addKeyCombination: Character escape asKeyCombination 
 			action: [ self closeFromKeyboard ]
 			toWidget: gtkWindow;
-		addKeyCombination: $s actionModifier
+		addKeyCombination: $s actionModifier | Character cr asKeyCombination
 			action: [ self defaultFromKeyboard ]
 			toWidget: gtkWindow
 ]
