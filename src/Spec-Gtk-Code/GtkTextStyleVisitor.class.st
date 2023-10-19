@@ -184,12 +184,12 @@ GtkTextStyleVisitor >> styleMethod: aString [
 	| ast |
 
 	ast := (contextClass ifNil: [ UndefinedObject ]) compiler
-		source: aString;
-		noPattern: false;
-		requestor: nil;
-		failBlock: [ ^ nil ];
-		options:  #(+ optionParseErrors + optionSkipSemanticWarnings);
-		parse.	
+       source: aString;
+       isScripting: false;
+       requestor: nil;
+       failBlock: [ ^ nil ];
+       options: #( #+ optionParseErrors #+ optionSkipSemanticWarnings );
+       parse.
 
 	self styleAST: ast.
 
