@@ -36,6 +36,8 @@ GtkBoxAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 { #category : #private }
 GtkBoxAdapter >> applyHorizontalConstraintsTo: aWidget constraints: constraints [
 	
+	constraints isPlacedAtStart 
+		ifFalse: [ aWidget hAlignEnd ].
 	aWidget hExpand: constraints isExpand
 ]
 
@@ -56,6 +58,8 @@ GtkBoxAdapter >> applyLayout: aLayout [
 { #category : #private }
 GtkBoxAdapter >> applyVerticalConstraintsTo: aWidget constraints: constraints [
 	
+	constraints isPlacedAtStart 
+		ifFalse: [ aWidget vAlignEnd ].
 	aWidget vExpand: constraints isExpand
 ]
 
