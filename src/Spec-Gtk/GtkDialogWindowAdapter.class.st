@@ -63,6 +63,8 @@ GtkDialogWindowAdapter >> closeFromSignal [
 { #category : #'private building' }
 GtkDialogWindowAdapter >> defaultFromKeyboard [
 
+	self presenter hasDefaultButton ifFalse: [ ^ self ].
+
 	self presenter 
 		executeDefaultAction;
 		beOk
