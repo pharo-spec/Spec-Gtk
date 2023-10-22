@@ -24,11 +24,14 @@ GtkRichTextAdapter >> addTextTo: gtkTextView [
 
 { #category : 'building' }
 GtkRichTextAdapter >> applyStyleTo: textBuffer [
-	| tags visitor |
+	
+	self halt
+	"| tags visitor |
+	
 	visitor := GtkTextStyleTagsVisitor new.
 	visitor styleProvider: self model styleAttributes.
 	tags := visitor styleDocument: self model renderTree.
-	tags do: [ :tag | tag acceptTextBuffer: textBuffer textBuffer ]
+	tags do: [ :tag | tag acceptTextBuffer: textBuffer textBuffer ]"
 ]
 
 { #category : 'building' }
