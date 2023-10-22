@@ -5,9 +5,9 @@ It serves `SpDropListItemPresenter` instances.
 Class {
 	#name : 'GtkDropListAdapterItemFactory',
 	#superclass : 'GtkListViewAdapterBaseFactory',
-	#category : 'Spec-Gtk-Adapter-List',
+	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
-	#tag : 'Adapter-List'
+	#tag : 'Adapter-ListView'
 }
 
 { #category : 'private' }
