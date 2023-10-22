@@ -3,6 +3,7 @@ Class {
 	#superclass : 'GtkPharoListItemFactory',
 	#instVars : [
 		'presenter',
+		'items',
 		'mutex'
 	],
 	#category : 'Spec-Gtk-Adapter-ListView',
@@ -65,6 +66,12 @@ GtkListViewAdapterBaseFactory >> freeStoredObjects [
 			removeAll ]
 ]
 
+{ #category : 'private' }
+GtkListViewAdapterBaseFactory >> getItems [
+
+	^ self presenter items
+]
+
 { #category : 'initialization' }
 GtkListViewAdapterBaseFactory >> initialize [
 
@@ -75,7 +82,19 @@ GtkListViewAdapterBaseFactory >> initialize [
 { #category : 'private' }
 GtkListViewAdapterBaseFactory >> itemAt: aPosition [ 
 
-	^ self presenter items at: aPosition
+	^ self items at: aPosition
+]
+
+{ #category : 'accessing' }
+GtkListViewAdapterBaseFactory >> items [
+
+	^ items ifNil: [ items := self getItems  ]
+]
+
+{ #category : 'accessing' }
+GtkListViewAdapterBaseFactory >> items: aCollection [
+
+	items := aCollection
 ]
 
 { #category : 'accessing' }
@@ -84,7 +103,7 @@ GtkListViewAdapterBaseFactory >> presenter [
 	^ presenter
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> presenter: aPresenter [
 
 	presenter := aPresenter
@@ -102,6 +121,12 @@ GtkListViewAdapterBaseFactory >> removeStoredPresenterAtHandle: aHandle [
 	mutex critical: [ 
 		"GObject objectUnref: aHandle."
 		storedObjects removeKey: aHandle ifAbsent: [ ] ]
+]
+
+{ #category : 'accessing' }
+GtkListViewAdapterBaseFactory >> reset [
+
+	items := nil
 ]
 
 { #category : 'private' }

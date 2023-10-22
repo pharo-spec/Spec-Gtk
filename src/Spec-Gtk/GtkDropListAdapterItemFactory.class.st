@@ -25,9 +25,9 @@ GtkDropListAdapterItemFactory >> bind: listItem to: anObject [
 ]
 
 { #category : 'private' }
-GtkDropListAdapterItemFactory >> itemAt: aPosition [
+GtkDropListAdapterItemFactory >> getItems [
 
-	^ self presenter getList at: aPosition
+	^ self presenter getList
 ]
 
 { #category : 'accessing' }
