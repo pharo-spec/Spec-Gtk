@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfSpecGtk,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfSpecGtk
+	#name : 'BaselineOfSpecGtk',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfSpecGtk',
+	#package : 'BaselineOfSpecGtk'
 }
 
-{ #category : #baseline }
+{ #category : 'baseline' }
 BaselineOfSpecGtk >> baseline: spec [
 	<baseline>
 
@@ -42,60 +43,60 @@ BaselineOfSpecGtk >> baseline: spec [
 		spec group: 'default' with: #('Base' 'Tests' 'Morphic')
 ]
 
-{ #category : #'external projects' }
+{ #category : 'external projects' }
 BaselineOfSpecGtk >> gtk: spec [
 
 	spec baseline: 'GtkCore' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings';
+			repository: 'github://pharo-spec/gtk-bindings/src';
 			className: 'BaselineOfGtk';			
 			loads: 'Core' ]
 ]
 
-{ #category : #'external projects' }
+{ #category : 'external projects' }
 BaselineOfSpecGtk >> gtkCode: spec [
 
 	spec baseline: 'GtkCode' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings';
+			repository: 'github://pharo-spec/gtk-bindings/src';
 			className: 'BaselineOfGtk';
 			loads: 'Code' ]
 ]
 
-{ #category : #'external projects' }
+{ #category : 'external projects' }
 BaselineOfSpecGtk >> gtkMorphic: spec [
 
 	spec baseline: 'GtkMorphic' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings';
+			repository: 'github://pharo-spec/gtk-bindings/src';
 			className: 'BaselineOfGtk';
 			loads: 'Morphic' ]
 ]
 
-{ #category : #'external projects' }
+{ #category : 'external projects' }
 BaselineOfSpecGtk >> spec: spec [
 
 	spec baseline: 'SpecCore' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec:Pharo11';
+			repository: 'github://pharo-spec/Spec:Pharo12/src';
 			loads: 'Core' ]
 ]
 
-{ #category : #'external projects' }
+{ #category : 'external projects' }
 BaselineOfSpecGtk >> specCode: spec [
 
 	spec baseline: 'SpecCode' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec:Pharo11';
+			repository: 'github://pharo-spec/Spec:Pharo12/src';
 			className: 'BaselineOfSpecCore';
 			loads: 'Code' ]
 ]
 
-{ #category : #'external projects' }
+{ #category : 'external projects' }
 BaselineOfSpecGtk >> specMorphic: spec [
 
 	spec baseline: 'SpecMorphic' with: [ 
 		spec 
-			repository: 'github://pharo-spec/Spec:Pharo11';
+			repository: 'github://pharo-spec/Spec:Pharo12/src';
 			className: 'BaselineOfSpec2' ]
 ]

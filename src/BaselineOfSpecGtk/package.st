@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfSpecGtk }
+Package { #name : 'BaselineOfSpecGtk' }
