@@ -164,7 +164,9 @@ GtkWindowAdapter >> closeFromKeyboard [
 { #category : 'private' }
 GtkWindowAdapter >> closeFromSignal [
 	"this is called from connectDestroy (just one time)"
-	self announceClosed
+
+	self announceClosed.
+	self widget unregister
 ]
 
 { #category : 'private' }
@@ -193,7 +195,7 @@ GtkWindowAdapter >> connectToGtkSignals: gtkWindow [
 			"true to stop handlers to continue (so, if I want to *not* close it, I need 
 			 to answer true, the oposite of canClose)"
 			self announceWillClose not ];
-		connectDestroy: [ self closeFromSignal ];
+		connectHide: [ self closeFromSignal ];
 		connectDefaultWidth: [ self announceResized: self widget defaultSize ];
 		connectDefaultHeight: [ self announceResized: self widget defaultSize ]
 ]
@@ -323,6 +325,7 @@ GtkWindowAdapter >> newWidget [
 
 	^ GtkWindow new 
 		autoRelease;
+		hideOnClose: true;
 		yourself
 ]
 

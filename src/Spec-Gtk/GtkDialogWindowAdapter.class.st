@@ -84,8 +84,7 @@ GtkDialogWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpe
 { #category : 'building' }
 GtkDialogWindowAdapter >> newWidget [
 
-	^ GtkWindow new 
-		autoRelease;
+	^ super newWidget
 		defaultSize: self presenter initialExtent;
 		yourself
 ]
