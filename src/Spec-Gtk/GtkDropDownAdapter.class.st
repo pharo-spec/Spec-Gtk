@@ -30,7 +30,6 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 		
 	gtkDropDown connectSelectedItem: [ 
 		self updatePresenterSelectionFromGtk ]
-	
 ]
 
 { #category : 'private' }

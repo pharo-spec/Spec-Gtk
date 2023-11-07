@@ -75,8 +75,10 @@ GtkDropListAdapter >> newItemFactory [
 { #category : 'private - factory' }
 GtkDropListAdapter >> newStore [
 
-	^ GListReferenceStore new
-		items: self presenter getList;
+	^ GtkFilterListModel new
+		model: (GListReferenceStore new
+			items: self presenter getList;
+			yourself);
 		yourself
 ]
 
