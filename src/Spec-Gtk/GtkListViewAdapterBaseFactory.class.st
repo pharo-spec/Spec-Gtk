@@ -153,8 +153,8 @@ GtkListViewAdapterBaseFactory >> teardown: item [
 
 { #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> unbind: listItem [
-	| childHandle |
+	"| childHandle |
 
 	childHandle := listItem child.
-	self removeStoredPresenterAtHandle: childHandle
+	self removeStoredPresenterAtHandle: childHandle"
 ]
