@@ -40,7 +40,7 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 
 	gtkListView connectRowActivated: [ :position |
-		self presenter doActivateAtIndex: position ].
+		self presenter doActivateAtIndex: position + 1 ].
 	
 	self configureScrolling
 ]
