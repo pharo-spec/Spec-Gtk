@@ -10,12 +10,6 @@ Class {
 	#tag : 'Adapter-List'
 }
 
-{ #category : 'private' }
-GtkDropListAdapterItemFactory class >> gtkNew [ 
-
-	self ffiCall: #(GtkDropListAdapterItemFactory *gtk_signal_list_item_factory_new())
-]
-
 { #category : 'accessing' }
 GtkDropListAdapterItemFactory >> bind: listItem to: anObject [
 	| child |

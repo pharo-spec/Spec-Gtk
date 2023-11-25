@@ -9,12 +9,6 @@ Class {
 	#tag : 'Adapter-ListView'
 }
 
-{ #category : 'private' }
-GtkListViewAdapterHeaderFactory class >> gtkNew [ 
-
-	self ffiCall: #(#GtkListViewAdapterHeaderFactory *gtk_signal_list_item_factory_new())
-]
-
 { #category : 'accessing' }
 GtkListViewAdapterHeaderFactory >> bind: listItem to: anObject [
 	| child |
