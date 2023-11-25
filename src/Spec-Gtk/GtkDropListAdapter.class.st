@@ -14,7 +14,7 @@ GtkDropListAdapter >> addModelTo: gtkDropDown [
 	
 	super addModelTo: gtkDropDown.
 	
-	gtkDropDown factory: self newItemFactory.	
+	gtkDropDown listFactory: self newItemFactory.	
 	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
 		(gtkDropDown model itemAtHandle: handle)
 			ifNotNil: [ :item | self presenter displayForItem: item ] ]).
