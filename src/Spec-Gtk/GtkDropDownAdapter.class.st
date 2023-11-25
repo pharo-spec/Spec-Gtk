@@ -64,7 +64,8 @@ GtkDropDownAdapter >> newStore [
 GtkDropDownAdapter >> refreshList [
 
 	self innerWidgetDo: [ :w |
-		w model: self newStore ]
+		w model: self newStore.
+		w listFactory reset ]
 ]
 
 { #category : 'accessing' }
