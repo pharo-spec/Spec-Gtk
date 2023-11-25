@@ -82,6 +82,7 @@ GtkListViewAdapterBaseFactory >> initialize [
 { #category : 'private' }
 GtkListViewAdapterBaseFactory >> itemAt: aPosition [ 
 
+	self items size < aPosition ifTrue: [ ^ nil ].
 	^ self items at: aPosition
 ]
 
@@ -126,6 +127,7 @@ GtkListViewAdapterBaseFactory >> removeStoredPresenterAtHandle: aHandle [
 { #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> reset [
 
+	super reset.
 	items := nil
 ]
 
