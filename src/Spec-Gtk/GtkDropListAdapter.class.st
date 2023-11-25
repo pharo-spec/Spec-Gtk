@@ -114,7 +114,7 @@ GtkDropListAdapter >> selectionChangedOnPresenter [
 GtkDropListAdapter >> setModelTo: gtkDropDown [
 
 	gtkDropDown model: self newStore.
-	gtkDropDown factory reset
+	gtkDropDown listFactory reset
 ]
 
 { #category : 'building' }
