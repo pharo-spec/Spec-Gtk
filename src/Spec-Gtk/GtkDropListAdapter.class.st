@@ -77,7 +77,7 @@ GtkDropListAdapter >> newStore [
 
 	^ GtkFilterListModel new
 		model: (GListReferenceStore new
-			items: self presenter getList;
+			items: (self presenter getList ifNil: [ #() ]);
 			yourself);
 		yourself
 ]
