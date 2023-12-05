@@ -38,6 +38,12 @@ GtkNumberInputFieldAdapter >> newWidget [
 ]
 
 { #category : 'private' }
+GtkNumberInputFieldAdapter >> parseNumber: aString [
+
+	^ (Number readFrom: aString ifFail: [ 0.0 ]) asFloat
+]
+
+{ #category : 'private' }
 GtkNumberInputFieldAdapter >> refreshText [
 	
 	self widgetDo: [ :w |
@@ -48,15 +54,15 @@ GtkNumberInputFieldAdapter >> refreshText [
 GtkNumberInputFieldAdapter >> setText: aStringOrNumber to: gtkWidget [
 
 	gtkWidget value: (aStringOrNumber isString 
-		ifTrue: [ (Number readFrom: aStringOrNumber ifFail: [ 0.0 ]) asFloat ]
+		ifTrue: [ self parseNumber: aStringOrNumber ]
 		ifFalse: [ aStringOrNumber ])
 ]
 
 { #category : 'private' }
 GtkNumberInputFieldAdapter >> updatePresenterText: aString [
 
-	self backendUpdatingDo: [ 
-		self presenter text: aString ] 
+	self backendUpdatingDo: [
+		self presenter text: (aString copyReplaceAll: ',' with: '.') ] 
 ]
 
 { #category : 'building' }
