@@ -1,1 +1,1 @@
-Package { #name : #'Spec-Gtk-Alexandrie' }
+Package { #name : 'Spec-Gtk-Alexandrie' }
