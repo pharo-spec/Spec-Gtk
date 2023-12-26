@@ -4,28 +4,30 @@ A frame presenter to decorate a content presenter with a frame and an optional l
 **IMPORTANT:** For the time being, this component is just present with the Gtk backend.
 "
 Class {
-	#name : #SpFramePresenter,
-	#superclass : #SpAbstractWidgetPresenter,
+	#name : 'SpFramePresenter',
+	#superclass : 'SpAbstractWidgetPresenter',
 	#instVars : [
 		'#label => ObservableSlot',
 		'#presenter => ObservableSlot'
 	],
-	#category : #'Spec-Gtk-Frame-Presenter'
+	#category : 'Spec-Gtk-Frame-Presenter',
+	#package : 'Spec-Gtk-Frame',
+	#tag : 'Presenter'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 SpFramePresenter class >> adapterName [
 
 	^ #FrameAdapter
 ]
 
-{ #category : #documentation }
+{ #category : 'documentation' }
 SpFramePresenter class >> documentExamplesProtocol [
 
 	^ #example
 ]
 
-{ #category : #example }
+{ #category : 'example' }
 SpFramePresenter class >> example [
 	
 	^ self new 
@@ -34,39 +36,39 @@ SpFramePresenter class >> example [
 		presenter: (SpLabelPresenter new 
 			label: 'Content';
 			yourself);
-		openWithSpec
+		open
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 SpFramePresenter >> label [
 	^ label
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 SpFramePresenter >> label: anObject [
 	label := anObject
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 SpFramePresenter >> presenter [
 
 	^ presenter
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 SpFramePresenter >> presenter: aPresenter [
 
 	aPresenter owner: self.
 	presenter := aPresenter
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 SpFramePresenter >> whenLabelChangedDo: aBlock [
 	
 	self property: #label whenChangedDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 SpFramePresenter >> whenPresenterChangedDo: aBlock [
 	
 	self property: #presenter whenChangedDo: aBlock

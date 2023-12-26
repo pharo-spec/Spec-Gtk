@@ -2,19 +2,21 @@
 Gtk adapter for the frame layout
 "
 Class {
-	#name : #GtkFrameLayoutAdapter,
-	#superclass : #GtkLayoutAdapter,
-	#category : #'Spec-Gtk-Frame-Layout'
+	#name : 'GtkFrameLayoutAdapter',
+	#superclass : 'GtkLayoutAdapter',
+	#category : 'Spec-Gtk-Frame-Layout',
+	#package : 'Spec-Gtk-Frame',
+	#tag : 'Layout'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 GtkFrameLayoutAdapter >> addConstraits: constraints toChild: childWidget [
 	"adds constraits by child."
 
 	^ childWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkFrameLayoutAdapter >> applyLayout: aLayout [
 
 	"build of widget was differed up to here (to know what is the direction)"
@@ -25,7 +27,7 @@ GtkFrameLayoutAdapter >> applyLayout: aLayout [
 	self connectToEvents: aLayout
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkFrameLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
 
@@ -37,25 +39,25 @@ GtkFrameLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWi
 	^ gtkWidget
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkFrameLayoutAdapter >> childrenWidgets [
 	
 	^ self widget children
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkFrameLayoutAdapter >> newFrame [
 
 	^ GtkFrame new
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkFrameLayoutAdapter >> newFrameWithLabel: aLabel [
 
 	^ GtkFrame newLabel: aLabel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkFrameLayoutAdapter >> replace: aPresenter with: otherPresenter withConstraints: constraints [
 	| index |
 	

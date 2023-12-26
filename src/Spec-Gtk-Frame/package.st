@@ -1,1 +1,1 @@
-Package { #name : #'Spec-Gtk-Frame' }
+Package { #name : 'Spec-Gtk-Frame' }

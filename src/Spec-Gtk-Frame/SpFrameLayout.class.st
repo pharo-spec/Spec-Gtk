@@ -2,47 +2,49 @@
 A layout with maximally one child that adds a frame around its contnent with optional label
 "
 Class {
-	#name : #SpFrameLayout,
-	#superclass : #SpExecutableLayout,
+	#name : 'SpFrameLayout',
+	#superclass : 'SpExecutableLayout',
 	#instVars : [
 		'label',
 		'child'
 	],
-	#category : #'Spec-Gtk-Frame-Layout'
+	#category : 'Spec-Gtk-Frame-Layout',
+	#package : 'Spec-Gtk-Frame',
+	#tag : 'Layout'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SpFrameLayout class >> newFrame [
 
 	^ self new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SpFrameLayout class >> newLabel: aLabel [ 
 
 	^ self new label: aLabel
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpFrameLayout >> adapterName [
 
 	^ #FrameLayoutAdapter
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 SpFrameLayout >> add: aNameOrPresenter [
 
 	self child: aNameOrPresenter
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 SpFrameLayout >> add: aPresenter withConstraints: aBlock [
 	
 	super add: aPresenter withConstraints: aBlock.
 	self announceChildAdded: aPresenter.
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 SpFrameLayout >> child: aNameOrPresenter [
 
 	child ifNotNil: [ self remove: child ].
@@ -52,31 +54,31 @@ SpFrameLayout >> child: aNameOrPresenter [
 		withConstraints: [ :constraints | ].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SpFrameLayout >> constraintsClass [
 
 	^ SpFrameConstraints
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SpFrameLayout >> initialize [
 
 	super initialize.
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpFrameLayout >> label [
 	^ label
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SpFrameLayout >> label: aString [
 
 	label := aString
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 SpFrameLayout >> removeAll [
 
 	children removeAll.
@@ -85,7 +87,7 @@ SpFrameLayout >> removeAll [
 		anAdapter removeAll ]
 ]
 
-{ #category : #replacing }
+{ #category : 'replacing' }
 SpFrameLayout >> replace: aPresenter with: otherPresenter [
 	"Replace aPresenter with otherPresenter. 
 	 Original constraints will be preserved."
@@ -96,7 +98,7 @@ SpFrameLayout >> replace: aPresenter with: otherPresenter [
 		withConstraints: (self constraintsFor: aPresenter)
 ]
 
-{ #category : #replacing }
+{ #category : 'replacing' }
 SpFrameLayout >> replace: aPresenter with: otherPresenter withConstraints: constraints [
 	"Replace aPresenter with otherPresenter"
 	
