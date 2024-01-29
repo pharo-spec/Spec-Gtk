@@ -320,6 +320,11 @@ GtkWindowAdapter >> minimize [
 	self widgetDo: [ :w | w minimize ]
 ]
 
+{ #category : 'spec protocol' }
+GtkWindowAdapter >> moveTo: aPoint [
+	"can't directly position a window on gtk4 :("
+]
+
 { #category : 'building' }
 GtkWindowAdapter >> newWidget [
 
