@@ -17,8 +17,7 @@ Class {
 }
 
 { #category : 'specs' }
-SpecFormExample class >> defaultSpec [ 
-	<spec: #grid>
+SpecFormExample class >> defaultLayout [
 	
 	^ SpGridLayout new 
 		add: #textInputLabel 				at: 1@1;
@@ -36,7 +35,7 @@ SpecFormExample class >> defaultSpec [
 SpecFormExample class >> show [ 
 	<example>
 	
-	self new openWithSpec
+	self new open
 ]
 
 { #category : 'accessing ui' }

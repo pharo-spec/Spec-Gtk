@@ -7,9 +7,3 @@ SpVerticalLayoutDirection >> applyDirectionConstraintsTo: aWidget constraints: c
 		applyVerticalConstraintsTo: aWidget
 		constraints: constraints
 ]
-
-{ #category : '*Spec-Gtk' }
-SpVerticalLayoutDirection >> applyDirectionConstraintsTo: aWidget in: layout [
-
-	^ layout applyVerticalConstraintsTo: aWidget
-]
