@@ -36,7 +36,6 @@ GtkCodeAdapter >> addSmartCharactersTo: gtkTextView [
 GtkCodeAdapter >> addSourceCompletionProviderTo: gtkSourceView [
 
 	gtkSourceView completion
-		showHeaders: false;
 		showIcons: true;
 		addProvider: (completionProvider := GtkPharoSourceCompletionProvider new
 			completionEngine: (self newCompletionEngine: self presenter interactionModel);
