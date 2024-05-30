@@ -55,7 +55,9 @@ GtkAdapterActionManager >> anyCommandHasShortcut [
 { #category : 'private - testing' }
 GtkAdapterActionManager >> anyCommandIsVisible [
 		
-	^ self presenter actionGroup allCommands anySatisfy: [ :each | each isVisible ]
+	^ self presenter actionGroup 
+		ifNotNil: [ :actionGroup | actionGroup allCommands anySatisfy: [ :each | each isVisible ] ]
+		ifNil: [ false ]
 ]
 
 { #category : 'accessing' }
@@ -99,12 +101,15 @@ GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
 
 { #category : 'private - actions' }
 GtkAdapterActionManager >> installActionsOn: gtkWidget [
-	| map |
+	| map actionGroup |
 
 	"keeping an actionMap to be able to perform operations later (like enable/disable)"
+	actionGroup := self presenter actionGroup.
+	actionGroup ifNil: [ ^ self ].
+	
 	map := GtkActionInstaller new
 		widget: gtkWidget;
-		visit: self presenter actionGroup.
+		visit: actionGroup.
 	actionMap addAll: map
 ]
 
@@ -137,10 +142,14 @@ GtkAdapterActionManager >> installOn: gtkWidget [
 
 { #category : 'private - actions' }
 GtkAdapterActionManager >> installShortcutsOn: gtkWidget [
+	| actionGroup |
+	
+	actionGroup := self presenter actionGroup.
+	actionGroup ifNil: [ ^ self ].
 	
 	GtkActionShortcutInstaller new
 		widget: gtkWidget;
-		visit: self presenter actionGroup
+		visit: actionGroup
 ]
 
 { #category : 'accessing' }
