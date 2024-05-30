@@ -14,7 +14,7 @@ Class {
 { #category : 'building' }
 GtkCodeAdapter >> addModelTo: gtkTextView [ 
 
-	self addSourceFeaturesTo: gtkTextView.	
+	self addSourceFeaturesTo: gtkTextView.
 	self addSmartCharactersTo: gtkTextView.
 	super addModelTo: gtkTextView
 ]
@@ -51,7 +51,9 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 	  
 	self flag: #TODO. "All this needs to come from settings"
 	gtkSourceView 
-		showLineNumbers: self presenter hasLineNumbers;
+		"this is leaking, I am removing it until I have an answer (or a fix)
+		 see: https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/365"
+		"showLineNumbers: self presenter hasLineNumbers;"
 		autoIndent: true;
 		indentOnTab: true;
 		tabWidth: 4.
@@ -272,7 +274,7 @@ GtkCodeAdapter >> newTextBuffer [
 GtkCodeAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
-	textBuffer := self bufferClass newTable: self newTagTable.
+	textBuffer := self bufferClass newTable: self usingTagTable.
 	textBuffer connectChanged: [ 
 		self applyFullStyleTo: textBuffer ].
 
@@ -432,7 +434,7 @@ GtkCodeAdapter >> styleScheme [
 
 { #category : 'private - factory' }
 GtkCodeAdapter >> styleTable [
-	| styleTableName |	
+	| styleTableName |
 
 	styleTableName := self presenter syntaxHighlightTheme 	
 		ifNil: [ 
@@ -477,6 +479,13 @@ GtkCodeAdapter >> userActionDuring: aBlock [
 				userAction hasChanged ifTrue: [
 					userAction := nil.
 					self applyFullStyleTo: w textBuffer ] ] ].
+]
+
+{ #category : 'private' }
+GtkCodeAdapter >> usingTagTable [
+
+	^ (GtkCodeTagTableManager for: self presenter application) 
+		tagTableFor: self presenter
 ]
 
 { #category : 'building' }
