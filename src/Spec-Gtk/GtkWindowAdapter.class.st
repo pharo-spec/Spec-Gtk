@@ -151,14 +151,14 @@ GtkWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 { #category : 'accessing' }
 GtkWindowAdapter >> close [
 
-	self widgetDo: [ :w |
-		w close ]
+	self widgetDo: [ :w | w close ]
 ]
 
 { #category : 'private' }
 GtkWindowAdapter >> closeFromKeyboard [
 
-	self presenter close
+	self close
+
 ]
 
 { #category : 'private' }
@@ -330,7 +330,7 @@ GtkWindowAdapter >> newWidget [
 
 	^ GtkWindow new 
 		autoRelease;
-		hideOnClose: true;
+		hideOnClose: false;
 		yourself
 ]
 
