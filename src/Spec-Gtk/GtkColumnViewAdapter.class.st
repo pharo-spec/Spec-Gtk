@@ -83,6 +83,7 @@ GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
 	^ GtkColumnViewColumn new
 		title: aColumn title;
 		factory: (self newColumnFactory: aColumn);
+		resizable: self presenter isResizable;
 		yourself
 ]
 
@@ -156,6 +157,13 @@ GtkColumnViewAdapter >> updatePresenterSelection: position numItems: numItems [
 		self selectionCompanion 
 			updatePresenterSelection: position 
 			numItems: numItems ]
+]
+
+{ #category : 'private - updating' }
+GtkColumnViewAdapter >> updateResizableColumnsTo: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		w columns do: [ :each | each resizable: aBoolean ] ]
 ]
 
 { #category : 'private - updating' }
