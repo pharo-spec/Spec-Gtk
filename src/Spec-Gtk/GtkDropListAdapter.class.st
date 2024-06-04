@@ -16,7 +16,7 @@ GtkDropListAdapter >> addModelTo: gtkDropDown [
 	
 	gtkDropDown listFactory: self newItemFactory.	
 	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
-		(gtkDropDown model itemAtHandle: handle)
+		(gtkDropDown model model itemAtHandle: handle)
 			ifNotNil: [ :item | self presenter displayForItem: item ] ]).
 	
 	self setModelTo: gtkDropDown.
@@ -107,7 +107,11 @@ GtkDropListAdapter >> selectionChangedOnGtk [
 GtkDropListAdapter >> selectionChangedOnPresenter [
 			
 	self backendUpdatingDo: [
-		self innerWidgetDo: [ :w | w select: self presenter selectedIndex - 1 ] ]
+		| index |
+		index := self presenter selectedIndex.
+		index > 0
+			ifTrue: [ self innerWidgetDo: [ :w | w select: index - 1 ] ]
+			ifFalse: [ self innerWidgetDo: [ :w | w unselectAll ] ] ]
 ]
 
 { #category : 'building' }
