@@ -19,7 +19,7 @@ Class {
 GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	super addModelTo: gtkColumnView.
-		
+
 	"gtkListView showSeparators: true."
 	"gtkListView enableRubberband: true."
 
@@ -31,11 +31,13 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 	
 	gtkColumnView selectionModel: self newSelectionModel.
 	gtkColumnView singleClickActivate: self presenter isActiveOnSingleClick.
-		
+
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
 	self presenter selection 
 		whenChangedDo: [ self updateSelectionFromPresenter ].
+	self presenter whenIsResizableChangedDo: [ :aBoolean |
+		self updateResizableColumnsTo: aBoolean ].
 
 	gtkColumnView connectRowActivated: [ :position |
 		self presenter doActivateAtIndex: position + 1 ].
