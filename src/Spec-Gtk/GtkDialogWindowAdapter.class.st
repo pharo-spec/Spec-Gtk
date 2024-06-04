@@ -85,6 +85,7 @@ GtkDialogWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpe
 GtkDialogWindowAdapter >> newWidget [
 
 	^ super newWidget
+		hideOnClose: true;
 		defaultSize: self presenter initialExtent;
 		yourself
 ]
@@ -104,5 +105,6 @@ GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 	aBlock value.	
 	"This will block until dialog is closed (see `closeFromSignal`"
 	GRunLoop defer: [ runLoop run ].
-
+	self widgetDo: [ :w |
+		w withObjectReferenceDo: [ w destroy ] ]
 ]
