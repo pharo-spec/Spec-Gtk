@@ -20,12 +20,6 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	super addModelTo: gtkColumnView.
 
-	"gtkListView showSeparators: true."
-	"gtkListView enableRubberband: true."
-
-	"self configureDragAndDrop: gtkListView".
-	"self addSearchTo: gtkListView"
-
 	self presenter columns do: [ :each |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
 	
@@ -86,6 +80,10 @@ GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
 		title: aColumn title;
 		factory: (self newColumnFactory: aColumn);
 		resizable: self presenter isResizable;
+		expand: aColumn isExpand;
+		in: [ :this | 
+			aColumn hasFixedWidth 
+				ifTrue: [ this fixedWidth: aColumn width ] ];
 		yourself
 ]
 
