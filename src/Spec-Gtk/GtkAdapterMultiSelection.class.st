@@ -19,24 +19,13 @@ GtkAdapterMultiSelection >> newModel: aModel [
 ]
 
 { #category : 'private - updating' }
-GtkAdapterMultiSelection >> updatePresenterSelection: position numItems: numItems [
-	| indexes |
-	
-	indexes := self adapter innerWidgetDo: [ :w | w selectionModel allSelected ].
-	self presenter selection selectIndexes: indexes
+GtkAdapterMultiSelection >> updateSelectionFromGtk [
+
+	self adapter updateMultiSelectionFromGtk
 ]
 
 { #category : 'updating' }
 GtkAdapterMultiSelection >> updateSelectionFromPresenter [
-	| rowIndexes newIndexes removedIndexes |
-
-	oldIndexes ifNil: [ oldIndexes := #() ].
-	rowIndexes := self presenter selection selectedIndexes.
-	removedIndexes := oldIndexes \ rowIndexes.
-	newIndexes := rowIndexes \ oldIndexes.
-	oldIndexes := rowIndexes.
 	
-	self adapter innerWidgetDo: [ :w |
-		removedIndexes do: [ :index | w selectionModel unselectItem: index ].
-		newIndexes do: [ :index | w selectionModel selectItem: index unselectRest: false ] ]
+	oldIndexes := self adapter updateMultiSelectionFromPresenter: (oldIndexes ifNil: [ #() ])
 ]

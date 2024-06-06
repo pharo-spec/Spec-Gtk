@@ -24,7 +24,7 @@ GtkTreeListViewAdapterDataStore class >> newPresenter: aPresenter [
 GtkTreeListViewAdapterDataStore >> items [
 
 	^ items ifNil: [ 
-		items := self presenter items 
+		items := self presenter roots
 			ifNotNil: [ :aCollection | aCollection copy ]
 			ifNil: [ #() ] ]
 ]

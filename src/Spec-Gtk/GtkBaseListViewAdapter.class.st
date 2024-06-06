@@ -1,0 +1,75 @@
+Class {
+	#name : 'GtkBaseListViewAdapter',
+	#superclass : 'GtkAdapter',
+	#traits : 'GtkTHaveWrappingScrollBars',
+	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
+	#instVars : [
+		'deferredAction',
+		'selectionCompanion'
+	],
+	#category : 'Spec-Gtk-Adapter-ListView',
+	#package : 'Spec-Gtk',
+	#tag : 'Adapter-ListView'
+}
+
+{ #category : 'private' }
+GtkBaseListViewAdapter >> selectionCompanion [
+
+	^ selectionCompanion ifNil: [ 
+		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
+]
+
+{ #category : 'private - updating' }
+GtkBaseListViewAdapter >> updateMultiSelectionFromGtk [
+	| indexes |
+	
+	indexes := self innerWidgetDo: [ :w | w selectionModel allSelected ].
+	self presenter selection selectIndexes: indexes
+]
+
+{ #category : 'private - updating' }
+GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: oldIndexes [
+	| rowIndexes newIndexes removedIndexes |
+
+	rowIndexes := self presenter selection selectedIndexes.
+	removedIndexes := oldIndexes \ rowIndexes.
+	newIndexes := rowIndexes \ oldIndexes.
+	
+	self innerWidgetDo: [ :w |
+		removedIndexes do: [ :index | w selectionModel unselectItem: index ].
+		newIndexes do: [ :index | w selectionModel selectItem: index unselectRest: false ] ].
+	
+	^ newIndexes
+]
+
+{ #category : 'private - updating' }
+GtkBaseListViewAdapter >> updatePresenterSelection: position numItems: numItems [
+	
+	self backendUpdatingDo: [
+		self selectionCompanion updateSelectionFromGtk ]
+]
+
+{ #category : 'private - updating' }
+GtkBaseListViewAdapter >> updateSingleSelectionFromGtk [
+	| index |
+
+	"Do not use the position received because is information about the change not 
+	 indicating the real selected index"	
+	index := self innerWidgetDo: [ :w | w selectionModel selected ].
+	self presenter selection selectIndex: index
+]
+
+{ #category : 'private - updating' }
+GtkBaseListViewAdapter >> updateSingleSelectionFromPresenter [
+	| index |
+
+	index := self presenter selection selectedIndex. 
+	self innerWidgetDo: [ :w |
+		index > 0 
+			ifTrue: [ 
+				w selectionModel selectItem: index unselectRest: true ]
+			ifFalse: [ 
+				w selectionModel unselectAll ] ].
+		
+	^ index
+]

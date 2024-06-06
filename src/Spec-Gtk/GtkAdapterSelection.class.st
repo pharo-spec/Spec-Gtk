@@ -45,7 +45,7 @@ GtkAdapterSelection >> presenter [
 ]
 
 { #category : 'private - updating' }
-GtkAdapterSelection >> updatePresenterSelection: position numItems: numItems [
+GtkAdapterSelection >> updateSelectionFromGtk [
 
 	self subclassResponsibility
 ]

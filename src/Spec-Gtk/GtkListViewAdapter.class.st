@@ -3,13 +3,7 @@ Gtk adaptor for `SpListViewPresenter`.
 "
 Class {
 	#name : 'GtkListViewAdapter',
-	#superclass : 'GtkAdapter',
-	#traits : 'GtkTHaveWrappingScrollBars',
-	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
-	#instVars : [
-		'deferredAction',
-		'selectionCompanion'
-	],
+	#superclass : 'GtkBaseListViewAdapter',
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter-ListView'
@@ -141,25 +135,9 @@ GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
 ]
 
 { #category : 'private' }
-GtkListViewAdapter >> selectionCompanion [
-
-	^ selectionCompanion ifNil: [ 
-		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
-]
-
-{ #category : 'private' }
 GtkListViewAdapter >> setDeferredAction: aBlock [
 
 	deferredAction := aBlock
-]
-
-{ #category : 'private - updating' }
-GtkListViewAdapter >> updatePresenterSelection: position numItems: numItems [
-	
-	self backendUpdatingDo: [
-		self selectionCompanion 
-			updatePresenterSelection: position 
-			numItems: numItems ]
 ]
 
 { #category : 'private - updating' }

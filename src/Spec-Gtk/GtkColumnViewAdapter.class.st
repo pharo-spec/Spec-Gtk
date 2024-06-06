@@ -3,13 +3,8 @@ Gtk adaptor for `SpListViewPresenter`.
 "
 Class {
 	#name : 'GtkColumnViewAdapter',
-	#superclass : 'GtkAdapter',
-	#traits : 'GtkTHaveWrappingScrollBars',
+	#superclass : 'GtkBaseListViewAdapter',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
-	#instVars : [
-		'deferredAction',
-		'selectionCompanion'
-	],
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter-ListView'
@@ -23,7 +18,7 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 	self presenter columns do: [ :each |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
 	
-	gtkColumnView selectionModel: self newSelectionModel.
+	self refreshSelectionModelIn: gtkColumnView.
 	gtkColumnView singleClickActivate: self presenter isActiveOnSingleClick.
 
 	self presenter selection isEmpty 
@@ -65,7 +60,7 @@ GtkColumnViewAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
-{ #category : 'private - factory' }
+{ #category : 'as yet unclassified' }
 GtkColumnViewAdapter >> newColumnFactory: aColumn [
 
 	^ GtkColumnViewAdapterItemFactory 
@@ -73,7 +68,7 @@ GtkColumnViewAdapter >> newColumnFactory: aColumn [
 		column: aColumn
 ]
 
-{ #category : 'private - factory' }
+{ #category : 'as yet unclassified' }
 GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
 
 	^ GtkColumnViewColumn new
@@ -112,7 +107,13 @@ GtkColumnViewAdapter >> refreshList [
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
 			 back a non existing anymore model reference objects), causing a crash."
-			w selectionModel: self newSelectionModel ] ]
+			self refreshSelectionModelIn: w ] ]
+]
+
+{ #category : 'building' }
+GtkColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
+	
+	gtkColumnView selectionModel: self newSelectionModel
 ]
 
 { #category : 'private - updating' }
@@ -138,25 +139,9 @@ GtkColumnViewAdapter >> scrollToSelectionIfNeeded: index [
 ]
 
 { #category : 'private' }
-GtkColumnViewAdapter >> selectionCompanion [
-
-	^ selectionCompanion ifNil: [ 
-		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
-]
-
-{ #category : 'private' }
 GtkColumnViewAdapter >> setDeferredAction: aBlock [
 
 	deferredAction := aBlock
-]
-
-{ #category : 'private - updating' }
-GtkColumnViewAdapter >> updatePresenterSelection: position numItems: numItems [
-	
-	self backendUpdatingDo: [
-		self selectionCompanion 
-			updatePresenterSelection: position 
-			numItems: numItems ]
 ]
 
 { #category : 'private - updating' }

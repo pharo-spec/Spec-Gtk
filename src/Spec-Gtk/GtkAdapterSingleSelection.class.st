@@ -19,24 +19,13 @@ GtkAdapterSingleSelection >> newModel: aModel [
 ]
 
 { #category : 'private - updating' }
-GtkAdapterSingleSelection >> updatePresenterSelection: position numItems: numItems [
-	| index |
+GtkAdapterSingleSelection >> updateSelectionFromGtk [
 
-	"Do not use the position received because is information about the change not 
-	 indicating the real selected index"	
-	index := self adapter innerWidgetDo: [ :w | w selectionModel selected ].
-	self presenter selection selectIndex: index
+	self adapter updateSingleSelectionFromGtk
 ]
 
 { #category : 'updating' }
 GtkAdapterSingleSelection >> updateSelectionFromPresenter [
-	| index |
 
-	index := self presenter selection selectedIndex. 
-	self adapter innerWidgetDo: [ :w |
-		index > 0 
-			ifTrue: [ 
-				w selectionModel selectItem: index unselectRest: true ]
-			ifFalse: [ 
-				w selectionModel unselectAll ] ]
+	self adapter updateSingleSelectionFromPresenter
 ]
