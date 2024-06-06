@@ -139,8 +139,7 @@ GtkListViewAdapterBaseFactory >> storePresenter: aPresenter [
 		widget := aPresenter adapter widget.
 		storedObjects 
 			at: widget getHandle
-			put: aPresenter.
-		"widget objectRef" ].
+			put: aPresenter ].
 		
 	^ aPresenter
 ]

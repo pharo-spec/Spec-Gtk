@@ -19,15 +19,15 @@ Class {
 GtkListViewAdapter >> addModelTo: gtkListView [
 
 	super addModelTo: gtkListView.
-		
+
 	"gtkListView showSeparators: true."
 	"gtkListView enableRubberband: true."
 
-	"self configureDragAndDrop: gtkListView".
+	"self configureDragAndDrop: gtkListView."
 	"self addSearchTo: gtkListView"
 	
 	gtkListView factory: self newItemFactory.
-	gtkListView selectionModel: self newSelectionModel.
+	self refreshSelectionModelIn: gtkListView.
 
 	gtkListView singleClickActivate: 	self presenter isActiveOnSingleClick.
 
@@ -108,8 +108,14 @@ GtkListViewAdapter >> refreshList [
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
 			 back a non existing anymore model reference objects), causing a crash."
-			w selectionModel: self newSelectionModel.
+			self refreshSelectionModelIn: w.
 			w factory reset ] ]
+]
+
+{ #category : 'building' }
+GtkListViewAdapter >> refreshSelectionModelIn: gtkListView [
+	
+	gtkListView selectionModel: self newSelectionModel
 ]
 
 { #category : 'private - updating' }

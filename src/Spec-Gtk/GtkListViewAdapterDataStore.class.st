@@ -43,7 +43,7 @@ GtkListViewAdapterDataStore >> presenter: aPresenter [
 	self reset
 ]
 
-{ #category : 'private' }
+{ #category : 'as yet unclassified' }
 GtkListViewAdapterDataStore >> reset [
 
 	super reset.
