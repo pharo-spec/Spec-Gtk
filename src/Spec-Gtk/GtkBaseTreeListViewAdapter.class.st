@@ -19,6 +19,20 @@ GtkBaseTreeListViewAdapter >> doInitializationDeferredActions [
 	deferredAction ensure: [ deferredAction := nil ]
 ]
 
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel [
+	
+	aPath ifEmpty: [ ^ nil ].
+
+	^ aModel
+		withRowAt: aPath first 
+		do: [ :row | 						
+			row expand: true.
+			aPath allButFirst 
+				ifNotEmpty: [ :nextPath | self findAndExpandPath: nextPath in: row ]
+				ifEmpty: [ row ] ]
+]
+
 { #category : 'accessing' }
 GtkBaseTreeListViewAdapter >> itemAtPath: aPath [
 
@@ -63,6 +77,12 @@ GtkBaseTreeListViewAdapter >> newStore [
 				children: self presenter children ])
 ]
 
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> refreshSelectionModelIn: gtkWidget [
+
+	self subclassResponsibility
+]
+
 { #category : 'building' }
 GtkBaseTreeListViewAdapter >> selectionCompanion [
 
@@ -83,10 +103,28 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromGtk [
 ]
 
 { #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> updateMultiSelectionFromPresenter: oldPath [
+
+	self halt.
+	oldPath crTrace
+]
+
+{ #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> updatePresenterSelection: position numItems: numItems [
 	
 	self backendUpdatingDo: [
 		self selectionCompanion updateSelectionFromGtk ]
+]
+
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> updateRoots [
+
+	self backendUpdatingDo: [
+		self innerWidgetDo: [ :w |
+			"IMPORTANT: Do not attempt to change the inner model of the selection model!
+			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
+			 back a non existing anymore model reference objects), causing a crash."
+			self refreshSelectionModelIn: w ] ]
 ]
 
 { #category : 'building' }
@@ -108,4 +146,25 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromGtk [
 			selection model store pathOfItem: item ] ].
 
 	self presenter selection selectPath: path
+]
+
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
+	| path |
+	
+	path := self presenter selection selectedPath collect: [ :each | each - 1 ].
+	path = oldPath ifTrue: [ ^ path ].  
+
+	path ifEmpty: [ 
+		self innerWidgetDo: [ :w | w selectionModel unselectAll ].
+		^ path ].
+
+	self innerWidgetDo: [ :w | 
+		| treeModel lastRow |
+		treeModel := w selectionModel model.
+		lastRow := self findAndExpandPath: path in: treeModel.
+		lastRow ifNotNil: [ 
+			w selectionModel select: lastRow position ] ].
+	
+	^ path
 ]

@@ -27,5 +27,5 @@ GtkAdapterMultiSelection >> updateSelectionFromGtk [
 { #category : 'updating' }
 GtkAdapterMultiSelection >> updateSelectionFromPresenter [
 	
-	oldIndexes := self adapter updateMultiSelectionFromPresenter: (oldIndexes ifNil: [ #() ])
+	oldIndexes := self adapter updateMultiSelectionFromPresenter: oldIndexes
 ]

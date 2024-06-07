@@ -23,6 +23,7 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 	self presenter whenIsResizableChangedDo: [ :aBoolean |
 		self updateResizableColumnsTo: aBoolean ].
+	self presenter whenRootsChangedDo: [ self updateRoots ].
 
 	gtkColumnView connectRowActivated: [ :position |
 		self presenter doActivateSelected ]
@@ -76,6 +77,7 @@ GtkTreeColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
 	
 	selectionModel := self newSelectionModel.
 	gtkColumnView selectionModel: selectionModel.
+	"update stores in column factories"
 	gtkColumnView columns do: [ :each |
 		each factory store: selectionModel model store ]
 ]

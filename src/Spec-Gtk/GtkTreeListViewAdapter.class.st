@@ -29,6 +29,8 @@ GtkTreeListViewAdapter >> addModelTo: gtkListView [
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
 	self presenter selection 
 		whenChangedDo: [ self updateSelectionFromPresenter ].
+	self presenter whenRootsChangedDo: [ 
+		self updateRoots ].
 
 	gtkListView connectRowActivated: [ :position |
 		self presenter doActivateSelected ]
@@ -59,10 +61,11 @@ GtkTreeListViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
 		self innerWidgetDo: [ :w |
+			w selectionModel unselectAll.
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
 			 back a non existing anymore model reference objects), causing a crash."
-			self refreshSelectionModelIn: w.
+			w selectionModel: self newSelectionModel.
 			w factory reset ] ]
 ]
 
@@ -72,6 +75,7 @@ GtkTreeListViewAdapter >> refreshSelectionModelIn: gtkListView [
 	
 	selectionModel := self newSelectionModel.
 	gtkListView selectionModel: selectionModel.
+	"update store in factory"
 	gtkListView factory store: selectionModel model store
 ]
 

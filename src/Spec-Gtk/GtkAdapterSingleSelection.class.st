@@ -4,6 +4,9 @@ adapter to handle simple selections (maps a presenter selection with a gtk selec
 Class {
 	#name : 'GtkAdapterSingleSelection',
 	#superclass : 'GtkAdapterSelection',
+	#instVars : [
+		'oldIndex'
+	],
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter-ListView'
@@ -27,5 +30,5 @@ GtkAdapterSingleSelection >> updateSelectionFromGtk [
 { #category : 'updating' }
 GtkAdapterSingleSelection >> updateSelectionFromPresenter [
 
-	self adapter updateSingleSelectionFromPresenter
+	oldIndex := self adapter updateSingleSelectionFromPresenter: oldIndex
 ]

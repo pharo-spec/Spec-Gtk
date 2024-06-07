@@ -60,16 +60,17 @@ GtkBaseListViewAdapter >> updateSingleSelectionFromGtk [
 ]
 
 { #category : 'private - updating' }
-GtkBaseListViewAdapter >> updateSingleSelectionFromPresenter [
+GtkBaseListViewAdapter >> updateSingleSelectionFromPresenter: oldIndex [
 	| index |
 
 	index := self presenter selection selectedIndex. 
-	self innerWidgetDo: [ :w |
-		index > 0 
-			ifTrue: [ 
-				w selectionModel selectItem: index unselectRest: true ]
-			ifFalse: [ 
-				w selectionModel unselectAll ] ].
-		
+	oldIndex = index ifFalse: [
+		self innerWidgetDo: [ :w |
+			index > 0 
+				ifTrue: [ 
+					w selectionModel selectItem: index unselectRest: true ]
+				ifFalse: [ 
+					w selectionModel unselectAll ] ] ].
+
 	^ index
 ]
