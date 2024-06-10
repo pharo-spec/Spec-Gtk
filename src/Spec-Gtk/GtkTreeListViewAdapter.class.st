@@ -36,6 +36,13 @@ GtkTreeListViewAdapter >> addModelTo: gtkListView [
 		self presenter doActivateSelected ]
 ]
 
+{ #category : 'api' }
+GtkTreeListViewAdapter >> alternateRowsColor [
+
+	self innerWidgetDo: [ :w | 
+		w showSeparators: true ]
+]
+
 { #category : 'accessing' }
 GtkTreeListViewAdapter >> elementAt: index [
 	| item |

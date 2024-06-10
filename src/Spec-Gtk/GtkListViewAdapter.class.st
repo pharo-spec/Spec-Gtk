@@ -39,6 +39,13 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 	self configureScrolling
 ]
 
+{ #category : 'api' }
+GtkListViewAdapter >> alternateRowsColor [
+
+	self innerWidgetDo: [ :w | 
+		w showSeparators: true ]
+]
+
 { #category : 'building' }
 GtkListViewAdapter >> configureScrolling [
 	| vAlignment |

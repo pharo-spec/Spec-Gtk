@@ -34,6 +34,13 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 	self configureScrolling
 ]
 
+{ #category : 'api' }
+GtkColumnViewAdapter >> alternateRowsColor [
+
+	self innerWidgetDo: [ :w | 
+		w showRowSeparators: true ]
+]
+
 { #category : 'building' }
 GtkColumnViewAdapter >> configureScrolling [
 	| vAlignment |

@@ -29,6 +29,13 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 		self presenter doActivateSelected ]
 ]
 
+{ #category : 'api' }
+GtkTreeColumnViewAdapter >> alternateRowsColor [
+
+	self innerWidgetDo: [ :w | 
+		w showRowSeparators: true ]
+]
+
 { #category : 'private' }
 GtkTreeColumnViewAdapter >> configureScrolling [
 	"
