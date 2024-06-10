@@ -74,12 +74,14 @@ GtkTreeColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn index: index [
 { #category : 'building' }
 GtkTreeColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
 	| selectionModel |
-	
+
 	selectionModel := self newSelectionModel.
-	gtkColumnView selectionModel: selectionModel.
-	"update stores in column factories"
+	"update store in factory. This has to be BEFORE setting it to the list view 
+	 because gtk will trigger an update *immediately*. and it needs to find the 
+	 right contents when it looks for them. "
 	gtkColumnView columns do: [ :each |
-		each factory store: selectionModel model store ]
+		each factory store: selectionModel model store ].
+	gtkColumnView selectionModel: selectionModel 
 ]
 
 { #category : 'private' }

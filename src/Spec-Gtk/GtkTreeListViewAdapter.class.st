@@ -74,9 +74,12 @@ GtkTreeListViewAdapter >> refreshSelectionModelIn: gtkListView [
 	| selectionModel |
 	
 	selectionModel := self newSelectionModel.
+	"update store in factory. This has to be BEFORE setting it to the list view 
+	 because gtk will trigger an update *immediately*. and it needs to find the 
+	 right contents when it looks for them. "
+	gtkListView factory store: selectionModel model store.
 	gtkListView selectionModel: selectionModel.
-	"update store in factory"
-	gtkListView factory store: selectionModel model store
+	
 ]
 
 { #category : 'private - updating' }
