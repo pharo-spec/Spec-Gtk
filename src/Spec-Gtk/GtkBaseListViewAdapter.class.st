@@ -28,9 +28,10 @@ GtkBaseListViewAdapter >> updateMultiSelectionFromGtk [
 ]
 
 { #category : 'private - updating' }
-GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: oldIndexes [
-	| rowIndexes newIndexes removedIndexes |
+GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: pathsArray [
+	| rowIndexes newIndexes removedIndexes oldIndexes |
 
+	oldIndexes := pathsArray ifNil: [ #() ].
 	rowIndexes := self presenter selection selectedIndexes.
 	removedIndexes := oldIndexes \ rowIndexes.
 	newIndexes := rowIndexes \ oldIndexes.

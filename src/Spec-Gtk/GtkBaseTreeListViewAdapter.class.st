@@ -98,15 +98,40 @@ GtkBaseTreeListViewAdapter >> setDeferredAction: aBlock [
 
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> updateMultiSelectionFromGtk [
-	
-	self notYetImplemented
+	| paths |
+
+	paths := OrderedCollection new.
+	self innerWidgetDo: [ :w |
+		| selection row  |
+		selection :=  w selectionModel.
+		selection selectedItems do: [ :rowHandle |
+			row := GtkTreeListRow fromHandleUnreferenced: rowHandle getHandle.
+			paths add: (row withItemDo: [ :item | 
+				selection model store pathOfItem: item ]) ] ].
+
+	self presenter selection selectPaths: paths asArray
 ]
 
 { #category : 'private - updating' }
-GtkBaseTreeListViewAdapter >> updateMultiSelectionFromPresenter: oldPath [
+GtkBaseTreeListViewAdapter >> updateMultiSelectionFromPresenter: oldPaths [
+	| paths |
+	
+	paths := self presenter selection selectedPaths collect: [ :each | each - 1 ].
+	paths = oldPaths ifTrue: [ ^ paths ].  
 
-	self halt.
-	oldPath crTrace
+	paths ifEmpty: [ 
+		self innerWidgetDo: [ :w | w selectionModel unselectAll ].
+		^ paths ].
+
+	self innerWidgetDo: [ :w | 
+		| treeModel lastRow |
+		treeModel := w selectionModel model.
+		paths do: [ :path |
+			lastRow := self findAndExpandPath: path in: treeModel.
+			lastRow ifNotNil: [ 
+				w selectionModel select: lastRow position ] ] ].
+	
+	^ paths
 ]
 
 { #category : 'private - updating' }
