@@ -50,19 +50,19 @@ SpecGtkBackend >> initialize [
 	super initialize
 ]
 
-{ #category : 'ui notifying' }
+{ #category : 'ui - notifying' }
 SpecGtkBackend >> notifyError: aSpecNotification [
 
 	GtkErrorDialog runMessage: aSpecNotification message
 ]
 
-{ #category : 'ui notifying' }
+{ #category : 'ui - notifying' }
 SpecGtkBackend >> notifyInfo: aSpecNotification [
 
 	GtkInformDialog runMessage: aSpecNotification message
 ]
 
-{ #category : 'ui dialogs' }
+{ #category : 'ui - dialogs' }
 SpecGtkBackend >> selectDirectoryTitle: aString [
 	| dialog |
 
