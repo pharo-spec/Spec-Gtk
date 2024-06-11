@@ -112,13 +112,19 @@ GtkPanedAdapter >> setInitializationDeferredAction: aBlock [
 { #category : 'private' }
 GtkPanedAdapter >> setPosition: aNumber to: aWidget [
 
-	aWidget position: (aNumber < 1 
-		ifTrue: [ 
-			self 
-				calculatePercentAtDirectionOf: aWidget 
-				extent: aWidget allocation extent ]
-		ifFalse: [ 
-			aNumber ])
+	aNumber < 1 ifTrue: [  
+		| widgetSize |
+		
+		self flag: #TODO. "% location is not working because we can't know the actual size 
+		so we can't calculate the position... :("
+		widgetSize := aWidget size.
+		widgetSize = (0@0) ifTrue: [ ^ self ].
+		aWidget position: (self 
+			calculatePercentAtDirectionOf: aWidget 
+			extent: widgetSize).
+		^ self ].
+	  
+	aWidget position: aNumber
 ]
 
 { #category : 'private' }
