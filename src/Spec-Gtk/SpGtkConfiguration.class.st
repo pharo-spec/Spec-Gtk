@@ -49,10 +49,33 @@ SpGtkConfiguration >> addCSSProviderFromString: aString [
 { #category : 'configuring' }
 SpGtkConfiguration >> addPredefinedStyles [
 	
-	self addCSSProviderFromString: self styleForToolbar.
+	self addCSSProviderFromString: self baseStyle.
 	self addCSSProviderFromString: (self isDarkTheme 
 		ifTrue: [ self styleForToolbarDark ]
 		ifFalse: [ self styleForToolbarLight ])
+]
+
+{ #category : 'configuring' }
+SpGtkConfiguration >> baseStyle [
+
+	^ '
+/* compact toolbar */
+box.toolbar { font-size: 0.6em; font-weight: lighter; }
+box.toolbar .toolbarButton > button { padding: 1px; margin: 1px; }
+
+/* action areas for dialogs */
+box.action_area { min-height: 50px; }
+box.action_area > button:first-child { 
+	border-radius: 0;
+	border-bottom-left-radius: 13px; 
+	border-left: none; 
+}
+box.action_area > button:last-child { 
+	border-radius: 0;
+	border-bottom-right-radius: 13px;
+	border-right: none; 
+}
+'
 ]
 
 { #category : 'accessing - colors' }
@@ -188,26 +211,23 @@ SpGtkConfiguration >> settings [
 ]
 
 { #category : 'configuring' }
-SpGtkConfiguration >> styleForToolbar [
-
-	^ '
-/* compact toolbar */
-box.toolbar { font-size: 0.7em; }
-box.toolbar .toolbarButton > button { padding: 2px; margin: 2px; }
-'
-]
-
-{ #category : 'configuring' }
 SpGtkConfiguration >> styleForToolbarDark [
 		
-	^ 'box.toolbar label { color: #C0C0C0; }'
+	^ '
+box.toolbar label { 
+	color: #C0C0C0; 
+}
+'
 ]
 
 { #category : 'configuring' }
 SpGtkConfiguration >> styleForToolbarLight [
 		
-	^ 'box.toolbar label { color: #808080; }'
-
+	^ '
+box.toolbar label { 
+	color: #808080; 
+}
+'
 ]
 
 { #category : 'accessing - style' }
