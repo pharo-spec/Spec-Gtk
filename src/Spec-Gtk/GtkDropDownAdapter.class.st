@@ -94,10 +94,14 @@ GtkDropDownAdapter >> updateSelectionFromPresenter [
 
 	self backendDetectCyclesDo: [ 
 		| index |
-		index := self presenter selection selectedIndex. 
+		index := self presenter selection selectedIndex - 1. 
 		self innerWidgetDo: [ :w |
-			index > 0 
-				ifTrue: [ w select: index - 1 ] ] ]
+			index >= 0 
+				ifTrue: [ 
+					w selected = index 
+						ifFalse: [ w select: index ] ]
+				ifFalse: [ 
+					w unselectAll ] ] ]
 ]
 
 { #category : 'building' }
