@@ -368,11 +368,11 @@ GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 	| windowContent |
 
 	"menu bar"
-	self model hasMenu
+	self model hasMenu 
 		ifTrue: [ gtkBox append: (self menuBarAccelInstalledOn: gtkWindow) ].
 	"tool bar"
-	self model hasToolbar
-		ifTrue: [ gtkBox packStart: self toolbar ].
+	self model hasToolbar 
+		ifTrue: [ gtkBox append: self toolbar ].
 	"infoArea"
 	contentBox append: self infoArea adapter widget.
 	"contents"
@@ -380,7 +380,7 @@ GtkWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 	gtkBox append: windowContent.
 	windowContent expand: true.
 	"status bar"
-	self model hasStatusBar
+	self model hasStatusBar 
 		ifTrue: [ gtkBox append: self statusBar ]
 ]
 
