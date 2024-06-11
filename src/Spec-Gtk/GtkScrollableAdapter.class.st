@@ -34,7 +34,7 @@ GtkScrollableAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWid
 	| childWidget |
 
 	childWidget := aPresenter buildWithSelector: constraints spec.
-	gtkWidget add: childWidget.
+	gtkWidget child: childWidget.
 			
 	^ gtkWidget
 ]
