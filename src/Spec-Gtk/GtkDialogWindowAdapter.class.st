@@ -18,19 +18,18 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 	containerBox append: gtkBox.
 	
 	buttonBox := GtkBox newHorizontal.
-	buttonBox spacing: 2.
-	self presenter buttons
-		do: [ :buttonPresenter |
-			buttonPresenter = self presenter defaultButton
-				ifTrue: [ buttonPresenter addStyle: 'suggested-action' ]. 
-			buttonBox append: (buttonPresenter build
-				hExpand: true;
-				yourself) ].
+	buttonBox spacing: 0.
+	buttonBox addClass: 'action_area'.
+	self presenter buttons do: [ :buttonPresenter |
+		buttonPresenter = self presenter defaultButton
+			ifTrue: [ buttonPresenter addStyle: 'suggested-action' ]. 
+		buttonBox append: (buttonPresenter build
+			hExpand: true;
+			yourself) ].
 	buttonBox vExpand: false.
 	containerBox append: buttonBox.
 	
 	super add: containerBox toWindow: gtkDialog
-
 ]
 
 { #category : 'private - building' }
