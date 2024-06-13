@@ -43,6 +43,24 @@ GtkLabelAdapter >> applyDecorationsTo: aWidget label: aString [
 ]
 
 { #category : 'accessing' }
+GtkLabelAdapter >> beJustifyCenter [
+
+	self widgetDo: [ :w | w beJustifyCenter ]
+]
+
+{ #category : 'accessing' }
+GtkLabelAdapter >> beJustifyLeft [
+
+	self widgetDo: [ :w | w beJustifyLeft ]
+]
+
+{ #category : 'accessing' }
+GtkLabelAdapter >> beJustifyRight [
+
+	self widgetDo: [ :w | w beJustifyRight ]
+]
+
+{ #category : 'accessing' }
 GtkLabelAdapter >> beNotWrap [
 
 	self widgetDo: [ :w | w wrap: false ]
