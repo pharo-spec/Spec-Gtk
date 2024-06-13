@@ -1,6 +1,24 @@
 Extension { #name : 'SpLabelPresenter' }
 
 { #category : '*Spec-Gtk' }
+SpLabelPresenter >> beJustifyCenter [
+
+	self withAdapterPerformOrDefer:  [ :anAdapter | anAdapter beJustifyCenter ]
+]
+
+{ #category : '*Spec-Gtk' }
+SpLabelPresenter >> beJustifyLeft [
+
+	self withAdapterPerformOrDefer:  [ :anAdapter | anAdapter beJustifyLeft ]
+]
+
+{ #category : '*Spec-Gtk' }
+SpLabelPresenter >> beJustifyRight [
+
+	self withAdapterPerformOrDefer:  [ :anAdapter | anAdapter beJustifyRight ]
+]
+
+{ #category : '*Spec-Gtk' }
 SpLabelPresenter >> beNotWrap [
 
 	self withAdapterPerformOrDefer:  [ :anAdapter | anAdapter beNotWrap ]
