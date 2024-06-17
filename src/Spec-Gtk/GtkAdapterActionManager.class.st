@@ -85,7 +85,7 @@ GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
 		gtkWidget insertActionGroup: 'global' actions: actionGroup ].
 	
 	action := (GSimpleAction newName: aCommand id)
-		connectActivate: [ [ aCommand execute ] fork ];
+		connectActivate: [ self runInSystem: [ aCommand execute ] ];
 		yourself.	
 	actionMap at: aCommand put: action.
 	actionGroup insert: action.
@@ -156,6 +156,12 @@ GtkAdapterActionManager >> installShortcutsOn: gtkWidget [
 GtkAdapterActionManager >> presenter [
 
 	^ self adapter presenter
+]
+
+{ #category : 'private' }
+GtkAdapterActionManager >> runInSystem: aBlock [
+	
+	GRunLoop enterSystem: aBlock
 ]
 
 { #category : 'actions' }

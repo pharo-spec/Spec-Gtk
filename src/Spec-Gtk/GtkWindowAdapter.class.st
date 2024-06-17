@@ -84,8 +84,8 @@ GtkWindowAdapter >> announceClosed [
 
 { #category : 'private' }
 GtkWindowAdapter >> announceOpened [
-
-	self model windowIsOpened
+	"ensure not in callback"
+	self runInSystem: [ self model windowIsOpened ]
 ]
 
 { #category : 'private' }

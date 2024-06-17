@@ -55,6 +55,12 @@ GtkActionVisitor >> pushPrefix: aCommandGroup [
 		ifFalse: [ aCommandGroup id ])
 ]
 
+{ #category : 'private' }
+GtkActionVisitor >> runInSystem: aBlock [
+	
+	GRunLoop enterSystem: aBlock
+]
+
 { #category : 'visiting' }
 GtkActionVisitor >> visitCommandGroup: aCommandGroup [
 

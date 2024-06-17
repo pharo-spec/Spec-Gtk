@@ -109,7 +109,8 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromGtk [
 			paths add: (row withItemDo: [ :item | 
 				selection model store pathOfItem: item ]) ] ].
 
-	self presenter selection selectPaths: paths asArray
+	self runInSystem: [ 
+		self presenter selection selectPaths: paths asArray ]
 ]
 
 { #category : 'private - updating' }
@@ -129,7 +130,9 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromPresenter: oldPaths [
 		paths do: [ :path |
 			lastRow := self findAndExpandPath: path in: treeModel.
 			lastRow ifNotNil: [ 
-				w selectionModel select: lastRow position ] ] ].
+				w selectionModel 
+					selectItem: lastRow position
+					unselectRest: false ] ] ].
 	
 	^ paths
 ]
@@ -170,7 +173,7 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromGtk [
 		path := row withItemDo: [ :item |
 			selection model store pathOfItem: item ] ].
 
-	self presenter selection selectPath: path
+	self runInSystem: [ self presenter selection selectPath: path ]
 ]
 
 { #category : 'private - updating' }

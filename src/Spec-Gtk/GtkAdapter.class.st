@@ -493,6 +493,13 @@ GtkAdapter >> removeStyle: aStyle [
 	self innerWidgetDo: [ :w | w removeClass: aStyle ]
 ]
 
+{ #category : 'private' }
+GtkAdapter >> runInSystem: aBlock [
+	"This will just make sure we left the main thread (e.g. the execution in callback) to run in the environment"
+	
+	GRunLoop enterSystem: aBlock
+]
+
 { #category : 'emulating' }
 GtkAdapter >> sendRightClickEvent [
 	
