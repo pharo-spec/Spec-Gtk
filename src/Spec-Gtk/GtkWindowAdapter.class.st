@@ -151,7 +151,7 @@ GtkWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 { #category : 'accessing' }
 GtkWindowAdapter >> close [
 
-	self widgetDo: [ :w | w close ]
+	self widgetDo: [ :w | w beNotVisible ]
 ]
 
 { #category : 'private' }

@@ -2,7 +2,8 @@ Class {
 	#name : 'GtkDialogWindowAdapter',
 	#superclass : 'GtkWindowAdapter',
 	#instVars : [
-		'runLoop'
+		'runLoop',
+		'buttonBox'
 	],
 	#category : 'Spec-Gtk-Adapter-Window',
 	#package : 'Spec-Gtk',
@@ -11,7 +12,7 @@ Class {
 
 { #category : 'private' }
 GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
-	| containerBox buttonBox |
+	| containerBox |
 	
 	containerBox := GtkBox newVertical.
 	containerBox spacing: 2.
@@ -27,6 +28,7 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 			hExpand: true;
 			yourself) ].
 	buttonBox vExpand: false.
+	buttonBox visible: self presenter hasButtonDecorations.
 	containerBox append: buttonBox.
 	
 	super add: containerBox toWindow: gtkDialog
@@ -54,6 +56,12 @@ GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 	self widgetDo: [ :w | w transientTo: aWindowPresenter window ]
 ]
 
+{ #category : 'accessing' }
+GtkDialogWindowAdapter >> close [
+
+	self widgetDo: [ :w | w visible: false ]
+]
+
 { #category : 'private' }
 GtkDialogWindowAdapter >> closeFromSignal [
 
@@ -77,7 +85,10 @@ GtkDialogWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpe
 	"self model isCentered ifTrue: [ gtkWindow center ]."
 	super
 		deferredAddPresenterIn: gtkWindow
-		withSpecLayout: aSpec
+		withSpecLayout: aSpec.
+		
+	self presenter whenButtonDecorationsChangedDo: [
+		self updateButtonDecorations ]
 ]
 
 { #category : 'building' }
@@ -102,8 +113,14 @@ GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 		self presenter presenter takeKeyboardFocus ].
 	self announceOpened.
 	aBlock value.	
-	"This will block until dialog is closed (see `closeFromSignal`"
+	"This will block until dialog is closed (see `closeFromSignal`)"
 	GRunLoop defer: [ runLoop run ].
 	self widgetDo: [ :w |
 		w withObjectReferenceDo: [ w destroy ] ]
+]
+
+{ #category : 'private - updating' }
+GtkDialogWindowAdapter >> updateButtonDecorations [
+
+	self widgetDo: [ :w | buttonBox visible: self presenter hasButtonDecorations ]
 ]
