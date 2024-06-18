@@ -38,7 +38,10 @@ GtkActionInstaller >> visitCommand: aCommand [
 	| action |
 	
 	action := (GSimpleAction newName: aCommand id)
-		connectActivate: [ self runInSystem: [ aCommand execute ] ];
+		connectActivate: [ 
+			self runInSystem: [ 
+				aCommand canBeExecuted 
+					ifTrue: [  aCommand execute ] ] ];
 		yourself.	
 	actionMap at: aCommand put: action.
 	self actionGroup insert: action
