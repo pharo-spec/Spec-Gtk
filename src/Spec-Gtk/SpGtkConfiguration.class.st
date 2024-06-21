@@ -64,7 +64,7 @@ box.toolbar { font-size: 0.6em; font-weight: lighter; }
 box.toolbar .toolbarButton > button { padding: 1px; margin: 1px; }
 
 /* action areas for dialogs */
-box.action_area { min-height: 50px; }
+box.action_area { min-height: 45px; }
 box.action_area > button:first-child { 
 	border-radius: 0;
 	border-bottom-left-radius: 13px; 
@@ -74,6 +74,14 @@ box.action_area > button:last-child {
 	border-radius: 0;
 	border-bottom-right-radius: 13px;
 	border-right: none; 
+}
+
+/* dialogs */
+label.message {
+	margin: 20px 15px 20px 15px;
+}
+entry.request { 
+	margin: 0px 15px 20px 15px;
 }
 '
 ]
