@@ -50,6 +50,24 @@ SpecGtkBackend >> initialize [
 	super initialize
 ]
 
+{ #category : 'private' }
+SpecGtkBackend >> newFileDialogFor: aFileDialog [
+	| dialog |
+
+	dialog := GtkFileDialog new.
+	aFileDialog title ifNotNil: [ :aString | dialog title: aString ].
+	aFileDialog filters ifNotEmpty: [ :aList | 
+		| filters |
+		filters := GListStore newType: GtkFileFilter.
+		aList do: [ :each |
+			filters append: (GtkFileFilter new 
+				addSuffix: each; 
+				yourself) ].
+		dialog filters: filters ].
+	
+	^ dialog
+]
+
 { #category : 'ui - notifying' }
 SpecGtkBackend >> notifyError: aSpecNotification [
 
@@ -62,18 +80,28 @@ SpecGtkBackend >> notifyInfo: aSpecNotification [
 	GtkInformDialog runMessage: aSpecNotification message
 ]
 
-{ #category : 'ui - dialogs' }
-SpecGtkBackend >> selectDirectoryTitle: aString [
-	| dialog |
+{ #category : 'private' }
+SpecGtkBackend >> openDialogSelector: aFileDialog [
 
-	dialog := GtkFileChooserDialog 
-		newOpenDirectoryTitle: 'Select file...' 
-		acceptLabel: 'Accept' 
-		cancelLabel: 'Cancel'.
-	dialog showAll; run.
-	^ dialog isOk 
-		ifTrue: [ dialog filename asFileReference ]
-		ifFalse: [ nil ]
+	aFileDialog isSaveFile ifTrue: [ ^ #saveDo: ].
+	aFileDialog isOpenDirectory ifTrue: [ ^ #selectFolderDo: ].
+	
+	^ #openDo:
+]
+
+{ #category : 'ui - dialogs' }
+SpecGtkBackend >> openFileDialog: aFileDialog [
+	| sem result selector |
+
+	selector := self openDialogSelector: aFileDialog.
+	sem := Semaphore new.
+	GRunLoop defer: [ 
+		(self newFileDialogFor: aFileDialog)
+			perform: selector with: [ :file | 
+				result := file.
+				sem signal ] ].
+	sem wait.
+	^ result ifNotNil: [ result path asFileReference ]
 ]
 
 { #category : 'private' }
