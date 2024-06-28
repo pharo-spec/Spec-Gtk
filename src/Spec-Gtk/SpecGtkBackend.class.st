@@ -38,6 +38,12 @@ SpecGtkBackend >> defer: aBlock [
 ]
 
 { #category : 'accessing' }
+SpecGtkBackend >> dropListClass [
+
+	^ SpDropDownPresenter
+]
+
+{ #category : 'accessing' }
 SpecGtkBackend >> forceDefer: aBlock [ 
 
 	GRunLoop forceDefer: aBlock
@@ -48,6 +54,12 @@ SpecGtkBackend >> initialize [
 
 	GtkEngine ensureRunning.
 	super initialize
+]
+
+{ #category : 'accessing' }
+SpecGtkBackend >> listClass [
+
+	^ SpEasyListViewPresenter
 ]
 
 { #category : 'private' }
@@ -119,4 +131,22 @@ SpecGtkBackend >> showWaitCursorWhile: aBlock inApplication: anApplication [
 	aBlock ensure: [ 
 		self forceDefer: [ 
 			self setCursor: GdkCursor null toAll: anApplication windows ] ]
+]
+
+{ #category : 'accessing' }
+SpecGtkBackend >> tableClass [
+
+	^ SpEasyColumnViewPresenter
+]
+
+{ #category : 'accessing' }
+SpecGtkBackend >> treeClass [
+
+	^ SpEasyTreeListViewPresenter
+]
+
+{ #category : 'accessing' }
+SpecGtkBackend >> treeTableClass [
+
+	^ SpEasyTreeColumnViewPresenter
 ]
