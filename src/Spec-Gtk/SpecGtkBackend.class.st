@@ -120,7 +120,7 @@ SpecGtkBackend >> openFileDialog: aFileDialog [
 SpecGtkBackend >> setCursor: cursor toAll: aCollection [ 
 
 	aCollection do: [ :each | 
-			each adapter widget gdkWindow cursor: cursor ].
+		each adapter widget surface cursor: cursor ].
 ]
 
 { #category : 'ui' }
