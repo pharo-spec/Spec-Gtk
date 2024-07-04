@@ -114,9 +114,11 @@ GtkColumnViewAdapter >> refreshList [
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
 			 back a non existing anymore model reference objects), causing a crash."
-			"important refresh items in factory (so they are not out of sync)"
+			
+			"refresh items in factory (so they are not out of sync)"
 			w columns do: [ :each |
 				each factory items: self presenter items ].
+			"now change the model"
 			self refreshSelectionModelIn: w ] ]
 ]
 
