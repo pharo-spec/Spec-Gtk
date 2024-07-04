@@ -73,3 +73,9 @@ GtkBaseButtonAdapter >> updateTooltip [
 	self widgetDo: [ :w | 
 		w tooltipText: self getHelpText ]
 ]
+
+{ #category : 'building' }
+GtkBaseButtonAdapter >> widgetClass [
+
+	^ GtkButton
+]
