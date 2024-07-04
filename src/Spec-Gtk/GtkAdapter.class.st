@@ -362,14 +362,14 @@ GtkAdapter >> installEvent: anEvent [
 GtkAdapter >> installFocusLostEvent: anEvent to: aWidget [
 
 	aWidget addFocusLeaveEvent: [ :event |
-		anEvent action value: event ]
+		anEvent action cull: event ]
 ]
 
 { #category : 'event installing' }
 GtkAdapter >> installFocusReceivedEvent: anEvent to: aWidget [
 
 	aWidget addFocusEnterEvent: [ :event |
-		anEvent action value: event ]
+		anEvent action cull: event ]
 ]
 
 { #category : 'event installing' }
@@ -383,7 +383,7 @@ GtkAdapter >> installKeyDownEvent: anEvent to: aWidget [
 { #category : 'event installing' }
 GtkAdapter >> installKeyUpEvent: anEvent to: aWidget [
 
-	aWidget connectKeyReleaseEvent: [ :event |
+	aWidget addKeyReleaseEvent: [ :event |
 		anEvent action value: event.
 		event wasHandled ]
 ]
