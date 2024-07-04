@@ -163,17 +163,18 @@ GtkTextStyleVisitor >> styleCloseParenthese: aMessageNode [
 
 { #category : 'styling' }
 GtkTextStyleVisitor >> styleExpression: aString [
-	| ast |
 
+	| ast |
 	ast := (contextClass ifNil: [ UndefinedObject ]) compiler
-		source: aString;
-		noPattern: true;
-		options:  #(+ optionParseErrors + optionSkipSemanticWarnings);
-		requestor: requestor;
-		parse.				
+		       source: aString;
+		       isScripting: true;
+		       options:
+			       #( #+ optionParseErrors #+ optionSkipSemanticWarnings );
+		       requestor: requestor;
+		       parse.
 
 	self styleAST: ast.
-	
+
 	^ self tags
 ]
 
