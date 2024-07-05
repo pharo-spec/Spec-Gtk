@@ -67,7 +67,7 @@ GtkColumnViewAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private - factory' }
 GtkColumnViewAdapter >> newColumnFactory: aColumn [
 
 	^ GtkColumnViewAdapterItemFactory 
@@ -75,7 +75,7 @@ GtkColumnViewAdapter >> newColumnFactory: aColumn [
 		column: aColumn
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private - factory' }
 GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
 
 	^ GtkColumnViewColumn new
