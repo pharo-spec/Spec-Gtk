@@ -16,7 +16,7 @@ GtkLinkAdapter >> addModelTo: gtkButton [
 	gtkButton connectActivateLink: [ true ].
 
 	gtkButton connectClicked: [ 
-		self presenter performAction ].
+		self runInSystem: [ self presenter performAction ] ].
 
 	self presenter label isEmptyOrNil 
 		ifFalse: [ self updateLabel ].

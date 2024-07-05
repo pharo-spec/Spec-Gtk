@@ -13,7 +13,8 @@ Class {
 GtkToolbarMenuButtonAdapter >> addModelTo: gtkToolButton [
 
 	super addModelTo: gtkToolButton.
-	gtkToolButton connectClicked: self presenter action.
+	gtkToolButton connectClicked: [
+		self runInSystem: [ self presenter action value ] ].
 	self updateMenuTo: gtkToolButton.
 	gtkToolButton connectShowMenu: [ self updateMenu ]
 ]
