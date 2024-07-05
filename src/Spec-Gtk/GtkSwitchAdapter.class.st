@@ -13,7 +13,7 @@ GtkSwitchAdapter >> addModelTo: gtkWidget [
 	
 	gtkWidget active: self presenter state.
 	
-	gtkWidget connectToggled: [
+	gtkWidget connectStateSet: [
 		self backendUpdatingDo: [ self updatePresenterState ] ].
 	self presenter whenChangedDo: [
 		self backendDetectCyclesDo: [ self updateState ] ]
