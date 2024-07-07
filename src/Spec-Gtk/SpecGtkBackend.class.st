@@ -67,14 +67,18 @@ SpecGtkBackend >> newFileDialogFor: aFileDialog [
 	| dialog |
 
 	dialog := GtkFileDialog new.
+	aFileDialog parentWindow 
+		ifNotNil: [ :aWindow | dialog parent: aWindow adapter widget ].
 	aFileDialog title ifNotNil: [ :aString | dialog title: aString ].
 	aFileDialog filters ifNotEmpty: [ :aList | 
 		| filters |
 		filters := GListStore newType: GtkFileFilter.
-		aList do: [ :each |
-			filters append: (GtkFileFilter new 
-				addSuffix: each; 
-				yourself) ].
+		aList
+			collect: [ :each | each reject: [ :ch | '*.' includes: ch ] ] 
+			thenDo: [ :each |
+				filters append: (GtkFileFilter new 
+					addSuffix: each; 
+					yourself) ].
 		dialog filters: filters ].
 	
 	^ dialog
