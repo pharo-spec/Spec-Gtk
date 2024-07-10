@@ -4,7 +4,7 @@ The Spec Gtk bindings for Pharo
 # How to install
 
 ### On Windows
-You need Gtk3!  
+You need Gtk4!  
 And you need to put it at the same place of the `Pharo.exe` executable.  
 To simplify the process we created a VM bundled with all the DLL and resources needed to execute GTK+3  
 
@@ -14,27 +14,38 @@ NOTE: If you are running under cygwin subsystem, remember to `chmod +x *`. Libra
 
 ### On macOS: 
 
-You need Gtk3 (installed by brew because paths are fixed for now)
+You need Gtk4 (installed by brew because paths are fixed for now)
 ```
-brew install gtk+3
+brew install gtk+4
 ```
 
 ### On Linux
-You need to have Gtk3 installed (this should be already the case).
-
+You need to have Gtk4 installed (this should be already the case).
+You can verify with this command: 
+```
+apt list --installed | grep gtk4 
+```
+or
+```
+dnf list --installed | grep gtk4 
+```
+You will need to remove some library files shipped with the Pharo VM:
+```
+rm ~/pharo/vm/lib/libfreetype.so* ~/pharo/vm/lib/libcairo*.so*
+```
 
 ## Installing in your image
 
-1) Download a Pharo 11.0 image:
+1) Download a Pharo 12.0 image:
 
 ```
-curl get.pharo.org/110 | bash
+curl get.pharo.org/120 | bash
 ```
 
 2) Open your image using `./pharo-ui Pharo.image` and evaluate:
 ```Smalltalk
  Metacello new
-        repository: 'github://pharo-spec/Spec-Gtk';
+        repository: 'github://pharo-spec/Spec-Gtk:gtk4';
         baseline: 'SpecGtk';
         onConflict: [ :e | e useIncoming ];
         onUpgrade: [ :e | e useIncoming ];
@@ -43,7 +54,9 @@ curl get.pharo.org/110 | bash
 ```
 After the execution, save the image, and quit.
 
-In macOS, if you open the image using `./pharo-ui Pharo.image`, the image should give the feeling of being significantly slower. This is because the Gtk event loop is running. You can verify this by opening the process browser: you should see a line begining with `(70) GtkRunLoop`.
+Running GTK now requires the Pharo VM to be run in worker mode: `./pharo --worker Pharo.image`.
+
+In macOS, running the World in Morphic is not yet possible since the SDL loop will execute in the worker and assume Cocoa is in the same thread. It cannot work since Cocoa must run in the main thread.
 
 ## A first example
 
@@ -52,7 +65,7 @@ The following code should open a small UI:
 ```Smalltalk
 SpLabelPresenter new
 	application: (SpApplication new useBackend: #Gtk);	
-	label: 'Hello, Gtk3';
+	label: 'Hello, Gtk4';
 	open.
 ```
 
