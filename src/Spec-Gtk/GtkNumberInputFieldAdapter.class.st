@@ -61,8 +61,9 @@ GtkNumberInputFieldAdapter >> setText: aStringOrNumber to: gtkWidget [
 { #category : 'private' }
 GtkNumberInputFieldAdapter >> updatePresenterText: aString [
 
-	self backendUpdatingDo: [
-		self presenter text: (aString copyReplaceAll: ',' with: '.') ] 
+	self runInSystem: [
+		self backendUpdatingDo: [
+			self presenter text: (aString copyReplaceAll: ',' with: '.') ] ] 
 ]
 
 { #category : 'building' }

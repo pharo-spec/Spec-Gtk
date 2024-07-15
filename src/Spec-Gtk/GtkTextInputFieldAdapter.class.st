@@ -100,8 +100,9 @@ GtkTextInputFieldAdapter >> text: aString [
 { #category : 'private - updating' }
 GtkTextInputFieldAdapter >> updatePresenterText: aString [
 
-	self backendUpdatingDo: [ 
-		self presenter text: aString ] 
+	self runInSystem: [
+		self backendUpdatingDo: [  
+			self presenter text: aString ] ]
 ]
 
 { #category : 'private' }

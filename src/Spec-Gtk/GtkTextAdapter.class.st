@@ -128,8 +128,8 @@ GtkTextAdapter >> updateEnabled [
 { #category : 'private' }
 GtkTextAdapter >> updatePresenterText: aString [
 
-	self backendUpdatingDo: [ 
-		self presenter text: aString ]
+	self runInSystem: [  
+		self backendUpdatingDo: [ self presenter text: aString ] ]
 ]
 
 { #category : 'building' }
