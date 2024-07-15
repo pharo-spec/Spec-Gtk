@@ -28,29 +28,29 @@ GtkTextStyleVisitor >> contextClass: aClass [
 { #category : 'private' }
 GtkTextStyleVisitor >> currentClosedBracketStyleName [
 	
-	bracketLevel isZero ifTrue: [ ^ #blockEnd ].
-	^ (#blockEnd asString, bracketLevel asString) asSymbol
+	bracketLevel isZero ifTrue: [ ^ #block ].
+	^ (#block asString, bracketLevel asString) asSymbol
 ]
 
 { #category : 'private' }
 GtkTextStyleVisitor >> currentClosedParenthesisStyleName [
 
-	parentheseLevel isZero ifTrue: [ ^ #rightParenthesis ].
-	^ (#rightParenthesis asString, parentheseLevel asString) asSymbol
+	parentheseLevel isZero ifTrue: [ ^ #parenthesis ].
+	^ (#parenthesis asString, parentheseLevel asString) asSymbol
 ]
 
 { #category : 'private' }
 GtkTextStyleVisitor >> currentOpenedBracketStyleName [
 
-	bracketLevel isZero ifTrue: [ ^ #blockStart ].
-	^ (#blockStart asString, bracketLevel asString) asSymbol
+	bracketLevel isZero ifTrue: [ ^ #block ].
+	^ (#block asString, bracketLevel asString) asSymbol
 ]
 
 { #category : 'private' }
 GtkTextStyleVisitor >> currentOpenedParenthesisStyleName [
 
-	parentheseLevel isZero ifTrue: [ ^ #leftParenthesis ].
-	^ (#leftParenthesis asString, parentheseLevel asString) asSymbol
+	parentheseLevel isZero ifTrue: [ ^ #parenthesis ].
+	^ (#parenthesis asString, parentheseLevel asString) asSymbol
 ]
 
 { #category : 'private' }
@@ -335,12 +335,12 @@ GtkTextStyleVisitor >> visitLiteralNode: aRBLiteralValueNode [
 GtkTextStyleVisitor >> visitMessageNode: aRBMessageNode [ 
 	| style |
 	
-	style := #keyword.
+	style := #selector.
 	aRBMessageNode selector isSelectorSymbol 
 		ifFalse: [ 
 			style := (Symbol selectorThatStartsCaseSensitive: aRBMessageNode selector asString skipping: nil) isNil
-				ifTrue: [ #undefinedKeyword ]
-				ifFalse: [ #incompleteKeyword ] ].
+				ifTrue: [ #undefinedSelector ]
+				ifFalse: [ #incompleteSelector ] ].
 
 	self styleOpenParenthese: aRBMessageNode.
 	aRBMessageNode selectorParts
@@ -385,7 +385,7 @@ GtkTextStyleVisitor >> visitMethodNode: aRBMethodNode [
 		with: aRBMethodNode keywordsPositions
 		do: [ :keyword :position | 
 			self
-				addStyle: #patternKeyword
+				addStyle: #patternSelector
 				from: position
 				to: position + keyword size - 1 ].
 	aRBMethodNode pragmas do: [ :each | self visitNode: each ].	
@@ -421,7 +421,7 @@ GtkTextStyleVisitor >> visitPragmaNode: aRBPragmaNode [
 		with: aRBPragmaNode keywordsPositions 
 		do: [ :keyword : position |
 			self 
-				addStyle: #pragmaKeyword
+				addStyle: #pragma
 				from: position
 				to: position + keyword size ].
 	
