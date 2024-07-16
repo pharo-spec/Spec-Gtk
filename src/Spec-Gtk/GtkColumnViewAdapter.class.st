@@ -15,6 +15,8 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	super addModelTo: gtkColumnView.
 
+	gtkColumnView setHeaderFactory: self newHeaderFactory.
+
 	self presenter columns do: [ :each |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
 	
@@ -87,6 +89,12 @@ GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
 			aColumn hasFixedWidth 
 				ifTrue: [ this fixedWidth: aColumn width ] ];
 		yourself
+]
+
+{ #category : 'private - factory' }
+GtkColumnViewAdapter >> newHeaderFactory [
+
+	^ GtkColumnViewAdapterHeaderFactory newPresenter: self presenter
 ]
 
 { #category : 'private - factory' }

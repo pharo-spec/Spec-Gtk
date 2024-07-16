@@ -11,6 +11,8 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	super addModelTo: gtkColumnView.
 
+	gtkColumnView headerFactory: self newHeaderFactory.
+
 	self presenter columns withIndexDo: [ :each :index |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each index: index) ].
 	
@@ -76,6 +78,12 @@ GtkTreeColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn index: index [
 			aColumn hasFixedWidth 
 				ifTrue: [ this fixedWidth: aColumn width ] ];
 		yourself
+]
+
+{ #category : 'private - factory' }
+GtkTreeColumnViewAdapter >> newHeaderFactory [
+
+	^ GtkColumnViewAdapterHeaderFactory newPresenter: self presenter
 ]
 
 { #category : 'building' }

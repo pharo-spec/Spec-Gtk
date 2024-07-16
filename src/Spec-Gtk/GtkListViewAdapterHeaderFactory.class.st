@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : 'accessing' }
+GtkListViewAdapterHeaderFactory >> bind: listItem [
+
+	self 
+		bind: listItem 
+		to: (self itemAt: (listItem start + 1))
+]
+
+{ #category : 'as yet unclassified' }
 GtkListViewAdapterHeaderFactory >> bind: listItem to: anObject [
 	| child |
 
@@ -23,13 +31,13 @@ GtkListViewAdapterHeaderFactory >> itemAt: aPosition [
 	^ self presenter headerTitle
 ]
 
-{ #category : 'private' }
+{ #category : 'as yet unclassified' }
 GtkListViewAdapterHeaderFactory >> listItemClass [
 	
 	^ GtkListHeader
 ]
 
-{ #category : 'accessing' }
+{ #category : 'as yet unclassified' }
 GtkListViewAdapterHeaderFactory >> setup: listItem [
 	| child |
 
