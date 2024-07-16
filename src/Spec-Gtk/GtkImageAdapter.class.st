@@ -36,5 +36,5 @@ GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImage [
 		aGtkImage clear. 
 		^ self ].
 	
-	aGtkImage setFromGdkPixbuf: aFormOrGdkPixbuf asGdkPixbuf
+	aGtkImage setFromPaintable: aFormOrGdkPixbuf asGdkPaintable
 ]
