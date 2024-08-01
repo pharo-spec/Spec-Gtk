@@ -20,6 +20,40 @@ GtkBaseTreeListViewAdapter >> doInitializationDeferredActions [
 ]
 
 { #category : 'expanding-collapsing' }
+GtkBaseTreeListViewAdapter >> expandAll [
+
+	self innerWidgetDo: [ :w |
+		self 
+			expandAll: self presenter roots 
+			basePath: #()
+			in: w selectionModel model ]
+]
+
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> expandAll: aCollection basePath: aPath in: aModel [
+
+	aCollection withIndexDo: [ :each :index |
+		| path |
+		path := aPath copyWith: index - 1.
+		self findAndExpandPath: path in: aModel.
+		self 
+			expandAll: (self presenter childrenFor: each) 
+			basePath: path 
+			in: aModel ]
+]
+
+{ #category : 'expanding-collapsing' }
+GtkBaseTreeListViewAdapter >> expandPath: aPath [
+	
+	self innerWidgetDo: [ :w |
+		| treeModel |
+		
+		treeModel := w selectionModel model.
+		self presenter roots withIndexDo: [ :each :index | 
+			self findAndExpandPath: aPath in: treeModel ] ]
+]
+
+{ #category : 'expanding-collapsing' }
 GtkBaseTreeListViewAdapter >> expandRoots [
 	
 	self innerWidgetDo: [ :w |
