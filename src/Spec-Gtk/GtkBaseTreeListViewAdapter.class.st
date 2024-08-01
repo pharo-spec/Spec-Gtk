@@ -19,6 +19,17 @@ GtkBaseTreeListViewAdapter >> doInitializationDeferredActions [
 	deferredAction ensure: [ deferredAction := nil ]
 ]
 
+{ #category : 'expanding-collapsing' }
+GtkBaseTreeListViewAdapter >> expandRoots [
+	
+	self innerWidgetDo: [ :w |
+		| treeModel |
+		
+		treeModel := w selectionModel model.
+		self presenter roots withIndexDo: [ :each :index | 
+			self findAndExpandPath: { index - 1 } in: treeModel ] ]
+]
+
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel [
 	
