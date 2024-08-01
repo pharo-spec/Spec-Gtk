@@ -18,6 +18,12 @@ SpecGtkBackend >> adapterBindingsClass [
 	^ GtkAdapterBindings
 ]
 
+{ #category : 'accessing' }
+SpecGtkBackend >> componentListClass [
+
+	^ SpEasyComponentListPresenter
+]
+
 { #category : 'clipboard handling' }
 SpecGtkBackend >> copyToClipboard: aString [
 
