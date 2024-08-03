@@ -27,8 +27,8 @@ GtkTreeListViewAdapter >> addModelTo: gtkListView [
 		
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
-	self presenter selection 
-		whenChangedDo: [ self updateSelectionFromPresenter ].
+	self presenter whenSelectionChangedDo: [
+		self updateSelectionFromPresenter ].
 	self presenter whenRootsChangedDo: [ 
 		self updateRoots ].
 
@@ -93,7 +93,7 @@ GtkTreeListViewAdapter >> refreshSelectionModelIn: gtkListView [
 GtkTreeListViewAdapter >> refreshWidgetSelection [
 
 	self flag: #TODO. "not sure this is needed?"
-
+'mode' crTrace.
 	"self innerWidgetDo: [ :w |
 		| rowIndex selection |
 		rowIndex := self presenter selection selectedIndex.
@@ -102,6 +102,12 @@ GtkTreeListViewAdapter >> refreshWidgetSelection [
 		rowIndex > 0
 			ifTrue: [ w selectionModel select: rowIndex ]
 			ifFalse: [ w selectionModel unselectAll ] ]"
+]
+
+{ #category : 'private - updating' }
+GtkTreeListViewAdapter >> updateSelectionFromPresenter [
+
+	super updateSelectionFromPresenter
 ]
 
 { #category : 'building' }

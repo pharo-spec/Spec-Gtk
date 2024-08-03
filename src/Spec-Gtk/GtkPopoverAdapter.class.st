@@ -46,7 +46,8 @@ GtkPopoverAdapter >> popup [
 	self widgetDo: [ :w | 
 		self register: w.
 		w parent: self presenter relativeTo adapter innerWidget.
-		w popup ]
+		w popup.
+		self processInitializationDeferredActions ]
 ]
 
 { #category : 'api' }
@@ -56,13 +57,22 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 		self register: w.
 		w parent: self presenter relativeTo adapter innerWidget.
 		w setPointingTo: aRectangle asGdkRectangle.
-		w popup ]
+		w popup.
+		self processInitializationDeferredActions ]
 ]
 
 { #category : 'building' }
 GtkPopoverAdapter >> presenterWidget [
 
 	^ self presenter presenter build
+]
+
+{ #category : 'private' }
+GtkPopoverAdapter >> processInitializationDeferredActions [
+	
+	self presenter traversePresentersDo: [ :each | 
+		each adapter ifNotNil: [ :anAdapter |
+			anAdapter doInitializationDeferredActions ] ] 
 ]
 
 { #category : 'building' }
@@ -84,7 +94,7 @@ GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 
 	gtkPopover 
 		removeAll;
-		add: self presenterWidget showAll
+		add: self presenterWidget
 ]
 
 { #category : 'building' }
