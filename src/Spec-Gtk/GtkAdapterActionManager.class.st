@@ -49,13 +49,13 @@ GtkAdapterActionManager >> adapter: anObject [
 { #category : 'private - testing' }
 GtkAdapterActionManager >> anyCommandHasShortcut [
 
-	^ self presenter actionGroup allCommands anySatisfy: [ :each | each hasShortcutKey ]
+	^ self presenter rootActionGroup allCommands anySatisfy: [ :each | each hasShortcutKey ]
 ]
 
 { #category : 'private - testing' }
 GtkAdapterActionManager >> anyCommandIsVisible [
 		
-	^ self presenter actionGroup 
+	^ self presenter rootActionGroup 
 		ifNotNil: [ :actionGroup | actionGroup allCommands anySatisfy: [ :each | each isVisible ] ]
 		ifNil: [ false ]
 ]
@@ -104,7 +104,7 @@ GtkAdapterActionManager >> installActionsOn: gtkWidget [
 	| map actionGroup |
 
 	"keeping an actionMap to be able to perform operations later (like enable/disable)"
-	actionGroup := self presenter actionGroup.
+	actionGroup := self presenter rootActionGroup.
 	actionGroup ifNil: [ ^ self ].
 	
 	map := GtkActionInstaller new
@@ -123,7 +123,7 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	gtkWidget addRightClickEvent: [ :event |
 		self updateEnabledActions.
 		self 
-			showPopoverMenuFor: self presenter actionGroup
+			showPopoverMenuFor: self presenter rootActionGroup
 			at: event position ]
 ]
 
@@ -144,7 +144,7 @@ GtkAdapterActionManager >> installOn: gtkWidget [
 GtkAdapterActionManager >> installShortcutsOn: gtkWidget [
 	| actionGroup |
 	
-	actionGroup := self presenter actionGroup.
+	actionGroup := self presenter rootActionGroup.
 	actionGroup ifNil: [ ^ self ].
 	
 	GtkActionShortcutInstaller new
@@ -169,7 +169,7 @@ GtkAdapterActionManager >> showContextMenu [
 
 	self adapter innerWidgetDo: [ :w |
 		self 
-			showPopoverMenuFor: self presenter actionGroup
+			showPopoverMenuFor: self presenter rootActionGroup
 			at: w surface positionOfPointer ]
 ]
 
@@ -177,8 +177,8 @@ GtkAdapterActionManager >> showContextMenu [
 GtkAdapterActionManager >> showPopoverMenuFor: aGroup at: position [
 
 	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].	
+	
 	self adapter innerWidgetDo: [ :w |
-		
 		popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new)
 			ensureObjectRefAndAutoRelease.
 		popoverContextMenu hasArrow: false.

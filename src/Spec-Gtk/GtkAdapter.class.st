@@ -295,7 +295,7 @@ GtkAdapter >> handleKeyEvent: event [
 { #category : 'testing' }
 GtkAdapter >> hasActions [
 
-	^ self presenter actionGroup notNil
+	^ self presenter rootActionGroup notNil
 ]
 
 { #category : 'testing' }

@@ -22,7 +22,7 @@ GtkAdapterActionTextManager >> hasContextMenu [
 GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
 
 	hasContextMenu := true.	
-	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self presenter actionGroup)
+	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self presenter rootActionGroup)
 ]
 
 { #category : 'private - actions' }
