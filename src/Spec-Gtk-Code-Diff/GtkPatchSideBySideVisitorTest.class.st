@@ -1,10 +1,11 @@
 Class {
-	#name : #GtkPatchSideBySideVisitorTest,
-	#superclass : #TestCase,
-	#category : #'Spec-Gtk-Code-Diff'
+	#name : 'GtkPatchSideBySideVisitorTest',
+	#superclass : 'TestCase',
+	#category : 'Spec-Gtk-Code-Diff',
+	#package : 'Spec-Gtk-Code-Diff'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 GtkPatchSideBySideVisitorTest >> testPatchIncludesLastLine [
 	| patch visitor fileA fileB |
 

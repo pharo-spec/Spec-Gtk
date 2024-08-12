@@ -56,5 +56,5 @@ GtkToolbarMenuButtonAdapter >> updateMenuTo: aWidget [
 
 	self presenter menu ifNotNil: [ :aValuable |
 		aValuable value ifNotNil: [ :aMenu |
-			aWidget menu: (self buildMenu: aMenu) showAll ] ]
+			aWidget menu: (self buildMenu: aMenu) ] ]
 ]

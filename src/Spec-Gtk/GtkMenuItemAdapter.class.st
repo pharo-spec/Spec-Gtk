@@ -95,8 +95,6 @@ GtkMenuItemAdapter >> menuLabelWithIconAndAccelFor: gtkWidget [
 	self presenter shortcut ifNotNil: [ :shortcut |
 		self addAcceleratorShortcutLabel: shortcut to: gtkBox ].
 		
-	gtkBox showAll.
-
 	^ gtkBox
 ]
 

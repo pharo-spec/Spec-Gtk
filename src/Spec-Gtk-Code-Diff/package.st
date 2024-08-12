@@ -1,1 +1,1 @@
-Package { #name : #'Spec-Gtk-Code-Diff' }
+Package { #name : 'Spec-Gtk-Code-Diff' }

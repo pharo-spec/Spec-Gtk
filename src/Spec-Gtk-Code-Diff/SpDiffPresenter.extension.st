@@ -1,6 +1,6 @@
-Extension { #name : #SpDiffPresenter }
+Extension { #name : 'SpDiffPresenter' }
 
-{ #category : #'*Spec-Gtk-Code-Diff' }
+{ #category : '*Spec-Gtk-Code-Diff' }
 SpDiffPresenter class >> defaultMarks [
 	
 	^ {  
@@ -19,7 +19,7 @@ SpDiffPresenter class >> defaultMarks [
 	}
 ]
 
-{ #category : #'*Spec-Gtk-Code-Diff' }
+{ #category : '*Spec-Gtk-Code-Diff' }
 SpDiffPresenter >> marks [
 	
 	^ self class defaultMarks

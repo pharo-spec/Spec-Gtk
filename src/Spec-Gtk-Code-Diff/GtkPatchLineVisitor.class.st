@@ -1,27 +1,28 @@
 Class {
-	#name : #GtkPatchLineVisitor,
-	#superclass : #DiffPatchVisitor,
+	#name : 'GtkPatchLineVisitor',
+	#superclass : 'DiffPatchVisitor',
 	#instVars : [
 		'lineNumber',
 		'textBuffer',
 		'lineMarks'
 	],
-	#category : #'Spec-Gtk-Code-Diff'
+	#category : 'Spec-Gtk-Code-Diff',
+	#package : 'Spec-Gtk-Code-Diff'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchLineVisitor >> addLineMark: anAssociation [
 
 	lineMarks add: anAssociation
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 GtkPatchLineVisitor >> incrementLineNumber [
 
 	lineNumber := lineNumber + 1
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkPatchLineVisitor >> initialize [
 
 	super initialize.
@@ -29,31 +30,31 @@ GtkPatchLineVisitor >> initialize [
 	lineMarks := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchLineVisitor >> lineMarks [
 
 	^ lineMarks
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchLineVisitor >> lineNumber [
 
 	^ lineNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchLineVisitor >> textBuffer [
 
 	^ textBuffer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchLineVisitor >> textBuffer: anObject [
 
 	textBuffer := anObject
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkPatchLineVisitor >> visitDelete: anElement [
 
 	self incrementLineNumber.
@@ -61,7 +62,7 @@ GtkPatchLineVisitor >> visitDelete: anElement [
 	stream << anElement element << String cr
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkPatchLineVisitor >> visitInsert: anElement [
 
 	self incrementLineNumber.
@@ -69,7 +70,7 @@ GtkPatchLineVisitor >> visitInsert: anElement [
 	stream << anElement element << String cr
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkPatchLineVisitor >> visitMatch: anElement [
 
 	self incrementLineNumber.

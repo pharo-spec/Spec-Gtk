@@ -1,14 +1,15 @@
 Class {
-	#name : #GtkPatchSideBySideAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkPatchSideBySideAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'leftSourceView',
 		'rightSourceView'
 	],
-	#category : #'Spec-Gtk-Code-Diff'
+	#category : 'Spec-Gtk-Code-Diff',
+	#package : 'Spec-Gtk-Code-Diff'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtkPatchSideBySideAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 	| start |
 
@@ -20,7 +21,7 @@ GtkPatchSideBySideAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 		where: start
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 	
 	self marks valuesDo: [ :each |
@@ -33,7 +34,7 @@ GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 				priority: 0 ]
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtkPatchSideBySideAdapter >> addModelTo: aView [
 
 	super addModelTo: aView.
@@ -44,20 +45,20 @@ GtkPatchSideBySideAdapter >> addModelTo: aView [
 	self addPatchTo: aView
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 GtkPatchSideBySideAdapter >> addPatchTo: aView [
 	
 	self setPatch.
 	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPatchSideBySideAdapter >> marks [
 	
 	^ self presenter marks
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkPatchSideBySideAdapter >> newSourceView [
 
 	^ GtkSourceView new
@@ -71,7 +72,7 @@ GtkPatchSideBySideAdapter >> newSourceView [
 
 ]
 
-{ #category : #factory }
+{ #category : 'factory' }
 GtkPatchSideBySideAdapter >> newWidget [
 
 	leftSourceView := self newSourceView.
@@ -83,10 +84,10 @@ GtkPatchSideBySideAdapter >> newWidget [
 			packStart: leftSourceView;
 			packStart: rightSourceView;
 			yourself);
-		showAll
+		yourself
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchSideBySideAdapter >> setPatch [
 
 	(self presenter model isNil 
@@ -99,7 +100,7 @@ GtkPatchSideBySideAdapter >> setPatch [
 	self setPatch: self presenter model patch
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchSideBySideAdapter >> setPatch: patch [
 	| visitor |
 	

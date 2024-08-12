@@ -1,14 +1,15 @@
 Class {
-	#name : #GtkPatchSideBySideVisitor,
-	#superclass : #DiffVisitor,
+	#name : 'GtkPatchSideBySideVisitor',
+	#superclass : 'DiffVisitor',
 	#instVars : [
 		'leftSide',
 		'rightSide'
 	],
-	#category : #'Spec-Gtk-Code-Diff'
+	#category : 'Spec-Gtk-Code-Diff',
+	#package : 'Spec-Gtk-Code-Diff'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkPatchSideBySideVisitor >> initialize [
 
 	super initialize.
@@ -16,7 +17,7 @@ GtkPatchSideBySideVisitor >> initialize [
 	rightSide := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchSideBySideVisitor >> leftMarks [
 
 	^ self leftSide 
@@ -24,19 +25,19 @@ GtkPatchSideBySideVisitor >> leftMarks [
 		thenCollect: [ :each | each first ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchSideBySideVisitor >> leftSide [
 
 	^ leftSide
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchSideBySideVisitor >> leftText [
 
 	^ (self leftSide collect: #second) asStringWithCr
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchSideBySideVisitor >> rightMarks [
 
 	^ self rightSide 
@@ -44,31 +45,31 @@ GtkPatchSideBySideVisitor >> rightMarks [
 		thenCollect: [ :each | each first ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchSideBySideVisitor >> rightSide [
 
 	^ rightSide
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkPatchSideBySideVisitor >> rightText [
 
 	^ (self rightSide collect: #second) asStringWithCr
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkPatchSideBySideVisitor >> visitDelete: anElement [
 
 	leftSide add: { ((leftSide size + 1) -> #delete). anElement element }
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkPatchSideBySideVisitor >> visitInsert: anElement [
 
 	rightSide add: { ((rightSide size + 1) -> #insert). anElement element }
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 GtkPatchSideBySideVisitor >> visitMatch: anElement [
 
 	leftSide add: { nil. anElement element }.

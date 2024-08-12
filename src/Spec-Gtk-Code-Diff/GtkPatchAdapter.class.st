@@ -1,12 +1,13 @@
 Class {
-	#name : #GtkPatchAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkPatchAdapter',
+	#superclass : 'GtkAdapter',
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
-	#category : #'Spec-Gtk-Code-Diff'
+	#category : 'Spec-Gtk-Code-Diff',
+	#package : 'Spec-Gtk-Code-Diff'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 	| start |
 
@@ -18,7 +19,7 @@ GtkPatchAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 		where: start
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPatchAdapter >> addMarksTo: gtkSourceView [
 	
 	self presenter marks valuesDo: [ :each |
@@ -31,7 +32,7 @@ GtkPatchAdapter >> addMarksTo: gtkSourceView [
 				priority: 0 ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPatchAdapter >> addModelTo: gtkSourceView [
 
 	super addModelTo: gtkSourceView.
@@ -54,19 +55,19 @@ GtkPatchAdapter >> addModelTo: gtkSourceView [
 	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchAdapter >> bufferClass [ 
 	
 	^ GtkSourceBuffer
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkPatchAdapter >> newTagTable [
 	
 	^ GtkTextTagTable newForCode: self styleTable
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
@@ -75,7 +76,7 @@ GtkPatchAdapter >> newTextBufferForHighlight [
 	^ textBuffer
 ]
 
-{ #category : #'private - factory' }
+{ #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForText: aString [
 	| textBuffer |
 
@@ -89,14 +90,14 @@ GtkPatchAdapter >> newTextBufferForText: aString [
 	^ textBuffer
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchAdapter >> setPatch: aPatchModel [
 
 	self innerWidgetDo: [ :w | 
 		self setPatch: aPatchModel patch to: w ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchAdapter >> setPatch: patch to: gtkTextView [ 
 	| visitor |
 	
@@ -112,7 +113,7 @@ GtkPatchAdapter >> setPatch: patch to: gtkTextView [
 			to: gtkTextView textBuffer ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchAdapter >> setPatchTo: gtkTextView [ 
 
 	(self presenter model isNil 
@@ -126,7 +127,7 @@ GtkPatchAdapter >> setPatchTo: gtkTextView [
 		to: gtkTextView
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchAdapter >> setText: aString to: gtkWidget [
 
 	self backendDetectCyclesDo: [
@@ -136,7 +137,7 @@ GtkPatchAdapter >> setText: aString to: gtkWidget [
 		textBuffer objectUnref ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtkPatchAdapter >> styleTable [
 	| styleTableName |	
 
@@ -151,13 +152,13 @@ GtkPatchAdapter >> styleTable [
 	^ SHRBTextStyler newAttributesForStyleTableNamed: styleTableName
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPatchAdapter >> widgetClass [
 
 	^ GtkSourceView
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPatchAdapter >> wrapWidget: gtkWidget [
 	| wrapWidget |
 	
