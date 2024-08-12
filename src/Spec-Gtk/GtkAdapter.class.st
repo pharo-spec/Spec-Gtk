@@ -525,7 +525,6 @@ GtkAdapter >> showMenu: aValuable event: event [
 	lastShownMenu := self buildMenu: aValuable value.
 	lastShownMenu 
 		connectDestroy: [ lastShownMenu := nil ];
-		showAll;
 		popupAtPointer: event.
 ]
 
