@@ -23,7 +23,8 @@ GtkToolbarBaseButtonAdapter >> addModelTo: gtkButton [
 { #category : 'testing' }
 GtkToolbarBaseButtonAdapter >> hasIcon [
 
-	^ self presenter icon notNil and: [ self presenter owner displayMode hasIcon ]
+	^ self presenter owner displayMode hasIcon 
+		and: [ self presenter icon notNil ]
 ]
 
 { #category : 'testing' }
@@ -34,23 +35,21 @@ GtkToolbarBaseButtonAdapter >> hasLabel [
 
 { #category : 'private' }
 GtkToolbarBaseButtonAdapter >> labelAndIcon [
-	| box |
+	| box gtkIcon gtkLabel |
 
 	box := GtkBox newVertical
 		vAlignCenter;
 		spacing: 3;
 		yourself.
 
-	self hasIcon ifTrue: [ 
-		| gtkIcon |
-		gtkIcon := self presenter icon asGtkImage.
-		gtkIcon vExpand: false.
-		box append: gtkIcon ].
+	gtkIcon := GtkImage new.
+	gtkIcon vExpand: false.
+	box append: gtkIcon.
+	gtkIcon visible: false.
 
-	self hasLabel ifTrue: [ 
-		self getLabelText ifNotEmpty: [ :label | | gtkLabel |
-			gtkLabel := (GtkLabel newLabel: label).
-			box append: gtkLabel ] ].
+	gtkLabel := GtkLabel new.
+	box append: gtkLabel.
+	gtkLabel visible: false.
 
 	^ box
 ]
