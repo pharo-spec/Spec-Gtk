@@ -1,6 +1,6 @@
 Class {
 	#name : 'GtkLinkAdapter',
-	#superclass : 'GtkButtonAdapter',
+	#superclass : 'GtkBaseButtonAdapter',
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
@@ -8,8 +8,8 @@ Class {
 
 { #category : 'building' }
 GtkLinkAdapter >> addModelTo: gtkButton [
-
-	widget := gtkButton.
+	
+	super addModelTo: gtkButton.
 	
 	self flag: #TODO. "Add SpTAlignable to SpLinkPresenter. Now I have no time nor the requirement"
 	gtkButton hAlignStart.
@@ -19,24 +19,35 @@ GtkLinkAdapter >> addModelTo: gtkButton [
 		self runInSystem: [ self presenter performAction ] ].
 
 	self presenter label isEmptyOrNil 
-		ifFalse: [ self updateLabel ].
+		ifFalse: [ self updateLabelAndIconTo: gtkButton ].
 	
 	model whenLabelChangedDo: [ self updateLabel ]
 ]
 
+{ #category : 'building' }
+GtkLinkAdapter >> connectToSpecEvents: gtkButton [
+
+	self presenter 
+		whenLabelChangedDo: [ self updateLabel ]
+]
+
+{ #category : 'private - testing' }
+GtkLinkAdapter >> hasLabelOrIcon [
+	
+	^ self hasLabel
+]
+
 { #category : 'private' }
 GtkLinkAdapter >> labelAndIcon [
-	| box |
+	| box gtkLabel |
 
 	box := GtkBox newHorizontal
 		hAlignCenter;
 		spacing: 3;
 		yourself.
 
-	self getLabelText ifNotNil: [ :label | | gtkLabel |
-		label ifNotEmpty: [
-			gtkLabel := (GtkLabel newLabel: label).
-			box append: gtkLabel ] ].
+	gtkLabel := GtkLabel new.
+	box append: gtkLabel.
 
 	^ box
 ]
@@ -44,7 +55,16 @@ GtkLinkAdapter >> labelAndIcon [
 { #category : 'factory' }
 GtkLinkAdapter >> newWidget [ 
 	
-	^ GtkLinkButton 
-		buttonNewWithUri: ''
-		withLabel: self getLabelText 
+	^ GtkLinkButton newWithUri: ''
+]
+
+{ #category : 'private - updating' }
+GtkLinkAdapter >> updateLabelAndIconTo: gtkButton [
+	| label gtkLabel |
+	
+	label := self getLabelText.
+	gtkLabel := gtkButton child children first.
+	label isEmptyOrNil 
+		ifTrue: [ gtkLabel beNotVisible ]
+		ifFalse: [ gtkLabel label: label; beVisible ]
 ]

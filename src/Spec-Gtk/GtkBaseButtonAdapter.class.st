@@ -1,6 +1,9 @@
 Class {
 	#name : 'GtkBaseButtonAdapter',
 	#superclass : 'GtkAdapter',
+	#instVars : [
+		'labelWidget'
+	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
@@ -11,44 +14,71 @@ GtkBaseButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
 
-	widget := gtkButton.
-
-	self presenter label isEmptyOrNil ifFalse: [ self updateLabel ].
-	self presenter icon ifNotNil: [ self updateIcon ].
+	gtkButton child: self labelAndIcon.
 	
-	model whenLabelChangedDo: [ self updateLabel ].
-	model whenIconChangedDo: [ self updateIcon ]
+	self hasLabelOrIcon
+		ifTrue: [ self updateLabelAndIconTo: gtkButton ] .
+	
+	self connectToSpecEvents: gtkButton
+]
+
+{ #category : 'building' }
+GtkBaseButtonAdapter >> connectToSpecEvents: gtkButton [
+
+	self presenter 
+		whenLabelChangedDo: [ self updateLabel ];
+		whenIconChangedDo: [ self updateIcon ]
 ]
 
 { #category : 'updating' }
 GtkBaseButtonAdapter >> getLabelText [
 
-	^ self presenter label ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
+	^ self presenter label 
+		ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
+]
+
+{ #category : 'private - testing' }
+GtkBaseButtonAdapter >> hasIcon [
+
+	^ self presenter icon isNotNil
+]
+
+{ #category : 'private - testing' }
+GtkBaseButtonAdapter >> hasLabel [
+
+	^ self presenter label isEmptyOrNil not
+]
+
+{ #category : 'private - testing' }
+GtkBaseButtonAdapter >> hasLabelOrIcon [
+
+	^ self hasLabel
+		or: [ self hasIcon ]
 ]
 
 { #category : 'accessing' }
 GtkBaseButtonAdapter >> icon [
+
 	^ widget image
 ]
 
 { #category : 'private' }
 GtkBaseButtonAdapter >> labelAndIcon [
-	| box |
+	| box gtkIcon gtkLabel |
 
 	box := GtkBox newHorizontal
 		hAlignCenter;
 		spacing: 3;
 		yourself.
 
-	self presenter icon ifNotNil: [ :icon | | gtkIcon |
-		gtkIcon := self presenter icon asGtkImage.
-		gtkIcon hExpand: false.
-		box append: gtkIcon ].
+	gtkIcon := GtkImage new.
+	gtkIcon hExpand: false.
+	box append: gtkIcon.
+	gtkIcon visible: false.
 
-	self getLabelText ifNotNil: [ :label | | gtkLabel |
-		label ifNotEmpty: [
-			gtkLabel := (GtkLabel newLabel: label).
-			box append: gtkLabel ] ].
+	gtkLabel := GtkLabel new.
+	box append: gtkLabel.
+	gtkLabel visible: false.
 
 	^ box
 ]
@@ -56,15 +86,30 @@ GtkBaseButtonAdapter >> labelAndIcon [
 { #category : 'updating' }
 GtkBaseButtonAdapter >> updateIcon [
 
-	self widgetDo: [ :w |
-		w child: self labelAndIcon ]
+	self updateLabel
 ]
 
 { #category : 'updating' }
 GtkBaseButtonAdapter >> updateLabel [
 
 	self widgetDo: [ :w | 
-		w child: self labelAndIcon ]
+		self updateLabelAndIconTo: w ]
+]
+
+{ #category : 'private - updating' }
+GtkBaseButtonAdapter >> updateLabelAndIconTo: gtkButton [
+	| label gtkIcon gtkLabel |
+	
+	gtkIcon := gtkButton child children first.
+	self hasIcon
+		ifTrue: [ gtkIcon setFromPaintable: self presenter icon asGdkPaintable; beVisible ]
+		ifFalse: [ gtkIcon beNotVisible ].
+
+	label := self getLabelText.
+	gtkLabel := gtkButton child children second.
+	self hasLabel
+		ifTrue: [ gtkLabel label: label; beVisible ]
+		ifFalse: [ gtkLabel beNotVisible ]
 ]
 
 { #category : 'updating' }
