@@ -15,7 +15,7 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	super addModelTo: gtkColumnView.
 
-	gtkColumnView setHeaderFactory: self newHeaderFactory.
+	gtkColumnView headerFactory: self newHeaderFactory.
 
 	self presenter columns do: [ :each |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
