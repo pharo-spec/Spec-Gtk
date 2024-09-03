@@ -11,9 +11,9 @@ Class {
 		'gtkWidget',
 		'realWidget'
 	],
-	#category : 'Spec-Gtk-Adapter',
+	#category : 'Spec-Gtk-Adapter-List',
 	#package : 'Spec-Gtk',
-	#tag : 'Adapter'
+	#tag : 'Adapter-List'
 }
 
 { #category : 'specs' }
