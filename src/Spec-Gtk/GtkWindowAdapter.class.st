@@ -428,6 +428,12 @@ GtkWindowAdapter >> setDecorated: aBoolean [
 	self widgetDo: [ :w | w decorated: aBoolean ]
 ]
 
+{ #category : 'spec protocol' }
+GtkWindowAdapter >> size [
+
+	^ self widgetDo: [ :w | w defaultSize ]
+]
+
 { #category : 'private - building' }
 GtkWindowAdapter >> statusBar [
 
