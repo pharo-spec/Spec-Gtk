@@ -1,6 +1,6 @@
 Class {
 	#name : 'GtkLabelAdapter',
-	#superclass : 'GtkMiscAdapter',
+	#superclass : 'GtkAdapter',
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
