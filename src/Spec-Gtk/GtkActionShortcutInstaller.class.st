@@ -11,9 +11,12 @@ Class {
 
 { #category : 'visiting' }
 GtkActionShortcutInstaller >> visitCommand: aCommand [
+	| shortcut |
 	
 	aCommand hasShortcutKey ifFalse: [ ^ self ].
-	self widget addShortcut: (GtkShortcut 
+	
+	shortcut := GtkShortcut 
 		newKeyCombination: aCommand shortcutKey 
-		actionName: (self actionNameFor: aCommand))
+		actionName: (self actionNameFor: aCommand).
+	self widget addShortcut: shortcut
 ]

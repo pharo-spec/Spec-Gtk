@@ -61,7 +61,7 @@ GtkActionMenuBuilder >> visitCommandGroup: aCommandGroup [
 				appendGroup: menu 
 				label: aCommandGroup name
 				to: oldMenu
-				in: self ] 
+				in: self ]
 	]	
 	ensure: [ 
 		menu := oldMenu ]
