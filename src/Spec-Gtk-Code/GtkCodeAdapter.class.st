@@ -50,9 +50,10 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 	  
 	self flag: #TODO. "All this needs to come from settings"
 	gtkSourceView 
-		"this is leaking, I am removing it until I have an answer (or a fix)
-		 see: https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/365"
-		"showLineNumbers: self presenter hasLineNumbers;"
+		"this was leaking before 5.12.1, 
+		 see: https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/365
+		 I let the comment for future references"
+		showLineNumbers: self presenter hasLineNumbers;
 		autoIndent: true;
 		indentOnTab: true;
 		tabWidth: 4.
