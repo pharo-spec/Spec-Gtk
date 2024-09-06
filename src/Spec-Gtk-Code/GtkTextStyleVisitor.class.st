@@ -54,20 +54,6 @@ GtkTextStyleVisitor >> currentOpenedParenthesisStyleName [
 ]
 
 { #category : 'private' }
-GtkTextStyleVisitor >> fixPatternSelectorError [
-	"for some reason, first one is always #patternSelector and that breaks all "
-	| tag |
-
-	self tags ifEmpty: [ ^ self ].
-	
-	tag := self tags first.
-	(tag name = #patternSelector
-		and: [ tag start = 0
-		and: [ tag stop = 3 ] ])
-		ifTrue: [ tags := tags allButFirst ]
-]
-
-{ #category : 'private' }
 GtkTextStyleVisitor >> literalStyleSymbol: aValue [
 
 	aValue isSymbol 		ifTrue: [ ^ #symbol ].
@@ -113,6 +99,21 @@ GtkTextStyleVisitor >> methodOrBlockTempStyleFor: aRBTemporaryNode [
 GtkTextStyleVisitor >> processOverlapedTags [
 	"Seems that GtkSourceView does not process fine the fact that some tags may be overlapped"
 	
+]
+
+{ #category : 'private' }
+GtkTextStyleVisitor >> removeDoItTag [
+	"Now when parsing expressions, first element is a DoIt method. Remove it since 
+	 text does not includes it."
+	| tag |
+
+	self tags ifEmpty: [ ^ self ].
+	
+	tag := self tags first.
+	(tag name = #patternSelector
+		and: [ tag start = 0
+		and: [ tag stop = 3 ] ])
+		ifTrue: [ tags := tags allButFirst ]
 ]
 
 { #category : 'accessing' }
@@ -186,7 +187,7 @@ GtkTextStyleVisitor >> styleExpression: aString [
 		parse.
 
 	self styleAST: ast.
-	self fixPatternSelectorError.
+	self removeDoItTag.
 	
 	^ self tags
 ]
@@ -204,7 +205,6 @@ GtkTextStyleVisitor >> styleMethod: aString [
 	self styleAST: ast.
 
 	self processOverlapedTags.
-	self fixPatternSelectorError.
 		
 	^ self tags
 ]
