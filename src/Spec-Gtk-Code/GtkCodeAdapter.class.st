@@ -150,6 +150,12 @@ GtkCodeAdapter >> classOrMetaClass: aClass [
 	self updateCompletionProvider
 ]
 
+{ #category : 'private' }
+GtkCodeAdapter >> compiler [
+	
+	^ self presenter interactionModel compiler
+]
+
 { #category : 'api - shout' }
 GtkCodeAdapter >> doItContext [ 
 

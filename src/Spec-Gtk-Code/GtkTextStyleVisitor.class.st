@@ -54,6 +54,20 @@ GtkTextStyleVisitor >> currentOpenedParenthesisStyleName [
 ]
 
 { #category : 'private' }
+GtkTextStyleVisitor >> fixPatternSelectorError [
+	"for some reason, first one is always #patternSelector and that breaks all "
+	| tag |
+
+	self tags ifEmpty: [ ^ self ].
+	
+	tag := self tags first.
+	(tag name = #patternSelector
+		and: [ tag start = 0
+		and: [ tag stop = 3 ] ])
+		ifTrue: [ tags := tags allButFirst ]
+]
+
+{ #category : 'private' }
 GtkTextStyleVisitor >> literalStyleSymbol: aValue [
 
 	aValue isSymbol 		ifTrue: [ ^ #symbol ].
@@ -95,7 +109,7 @@ GtkTextStyleVisitor >> methodOrBlockTempStyleFor: aRBTemporaryNode [
 		  ifFalse: [ #tempVar ]
 ]
 
-{ #category : 'styling' }
+{ #category : 'private' }
 GtkTextStyleVisitor >> processOverlapedTags [
 	"Seems that GtkSourceView does not process fine the fact that some tags may be overlapped"
 	
@@ -163,18 +177,17 @@ GtkTextStyleVisitor >> styleCloseParenthese: aMessageNode [
 
 { #category : 'styling' }
 GtkTextStyleVisitor >> styleExpression: aString [
-
 	| ast |
-	ast := (contextClass ifNil: [ UndefinedObject ]) compiler
-		       source: aString;
-		       isScripting: true;
-		       options:
-			       #( #+ optionParseErrors #+ optionSkipSemanticWarnings );
-		       requestor: requestor;
-		       parse.
+
+	ast := requestor compiler
+		source: aString;
+		isScripting: true;
+		options: #( +optionParseErrors +optionSkipSemanticWarnings );
+		parse.
 
 	self styleAST: ast.
-
+	self fixPatternSelectorError.
+	
 	^ self tags
 ]
 
@@ -182,18 +195,17 @@ GtkTextStyleVisitor >> styleExpression: aString [
 GtkTextStyleVisitor >> styleMethod: aString [
 	| ast |
 
-	ast := (contextClass ifNil: [ UndefinedObject ]) compiler
-       source: aString;
-       isScripting: false;
-       requestor: nil;
-       failBlock: [ ^ nil ];
-       options: #( #+ optionParseErrors #+ optionSkipSemanticWarnings );
-       parse.
+	ast := requestor compiler
+		source: aString;
+		failBlock: [ ^ nil ];
+		options: #( +optionParseErrors +optionSkipSemanticWarnings );
+		parse.
 
 	self styleAST: ast.
 
 	self processOverlapedTags.
-
+	self fixPatternSelectorError.
+		
 	^ self tags
 ]
 
