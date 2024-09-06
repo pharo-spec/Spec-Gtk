@@ -114,8 +114,6 @@ GtkAdapter >> addSettingsTo: gtkWidget [
 	self presenter help ifNotNil: [ gtkWidget tooltipText: self getHelpText ].
 	self presenter whenHelpChangedDo: [ 
 		self backendUpdatingDo: [ self updateHelp ] ].
-	self presenter whenEnabledChangedDo: [ 
-		self backendUpdatingDo: [ self updateEnabled ] ].
 	
 	self addVisibleSettingsTo: gtkWidget
 ]
@@ -549,12 +547,6 @@ GtkAdapter >> updateActions [
 
 	self innerWidgetDo: [ :w |
 		self ensureActionManager updateOn: w ]
-]
-
-{ #category : 'updating' }
-GtkAdapter >> updateEnabled [
-	
-	self widgetDo: [ :w | w sensitive: self presenter isEnabled value ]
 ]
 
 { #category : 'updating' }

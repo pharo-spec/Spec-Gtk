@@ -85,6 +85,13 @@ GtkTextAdapter >> cutText [
 
 ]
 
+{ #category : 'accessing' }
+GtkTextAdapter >> enabled: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		w sensitive: aBoolean ]
+]
+
 { #category : 'spec protocol' }
 GtkTextAdapter >> lineAtCursorPosition [
 
@@ -117,12 +124,6 @@ GtkTextAdapter >> setWrapWord: value to: gtkTextView [
 	self presenter isWrapWord 
 		ifTrue: [ gtkTextView beWrapWord ]
 		ifFalse: [ gtkTextView beWrapNone ]
-]
-
-{ #category : 'updating' }
-GtkTextAdapter >> updateEnabled [	
-	
-	self innerWidgetDo: [ :w | w sensitive: self presenter isEnabled value ]
 ]
 
 { #category : 'private' }
