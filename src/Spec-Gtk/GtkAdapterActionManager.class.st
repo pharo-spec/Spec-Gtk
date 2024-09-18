@@ -49,15 +49,22 @@ GtkAdapterActionManager >> adapter: anObject [
 { #category : 'private - testing' }
 GtkAdapterActionManager >> anyCommandHasShortcut [
 
-	^ self presenter rootActionGroup allCommands anySatisfy: [ :each | each hasShortcutKey ]
+	^ self presenter actions allCommands 
+		anySatisfy: [ :each | each hasShortcutKey ]
+]
+
+{ #category : 'private - testing' }
+GtkAdapterActionManager >> anyCommandInActionGroupIsVisible: anActionGroup [ 
+		
+	^ anActionGroup 
+		ifNotNil: [ :actionGroup | actionGroup allCommands anySatisfy: [ :each | each isVisible ] ]
+		ifNil: [ false ]
 ]
 
 { #category : 'private - testing' }
 GtkAdapterActionManager >> anyCommandIsVisible [
 		
-	^ self presenter rootActionGroup 
-		ifNotNil: [ :actionGroup | actionGroup allCommands anySatisfy: [ :each | each isVisible ] ]
-		ifNil: [ false ]
+	^ self anyCommandInActionGroupIsVisible: self presenter actions
 ]
 
 { #category : 'accessing' }
@@ -100,17 +107,21 @@ GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionManager >> installActionsOn: gtkWidget [
-	| map actionGroup |
+GtkAdapterActionManager >> installActionGroup: actionGroup on: gtkWidget [
+	| map |
 
-	"keeping an actionMap to be able to perform operations later (like enable/disable)"
-	actionGroup := self presenter rootActionGroup.
-	actionGroup ifNil: [ ^ self ].
-	
 	map := GtkActionInstaller new
 		widget: gtkWidget;
 		visit: actionGroup.
 	actionMap addAll: map
+]
+
+{ #category : 'private - actions' }
+GtkAdapterActionManager >> installActionGroupShortcuts: anActionGroup on: gtkWidget [
+	
+	GtkActionShortcutInstaller new
+		widget: gtkWidget;
+		visit: anActionGroup
 ]
 
 { #category : 'private - actions' }
@@ -123,33 +134,31 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	gtkWidget addRightClickEvent: [ :event |
 		self updateEnabledActions.
 		self 
-			showPopoverMenuFor: self presenter rootActionGroup
+			showPopoverMenuFor: self presenter actions
 			at: event position ]
+]
+
+{ #category : 'actions' }
+GtkAdapterActionManager >> installGroup: anActionGroup on: gtkWidget [
+
+	anActionGroup ifNil: [ ^ self ].
+	"install actions"
+	self installActionGroup: anActionGroup on: gtkWidget.
+	"install shortcuts"
+	self installActionGroupShortcuts: anActionGroup on: gtkWidget
 ]
 
 { #category : 'actions' }
 GtkAdapterActionManager >> installOn: gtkWidget [
 
-	"install actions"
-	self installActionsOn: gtkWidget.
-	"install shortcuts"
-	self installShortcutsOn: gtkWidget.
+	self presenter internalActions ifNotNil: [ :actionGroup |
+		self installGroup: actionGroup on: gtkWidget ].
+	self presenter actions ifNotNil: [ :actionGroup |
+		self installGroup: actionGroup on: gtkWidget ].
 	"install context menu (but just if any action is visible, because they can be 
-	 just keybindings)"
-	self anyCommandIsVisible ifTrue: [ 
-		self installContextMenuOn: gtkWidget ]
-]
-
-{ #category : 'private - actions' }
-GtkAdapterActionManager >> installShortcutsOn: gtkWidget [
-	| actionGroup |
-	
-	actionGroup := self presenter rootActionGroup.
-	actionGroup ifNil: [ ^ self ].
-	
-	GtkActionShortcutInstaller new
-		widget: gtkWidget;
-		visit: actionGroup
+	 just keybindings), and just for root action group"
+	self anyCommandIsVisible 
+		ifTrue: [ self installContextMenuOn: gtkWidget ]	
 ]
 
 { #category : 'accessing' }
@@ -169,7 +178,7 @@ GtkAdapterActionManager >> showContextMenu [
 
 	self adapter innerWidgetDo: [ :w |
 		self 
-			showPopoverMenuFor: self presenter rootActionGroup
+			showPopoverMenuFor: self presenter actions
 			at: w surface positionOfPointer ]
 ]
 
@@ -210,6 +219,5 @@ GtkAdapterActionManager >> updateOn: gtkWidget [
 	"remove actions"
 	gtkWidget removeAllActions.
 	
-	self installOn: gtkWidget.
-
+	self installOn: gtkWidget
 ]

@@ -55,17 +55,7 @@ GtkAdapter >> addActionsTo: gtkWidget [
 	actionManager installOn: gtkWidget
 ]
 
-{ #category : 'KEYBINDINGS' }
-GtkAdapter >> addContextMenuKeyBindings: gtkWidget [
-	
-	self flag: #TODO. "Take this from a configuration"
-	self 
-		bindKeyCombination: $t command mac | $t control unix | $t control win
-		toAction: [ self showContextMenu ]
-		inWidget: gtkWidget
-]
-
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
 GtkAdapter >> addKeyBindingCategory: aCategory to: gtkWidget [
 
 	aCategory allEntries keymaps do: [ :each |
@@ -75,23 +65,35 @@ GtkAdapter >> addKeyBindingCategory: aCategory to: gtkWidget [
 			inWidget: gtkWidget ]
 ]
 
-{ #category : 'KEYBINDINGS' }
-GtkAdapter >> addKeyBindingsTo: gtkWidget [
+{ #category : 'TOREMOVE' }
+GtkAdapter >> addKeyBindingsFromGroup: actionGroup to:gtkWidget [
+	| kmCategory |
 
-	self presenter contextKeyBindings ifNotNil: [ :aCategory | 
-		self configureKeyBindings: gtkWidget. 
-		self addKeyBindingCategory: aCategory to: gtkWidget ]
+	kmCategory := actionGroup asKMCategory.
+	kmCategory allEntries ifEmpty: [ ^ self ].
+	
+	self configureKeyBindingsIfNeeded: gtkWidget. 
+	kmCategory addKeyBindingCategory: kmCategory to: gtkWidget
+]
+
+{ #category : 'TOREMOVE' }
+GtkAdapter >> addKeyBindingsTo: gtkWidget [
+	
+	self presenter internalActions ifNotNil: [ :actionGroup |
+		self addKeyBindingsFromGroup: actionGroup to: gtkWidget ].
+	self presenter actions ifNotNil: [ :actionGroup |
+		self addKeyBindingsFromGroup: actionGroup to: gtkWidget ]
 ]
 
 { #category : 'private - actions' }
 GtkAdapter >> addKeyCombination: aShortcut action: aBlock toWidget: aWidget [
 
 	self ensureActionManager 
-		installAction: (SpAction newShortcut: aShortcut action: aBlock) 
+		installAction: (SpAction newShortcutKey: aShortcut action: aBlock) 
 		on: aWidget
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
 GtkAdapter >> addMenu: aValuable to: gtkWidget [
 
 	gtkWidget connectRightClicked: [ :event |
@@ -114,6 +116,8 @@ GtkAdapter >> addSettingsTo: gtkWidget [
 	self presenter help ifNotNil: [ gtkWidget tooltipText: self getHelpText ].
 	self presenter whenHelpChangedDo: [ 
 		self backendUpdatingDo: [ self updateHelp ] ].
+	self presenter whenActionsChangedDo: [ 
+		self backendUpdatingDo: [ self updateActions ] ].
 	
 	self addVisibleSettingsTo: gtkWidget
 ]
@@ -156,8 +160,8 @@ GtkAdapter >> backendUpdatingDo: aBlock [
 		backendUpdating := oldStatus ]
 ]
 
-{ #category : 'KEYBINDINGS' }
-GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [ 
+{ #category : 'TOREMOVE' }
+GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
 	
 	self 
 		bindKeyCombination: aShortcut 
@@ -165,7 +169,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
 		inWidget: self innerWidget
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
 GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget [
 	
 	dispatcher ifNil: [ 
@@ -177,7 +181,7 @@ GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget
 		toAction: aBlock
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
 GtkAdapter >> buildMenu: aMenuPresenter [
 
 	^ aMenuPresenter 
@@ -204,7 +208,7 @@ GtkAdapter >> cleanupAfterReplacing [
 	widget := nil
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
 GtkAdapter >> configureKeyBindings: gtkWidget [
 
 	dispatcher := GtkKMDispatcher on: self presenter.
@@ -212,7 +216,14 @@ GtkAdapter >> configureKeyBindings: gtkWidget [
 		self handleKeyEvent: event ]
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
+GtkAdapter >> configureKeyBindingsIfNeeded: gtkWidget [
+	
+	dispatcher ifNotNil: [ ^ self ].
+	self configureKeyBindings: gtkWidget
+]
+
+{ #category : 'TOREMOVE' }
 GtkAdapter >> deferredUpdateMenuIn: gtkWidget [
 	| existingCallbacks menu |
 
@@ -279,7 +290,7 @@ GtkAdapter >> getHelpText [
 	^ self presenter help ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
 GtkAdapter >> handleKeyEvent: event [
 
 	event isModifier ifTrue: [ ^ false ].
@@ -293,7 +304,8 @@ GtkAdapter >> handleKeyEvent: event [
 { #category : 'testing' }
 GtkAdapter >> hasActions [
 
-	^ self presenter rootActionGroup notNil
+	^ self presenter actions isNotNil
+		or: [ self presenter internalActions isNotNil ]
 ]
 
 { #category : 'testing' }
@@ -461,7 +473,7 @@ GtkAdapter >> keyPressed: keyCode shift: shiftBoolean meta: metaBoolean control:
 				ExternalAddress null } ]
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'TOREMOVE' }
 GtkAdapter >> kmDispatcher [
 
 	^ dispatcher
@@ -517,7 +529,7 @@ GtkAdapter >> showContextMenu [
 	actionManager showContextMenu
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'private - actions' }
 GtkAdapter >> showMenu: aValuable event: event [
 	
 	lastShownMenu := self buildMenu: aValuable value.
@@ -563,14 +575,14 @@ GtkAdapter >> updateKeyBindings [
 		ifNotNil: [ :aCategory | self addKeyBindingCategory: aCategory to: self innerWidget ]
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'private - actions' }
 GtkAdapter >> updateMenu [
 
 	self innerWidgetDo: [ :w |
 		self deferredUpdateMenuIn: w ]
 ]
 
-{ #category : 'KEYBINDINGS' }
+{ #category : 'accessing' }
 GtkAdapter >> updateVisibility: aBoolean [ 
 
 	self widgetDo: [ :w |

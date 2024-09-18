@@ -17,13 +17,6 @@ GtkAbstractTextAdapter >> addEditionContextMenuTo: menuPresenter [
 ]
 
 { #category : 'building' }
-GtkAbstractTextAdapter >> addKeyBindingsTo: gtkWidget [
-
-	super addKeyBindingsTo: gtkWidget.
-	self addContextMenuKeyBindings: gtkWidget
-]
-
-{ #category : 'building' }
 GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.

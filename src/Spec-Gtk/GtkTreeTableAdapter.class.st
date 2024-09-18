@@ -36,13 +36,6 @@ Class {
 }
 
 { #category : 'building' }
-GtkTreeTableAdapter >> addKeyBindingsTo: gtkWidget [
-
-	super addKeyBindingsTo: gtkWidget.
-	self addContextMenuKeyBindings: gtkWidget
-]
-
-{ #category : 'building' }
 GtkTreeTableAdapter >> addModelTo: gtkTreeView [
 	
 	super addModelTo: gtkTreeView.

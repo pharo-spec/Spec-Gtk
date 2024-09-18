@@ -34,13 +34,21 @@ GtkWindowAdapter >> add: gtkBox toWindow: gtkWindow [
 ]
 
 { #category : 'private - building' }
+GtkWindowAdapter >> addActionsTo: gtkWindow [
+
+	super addActionsTo: gtkWindow.
+	self addDefaultKeyBindings: gtkWindow
+]
+
+{ #category : 'private - building' }
 GtkWindowAdapter >> addDefaultKeyBindings: gtkWindow [
+	| actionGroup |
 	
-	self flag: #TODO. "Take this from a configuration."
-	self 
-		addKeyCombination: $w actionModifier 
-		action: [ self closeFromKeyboard ]
-		toWidget: gtkWindow
+	actionGroup := self defaultActionGroup.
+	actionGroup ifNil: [ ^ self ].
+
+	self ensureActionManager
+		installGroup: actionGroup on: gtkWindow
 ]
 
 { #category : 'private - deferring' }
@@ -207,6 +215,18 @@ GtkWindowAdapter >> contentWithSpecLayout: aSpec [
 		  content := self model presenter buildWithLayout: aSpec ]
 ]
 
+{ #category : 'private - building' }
+GtkWindowAdapter >> defaultActionGroup [
+		
+	^ SpActionGroup new 
+		name: 'adapterWindowActions';
+		addActionWith: [ :action | action 
+			name: 'closeWindow';
+			shortcutKey: $w actionModifier;
+			action: [ self closeFromKeyboard ] ];
+		yourself
+]
+
 { #category : 'private - deferring' }
 GtkWindowAdapter >> deferAction: aBlock [ 
 
@@ -219,7 +239,6 @@ GtkWindowAdapter >> deferAction: aBlock [
 GtkWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec [
 
 	self connectToGtkSignals: gtkWindow.
-	self addDefaultKeyBindings: gtkWindow.
 
 	"add window properties"
 	self presenter initialExtent ifNotNil: [ :extent |

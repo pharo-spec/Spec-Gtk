@@ -50,9 +50,7 @@ GtkActionVisitor >> prefix [
 { #category : 'private' }
 GtkActionVisitor >> pushPrefix: aCommandGroup [
 
-	prefixes add: (aCommandGroup isRoot
-		ifTrue: [ 'action' ]
-		ifFalse: [ aCommandGroup id ])
+	prefixes add: aCommandGroup id
 ]
 
 { #category : 'private' }

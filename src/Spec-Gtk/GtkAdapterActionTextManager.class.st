@@ -19,17 +19,17 @@ GtkAdapterActionTextManager >> hasContextMenu [
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
+GtkAdapterActionTextManager >> installActionGroupShortcuts: anActionGroup on: gtkWidget [
 
-	hasContextMenu := true.	
-	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self presenter rootActionGroup)
+	super installActionGroupShortcuts: anActionGroup on: gtkWidget.
+	self maybeInstallCROn: gtkWidget
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionTextManager >> installShortcutsOn: gtkWidget [
+GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
 
-	super installShortcutsOn: gtkWidget.
-	self maybeInstallCROn: gtkWidget
+	hasContextMenu := true.	
+	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self presenter actions)
 ]
 
 { #category : 'private - actions' }
@@ -44,8 +44,7 @@ GtkAdapterActionTextManager >> maybeInstallCROn: gtkEntry [
 	enter := KeyboardKey enter asKeyCombination.
 	actionMap keysDo: [ :each | 
 		(each hasShortcutKey and: [ each shortcutKey  = enter ])
-			ifTrue: [ 
-				gtkEntry connectActivate: [ each execute ] ] ]
+			ifTrue: [ gtkEntry connectActivate: [ each execute ] ] ]
 ]
 
 { #category : 'actions' }

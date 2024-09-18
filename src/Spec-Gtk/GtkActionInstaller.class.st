@@ -49,12 +49,17 @@ GtkActionInstaller >> visitCommand: aCommand [
 
 { #category : 'visiting' }
 GtkActionInstaller >> visitCommandGroup: aCommandGroup [
+	| oldActionGroup |
 
 	self pushPrefix: aCommandGroup.
+	oldActionGroup := actionGroup.
 	[
+		actionGroup := GSimpleActionGroup new.
 		aCommandGroup entries do: [ :entry | entry acceptVisitor: self ].
 		self widget 
 			insertActionGroup: self prefix
 			actions: self actionGroup ]
-	ensure: [ self popPrefix ]
+	ensure: [ 
+		actionGroup := oldActionGroup.
+		self popPrefix ]
 ]

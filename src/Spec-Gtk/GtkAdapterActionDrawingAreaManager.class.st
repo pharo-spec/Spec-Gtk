@@ -7,11 +7,10 @@ Class {
 }
 
 { #category : 'private - actions' }
-GtkAdapterActionDrawingAreaManager >> installShortcutsOn: gtkDrawingArea [
+GtkAdapterActionDrawingAreaManager >> installActionGroupShortcuts: anActionGroup on: gtkWidget [
 
 	self anyCommandHasShortcut ifFalse: [ ^ self ].
 	
-	gtkDrawingArea focusable: true.
-	super installShortcutsOn: gtkDrawingArea
-
+	gtkWidget focusable: true.
+	super installActionGroupShortcuts: anActionGroup on: gtkWidget
 ]

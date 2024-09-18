@@ -34,19 +34,6 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 	super add: containerBox toWindow: gtkDialog
 ]
 
-{ #category : 'private - building' }
-GtkDialogWindowAdapter >> addDefaultKeyBindings: gtkWindow [
-
-	super addDefaultKeyBindings: gtkWindow.
-	self 
-		addKeyCombination: Character escape asKeyCombination 
-			action: [ self closeFromKeyboard ]
-			toWidget: gtkWindow;
-		addKeyCombination: $s actionModifier | Character cr asKeyCombination
-			action: [ self defaultFromKeyboard ]
-			toWidget: gtkWindow
-]
-
 { #category : 'accessing' }
 GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 
@@ -67,6 +54,21 @@ GtkDialogWindowAdapter >> closeFromSignal [
 
 	super closeFromSignal.
 	runLoop done
+]
+
+{ #category : 'private - building' }
+GtkDialogWindowAdapter >> defaultActionGroup [
+	
+	^ super defaultActionGroup
+		addShortcutWith: [ :action | action 
+			name: 'cancelDialog';
+			shortcutKey: Character escape asKeyCombination;
+			action: [ self closeFromKeyboard ] ];
+		addShortcutWith: [ :action | action
+			name: 'acceptDialog';
+			shortcutKey: $s actionModifier | Character cr asKeyCombination;
+			action: [ self defaultFromKeyboard ] ];
+		yourself
 ]
 
 { #category : 'private - building' }

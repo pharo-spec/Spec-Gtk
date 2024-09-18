@@ -23,13 +23,6 @@ GtkComponentListAdapter class >> adaptingAliases [
 ]
 
 { #category : 'building' }
-GtkComponentListAdapter >> addKeyBindingsTo: gtkWidget [
-
-	super addKeyBindingsTo: gtkWidget.
-	self addContextMenuKeyBindings: gtkWidget
-]
-
-{ #category : 'building' }
 GtkComponentListAdapter >> addModelTo: gtkListBox [
 
 	gtkListBox canFocus: true.
