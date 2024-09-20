@@ -187,7 +187,8 @@ GtkTextStyleVisitor >> styleExpression: aString [
 		parse.
 
 	self styleAST: ast.
-	self removeDoItTag.
+	ast isDoIt 
+		ifTrue: [ self removeDoItTag ].
 	
 	^ self tags
 ]
