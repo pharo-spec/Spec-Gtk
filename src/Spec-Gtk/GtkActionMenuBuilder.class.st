@@ -42,7 +42,7 @@ GtkActionMenuBuilder >> visitCommand: aCommand [
 	
 	aCommand isVisible ifFalse: [ ^ self ].
 	menu 
-		appendLabel: aCommand name 
+		appendLabel: aCommand dynamicName 
 		actionName: (self actionNameFor: aCommand)
 ]
 
