@@ -33,7 +33,7 @@ GtkTreeListViewAdapter >> addModelTo: gtkListView [
 		self updateRoots ].
 
 	gtkListView connectRowActivated: [ :position |
-		self presenter doActivateSelected ]
+		self runInSystem: [ self presenter doActivateSelected ] ]
 ]
 
 { #category : 'api' }

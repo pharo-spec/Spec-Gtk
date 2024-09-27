@@ -11,7 +11,7 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	super addModelTo: gtkColumnView.
 
-	gtkColumnView headerFactory: self newHeaderFactory.
+	"gtkColumnView headerFactory: self newHeaderFactory."
 
 	self presenter columns withIndexDo: [ :each :index |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each index: index) ].
@@ -21,14 +21,13 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
-	self presenter selection 
-		whenChangedDo: [ self updateSelectionFromPresenter ].
+	self presenter whenSelectionChangedDo: [ self updateSelectionFromPresenter ].
 	self presenter whenIsResizableChangedDo: [ :aBoolean |
 		self updateResizableColumnsTo: aBoolean ].
 	self presenter whenRootsChangedDo: [ self updateRoots ].
 
 	gtkColumnView connectRowActivated: [ :position |
-		self presenter doActivateSelected ]
+		self runInSystem: [ self presenter doActivateSelected ] ]
 ]
 
 { #category : 'api' }
