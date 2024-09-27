@@ -34,6 +34,12 @@ GtkAdapterActionManager class >> on: anAdapter [
 		yourself
 ]
 
+{ #category : 'private - actions' }
+GtkAdapterActionManager >> actionGroups [
+
+	^ { self presenter actions }
+]
+
 { #category : 'accessing' }
 GtkAdapterActionManager >> adapter [
 
@@ -65,6 +71,31 @@ GtkAdapterActionManager >> anyCommandInActionGroupIsVisible: anActionGroup [
 GtkAdapterActionManager >> anyCommandIsVisible [
 		
 	^ self anyCommandInActionGroupIsVisible: self presenter actions
+]
+
+{ #category : 'private - actions' }
+GtkAdapterActionManager >> deferredShowPopoverMenuFor: anArrayOfGroups  at: position  owner: gtkWidget [
+	| menuModel |
+	
+	popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new)
+			ensureObjectRefAndAutoRelease.
+	popoverContextMenu hasArrow: false.
+	popoverContextMenu parent: gtkWidget.
+	popoverContextMenu connectClosed: [ 
+		"release when closed, to ensure a finalize will happen before 
+		 close the window."
+		popoverContextMenu := nil ].
+
+	menuModel := GtkActionMenuBuilder new 
+		visit: anArrayOfGroups first;
+		in: [ :this | 
+			anArrayOfGroups allButFirstDo: [ :each | each acceptVisitor: this ] ];
+		root.
+	
+	popoverContextMenu
+		menuModel: menuModel;
+		pointingTo: (position extent: 1@1);
+		popup
 ]
 
 { #category : 'accessing' }
@@ -134,7 +165,7 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	gtkWidget addRightClickEvent: [ :event |
 		self updateEnabledActions.
 		self 
-			showPopoverMenuFor: self presenter actions
+			showPopoverMenuFor: self actionGroups
 			at: event position ]
 ]
 
@@ -149,12 +180,19 @@ GtkAdapterActionManager >> installGroup: anActionGroup on: gtkWidget [
 ]
 
 { #category : 'actions' }
-GtkAdapterActionManager >> installOn: gtkWidget [
-
+GtkAdapterActionManager >> installGroupsOn: gtkWidget [
+		
 	self presenter internalActions ifNotNil: [ :actionGroup |
 		self installGroup: actionGroup on: gtkWidget ].
 	self presenter actions ifNotNil: [ :actionGroup |
-		self installGroup: actionGroup on: gtkWidget ].
+		self installGroup: actionGroup on: gtkWidget ]
+]
+
+{ #category : 'actions' }
+GtkAdapterActionManager >> installOn: gtkWidget [
+
+	"install groups"
+	self installGroupsOn: gtkWidget.	
 	"install context menu (but just if any action is visible, because they can be 
 	 just keybindings), and just for root action group"
 	self anyCommandIsVisible 
@@ -178,29 +216,20 @@ GtkAdapterActionManager >> showContextMenu [
 
 	self adapter innerWidgetDo: [ :w |
 		self 
-			showPopoverMenuFor: self presenter actions
+			showPopoverMenuFor: self actionGroups
 			at: w surface positionOfPointer ]
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionManager >> showPopoverMenuFor: aGroup at: position [
+GtkAdapterActionManager >> showPopoverMenuFor: anArrayOfGroups at: position [
 
 	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].	
 	
 	self adapter innerWidgetDo: [ :w |
-		popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new)
-			ensureObjectRefAndAutoRelease.
-		popoverContextMenu hasArrow: false.
-		popoverContextMenu parent: w.
-		popoverContextMenu connectClosed: [ 
-			"release when closed, to ensure a finalize will happen before 
-			 close the window."
-			popoverContextMenu := nil ].
-		
-		popoverContextMenu
-			menuModel: (GtkActionMenuBuilder new visit: aGroup);
-			pointingTo: (position extent: 1@1);
-			popup ]
+		self 
+			deferredShowPopoverMenuFor: anArrayOfGroups 
+			at: position 
+			owner: w ]
 ]
 
 { #category : 'updating' }

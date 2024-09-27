@@ -13,6 +13,19 @@ Class {
 	#tag : 'Actions'
 }
 
+{ #category : 'private' }
+GtkActionMenuBuilder >> allPrefixes [
+	"| allPrefixes |
+
+	allPrefixes := super allPrefixes.
+	allPrefixes isEmptyOrNil ifTrue: [ ^ allPrefixes ].
+	
+	^ allPrefixes first 
+		ifNotNil: [ allPrefixes allButFirst ]
+		ifNil: [ allPrefixes ]"
+	^ super allPrefixes
+]
+
 { #category : 'visiting' }
 GtkActionMenuBuilder >> appendSection: aMenu label: aName to: parentMenu [
 	
@@ -27,6 +40,12 @@ GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
 	parentMenu 
 		appendLabel: aName 
 		submenu: menu
+]
+
+{ #category : 'accessing' }
+GtkActionMenuBuilder >> root [
+
+	^ root
 ]
 
 { #category : 'visiting' }

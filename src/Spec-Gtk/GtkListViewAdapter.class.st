@@ -34,7 +34,8 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 
 	gtkListView connectRowActivated: [ :position |
-		self presenter doActivateAtIndex: position + 1 ].
+		self runInSystem: [ 
+			self presenter doActivateAtIndex: position + 1 ] ].
 	
 	self configureScrolling
 ]
@@ -72,13 +73,13 @@ GtkListViewAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private - factory' }
 GtkListViewAdapter >> newHeaderFactory [
 
 	^ GtkListViewAdapterHeaderFactory newPresenter: self presenter
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private - factory' }
 GtkListViewAdapter >> newItemFactory [
 
 	^ GtkListViewAdapterItemFactory newPresenter: self presenter

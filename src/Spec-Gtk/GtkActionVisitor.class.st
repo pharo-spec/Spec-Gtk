@@ -27,6 +27,12 @@ GtkActionVisitor >> actionNameFor: aCommand [
 	^ '{1}.{2}' format: { self prefix. aCommand id }
 ]
 
+{ #category : 'private' }
+GtkActionVisitor >> allPrefixes [
+
+	^ prefixes
+]
+
 { #category : 'initialization' }
 GtkActionVisitor >> initialize [
 
@@ -44,7 +50,9 @@ GtkActionVisitor >> popPrefix [
 GtkActionVisitor >> prefix [
 
 	^ String streamContents: [ :stream | 
-		prefixes asStringOn: stream delimiter: '-' ]
+		self allPrefixes 
+			asStringOn: stream 
+			delimiter: '-' ]
 ]
 
 { #category : 'private' }

@@ -44,7 +44,9 @@ GtkAdapterActionTextManager >> maybeInstallCROn: gtkEntry [
 	enter := KeyboardKey enter asKeyCombination.
 	actionMap keysDo: [ :each | 
 		(each hasShortcutKey and: [ each shortcutKey  = enter ])
-			ifTrue: [ gtkEntry connectActivate: [ each execute ] ] ]
+			ifTrue: [ 
+				gtkEntry connectActivate: [ 
+					self runInSystem: [ each execute ] ] ] ]
 ]
 
 { #category : 'actions' }

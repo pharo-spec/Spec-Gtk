@@ -15,7 +15,7 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	super addModelTo: gtkColumnView.
 
-	gtkColumnView headerFactory: self newHeaderFactory.
+	"gtkColumnView headerFactory: self newHeaderFactory."
 
 	self presenter columns do: [ :each |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
@@ -31,8 +31,9 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 		self updateResizableColumnsTo: aBoolean ].
 
 	gtkColumnView connectRowActivated: [ :position |
-		self presenter doActivateAtIndex: position + 1 ].
-	
+		self runInSystem: [
+			self presenter doActivateAtIndex: position + 1 ] ].
+
 	self configureScrolling
 ]
 

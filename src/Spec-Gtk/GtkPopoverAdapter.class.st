@@ -26,7 +26,7 @@ GtkPopoverAdapter >> addVisibleSettingsTo: gtkWidget [
 { #category : 'building' }
 GtkPopoverAdapter >> buildWidget [
 	
-	^ super buildWidget ensureObjectRefAndAutoRelease
+	^ super buildWidget "ensureObjectRefAndAutoRelease"
 ]
 
 { #category : 'api' }
@@ -43,11 +43,7 @@ GtkPopoverAdapter >> dismiss [
 { #category : 'api' }
 GtkPopoverAdapter >> popup [
 
-	self widgetDo: [ :w | 
-		self register: w.
-		w parent: self presenter relativeTo adapter innerWidget.
-		w popup.
-		self processInitializationDeferredActions ]
+	self popupPointingTo: nil
 ]
 
 { #category : 'api' }
@@ -56,9 +52,11 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 	self widgetDo: [ :w | 
 		self register: w.
 		w parent: self presenter relativeTo adapter innerWidget.
-		w setPointingTo: aRectangle asGdkRectangle.
+		aRectangle ifNotNil: [ 
+			w setPointingTo: aRectangle asGdkRectangle ].
 		w popup.
-		self processInitializationDeferredActions ]
+		self processInitializationDeferredActions.
+		self presenter takeKeyboardFocus ]
 ]
 
 { #category : 'building' }

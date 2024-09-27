@@ -62,7 +62,7 @@ GtkMillerAdapter >> applyLayout: aLayout [
 		beVisible.
 
 	widget := GtkScrolledWindow newWidget: innerWidget.
-	widget connectSizeAllocate: [ :aRect | self widgetResized ].
+	"widget connectSizeAllocate: [ :aRect | self widgetResized ]."
 
 	self toggleVisible: self presenter isVisible.
 	self presenter whenVisibleChangedDo: [
@@ -84,11 +84,10 @@ GtkMillerAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget 
 	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
 		
-	gtkWidget 
-		packStart: childWidget
-		expand: true
-		fill: true
-		padding: 0.
+	childWidget 
+		vExpand: true;
+		hExpand: true.
+	gtkWidget append: childWidget.
 			
 	^ gtkWidget
 ]

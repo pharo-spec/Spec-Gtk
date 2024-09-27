@@ -55,36 +55,6 @@ GtkAdapter >> addActionsTo: gtkWidget [
 	actionManager installOn: gtkWidget
 ]
 
-{ #category : 'TOREMOVE' }
-GtkAdapter >> addKeyBindingCategory: aCategory to: gtkWidget [
-
-	aCategory allEntries keymaps do: [ :each |
-		self 
-			bindKeyCombination: each shortcut
-			toAction: each action
-			inWidget: gtkWidget ]
-]
-
-{ #category : 'TOREMOVE' }
-GtkAdapter >> addKeyBindingsFromGroup: actionGroup to:gtkWidget [
-	| kmCategory |
-
-	kmCategory := actionGroup asKMCategory.
-	kmCategory allEntries ifEmpty: [ ^ self ].
-	
-	self configureKeyBindingsIfNeeded: gtkWidget. 
-	kmCategory addKeyBindingCategory: kmCategory to: gtkWidget
-]
-
-{ #category : 'TOREMOVE' }
-GtkAdapter >> addKeyBindingsTo: gtkWidget [
-	
-	self presenter internalActions ifNotNil: [ :actionGroup |
-		self addKeyBindingsFromGroup: actionGroup to: gtkWidget ].
-	self presenter actions ifNotNil: [ :actionGroup |
-		self addKeyBindingsFromGroup: actionGroup to: gtkWidget ]
-]
-
 { #category : 'private - actions' }
 GtkAdapter >> addKeyCombination: aShortcut action: aBlock toWidget: aWidget [
 
@@ -161,27 +131,6 @@ GtkAdapter >> backendUpdatingDo: aBlock [
 ]
 
 { #category : 'TOREMOVE' }
-GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
-	
-	self 
-		bindKeyCombination: aShortcut 
-		toAction: aBlock 
-		inWidget: self innerWidget
-]
-
-{ #category : 'TOREMOVE' }
-GtkAdapter >> bindKeyCombination: aShortcut toAction: aBlock inWidget: gtkWidget [
-	
-	dispatcher ifNil: [ 
-		GRunLoop defer: [
-			self configureKeyBindings: gtkWidget ] ].
-
-	dispatcher 
-		bindKeyCombination: aShortcut
-		toAction: aBlock
-]
-
-{ #category : 'TOREMOVE' }
 GtkAdapter >> buildMenu: aMenuPresenter [
 
 	^ aMenuPresenter 
@@ -206,21 +155,6 @@ GtkAdapter >> buildWidget [
 GtkAdapter >> cleanupAfterReplacing [ 
 
 	widget := nil
-]
-
-{ #category : 'TOREMOVE' }
-GtkAdapter >> configureKeyBindings: gtkWidget [
-
-	dispatcher := GtkKMDispatcher on: self presenter.
-	gtkWidget addKeyPressEvent: [ :event |
-		self handleKeyEvent: event ]
-]
-
-{ #category : 'TOREMOVE' }
-GtkAdapter >> configureKeyBindingsIfNeeded: gtkWidget [
-	
-	dispatcher ifNotNil: [ ^ self ].
-	self configureKeyBindings: gtkWidget
 ]
 
 { #category : 'TOREMOVE' }
@@ -293,6 +227,7 @@ GtkAdapter >> getHelpText [
 { #category : 'TOREMOVE' }
 GtkAdapter >> handleKeyEvent: event [
 
+	self halt.
 	event isModifier ifTrue: [ ^ false ].
 	dispatcher ifNotNil: [
 		dispatcher dispatchKeyEvent: event.
@@ -565,14 +500,6 @@ GtkAdapter >> updateActions [
 GtkAdapter >> updateHelp [
 	
 	self widgetDo: [ :w | w tooltipText: self presenter help  ]
-]
-
-{ #category : 'updating' }
-GtkAdapter >> updateKeyBindings [
-
-	dispatcher ifNotNil: [ dispatcher detachAllKeymapCategories ].
-	self presenter contextKeyBindings 
-		ifNotNil: [ :aCategory | self addKeyBindingCategory: aCategory to: self innerWidget ]
 ]
 
 { #category : 'private - actions' }
