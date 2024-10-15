@@ -1,31 +1,32 @@
 Class {
-	#name : #GtkGenericAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkGenericAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'morph'
 	],
-	#category : #'Spec-Gtk-Morphic-Adapter'
+	#category : 'Spec-Gtk-Morphic-Adapter',
+	#package : 'Spec-Gtk-Morphic-Adapter'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkGenericAdapter class >> morph: aMorph [
 
 	^ self new morph: aMorph
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkGenericAdapter >> morph [
 
 	^ morph
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkGenericAdapter >> morph: anObject [
 
 	morph := anObject
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkGenericAdapter >> newWidget [
 
 	^ GtkScrolledWindow newWidget: (GtkMorphView newMorph: self morph)

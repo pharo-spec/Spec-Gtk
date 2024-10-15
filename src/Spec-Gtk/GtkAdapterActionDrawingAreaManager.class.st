@@ -14,3 +14,11 @@ GtkAdapterActionDrawingAreaManager >> installActionGroupShortcuts: anActionGroup
 	gtkWidget focusable: true.
 	super installActionGroupShortcuts: anActionGroup on: gtkWidget
 ]
+
+{ #category : 'private - actions' }
+GtkAdapterActionDrawingAreaManager >> installContextMenuOn: gtkWidget [
+	
+	"drawing areas (like the morphic presenter) do not install a controller,
+	 they show the menu calling showContextMenu"
+	hasContextMenu := true
+]

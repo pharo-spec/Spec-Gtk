@@ -1,6 +1,6 @@
-Extension { #name : #PluggableMenuItemSpec }
+Extension { #name : 'PluggableMenuItemSpec' }
 
-{ #category : #'*Spec-Gtk-Morphic-Adapter' }
+{ #category : '*Spec-Gtk-Morphic-Adapter' }
 PluggableMenuItemSpec >> asMenuItemPresenter [
 	"self haltIf: (self separator notNil and: [ self separator ~= false ]). "
 	| shortcut |

@@ -1,1 +1,1 @@
-Package { #name : #'Spec-Gtk-Morphic-Adapter' }
+Package { #name : 'Spec-Gtk-Morphic-Adapter' }

@@ -1,10 +1,11 @@
 Class {
-	#name : #GtkPaginatorAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Morphic-Adapter'
+	#name : 'GtkPaginatorAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Morphic-Adapter',
+	#package : 'Spec-Gtk-Morphic-Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPaginatorAdapter >> addModelTo: gtkWidget [
 	| morph |
 
@@ -44,37 +45,37 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPaginatorAdapter >> backgroundColor [
 
 	^ self presenter application configuration panelBackgroundColor
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPaginatorAdapter >> defaultMarginBottom [
 
 	^ 5
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPaginatorAdapter >> defaultPaginatorHeight [
 
 	^ 22
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPaginatorAdapter >> panelBackgroundColor [
 
 	^ self presenter application configuration panelBackgroundColor
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkPaginatorAdapter >> selectedColor [
 
 	^ self presenter application configuration listSelectedColor alpha: 0.3
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkPaginatorAdapter >> widgetClass [
 
 	^ GtkMorphView

@@ -1,10 +1,11 @@
 Class {
-	#name : #GtkMorphAdapter,
-	#superclass : #GtkAdapter,
-	#category : #'Spec-Gtk-Morphic-Adapter'
+	#name : 'GtkMorphAdapter',
+	#superclass : 'GtkAdapter',
+	#category : 'Spec-Gtk-Morphic-Adapter',
+	#package : 'Spec-Gtk-Morphic-Adapter'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMorphAdapter >> addModelTo: gtkWidget [
 
 	self presenter whenMorphChangedDo: [ :aMorph |
@@ -15,7 +16,13 @@ GtkMorphAdapter >> addModelTo: gtkWidget [
 	
 ]
 
-{ #category : #building }
+{ #category : 'private - actions' }
+GtkMorphAdapter >> newActionManager [
+
+	^ GtkAdapterActionDrawingAreaManager on: self
+]
+
+{ #category : 'building' }
 GtkMorphAdapter >> setMorph: aMorph to: gtkWidget [
 
 	aMorph ifNil: [ ^ self ].
@@ -29,7 +36,7 @@ GtkMorphAdapter >> setMorph: aMorph to: gtkWidget [
 		ifFalse: [ gtkWidget beMorphResizable ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkMorphAdapter >> widgetClass [
 
 	^ GtkMorphView

@@ -74,28 +74,28 @@ GtkAdapterActionManager >> anyCommandIsVisible [
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionManager >> deferredShowPopoverMenuFor: anArrayOfGroups  at: position  owner: gtkWidget [
+GtkAdapterActionManager >> deferredShowPopoverMenuFor: anArrayOfGroups at: position owner: gtkWidget [
 	| menuModel |
 	
-	popoverContextMenu := (GtkPopoverMenu newFromModelFull: GMenu new)
-			ensureObjectRefAndAutoRelease.
-	popoverContextMenu hasArrow: false.
-	popoverContextMenu parent: gtkWidget.
-	popoverContextMenu connectClosed: [ 
-		"release when closed, to ensure a finalize will happen before 
-		 close the window."
-		popoverContextMenu := nil ].
-
 	menuModel := GtkActionMenuBuilder new 
 		visit: anArrayOfGroups first;
 		in: [ :this | 
 			anArrayOfGroups allButFirstDo: [ :each | each acceptVisitor: this ] ];
 		root.
+
+	popoverContextMenu := (GtkPopoverMenu newFromModelFull: menuModel)
+			ensureObjectRefAndAutoRelease.
+	popoverContextMenu parent: gtkWidget.
+	popoverContextMenu hasArrow: false.
+	popoverContextMenu autohide: true.
+	popoverContextMenu pointingTo: (position extent: 10@10).
 	
-	popoverContextMenu
-		menuModel: menuModel;
-		pointingTo: (position extent: 1@1);
-		popup
+	popoverContextMenu connectClosed: [
+		"release when closed, to ensure a finalize will happen before 
+		 close the window."
+		popoverContextMenu := nil ].
+	
+	popoverContextMenu popup
 ]
 
 { #category : 'accessing' }
@@ -217,19 +217,16 @@ GtkAdapterActionManager >> showContextMenu [
 	self adapter innerWidgetDo: [ :w |
 		self 
 			showPopoverMenuFor: self actionGroups
-			at: w surface positionOfPointer ]
+			at: (w root computePositionOfPointerTarget: w) ]
 ]
 
 { #category : 'private - actions' }
 GtkAdapterActionManager >> showPopoverMenuFor: anArrayOfGroups at: position [
 
-	(actionMap keys noneSatisfy: [ :each | each isVisible ]) ifTrue: [ ^ self ].	
-	
-	self adapter innerWidgetDo: [ :w |
-		self 
-			deferredShowPopoverMenuFor: anArrayOfGroups 
-			at: position 
-			owner: w ]
+	self 
+		deferredShowPopoverMenuFor: anArrayOfGroups 
+		at: position 
+		owner: self adapter innerWidget
 ]
 
 { #category : 'updating' }

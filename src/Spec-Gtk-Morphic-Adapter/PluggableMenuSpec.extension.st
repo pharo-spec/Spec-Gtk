@@ -1,6 +1,6 @@
-Extension { #name : #PluggableMenuSpec }
+Extension { #name : 'PluggableMenuSpec' }
 
-{ #category : #'*Spec-Gtk-Morphic-Adapter' }
+{ #category : '*Spec-Gtk-Morphic-Adapter' }
 PluggableMenuSpec >> asMenuBarPresenter [
 	
 	^ SpMenuBarPresenter new
@@ -9,7 +9,7 @@ PluggableMenuSpec >> asMenuBarPresenter [
 				group addMenuItem: each asMenuItemPresenter ] ]
 ]
 
-{ #category : #'*Spec-Gtk-Morphic-Adapter' }
+{ #category : '*Spec-Gtk-Morphic-Adapter' }
 PluggableMenuSpec >> asMenuPresenter [
 	| presenter |
 
