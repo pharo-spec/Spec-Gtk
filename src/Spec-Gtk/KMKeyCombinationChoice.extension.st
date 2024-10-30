@@ -12,3 +12,10 @@ KMKeyCombinationChoice >> spGtkCurrentCharacter [
 		ifEmpty: [ nil ]
 		ifNotEmpty: [ candidates first ]
 ]
+
+{ #category : '*Spec-Gtk' }
+KMKeyCombinationChoice >> withAllKeyCombinationsDo: aBlock [
+
+	shortcuts do: [ :each | 
+		aBlock value: each ]
+]
