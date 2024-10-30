@@ -80,20 +80,19 @@ GtkTreeListViewAdapter >> refreshList [
 GtkTreeListViewAdapter >> refreshSelectionModelIn: gtkListView [
 	| selectionModel |
 	
-	selectionModel := self newSelectionModel.
+	selectionModel := self newSelectionModel.	
 	"update store in factory. This has to be BEFORE setting it to the list view 
 	 because gtk will trigger an update *immediately*. and it needs to find the 
 	 right contents when it looks for them. "
 	gtkListView factory store: selectionModel model store.
-	gtkListView selectionModel: selectionModel.
-	
+	gtkListView selectionModel: selectionModel
 ]
 
 { #category : 'private - updating' }
 GtkTreeListViewAdapter >> refreshWidgetSelection [
 
 	self flag: #TODO. "not sure this is needed?"
-'mode' crTrace.
+
 	"self innerWidgetDo: [ :w |
 		| rowIndex selection |
 		rowIndex := self presenter selection selectedIndex.

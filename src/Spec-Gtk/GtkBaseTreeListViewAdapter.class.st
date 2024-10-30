@@ -44,13 +44,17 @@ GtkBaseTreeListViewAdapter >> expandAll: aCollection basePath: aPath in: aModel 
 
 { #category : 'expanding-collapsing' }
 GtkBaseTreeListViewAdapter >> expandPath: aPath [
+	| path |
 	
+	path := aPath collect: [ :each | each - 1 ].
 	self innerWidgetDo: [ :w |
 		| treeModel |
-		
 		treeModel := w selectionModel model.
-		self presenter roots withIndexDo: [ :each :index | 
-			self findAndExpandPath: aPath in: treeModel ] ]
+		self presenter roots do: [ :each | 
+			| row |
+			row := self findAndExpandPath: path in: treeModel.
+			row ifNotNil: [ 
+				row expand: true ] ] ]
 ]
 
 { #category : 'expanding-collapsing' }
@@ -58,10 +62,11 @@ GtkBaseTreeListViewAdapter >> expandRoots [
 	
 	self innerWidgetDo: [ :w |
 		| treeModel |
-		
 		treeModel := w selectionModel model.
 		self presenter roots withIndexDo: [ :each :index | 
-			self findAndExpandPath: { index - 1 } in: treeModel ] ]
+			| row |
+			row := self findAndExpandPath: { index - 1 } in: treeModel.
+			row ifNotNil: [ row expand: true ] ] ]
 ]
 
 { #category : 'private - updating' }
@@ -71,8 +76,9 @@ GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel [
 
 	^ aModel
 		withRowAt: aPath first 
-		do: [ :row | 						
-			row expand: true.
+		do: [ :row |
+			aPath size = 1 
+				ifFalse: [ row expand: true ].
 			aPath allButFirst 
 				ifNotEmpty: [ :nextPath | self findAndExpandPath: nextPath in: row ]
 				ifEmpty: [ row ] ]
@@ -155,13 +161,16 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromGtk [
 				selection model store pathOfItem: item ]) ] ].
 
 	self runInSystem: [ 
-		self presenter selection selectPaths: paths asArray ]
+		self backendUpdatingDo: [  
+			self presenter selection selectPaths: paths asArray ] ]
 ]
 
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> updateMultiSelectionFromPresenter: oldPaths [
 	| paths |
 	
+	self isBackendUpdating ifTrue: [ ^ self ].
+
 	paths := self presenter selection selectedPaths collect: [ :each | each - 1 ].
 	paths = oldPaths ifTrue: [ ^ paths ].  
 
@@ -212,18 +221,22 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromGtk [
 	| path |
 
 	self innerWidgetDo: [ :w |
-		| selection row  |
+		| selection row |
 		selection :=  w selectionModel.
 		row := GtkTreeListRow fromHandleUnreferenced: selection selectedItem getHandle.
 		path := row withItemDo: [ :item |
 			selection model store pathOfItem: item ] ].
-
-	self runInSystem: [ self presenter selection selectPath: path ]
+	
+	self runInSystem: [ 
+		self backendUpdatingDo: [ 
+			self presenter selection selectPath: path ] ]
 ]
 
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 	| path |
+	
+	self isBackendUpdating ifTrue: [ ^ oldPath ].
 	
 	path := self presenter selection selectedPath collect: [ :each | each - 1 ].
 	path = oldPath ifTrue: [ ^ path ].  
