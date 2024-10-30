@@ -9,7 +9,9 @@ Class {
 		'listSelectedColor',
 		'providers',
 		'syntaxHighlightThemeName',
-		'styleScheme'
+		'styleScheme',
+		'applicationClass',
+		'applicationId'
 	],
 	#category : 'Spec-Gtk-Base',
 	#package : 'Spec-Gtk',
@@ -53,6 +55,30 @@ SpGtkConfiguration >> addPredefinedStyles [
 	self addCSSProviderFromString: (self isDarkTheme 
 		ifTrue: [ self styleForToolbarDark ]
 		ifFalse: [ self styleForToolbarLight ])
+]
+
+{ #category : 'accessing' }
+SpGtkConfiguration >> applicationClass [
+
+	^ applicationClass
+]
+
+{ #category : 'accessing' }
+SpGtkConfiguration >> applicationClass: anApplicationClass [
+
+	applicationClass := anApplicationClass
+]
+
+{ #category : 'accessing' }
+SpGtkConfiguration >> applicationId [
+
+	^ applicationId
+]
+
+{ #category : 'accessing' }
+SpGtkConfiguration >> applicationId: anApplicationId [
+
+	applicationId := anApplicationId
 ]
 
 { #category : 'configuring' }
@@ -103,6 +129,7 @@ SpGtkConfiguration >> buttonSelectedColor [
 { #category : 'configuring' }
 SpGtkConfiguration >> configure: anApplication [
 
+	self initializeEngine.
 	GRunLoop defer: [
 		self addPredefinedStyles.
 		self configureGeneral: anApplication.
@@ -167,6 +194,18 @@ SpGtkConfiguration >> getPanelBackgroundColor [
 SpGtkConfiguration >> getTextBackgroundColor [
 
 	self deprecated: #Gtk4
+]
+
+{ #category : 'configuring' }
+SpGtkConfiguration >> initializeEngine [
+	
+	GEngine isRunning ifTrue: [ 
+		GEngine current shutDown: true ].
+	
+	GEngine availableEngineClass new
+		applicationId: self applicationId;
+		applicationClass: self applicationClass;
+		run
 ]
 
 { #category : 'private' }
