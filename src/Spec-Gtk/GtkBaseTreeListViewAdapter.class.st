@@ -12,6 +12,22 @@ Class {
 	#tag : 'Adapter-ListView'
 }
 
+{ #category : 'expanding-collapsing' }
+GtkBaseTreeListViewAdapter >> collapsePath: aPath [
+	| path |
+	
+	"same as expand, but collapse at the end"
+	path := aPath collect: [ :each | each - 1 ].
+	self innerWidgetDo: [ :w |
+		| treeModel |
+		treeModel := w selectionModel model.
+		self presenter roots do: [ :each | 
+			| row |
+			row := self findAndExpandPath: path in: treeModel.
+			row ifNotNil: [ 
+				row expand: false ] ] ]
+]
+
 { #category : 'private' }
 GtkBaseTreeListViewAdapter >> doInitializationDeferredActions [
 
