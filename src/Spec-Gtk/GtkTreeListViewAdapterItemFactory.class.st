@@ -53,5 +53,6 @@ GtkTreeListViewAdapterItemFactory >> setup: listItem [
 { #category : 'accessing' }
 GtkTreeListViewAdapterItemFactory >> store: aRootStore [
 
-	store := aRootStore
+	store := aRootStore.
+	storedObjects removeAll
 ]

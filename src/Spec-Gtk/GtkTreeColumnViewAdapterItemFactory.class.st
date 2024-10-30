@@ -47,5 +47,6 @@ GtkTreeColumnViewAdapterItemFactory >> setup: listItem [
 { #category : 'accessing' }
 GtkTreeColumnViewAdapterItemFactory >> store: aRootStore [
 
-	store := aRootStore
+	store := aRootStore.
+	storedObjects removeAll
 ]
