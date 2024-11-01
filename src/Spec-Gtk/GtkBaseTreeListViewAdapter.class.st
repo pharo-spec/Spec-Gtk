@@ -252,7 +252,7 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromGtk [
 GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 	| path |
 	
-	self isBackendUpdating ifTrue: [ ^ oldPath ].
+	self isBackendUpdating ifTrue: [ ^ self ].
 	
 	path := self presenter selection selectedPath collect: [ :each | each - 1 ].
 	path = oldPath ifTrue: [ ^ path ].  
@@ -262,11 +262,11 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 		^ path ].
 
 	self innerWidgetDo: [ :w | 
-		| treeModel lastRow |
+		| treeModel row |
 		treeModel := w selectionModel model.
-		lastRow := self findAndExpandPath: path in: treeModel.
-		lastRow ifNotNil: [ 
-			w selectionModel select: lastRow position ] ].
+		row := self findAndExpandPath: path in: treeModel.
+		row ifNotNil: [ 
+			w selectionModel select: row position ] ].
 	
 	^ path
 ]
