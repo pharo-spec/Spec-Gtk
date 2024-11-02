@@ -156,7 +156,9 @@ GtkColumnViewAdapter >> refreshWidgetSelection [
 GtkColumnViewAdapter >> scrollToSelectionIfNeeded: index [
 
 	self innerWidgetDo: [ :w |
-		w scrollToPosition: index ]
+		w 
+			scrollToPosition: index - 1 
+			flags: GtkListScrollFlags GTK_LIST_SCROLL_FOCUS ]
 ]
 
 { #category : 'private' }

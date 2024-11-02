@@ -7,6 +7,9 @@ Class {
 		'deferredAction',
 		'selectionCompanion'
 	],
+	#pools : [
+		'GtkListScrollFlags'
+	],
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter-ListView'
@@ -63,7 +66,8 @@ GtkBaseListViewAdapter >> updateSingleSelectionFromGtk [
 	 indicating the real selected index"	
 	index := self innerWidgetDo: [ :w | w selectionModel selected ].
 	self runInSystem: [
-		self presenter selection selectIndex: index]
+		self backendUpdatingDo: [
+			self presenter selection selectIndex: index ] ]
 ]
 
 { #category : 'private - updating' }
@@ -75,7 +79,10 @@ GtkBaseListViewAdapter >> updateSingleSelectionFromPresenter: oldIndex [
 		self innerWidgetDo: [ :w |
 			index > 0 
 				ifTrue: [ 
-					w selectionModel selectItem: index unselectRest: true ]
+					"w selectionModel selectItem: index unselectRest: true."
+					w 
+						scrollToPosition: index 
+						flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT ]
 				ifFalse: [ 
 					w selectionModel unselectAll ] ] ].
 

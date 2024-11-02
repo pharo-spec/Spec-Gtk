@@ -7,6 +7,9 @@ Class {
 		'deferredAction',
 		'selectionCompanion'
 	],
+	#pools : [
+		'GtkListScrollFlags'
+	],
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter-ListView'
@@ -266,7 +269,10 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 		treeModel := w selectionModel model.
 		row := self findAndExpandPath: path in: treeModel.
 		row ifNotNil: [ 
-			w selectionModel select: row position ] ].
+			w 
+				scrollToPosition: row position
+				flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
+			"w selectionModel select: row position" ] ].
 	
 	^ path
 ]

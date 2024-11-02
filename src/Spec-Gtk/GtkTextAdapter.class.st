@@ -130,7 +130,8 @@ GtkTextAdapter >> setWrapWord: value to: gtkTextView [
 GtkTextAdapter >> updatePresenterText: aString [
 
 	self runInSystem: [  
-		self backendUpdatingDo: [ self presenter text: aString ] ]
+		self backendUpdatingDo: [ 
+			self presenter text: aString ] ]
 ]
 
 { #category : 'building' }
