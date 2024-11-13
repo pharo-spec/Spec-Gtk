@@ -248,6 +248,12 @@ GtkCodeAdapter >> isScripting [
 	^ self presenter isScripting
 ]
 
+{ #category : 'building' }
+GtkCodeAdapter >> newActionManager [
+
+	^ GtkAdapterActionCodeManager on: self
+]
+
 { #category : 'private - factory' }
 GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 

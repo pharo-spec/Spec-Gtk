@@ -12,6 +12,12 @@ Class {
 	#tag : 'Actions'
 }
 
+{ #category : 'private' }
+GtkAdapterActionTextManager >> actions [
+
+	^ self presenter actions
+]
+
 { #category : 'accessing' }
 GtkAdapterActionTextManager >> hasContextMenu [
 
@@ -29,7 +35,16 @@ GtkAdapterActionTextManager >> installActionGroupShortcuts: anActionGroup on: gt
 GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
 
 	hasContextMenu := true.	
-	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self presenter actions)
+	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self actions)
+]
+
+{ #category : 'actions' }
+GtkAdapterActionTextManager >> installGroupsOn: gtkWidget [
+		
+	self presenter internalActions ifNotNil: [ :actionGroup |
+		self installGroup: actionGroup on: gtkWidget ].
+	self actions ifNotNil: [ :actionGroup |
+		self installGroup: actionGroup on: gtkWidget ]
 ]
 
 { #category : 'private - actions' }
