@@ -270,7 +270,7 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 		row := self findAndExpandPath: path in: treeModel.
 		row ifNotNil: [ 
 			w 
-				scrollToPosition: row position
+				scrollToPosition: row position - 1
 				flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
 			"w selectionModel select: row position" ] ].
 	
