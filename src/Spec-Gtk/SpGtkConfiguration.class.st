@@ -199,13 +199,20 @@ SpGtkConfiguration >> getTextBackgroundColor [
 { #category : 'configuring' }
 SpGtkConfiguration >> initializeEngine [
 	
-	GEngine isRunning ifTrue: [ 
+	GEngine isRunning ifTrue: [
+		"if already initialized with the same class, abort"
+		(self applicationClass isNil 
+			or: [ 
+				GEngine current applicationClass = self applicationClass
+				and: [  GEngine current application = self applicationId ] ])
+			ifTrue: [ ^ self ].
 		GEngine current shutDown: true ].
 	
 	GEngine availableEngineClass new
 		applicationId: self applicationId;
 		applicationClass: self applicationClass;
 		run
+	
 ]
 
 { #category : 'private' }
