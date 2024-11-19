@@ -43,7 +43,8 @@ GtkTextInputFieldAdapter >> addModelTo: gtkEntry [
 { #category : 'accessing' }
 GtkTextInputFieldAdapter >> cursorPositionIndex: index [
 	
-	^ self innerWidgetDo: [ :w | w position: index ]
+	^ self innerWidgetDo: [ :w | 
+		w position: index - 1 ]
 ]
 
 { #category : 'private' }

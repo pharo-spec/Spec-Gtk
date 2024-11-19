@@ -47,7 +47,8 @@ GtkAbstractTextAdapter >> clearUndoManager [
 { #category : 'spec protocol' }
 GtkAbstractTextAdapter >> cursorPositionIndex [
 
-	^ self innerWidgetDo: [ :w | w textBuffer cursorPosition ]
+	"this is zero based on gtk"
+	^ self innerWidgetDo: [ :w | w textBuffer cursorPosition + 1 ]
 ]
 
 { #category : 'testing' }

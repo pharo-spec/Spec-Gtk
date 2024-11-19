@@ -33,7 +33,8 @@ GtkSearchInputFieldAdapter >> addModelTo: gtkEntry [
 { #category : 'accessing' }
 GtkSearchInputFieldAdapter >> cursorPositionIndex: index [
 	
-	^ self innerWidgetDo: [ :w | w position: index ]
+	^ self innerWidgetDo: [ :w | 
+		w position: index - 1]
 ]
 
 { #category : 'private' }

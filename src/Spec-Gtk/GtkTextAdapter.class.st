@@ -77,7 +77,7 @@ GtkTextAdapter >> cursorPosition [
 GtkTextAdapter >> cursorPositionIndex: index [
 	
 	^ self innerWidgetDo: [ :w |
-		w textBuffer cursorPosition: index ]
+		w textBuffer cursorPosition: index - 1 ]
 ]
 
 { #category : 'commands' }
