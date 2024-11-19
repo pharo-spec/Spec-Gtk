@@ -204,7 +204,7 @@ SpGtkConfiguration >> initializeEngine [
 		(self applicationClass isNil 
 			or: [ 
 				GEngine current applicationClass = self applicationClass
-				and: [  GEngine current application = self applicationId ] ])
+				and: [  GEngine current applicationId = self applicationId ] ])
 			ifTrue: [ ^ self ].
 		GEngine current shutDown: true ].
 	
