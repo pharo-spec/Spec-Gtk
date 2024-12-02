@@ -21,8 +21,8 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.
 	self addTextTo: gtkWidget. 
-	self presenter whenTextChangedDo: [ :text |
-		self updateTextFromPresenter: text ]
+	"self presenter whenTextChangedDo: [ :text |
+		self updateTextFromPresenter: text ]"
 ]
 
 { #category : 'building' }
@@ -127,7 +127,7 @@ GtkAbstractTextAdapter >> setText: aString to: gtkWidget [
 { #category : 'accessing' }
 GtkAbstractTextAdapter >> text: aString [ 
 	
-	self setText: aString to: widget
+	self updateTextFromPresenter: aString
 ]
 
 { #category : 'private - updating' }
