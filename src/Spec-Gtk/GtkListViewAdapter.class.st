@@ -110,8 +110,8 @@ GtkListViewAdapter >> refreshList [
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
 			 back a non existing anymore model reference objects), causing a crash."
-			self refreshSelectionModelIn: w.
-			w factory reset ] ]
+			w factory reset.
+			self refreshSelectionModelIn: w ] ]
 ]
 
 { #category : 'building' }
