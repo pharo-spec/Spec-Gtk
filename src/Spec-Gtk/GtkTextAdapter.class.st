@@ -131,7 +131,7 @@ GtkTextAdapter >> updatePresenterText: aString [
 
 	self runInSystem: [  
 		self backendUpdatingDo: [ 
-			self presenter text: aString ] ]
+			self presenter text: aString withInternalLineEndings ] ]
 ]
 
 { #category : 'building' }
