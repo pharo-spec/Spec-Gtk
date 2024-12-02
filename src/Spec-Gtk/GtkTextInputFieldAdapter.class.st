@@ -59,6 +59,12 @@ GtkTextInputFieldAdapter >> isPassword [
 	^ widget isPassword 
 ]
 
+{ #category : 'building' }
+GtkTextInputFieldAdapter >> newActionManager [
+
+	^ GtkAdapterActionTextInputFieldManager on: self
+]
+
 { #category : 'accessing' }
 GtkTextInputFieldAdapter >> placeHolderText [
 	

@@ -29,6 +29,12 @@ GtkNumberInputFieldAdapter >> addModelTo: gtkSpinButton [
 ]
 
 { #category : 'building' }
+GtkNumberInputFieldAdapter >> newActionManager [
+
+	^ GtkAdapterActionTextInputFieldManager on: self
+]
+
+{ #category : 'building' }
 GtkNumberInputFieldAdapter >> newWidget [ 
 
 	^ self widgetClass 

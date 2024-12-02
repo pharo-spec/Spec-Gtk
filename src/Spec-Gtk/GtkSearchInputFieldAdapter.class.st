@@ -43,6 +43,12 @@ GtkSearchInputFieldAdapter >> getPlaceholderText [
 	^ self presenter placeholder ifNotNil: [ :aString | aString localizedForPresenter: self presenter ]
 ]
 
+{ #category : 'building' }
+GtkSearchInputFieldAdapter >> newActionManager [
+
+	^ GtkAdapterActionTextInputFieldManager on: self
+]
+
 { #category : 'accessing' }
 GtkSearchInputFieldAdapter >> placeHolderText [
 	
