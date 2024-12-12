@@ -17,11 +17,8 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 
 	super addModelTo: gtkDropDown.
 	
-	gtkDropDown listFactory: self newItemFactory.
+	gtkDropDown factory: self newItemFactory.
 	gtkDropDown model: self newStore.
-	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
-		(gtkDropDown model itemAtHandle: handle)
-			ifNotNil: [ :item | self presenter display value: item ] ]).
 		
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
@@ -64,7 +61,7 @@ GtkDropDownAdapter >> newStore [
 GtkDropDownAdapter >> refreshList [
 
 	self innerWidgetDo: [ :w |
-		w listFactory reset.
+		w factory reset.
 		w model: self newStore ]
 ]
 
