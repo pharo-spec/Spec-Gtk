@@ -19,6 +19,10 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 	
 	gtkDropDown factory: self newItemFactory.
 	gtkDropDown model: self newStore.
+	"I need this to add something that needs to be show when is selected"
+	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
+		self expressionFor: gtkDropDown atHandle: handle ]).
+		
 		
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
@@ -44,11 +48,19 @@ GtkDropDownAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
+{ #category : 'private' }
+GtkDropDownAdapter >> expressionFor: gtkDropDown atHandle: handle [ 
+	
+	(gtkDropDown model itemAtHandle: handle) ifNotNil: [ :item | 
+		^ ExternalAddress fromString: ((self presenter display value: item) ifNil: [ '' ]) ].
+	
+	^ ExternalAddress null
+]
+
 { #category : 'private - factory' }
 GtkDropDownAdapter >> newItemFactory [
 
 	^ GtkListViewAdapterItemFactory newPresenter: self presenter
-
 ]
 
 { #category : 'private - factory' }
