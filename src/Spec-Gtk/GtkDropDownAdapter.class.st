@@ -19,10 +19,14 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 	
 	gtkDropDown factory: self newItemFactory.
 	gtkDropDown model: self newStore.
-	"I need this to add something that needs to be show when is selected"
-	gtkDropDown expression: (GtkCClosureExpression newStringCallback: [ :handle |
-		self expressionFor: gtkDropDown atHandle: handle ]).
-		
+	gtkDropDown enableSearch: true.
+
+	"the caller takes ownership of return vlue and it will free it when not using 
+	 it anymore, that' s why we answer a pointer and not a char*."
+	gtkDropDown expression: (GtkCClosureExpression 
+		newType: GType G_TYPE_STRING 
+		signature: #(void *(void *handle))
+		block: [ :handle | self expressionFor: gtkDropDown atHandle: handle ]).
 		
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
@@ -49,10 +53,11 @@ GtkDropDownAdapter >> elementAt: index [
 ]
 
 { #category : 'private' }
-GtkDropDownAdapter >> expressionFor: gtkDropDown atHandle: handle [ 
-	
-	(gtkDropDown model itemAtHandle: handle) ifNotNil: [ :item | 
-		^ ExternalAddress fromString: ((self presenter display value: item) ifNil: [ '' ]) ].
+GtkDropDownAdapter >> expressionFor: gtkDropDown atHandle: handle [
+
+	(gtkDropDown model itemAtHandle: handle) ifNotNil: [ :item |
+		(self presenter display value: item) ifNotNil: [ :aString | 
+			^ GLibLibrary uniqueInstance gstrdup: aString ] ].
 	
 	^ ExternalAddress null
 ]
