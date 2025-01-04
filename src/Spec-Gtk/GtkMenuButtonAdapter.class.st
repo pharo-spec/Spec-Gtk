@@ -13,13 +13,15 @@ Class {
 GtkMenuButtonAdapter >> addModelTo: gtkButton [
 
 	super addModelTo: gtkButton.
-	gtkButton
-		connect: 'button-press-event'
-		signature: #(gboolean (void *widget, void *event, void *data))
-		do: [ :w :event :data |
-			self updateMenu.
-			(GtkMenuButton fromHandle: w) popup.
-			false ]
+
+	self connectToSpecEvents: gtkButton.
+	
+	self presenter actions ifNotNil: [ :anActionGroup | 
+		self setPopoverWithActionGroup: anActionGroup to: gtkButton ].
+
+	self presenter whenActionsChangedDo: [ :anActionGroup |
+		self widgetDo: [ :w |
+			self setPopoverWithActionGroup: anActionGroup to: w ] ]
 ]
 
 { #category : 'building' }
@@ -34,6 +36,24 @@ GtkMenuButtonAdapter >> buildMenu: menuPresenter [
 		value: self presenter application adapterBindings
 		during: [ menuPresenter build ].
 	^ menuWidget
+]
+
+{ #category : 'building' }
+GtkMenuButtonAdapter >> setPopoverWithActionGroup: anActionGroup to: gtkButton [
+	| menuModel |
+	
+	menuModel := GtkActionMenuBuilder new 
+		visit: anActionGroup;
+		root.
+
+	gtkButton popover: (GtkPopoverMenu newFromModelFull: menuModel)
+]
+
+{ #category : 'private - updating' }
+GtkMenuButtonAdapter >> updateLabelAndIconTo: gtkButton [
+
+	gtkButton alwaysShowArrow: false.
+	super updateLabelAndIconTo: gtkButton
 ]
 
 { #category : 'updating' }
