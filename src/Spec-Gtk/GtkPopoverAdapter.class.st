@@ -11,7 +11,8 @@ GtkPopoverAdapter >> addModelTo: gtkPopover [
 
 	gtkPopover child: self presenterWidget.	
 	gtkPopover autohide: false. "true to dismiss on click"
-	gtkPopover connectHide: [ self unregister: gtkPopover ].
+	gtkPopover connectHide: [
+		self unregister: gtkPopover ].
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
@@ -23,27 +24,60 @@ GtkPopoverAdapter >> addVisibleSettingsTo: gtkWidget [
 	"popovers fo not have visibility settings, they are shown or hide"
 ]
 
+{ #category : 'private - announcing' }
+GtkPopoverAdapter >> announceClosed [
+
+	self presenter popoverClosed
+]
+
+{ #category : 'private - announcing' }
+GtkPopoverAdapter >> announceOpened [
+
+	self presenter popoverOpened
+]
+
 { #category : 'building' }
 GtkPopoverAdapter >> buildWidget [
 	
-	^ super buildWidget "ensureObjectRefAndAutoRelease"
+	^ super buildWidget 
+		"objectRef;"
+		yourself
+		"ensureObjectRefAndAutoRelease"
 ]
 
 { #category : 'api' }
 GtkPopoverAdapter >> dismiss [ 
 
 	self widgetDo: [ :w | 
-		w popdown. 
+		w popdown.
 		"I need to disconnect explicitly because it may cause gtk to send callbacks to 
 		 me and it may (most of the times it *will*) be already collected (then... 
 		 well, crash)."
-		w disconnectAll ]
+		"3/01/2025 -> testing without"
+		"w disconnectAll."
+		"unset parent (no idea if this is ok, but there is an error around saying: 
+		 Funalizing X but it has children left
+			- GtkPopover... etc.
+		 which indicates I am not disposing correcly this guys..."
+		 "w unparent"
+		 "3/01/2025 -> I moved most of this to #unregister: (which is what happens on 
+		  hide... no idea how all this will work out." ]
 ]
 
 { #category : 'api' }
 GtkPopoverAdapter >> popup [
 
 	self popupPointingTo: nil
+]
+
+{ #category : 'api' }
+GtkPopoverAdapter >> popupModal [
+	"is not really 'modal' but it will be hidden when lost focus/clicking 
+	 outside..."
+
+	self widgetDo: [ :w |
+		w autohide: true.
+		self popupPointingTo: nil ]
 ]
 
 { #category : 'api' }
@@ -56,6 +90,7 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 			w setPointingTo: aRectangle asGdkRectangle ].
 		w popup.
 		self processInitializationDeferredActions.
+		self announceOpened.
 		self presenter takeKeyboardFocus ]
 ]
 
@@ -104,6 +139,11 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 
+	"'remove' printToStdout.
+	gtkPopover getHandle printToStdout."
+	gtkPopover child: GObject null.
+	gtkPopover unparent.
+	"gtkPopover objectUnref."
 	GEngine current unregisterWindow: gtkPopover
 ]
 
