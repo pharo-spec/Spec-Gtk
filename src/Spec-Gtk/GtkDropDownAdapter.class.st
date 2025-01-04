@@ -16,17 +16,18 @@ Class {
 GtkDropDownAdapter >> addModelTo: gtkDropDown [
 
 	super addModelTo: gtkDropDown.
-	
-	gtkDropDown factory: self newItemFactory.
-	gtkDropDown model: self newStore.
-	gtkDropDown enableSearch: true.
 
+	gtkDropDown factory: self newLabelFactory.
+	gtkDropDown listFactory: self newItemFactory.
+	gtkDropDown model: self newStore.
+
+	"gtkDropDown  enableSearch: true."
 	"the caller takes ownership of return vlue and it will free it when not using 
 	 it anymore, that' s why we answer a pointer and not a char*."
-	gtkDropDown expression: (GtkCClosureExpression 
+	"gtkDropDown expression: (GtkCClosureExpression 
 		newType: GType G_TYPE_STRING 
 		signature: #(void *(void *handle))
-		block: [ :handle | self expressionFor: gtkDropDown atHandle: handle ]).
+		block: [ :handle | self expressionFor: gtkDropDown atHandle: handle ])."
 		
 	self presenter selection isEmpty 
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
@@ -69,6 +70,12 @@ GtkDropDownAdapter >> newItemFactory [
 ]
 
 { #category : 'private - factory' }
+GtkDropDownAdapter >> newLabelFactory [
+
+	^ GtkDropDownAdapterLabelFactory newPresenter: self presenter
+]
+
+{ #category : 'private - factory' }
 GtkDropDownAdapter >> newStore [
 	
 	^ GtkListViewAdapterDataStore newPresenter: self presenter
@@ -78,7 +85,7 @@ GtkDropDownAdapter >> newStore [
 GtkDropDownAdapter >> refreshList [
 
 	self innerWidgetDo: [ :w |
-		w factory reset.
+		w listFactory reset.
 		w model: self newStore ]
 ]
 
