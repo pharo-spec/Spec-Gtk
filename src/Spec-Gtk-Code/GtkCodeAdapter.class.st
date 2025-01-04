@@ -14,6 +14,7 @@ Class {
 { #category : 'building' }
 GtkCodeAdapter >> addModelTo: gtkTextView [ 
 
+	gtkTextView monospace: true.
 	self addSourceFeaturesTo: gtkTextView.
 	self addSmartCharactersTo: gtkTextView.
 	super addModelTo: gtkTextView
