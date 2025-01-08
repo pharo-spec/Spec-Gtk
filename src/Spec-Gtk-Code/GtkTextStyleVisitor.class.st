@@ -1,6 +1,6 @@
 Class {
 	#name : 'GtkTextStyleVisitor',
-	#superclass : 'ASTProgramNodeVisitor',
+	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'parentheseLevel',
 		'bracketLevel',
