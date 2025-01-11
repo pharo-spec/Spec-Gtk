@@ -5,14 +5,14 @@ This is useful e.g. to make texts in dialogs react to ESC (which will cancel the
 
 "
 Trait {
-	#name : 'GtkTWindowSpecialCharacterForText',
-	#category : 'Spec-Gtk-Adapter-Window',
+	#name : 'GtkTSpecialCharacterForText',
+	#category : 'Spec-Gtk-Actions',
 	#package : 'Spec-Gtk',
-	#tag : 'Adapter-Window'
+	#tag : 'Actions'
 }
 
 { #category : 'private - building' }
-GtkTWindowSpecialCharacterForText >> addSpecialActionsToTextWidget: anAdapter [
+GtkTSpecialCharacterForText >> addSpecialActionsToTextWidget: anAdapter [
 	"add special actions to a text family widget. 
 	 a special action is one that has a shortcut that cannot be let pass by the widget unless 
 	 explicitly defined"
@@ -31,7 +31,7 @@ GtkTWindowSpecialCharacterForText >> addSpecialActionsToTextWidget: anAdapter [
 ]
 
 { #category : 'private - building' }
-GtkTWindowSpecialCharacterForText >> isSpecialCharacterForText: aKeyCombination [
+GtkTSpecialCharacterForText >> isSpecialCharacterForText: aKeyCombination [
 
 	aKeyCombination combinationsDo: [ :each |  
 		each isForPlatform ifTrue: [ 
@@ -42,7 +42,7 @@ GtkTWindowSpecialCharacterForText >> isSpecialCharacterForText: aKeyCombination 
 ]
 
 { #category : 'private - building' }
-GtkTWindowSpecialCharacterForText >> specialActionsOn: anActionGroup [
+GtkTSpecialCharacterForText >> specialActionsOn: anActionGroup [
 
 	anActionGroup ifNil: [ ^ #() ].
 
