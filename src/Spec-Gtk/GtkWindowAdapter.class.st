@@ -1,6 +1,8 @@
 Class {
 	#name : 'GtkWindowAdapter',
 	#superclass : 'GtkAdapter',
+	#traits : 'GtkTWindowSpecialCharacterForText',
+	#classTraits : 'GtkTWindowSpecialCharacterForText classTrait',
 	#instVars : [
 		'infoArea',
 		'initialized',
@@ -48,7 +50,8 @@ GtkWindowAdapter >> addDefaultKeyBindings: gtkWindow [
 	actionGroup ifNil: [ ^ self ].
 
 	self ensureActionManager
-		installGroup: actionGroup on: gtkWindow
+		installGroup: actionGroup 
+on: gtkWindow
 ]
 
 { #category : 'private - deferring' }

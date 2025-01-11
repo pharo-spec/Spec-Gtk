@@ -7,6 +7,12 @@ KMPlatformSpecificKeyCombination >> isForPlatform [
 ]
 
 { #category : '*Spec-Gtk' }
+KMPlatformSpecificKeyCombination >> key [
+
+	^ self shortcut key
+]
+
+{ #category : '*Spec-Gtk' }
 KMPlatformSpecificKeyCombination >> spGtkCurrentCharacter [
 
 	^ (self platform = #all or: [ self platform = OSPlatform current platformFamily ])

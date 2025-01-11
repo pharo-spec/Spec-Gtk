@@ -142,7 +142,6 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 	"'remove' printToStdout.
 	gtkPopover getHandle printToStdout."
 	gtkPopover child: GObject null.
-	gtkPopover unparent.
 	"gtkPopover objectUnref."
 	GEngine current unregisterWindow: gtkPopover
 ]

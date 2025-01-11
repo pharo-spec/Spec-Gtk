@@ -34,6 +34,13 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 	super add: containerBox toWindow: gtkDialog
 ]
 
+{ #category : 'private - building' }
+GtkDialogWindowAdapter >> addSpecialActionsToTextWidget: anAdapter [
+	
+	super addSpecialActionsToTextWidget: anAdapter.
+	anAdapter addActionGroup: self defaultActionGroup
+]
+
 { #category : 'accessing' }
 GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 

@@ -7,6 +7,15 @@ Class {
 }
 
 { #category : 'building' }
+GtkAbstractTextAdapter >> addActionGroup: anActionGroup [
+	"this is used to install 'special' actions ported from a window"
+
+	self ensureActionManager 
+		installGroup: anActionGroup
+		on: self innerWidget
+]
+
+{ #category : 'building' }
 GtkAbstractTextAdapter >> addEditionContextMenuTo: menuPresenter [
 	
 
@@ -21,8 +30,10 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 
 	super addModelTo: gtkWidget.
 	self addTextTo: gtkWidget. 
-	"self presenter whenTextChangedDo: [ :text |
-		self updateTextFromPresenter: text ]"
+	
+	gtkWidget connectRealize: [ 
+		self presenter window withAdapterDo: [ :anAdapter |
+			anAdapter addSpecialActionsToTextWidget: self ] ]
 ]
 
 { #category : 'building' }
