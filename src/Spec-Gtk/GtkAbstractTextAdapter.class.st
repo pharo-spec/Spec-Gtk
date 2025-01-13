@@ -33,7 +33,8 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 	
 	gtkWidget connectRealize: [ 
 		self presenter window withAdapterDo: [ :anAdapter |
-			anAdapter addSpecialActionsToTextWidget: self ] ]
+			anAdapter addSpecialActionsToTextWidget: self ].
+		gtkWidget disconnect: 'realize' ]
 ]
 
 { #category : 'building' }
