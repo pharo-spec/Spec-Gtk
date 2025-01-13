@@ -17,10 +17,10 @@ GtkSearchInputFieldAdapter >> addModelTo: gtkEntry [
 	gtkEntry connectSearchChanged: [ 
 		self updatePresenterText: gtkEntry text ].
 	
-	"self presenter placeholder ifNotNil: [ :text | 
+	self presenter placeholder ifNotNil: [ :text | 
 		gtkEntry placeHolderText: (text localizedForPresenter: self presenter) asString ].
 	self presenter whenPlaceholderChangedDo: [ :text | 
-		gtkEntry placeHolderText: (text localizedForPresenter: self presenter) asString ]."
+		gtkEntry placeHolderText: (text localizedForPresenter: self presenter) asString ].
 		
 	"gtkEntry maxLength: self model maxLength.
 	self model whenMaxLengthChangedDo: [ gtkEntry maxLength: self presenter maxLength ]."
