@@ -1,6 +1,6 @@
 "
 This trait will add ""special key"" treatment for text components.
-Text components (the GtkAbstractTextAdapter family) will not react correctly when mapping characters like ESC and ENTER (because there are already internal functions there? Don't know), and we want to be able to catch those too, as any other keybinding.
+Text components (the `GtkAbstractTextAdapter` family) will not react correctly when mapping characters like ESC and ENTER (because there are already internal functions there? Don't know), and we want to be able to catch those too, as any other keybinding.
 This is useful e.g. to make texts in dialogs react to ESC (which will cancel the dialog) or to spotter commands (shift+ENTER and that).
 
 "
@@ -11,6 +11,18 @@ Trait {
 	#tag : 'Actions'
 }
 
+{ #category : 'special characters' }
+GtkTSpecialCharacterForText classSide >> specialCharactersForText [
+
+	^ { 
+	KeyboardKey escape. 
+	KeyboardKey enter. 
+	KeyboardKey down. 
+	KeyboardKey up.
+	KeyboardKey left.
+	KeyboardKey right. }
+]
+
 { #category : 'private - building' }
 GtkTSpecialCharacterForText >> addSpecialActionsToTextWidget: anAdapter [
 	"add special actions to a text family widget. 
@@ -18,34 +30,40 @@ GtkTSpecialCharacterForText >> addSpecialActionsToTextWidget: anAdapter [
 	 explicitly defined"
 	| specialUserActions specialInternalActions |
 
-	specialInternalActions := self specialActionsOn: self presenter internalActions.
-	specialUserActions := self specialActionsOn: self presenter actions.
+	specialInternalActions := self specialActionsForTextWidgetOn: self presenter internalActions.
+	specialUserActions := self specialActionsForTextWidgetOn: self presenter actions.
 	(specialUserActions isEmpty and: [ specialInternalActions isEmpty ])
 		ifTrue: [ ^ self ].
 	
 	anAdapter addActionGroup: (SpActionGroup new 
-		name: #'window-special-characters-text';
+		name: self specialActionsForTextWidgetGroupName;
 		addAll: specialInternalActions;
 		addAll: specialUserActions;
 		yourself)
 ]
 
 { #category : 'private - building' }
-GtkTSpecialCharacterForText >> isSpecialCharacterForText: aKeyCombination [
+GtkTSpecialCharacterForText >> isSpecialCharacterForTextWidget: aKeyCombination [
 
 	aKeyCombination combinationsDo: [ :each |  
 		each isForPlatform ifTrue: [ 
-			({ KeyboardKey escape. KeyboardKey enter } includes: each key) 
+			(self class specialCharactersForText includes: each key) 
 				ifTrue: [ ^ true ] ] ].
 		
 	^ false
 ]
 
 { #category : 'private - building' }
-GtkTSpecialCharacterForText >> specialActionsOn: anActionGroup [
+GtkTSpecialCharacterForText >> specialActionsForTextWidgetGroupName [
+		
+	^ #'window-special-characters-text'
+]
+
+{ #category : 'private - building' }
+GtkTSpecialCharacterForText >> specialActionsForTextWidgetOn: anActionGroup [
 
 	anActionGroup ifNil: [ ^ #() ].
 
 	^ anActionGroup allCommands 
-		select: [ :each | self isSpecialCharacterForText: each shortcutKey  ]
+		select: [ :each | self isSpecialCharacterForTextWidget: each shortcutKey ]
 ]

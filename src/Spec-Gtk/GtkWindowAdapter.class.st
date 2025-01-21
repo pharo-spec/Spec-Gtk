@@ -1,8 +1,8 @@
 Class {
 	#name : 'GtkWindowAdapter',
 	#superclass : 'GtkAdapter',
-	#traits : 'GtkTSpecialCharacterForText',
-	#classTraits : 'GtkTSpecialCharacterForText classTrait',
+	#traits : 'GtkTSpecialCharacterForText + GtkTSpecialCharacterForList',
+	#classTraits : 'GtkTSpecialCharacterForText classTrait + GtkTSpecialCharacterForList classTrait',
 	#instVars : [
 		'infoArea',
 		'initialized',

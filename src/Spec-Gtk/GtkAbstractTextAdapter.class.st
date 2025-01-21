@@ -31,10 +31,18 @@ GtkAbstractTextAdapter >> addModelTo: gtkWidget [
 	super addModelTo: gtkWidget.
 	self addTextTo: gtkWidget. 
 	
-	gtkWidget connectRealize: [ 
-		self presenter window withAdapterDo: [ :anAdapter |
-			anAdapter addSpecialActionsToTextWidget: self ].
+	gtkWidget connectRealize: [
+		self addSpecialActions.
+		"I want this just once"
 		gtkWidget disconnect: 'realize' ]
+]
+
+{ #category : 'building' }
+GtkAbstractTextAdapter >> addSpecialActions [
+
+	self presenter allWindowLike do: [ :each |
+		each withAdapterDo: [ :anAdapter |
+			anAdapter addSpecialActionsToTextWidget: self ] ]
 ]
 
 { #category : 'building' }

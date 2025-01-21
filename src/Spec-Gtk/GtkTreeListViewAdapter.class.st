@@ -103,6 +103,11 @@ GtkTreeListViewAdapter >> refreshWidgetSelection [
 			ifFalse: [ w selectionModel unselectAll ] ]"
 ]
 
+{ #category : 'accessing' }
+GtkTreeListViewAdapter >> scrollToSelection [
+	"not needed, in gtk it will always scroll to selection"
+]
+
 { #category : 'private - updating' }
 GtkTreeListViewAdapter >> updateSelectionFromPresenter [
 

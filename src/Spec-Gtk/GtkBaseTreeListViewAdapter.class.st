@@ -15,6 +15,33 @@ Class {
 	#tag : 'Adapter-ListView'
 }
 
+{ #category : 'building' }
+GtkBaseTreeListViewAdapter >> addActionGroup: anActionGroup [
+	"this is used to install 'special' actions ported from a window"
+
+	self ensureActionManager 
+		installGroup: anActionGroup
+		on: self innerWidget
+]
+
+{ #category : 'building' }
+GtkBaseTreeListViewAdapter >> addModelTo: gtkWidget [
+
+	super addModelTo: gtkWidget.
+	gtkWidget connectRealize: [
+		self addSpecialActions.
+		"I want this just once"
+		gtkWidget disconnect: 'realize' ]	
+]
+
+{ #category : 'building' }
+GtkBaseTreeListViewAdapter >> addSpecialActions [
+
+	self presenter allWindowLike do: [ :each |
+		each withAdapterDo: [ :anAdapter |
+			anAdapter addSpecialActionsToListWidget: self ] ]
+]
+
 { #category : 'expanding-collapsing' }
 GtkBaseTreeListViewAdapter >> collapsePath: aPath [
 	| path |

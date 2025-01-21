@@ -1,6 +1,8 @@
 Class {
 	#name : 'GtkPopoverAdapter',
 	#superclass : 'GtkAdapter',
+	#traits : 'GtkTSpecialCharacterForText + GtkTSpecialCharacterForList',
+	#classTraits : 'GtkTSpecialCharacterForText classTrait + GtkTSpecialCharacterForList classTrait',
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
@@ -12,6 +14,7 @@ GtkPopoverAdapter >> addModelTo: gtkPopover [
 	gtkPopover child: self presenterWidget.	
 	gtkPopover autohide: false. "true to dismiss on click"
 	gtkPopover connectHide: [
+		self announceClosed.
 		self unregister: gtkPopover ].
 	self setPopoverPositionTo: gtkPopover.
 	
@@ -81,6 +84,14 @@ GtkPopoverAdapter >> popupModal [
 ]
 
 { #category : 'api' }
+GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
+
+	self widgetDo: [ :w |
+		w autohide: true.
+		self popupPointingTo: aRectangle ]
+]
+
+{ #category : 'api' }
 GtkPopoverAdapter >> popupPointingTo: aRectangle [
 
 	self widgetDo: [ :w | 
@@ -134,6 +145,18 @@ GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 		
 	^ self presenter position applyTo: gtkPopover
+]
+
+{ #category : 'private - building' }
+GtkPopoverAdapter >> specialActionsForListWidgetGroupName [
+		
+	^ #'popover-special-characters-list'
+]
+
+{ #category : 'private - building' }
+GtkPopoverAdapter >> specialActionsForTextWidgetGroupName [
+		
+	^ #'popover-special-characters-text'
 ]
 
 { #category : 'private' }
