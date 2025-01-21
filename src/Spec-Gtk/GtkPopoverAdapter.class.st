@@ -1,8 +1,6 @@
 Class {
 	#name : 'GtkPopoverAdapter',
 	#superclass : 'GtkAdapter',
-	#traits : 'GtkTSpecialCharacterForText + GtkTSpecialCharacterForList',
-	#classTraits : 'GtkTSpecialCharacterForText classTrait + GtkTSpecialCharacterForList classTrait',
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'

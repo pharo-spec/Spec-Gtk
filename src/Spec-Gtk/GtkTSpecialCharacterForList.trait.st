@@ -53,7 +53,7 @@ GtkTSpecialCharacterForList >> isSpecialCharacterForListWidget: aKeyCombination 
 { #category : 'private - building' }
 GtkTSpecialCharacterForList >> specialActionsForListWidgetGroupName [
 		
-	^ #'window-special-characters-list'
+	^ #'widget-special-characters-list'
 ]
 
 { #category : 'private - building' }

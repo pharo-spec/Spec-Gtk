@@ -1,6 +1,8 @@
 Class {
 	#name : 'GtkAdapter',
 	#superclass : 'SpAbstractAdapter',
+	#traits : 'GtkTSpecialCharacterForText + GtkTSpecialCharacterForList',
+	#classTraits : 'GtkTSpecialCharacterForText classTrait + GtkTSpecialCharacterForList classTrait',
 	#instVars : [
 		'lastShownMenu',
 		'backendUpdating',

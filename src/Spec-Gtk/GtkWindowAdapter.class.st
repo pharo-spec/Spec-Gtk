@@ -1,8 +1,6 @@
 Class {
 	#name : 'GtkWindowAdapter',
 	#superclass : 'GtkAdapter',
-	#traits : 'GtkTSpecialCharacterForText + GtkTSpecialCharacterForList',
-	#classTraits : 'GtkTSpecialCharacterForText classTrait + GtkTSpecialCharacterForList classTrait',
 	#instVars : [
 		'infoArea',
 		'initialized',
@@ -454,6 +452,18 @@ GtkWindowAdapter >> setDecorated: aBoolean [
 GtkWindowAdapter >> size [
 
 	^ self widgetDo: [ :w | w defaultSize ]
+]
+
+{ #category : 'private - building' }
+GtkWindowAdapter >> specialActionsForListWidgetGroupName [
+		
+	^ #'window-special-characters-list'
+]
+
+{ #category : 'private - building' }
+GtkWindowAdapter >> specialActionsForTextWidgetGroupName [
+		
+	^ #'window-special-characters-text'
 ]
 
 { #category : 'private - building' }

@@ -56,7 +56,7 @@ GtkTSpecialCharacterForText >> isSpecialCharacterForTextWidget: aKeyCombination 
 { #category : 'private - building' }
 GtkTSpecialCharacterForText >> specialActionsForTextWidgetGroupName [
 		
-	^ #'window-special-characters-text'
+	^ #'widget-special-characters-text'
 ]
 
 { #category : 'private - building' }
