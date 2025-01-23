@@ -48,6 +48,15 @@ GtkAdapter >> addAction: action toWidget: aWidget [
 		on: aWidget
 ]
 
+{ #category : 'adding' }
+GtkAdapter >> addActionGroup: anActionGroup [
+	"this is used to install 'special' actions ported from a window"
+
+	self ensureActionManager 
+		installGroup: anActionGroup
+		on: self innerWidget
+]
+
 { #category : 'building' }
 GtkAdapter >> addActionsTo: gtkWidget [
 	

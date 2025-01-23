@@ -26,12 +26,14 @@ GtkTSpecialCharacterForList >> addSpecialActionsToListWidget: anAdapter [
 	 a special action is one that has a shortcut that cannot be let pass by the widget unless 
 	 explicitly defined"
 	| specialUserActions specialInternalActions |
-
+	"escape if I already have an action group for this component. 
+	 this may be problematic, but for now it works"
+	(anAdapter innerWidget hasActionGroupNamed: self specialActionsForListWidgetGroupName)
+		ifTrue: [ ^ self ].
 	specialInternalActions := self specialActionsForListWidgetOn: self presenter internalActions.
 	specialUserActions := self specialActionsForListWidgetOn: self presenter actions.
 	(specialUserActions isEmpty and: [ specialInternalActions isEmpty ])
 		ifTrue: [ ^ self ].
-	
 	anAdapter addActionGroup: (SpActionGroup new 
 		name: self specialActionsForListWidgetGroupName;
 		addAll: specialInternalActions;
@@ -53,7 +55,7 @@ GtkTSpecialCharacterForList >> isSpecialCharacterForListWidget: aKeyCombination 
 { #category : 'private - building' }
 GtkTSpecialCharacterForList >> specialActionsForListWidgetGroupName [
 		
-	^ #'widget-special-characters-list'
+	^ UUID new asString
 ]
 
 { #category : 'private - building' }

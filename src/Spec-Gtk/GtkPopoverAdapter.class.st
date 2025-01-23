@@ -145,18 +145,6 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 	^ self presenter position applyTo: gtkPopover
 ]
 
-{ #category : 'private - building' }
-GtkPopoverAdapter >> specialActionsForListWidgetGroupName [
-		
-	^ #'popover-special-characters-list'
-]
-
-{ #category : 'private - building' }
-GtkPopoverAdapter >> specialActionsForTextWidgetGroupName [
-		
-	^ #'popover-special-characters-text'
-]
-
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 

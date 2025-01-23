@@ -7,15 +7,6 @@ Class {
 }
 
 { #category : 'building' }
-GtkAbstractTextAdapter >> addActionGroup: anActionGroup [
-	"this is used to install 'special' actions ported from a window"
-
-	self ensureActionManager 
-		installGroup: anActionGroup
-		on: self innerWidget
-]
-
-{ #category : 'building' }
 GtkAbstractTextAdapter >> addEditionContextMenuTo: menuPresenter [
 	
 

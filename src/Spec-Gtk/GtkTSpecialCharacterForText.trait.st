@@ -29,6 +29,10 @@ GtkTSpecialCharacterForText >> addSpecialActionsToTextWidget: anAdapter [
 	 a special action is one that has a shortcut that cannot be let pass by the widget unless 
 	 explicitly defined"
 	| specialUserActions specialInternalActions |
+	"escape if I already have an action group for this component. 
+	 this may be problematic, but for now it works"
+	(anAdapter innerWidget hasActionGroupNamed: self specialActionsForTextWidgetGroupName)
+		ifTrue: [ ^ self ].
 
 	specialInternalActions := self specialActionsForTextWidgetOn: self presenter internalActions.
 	specialUserActions := self specialActionsForTextWidgetOn: self presenter actions.
@@ -56,7 +60,7 @@ GtkTSpecialCharacterForText >> isSpecialCharacterForTextWidget: aKeyCombination 
 { #category : 'private - building' }
 GtkTSpecialCharacterForText >> specialActionsForTextWidgetGroupName [
 		
-	^ #'widget-special-characters-text'
+	^ UUID new asString
 ]
 
 { #category : 'private - building' }

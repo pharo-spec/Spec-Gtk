@@ -455,18 +455,6 @@ GtkWindowAdapter >> size [
 ]
 
 { #category : 'private - building' }
-GtkWindowAdapter >> specialActionsForListWidgetGroupName [
-		
-	^ #'window-special-characters-list'
-]
-
-{ #category : 'private - building' }
-GtkWindowAdapter >> specialActionsForTextWidgetGroupName [
-		
-	^ #'window-special-characters-text'
-]
-
-{ #category : 'private - building' }
 GtkWindowAdapter >> statusBar [
 
 	^ statusBar ifNil: [ statusBar := self model statusBar build ]

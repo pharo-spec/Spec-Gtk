@@ -8,7 +8,6 @@ Class {
 
 { #category : 'building' }
 GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
-
 	super addModelTo: gtkColumnView.
 
 	"gtkColumnView headerFactory: self newHeaderFactory."
