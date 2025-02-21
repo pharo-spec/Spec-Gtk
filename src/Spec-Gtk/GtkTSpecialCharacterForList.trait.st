@@ -63,6 +63,7 @@ GtkTSpecialCharacterForList >> specialActionsForListWidgetOn: anActionGroup [
 
 	anActionGroup ifNil: [ ^ #() ].
 
-	^ anActionGroup allCommands 
-		select: [ :each | self isSpecialCharacterForListWidget: each shortcutKey ]
+	^ anActionGroup allCommands select: [ :each | 
+		each hasShortcutKey 
+			and: [ self isSpecialCharacterForListWidget: each shortcutKey ] ]
 ]

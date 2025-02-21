@@ -68,6 +68,7 @@ GtkTSpecialCharacterForText >> specialActionsForTextWidgetOn: anActionGroup [
 
 	anActionGroup ifNil: [ ^ #() ].
 
-	^ anActionGroup allCommands 
-		select: [ :each | self isSpecialCharacterForTextWidget: each shortcutKey ]
+	^ anActionGroup allCommands select: [ :each | 
+		each hasShortcutKey 
+			and: [ self isSpecialCharacterForTextWidget: each shortcutKey ] ]
 ]
