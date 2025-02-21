@@ -32,8 +32,11 @@ GtkTabAdapter >> applyLayout: aLayout [
 	widget := GtkNotebook new.
 	widget beScrollable.
 	
-	self connectToEvents: aLayout. 
-
+	self connectToEvents: aLayout.
+	
+	self flag: #WARNING. "switch page will be called a last time when releasing. 
+	I have no way to fix this in an efficient way so users need to take this 
+	into account (if they are using tab select/unselect events)" 
 	widget connectSwitchPage: [ :aPage | 
 		lastPage ifNotNil: [
 			aLayout announce: (SpTabUnselected newPresenter: lastPage) ].
