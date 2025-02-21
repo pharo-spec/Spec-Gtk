@@ -79,10 +79,10 @@ GtkPatchSideBySideAdapter >> newWidget [
 	rightSourceView := self newSourceView.
 	
 	^ GtkScrolledWindow new 
-		add: (GtkBox newHorizontal 
+		child: (GtkBox newHorizontal 
 			homogeneous: true;
-			packStart: leftSourceView;
-			packStart: rightSourceView;
+			append: leftSourceView;
+			append: rightSourceView;
 			yourself);
 		yourself
 ]
