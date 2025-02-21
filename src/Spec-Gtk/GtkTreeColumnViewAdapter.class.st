@@ -97,6 +97,11 @@ GtkTreeColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
 	gtkColumnView selectionModel: selectionModel 
 ]
 
+{ #category : 'accessing' }
+GtkTreeColumnViewAdapter >> scrollToSelection [
+	"not needed, in gtk it will always scroll to selection"
+]
+
 { #category : 'private' }
 GtkTreeColumnViewAdapter >> scrollToSelectionIfNeeded: index [ 
 	self flag: #TODO. "no sense here, but I need to refactory the presenter, I think"
