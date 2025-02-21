@@ -138,7 +138,7 @@ GtkListViewAdapter >> refreshWidgetSelection [
 { #category : 'private' }
 GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
 
-	index < 1 ifTrue: [ ^ self ].
+	((index < 1) or: [ self presenter items isEmpty ]) ifTrue: [ ^ self ].
 	self innerWidgetDo: [ :w |
 		w 
 			scrollToPosition: index - 1 
