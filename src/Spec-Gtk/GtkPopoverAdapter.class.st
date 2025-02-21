@@ -10,10 +10,9 @@ Class {
 GtkPopoverAdapter >> addModelTo: gtkPopover [
 
 	gtkPopover child: self presenterWidget.	
-	gtkPopover autohide: false. "true to dismiss on click"
 	gtkPopover connectHide: [
-		self announceClosed.
-		self unregister: gtkPopover ].
+		self unregister: gtkPopover.
+		self announceClosed ].
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
@@ -40,10 +39,7 @@ GtkPopoverAdapter >> announceOpened [
 { #category : 'building' }
 GtkPopoverAdapter >> buildWidget [
 	
-	^ super buildWidget 
-		"objectRef;"
-		yourself
-		"ensureObjectRefAndAutoRelease"
+	^ super buildWidget
 ]
 
 { #category : 'api' }
@@ -84,23 +80,23 @@ GtkPopoverAdapter >> popupModal [
 { #category : 'api' }
 GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 
-	self widgetDo: [ :w |
+	self widgetDo: [ :w | 
 		w autohide: true.
 		self popupPointingTo: aRectangle ]
 ]
 
 { #category : 'api' }
 GtkPopoverAdapter >> popupPointingTo: aRectangle [
-
+	
 	self widgetDo: [ :w | 
 		self register: w.
 		w parent: self presenter relativeTo adapter innerWidget.
 		aRectangle ifNotNil: [ 
 			w setPointingTo: aRectangle asGdkRectangle ].
 		w popup.
-		self processInitializationDeferredActions.
-		self announceOpened.
-		self presenter takeKeyboardFocus ]
+		self processInitializationDeferredActions ].
+	self presenter takeKeyboardFocus.
+	self announceOpened
 ]
 
 { #category : 'building' }
@@ -128,15 +124,14 @@ GtkPopoverAdapter >> rebuild [
 GtkPopoverAdapter >> register: gtkPopover [
 
 	(GEngine current isWindowRegistered: gtkPopover) ifTrue: [ ^ self ].
+	gtkPopover objectRef.
 	GEngine current registerWindow: gtkPopover
 ]
 
 { #category : 'private' }
 GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 
-	gtkPopover 
-		removeAll;
-		add: self presenterWidget
+	gtkPopover child: self presenterWidget
 ]
 
 { #category : 'building' }
@@ -147,12 +142,10 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
-
-	"'remove' printToStdout.
-	gtkPopover getHandle printToStdout."
-	gtkPopover child: GObject null.
-	"gtkPopover objectUnref."
-	GEngine current unregisterWindow: gtkPopover
+	"gtkPopover child: GObject null."
+	self presenter owner takeKeyboardFocus.
+	GEngine current unregisterWindow: gtkPopover.
+	gtkPopover objectUnref
 ]
 
 { #category : 'building' }
