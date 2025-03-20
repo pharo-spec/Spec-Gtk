@@ -103,7 +103,7 @@ GtkBaseListViewAdapter >> updateSingleSelectionFromPresenter: oldIndex [
 						scrollToPosition: index - 1
 						flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT ]
 				ifFalse: [ 
-					w selectionModel unselectAll ] ] ].
+					"w selectionModel unselectAll" ] ] ].
 
 	^ index
 ]
