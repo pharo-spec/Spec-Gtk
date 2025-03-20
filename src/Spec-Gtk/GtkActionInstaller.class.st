@@ -42,7 +42,8 @@ GtkActionInstaller >> visitCommand: aCommand [
 			self runInSystem: [ 
 				aCommand canBeExecuted 
 					ifTrue: [  aCommand execute ] ] ];
-		yourself.	
+		yourself.
+
 	actionMap at: aCommand put: action.
 	self actionGroup insert: action
 ]
@@ -53,7 +54,7 @@ GtkActionInstaller >> visitCommandGroup: aCommandGroup [
 
 	self pushPrefix: aCommandGroup.
 	oldActionGroup := actionGroup.
-	[
+	[	
 		actionGroup := GSimpleActionGroup new.
 		aCommandGroup entries do: [ :entry | entry acceptVisitor: self ].
 		self widget 
