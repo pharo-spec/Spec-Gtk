@@ -215,26 +215,34 @@ GtkCodeAdapter >> highlightSearchText: aBoolean [
 
 { #category : 'api' }
 GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleName [
+	| position popover |
 
-	self innerWidgetDo: [ :w | | endIter |
-
-		lastPopover := self presenter newPopover
-			bePositionRight;
-			presenter: aPresenter;
-			yourself.
-
-		styleName ifNotNil: [ 
-			lastPopover addStyle: styleName ].
-		
-		lastPopover build.
-
+	popover := self presenter newPopover
+		bePositionRight;
+		presenter: aPresenter;
+		yourself.
+	styleName ifNotNil: [
+		popover addStyle: styleName ].
+	
+	self innerWidgetDo: [ :w | 
+		| endIter |
 		endIter := w textBuffer 
 			selectionIteratorsDo: [ :start :end | end ] 
 			ifNone: [ w textBuffer iterAtOffset: w textBuffer cursorPosition ].
-		"18@0 is a magic number to place the popover where I want. 
-		 Not cool, but hard to do better :( "
-		lastPopover popupPointingTo: ((w iterLocation: endIter) translateBy: (18@0)).
-		lastPopover takeKeyboardFocus ]
+		position := w iterLocation: endIter ].
+
+	"18@0 is a magic number to place the popover where I want. 
+	 Not cool, but hard to do better :( "
+	[ 
+		"Another magic number,to give time the system to process any complex 
+		 drawing/updating/etc. (I may need to enlarge it in the future?)"
+		self innerWidget 
+			resetCursorBlink;
+			resetIMContext.
+	 	100 milliSeconds wait.
+		position := position translateBy: 18@0.
+		popover popupModalPointingTo: position
+	] fork
 ]
 
 { #category : 'api' }

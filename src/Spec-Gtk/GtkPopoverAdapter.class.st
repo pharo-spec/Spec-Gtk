@@ -142,7 +142,9 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
+
 	"gtkPopover child: GObject null."
+	gtkPopover autohide: false.
 	self presenter owner takeKeyboardFocus.
 	GEngine current unregisterWindow: gtkPopover.
 	gtkPopover objectUnref
