@@ -231,8 +231,6 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 			ifNone: [ w textBuffer iterAtOffset: w textBuffer cursorPosition ].
 		position := w iterLocation: endIter ].
 
-	"18@0 is a magic number to place the popover where I want. 
-	 Not cool, but hard to do better :( "
 	[ 
 		"Another magic number,to give time the system to process any complex 
 		 drawing/updating/etc. (I may need to enlarge it in the future?)"
@@ -240,7 +238,11 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 			resetCursorBlink;
 			resetIMContext.
 	 	100 milliSeconds wait.
-		position := position translateBy: 18@0.
+		"I'm ensuring a minimum rectangle to be sure the pointing position 
+		 is positive (and existent).
+		 18@18 is a magic number to place the popover where I want. 
+		 Not cool, but hard to do better :( "
+		position := (position origin max: (1@1)) extent: 18@18.
 		popover popupModalPointingTo: position
 	] fork
 ]
