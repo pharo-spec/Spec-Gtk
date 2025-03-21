@@ -345,24 +345,22 @@ GtkTextStyleVisitor >> visitLiteralNode: aRBLiteralValueNode [
 ]
 
 { #category : 'visiting' }
-GtkTextStyleVisitor >> visitMessageNode: aRBMessageNode [ 
+GtkTextStyleVisitor >> visitMessageNode: aRBMessageNode [
 	| style |
-	
+
 	style := #selector.
-	aRBMessageNode selector isSelectorSymbol 
-		ifFalse: [ 
-			style := (Symbol selectorThatStartsCaseSensitive: aRBMessageNode selector asString skipping: nil) isNil
-				ifTrue: [ #undefinedSelector ]
-				ifFalse: [ #incompleteSelector ] ].
+	aRBMessageNode selector isUsedAsSelectorSymbol ifFalse: [
+		style := (Symbol 
+			selectorThatStartsCaseSensitive: aRBMessageNode selector asString
+			skipping: nil)
+				ifNotNil: [ #incompleteSelector ]
+				ifNil: [ #undefinedSelector ] ].
 
 	self styleOpenParenthese: aRBMessageNode.
 	aRBMessageNode selectorParts
 		with: aRBMessageNode keywordsPositions
-		do: [ :keyword :position | 
-			self
-				addStyle: style
-				from: position
-				to: position + keyword size - 1 ].
+		do: [ :keyword :position |
+			self addStyle: style from: position to: position + keyword size - 1 ].
 	(aRBMessageNode isCascaded not or: [ aRBMessageNode isFirstCascaded ])
 		ifTrue: [ self visitNode: aRBMessageNode receiver ].
 	aRBMessageNode arguments do: [ :each | self visitNode: each ].
