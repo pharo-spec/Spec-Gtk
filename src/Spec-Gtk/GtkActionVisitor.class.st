@@ -50,9 +50,9 @@ GtkActionVisitor >> popPrefix [
 GtkActionVisitor >> prefix [
 
 	^ String streamContents: [ :stream | 
-		self allPrefixes 
-			asStringOn: stream 
-			delimiter: '-' ]
+		self allPrefixes
+			do: [ :elem | stream nextPutAll: elem asString ]
+			separatedBy: [ stream nextPutAll: '-' ] ]
 ]
 
 { #category : 'private' }
