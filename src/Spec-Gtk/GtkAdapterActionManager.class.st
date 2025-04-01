@@ -123,7 +123,7 @@ GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
 		gtkWidget insertActionGroup: 'global' actions: actionGroup ].
 	
 	action := (GSimpleAction newName: aCommand id)
-		connectActivate: [ self runInSystem: [ aCommand execute ] ];
+		connectActivate: [ self runInSystem: [ [ aCommand execute ] fork ] ];
 		yourself.	
 	actionMap at: aCommand put: action.
 	actionGroup insert: action.

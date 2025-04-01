@@ -10,7 +10,7 @@ Class {
 GtkToolbarBaseButtonAdapter >> addActionTo: gtkButton [
 
 	gtkButton connectClicked: [
-		self runInSystem: [ self performAction ] ]
+		self runInSystem: [ [ self performAction ] fork ] ]
 ]
 
 { #category : 'building' }

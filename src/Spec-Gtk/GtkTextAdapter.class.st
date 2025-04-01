@@ -129,8 +129,8 @@ GtkTextAdapter >> setWrapWord: value to: gtkTextView [
 { #category : 'private' }
 GtkTextAdapter >> updatePresenterText: aString [
 
-	self runInSystem: [  
-		self backendUpdatingDo: [ 
+	self runInSystem: [
+		self backendUpdatingDo: [
 			self presenter text: aString withInternalLineEndings ] ]
 ]
 
