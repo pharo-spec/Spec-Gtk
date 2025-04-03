@@ -108,12 +108,6 @@ GtkTreeListViewAdapter >> scrollToSelection [
 	"not needed, in gtk it will always scroll to selection"
 ]
 
-{ #category : 'private - updating' }
-GtkTreeListViewAdapter >> updateSelectionFromPresenter [
-
-	super updateSelectionFromPresenter
-]
-
 { #category : 'building' }
 GtkTreeListViewAdapter >> widgetClass [
 
