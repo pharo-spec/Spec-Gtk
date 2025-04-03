@@ -53,20 +53,23 @@ GtkBaseListViewAdapter >> updateMultiSelectionFromGtk [
 GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: pathsArray [
 	| rowIndexes newIndexes removedIndexes oldIndexes |
 
-	oldIndexes := pathsArray ifNil: [ #() ].
+	self isBackendUpdating ifTrue: [ ^ self ].
+
+	oldIndexes := pathsArray ifNil: [ #(  ) ].
 	rowIndexes := self presenter selection selectedIndexes.
-	rowIndexes ifEmpty: [  
-		self innerWidgetDo: [ :w | 
-			w selectionModel unselectAll ].
+	rowIndexes ifEmpty: [
+		self innerWidgetDo: [ :w | w selectionModel unselectAll ].
 		^ rowIndexes ].
-	
+
 	removedIndexes := oldIndexes \ rowIndexes.
 	newIndexes := rowIndexes \ oldIndexes.
-	
-	self innerWidgetDo: [ :w |
-		removedIndexes do: [ :index | w selectionModel unselectItem: index ].
-		newIndexes do: [ :index | w selectionModel selectItem: index unselectRest: false ] ].
 
+	self innerWidgetDo: [ :w |
+		removedIndexes do: [ :index |
+			w selectionModel unselectItem: index ].
+		newIndexes do: [ :index |
+			w selectionModel selectItem: index unselectRest: false ] ].
+	
 	^ newIndexes
 ]
 
@@ -92,6 +95,8 @@ GtkBaseListViewAdapter >> updateSingleSelectionFromGtk [
 { #category : 'private - updating' }
 GtkBaseListViewAdapter >> updateSingleSelectionFromPresenter: oldIndex [
 	| index |
+
+	self isBackendUpdating ifTrue: [ ^ self ].
 
 	index := self presenter selection selectedIndex. 
 	oldIndex = index ifFalse: [
