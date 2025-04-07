@@ -21,14 +21,14 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 		yourself).
 
 	self presenter whenSelectedPageChangedDo: [ :aNumber |
-		self backendDetectCyclesDo: [ 
+		self withCycleDetectionOnBackendDo: [ 
 			morph selectPage: aNumber ] ].
 	morph whenSelectedPageChangedDo: [ :aNumber |
 		self backendUpdatingDo: [ 
 			self presenter selectPage: aNumber ] ].
 	
 	self presenter whenVisiblePagesChangedDo: [ :aNumber |
-		self backendDetectCyclesDo: [ 
+		self withCycleDetectionOnBackendDo: [ 
 			morph numberOfPagesShown: aNumber ] ].
 	morph whenNumberOfPagesShownChangedDo: [ :aNumber |
 		self backendUpdatingDo: [

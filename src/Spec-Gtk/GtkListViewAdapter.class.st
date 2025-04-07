@@ -154,7 +154,7 @@ GtkListViewAdapter >> setDeferredAction: aBlock [
 { #category : 'private - updating' }
 GtkListViewAdapter >> updateSelectionFromPresenter [
 
-	self backendDetectCyclesDo: [ 
+	self withCycleDetectionOnBackendDo: [ 
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 

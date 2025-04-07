@@ -114,7 +114,7 @@ GtkTextAdapter >> setText: aString to: gtkWidget [
 	gtkWidget textBuffer 
 		blockCallback: GChangedCallback signalName
 		during: [ 
-			self backendDetectCyclesDo: [
+			self withCycleDetectionOnBackendDo: [
 				super setText: aString to: gtkWidget	] ]
 ]
 

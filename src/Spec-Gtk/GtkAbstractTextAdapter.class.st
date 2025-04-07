@@ -144,7 +144,7 @@ GtkAbstractTextAdapter >> text: aString [
 { #category : 'private - updating' }
 GtkAbstractTextAdapter >> updateTextFromPresenter: aString [
 	
-	self backendDetectCyclesDo: [  
+	self withCycleDetectionOnBackendDo: [  
 		self innerWidgetDo: [ :w | 
 			self setText: aString to: w ] ]
 ]

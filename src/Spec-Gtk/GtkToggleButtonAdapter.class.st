@@ -12,7 +12,7 @@ GtkToggleButtonAdapter >> addActionTo: gtkToggleButton [
 	gtkToggleButton connectToggled: [
 		self backendUpdatingDo: [ self updatePresenterState ] ].
 	self presenter whenChangedDo: [
-		self backendDetectCyclesDo: [ self updateState ] ]
+		self withCycleDetectionOnBackendDo: [ self updateState ] ]
 ]
 
 { #category : 'building' }

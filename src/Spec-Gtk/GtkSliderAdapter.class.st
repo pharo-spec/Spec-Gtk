@@ -19,7 +19,7 @@ GtkSliderAdapter >> addModelTo: gtkWidget [
 	gtkWidget connectValueChanged: [ 
 		self backendUpdatingDo: [ self presenter absoluteValue: gtkWidget value ] ].
 	self presenter whenAbsoluteValueChangedDo: [ :newValue | 
-		self backendDetectCyclesDo: [ self updateValue: newValue ] ]
+		self withCycleDetectionOnBackendDo: [ self updateValue: newValue ] ]
 ]
 
 { #category : 'building' }

@@ -120,13 +120,6 @@ GtkAdapter >> addVisibleSettingsTo: gtkWidget [
 ]
 
 { #category : 'private - cycle detection' }
-GtkAdapter >> backendDetectCyclesDo: aBlock [ 
-
-	self isBackendUpdating ifTrue: [ ^ self ].
-	^ aBlock value
-]
-
-{ #category : 'private - cycle detection' }
 GtkAdapter >> backendUpdatingDo: aBlock [ 
 	"This is a general mechanism to avoid colisions. 
 	 I'm adding it for the cases where a presenter can be updated in two directions: from the 
@@ -540,6 +533,13 @@ GtkAdapter >> widgetDo: aBlock [
 
 	self hasWidget ifFalse: [ ^ nil ].
 	^ GRunLoop defer: [ aBlock value: widget ]
+]
+
+{ #category : 'private - cycle detection' }
+GtkAdapter >> withCycleDetectionOnBackendDo: aBlock [ 
+
+	self isBackendUpdating ifTrue: [ ^ self ].
+	^ aBlock value
 ]
 
 { #category : 'building' }

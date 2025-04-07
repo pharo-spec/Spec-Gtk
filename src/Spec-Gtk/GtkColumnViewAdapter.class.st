@@ -177,7 +177,7 @@ GtkColumnViewAdapter >> updateResizableColumnsTo: aBoolean [
 { #category : 'private - updating' }
 GtkColumnViewAdapter >> updateSelectionFromPresenter [
 
-	self backendDetectCyclesDo: [ 
+	self withCycleDetectionOnBackendDo: [ 
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 

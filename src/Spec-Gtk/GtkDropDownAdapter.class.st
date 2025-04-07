@@ -113,7 +113,7 @@ GtkDropDownAdapter >> updatePresenterSelectionFromGtk [
 { #category : 'private - updating' }
 GtkDropDownAdapter >> updateSelectionFromPresenter [
 
-	self backendDetectCyclesDo: [ 
+	self withCycleDetectionOnBackendDo: [ 
 		| index |
 		index := self presenter selection selectedIndex - 1. 
 		self innerWidgetDo: [ :w |

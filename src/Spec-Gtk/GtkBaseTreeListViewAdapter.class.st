@@ -249,7 +249,7 @@ GtkBaseTreeListViewAdapter >> updateRoots [
 { #category : 'building' }
 GtkBaseTreeListViewAdapter >> updateSelectionFromPresenter [
 
-	self backendDetectCyclesDo: [ 
+	self withCycleDetectionOnBackendDo: [ 
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 

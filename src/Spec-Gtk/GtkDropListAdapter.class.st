@@ -99,7 +99,7 @@ GtkDropListAdapter >> selectionChanged [
 { #category : 'private - updating' }
 GtkDropListAdapter >> selectionChangedOnGtk [
 
-	self backendDetectCyclesDo: [ 
+	self withCycleDetectionOnBackendDo: [ 
 		self selectionChanged ]
 ]
 

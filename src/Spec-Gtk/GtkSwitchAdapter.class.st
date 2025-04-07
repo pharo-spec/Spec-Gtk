@@ -17,7 +17,7 @@ GtkSwitchAdapter >> addModelTo: gtkWidget [
 		self backendUpdatingDo: [ self updatePresenterState ].
 		false ].
 	self presenter whenChangedDo: [
-		self backendDetectCyclesDo: [ self updateState ] ]
+		self withCycleDetectionOnBackendDo: [ self updateState ] ]
 ]
 
 { #category : 'accessing' }

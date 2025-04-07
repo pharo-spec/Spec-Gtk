@@ -434,7 +434,7 @@ GtkTreeTableAdapter >> updateRoots [
 GtkTreeTableAdapter >> updateSelection [
 
 	self innerWidgetDo: [ :w | 
-		self backendDetectCyclesDo: [
+		self withCycleDetectionOnBackendDo: [
 			self 
 				disconnectSelectionEventsOf: w 
 				during: [ self updateSelectionOf: w ] ] ]

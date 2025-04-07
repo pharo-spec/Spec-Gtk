@@ -325,7 +325,7 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 	textBuffer highlightMatchingBrackets: true.
 
 	textBuffer connectChanged: [
-		self backendDetectCyclesDo: [ 
+		self withCycleDetectionOnBackendDo: [ 
 			self innerWidgetDo: [ :w | self updatePresenterText: w text ] ] ].
 
 	^ textBuffer
@@ -427,7 +427,7 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 { #category : 'building' }
 GtkCodeAdapter >> setText: aString to: gtkWidget [
 
-	self backendDetectCyclesDo: [
+	self withCycleDetectionOnBackendDo: [
 		| textBuffer |
 		textBuffer := self newTextBufferForText: aString.
 		gtkWidget textBuffer: textBuffer.
