@@ -226,23 +226,26 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 	
 	self innerWidgetDo: [ :w | 
 		| endIter |
+		"get cursor position"
 		endIter := w textBuffer 
 			selectionIteratorsDo: [ :start :end | end ] 
 			ifNone: [ w textBuffer iterAtOffset: w textBuffer cursorPosition ].
-		position := w iterLocation: endIter ].
+		position := w iterLocation: endIter.
+		"clean up some values"
+		w
+			resetCursorBlink;
+			resetIMContext ].
 
 	[ 
 		"Another magic number,to give time the system to process any complex 
 		 drawing/updating/etc. (I may need to enlarge it in the future?)"
-		self innerWidget 
-			resetCursorBlink;
-			resetIMContext.
 	 	100 milliSeconds wait.
 		"I'm ensuring a minimum rectangle to be sure the pointing position 
 		 is positive (and existent).
 		 18@18 is a magic number to place the popover where I want. 
 		 Not cool, but hard to do better :( "
 		position := (position origin max: (1@1)) extent: 18@18.
+		position printToStdout.
 		popover popupModalPointingTo: position
 	] fork
 ]
