@@ -65,10 +65,11 @@ GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: pathsArray [
 	newIndexes := rowIndexes \ oldIndexes.
 
 	self innerWidgetDo: [ :w |
-		removedIndexes do: [ :index |
-			w selectionModel unselectItem: index ].
-		newIndexes do: [ :index |
-			w selectionModel selectItem: index unselectRest: false ] ].
+		self withCycleDetectionOnBackendDo: [ 
+			removedIndexes do: [ :index |
+				w selectionModel unselectItem: index ].
+			newIndexes do: [ :index |
+				w selectionModel selectItem: index unselectRest: false ] ] ].
 	
 	^ newIndexes
 ]
@@ -101,14 +102,15 @@ GtkBaseListViewAdapter >> updateSingleSelectionFromPresenter: oldIndex [
 	index := self presenter selection selectedIndex. 
 	oldIndex = index ifFalse: [
 		self innerWidgetDo: [ :w |
-			index > 0 
-				ifTrue: [ 
-					"w selectionModel selectItem: index unselectRest: true."
-					w 
-						scrollToPosition: index - 1
-						flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT ]
-				ifFalse: [ 
-					"w selectionModel unselectAll" ] ] ].
+			self withCycleDetectionOnBackendDo: [  
+				index > 0 
+					ifTrue: [ 
+						"w selectionModel selectItem: index unselectRest: true."
+						w 
+							scrollToPosition: index - 1
+							flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT ]
+					ifFalse: [ 
+						"w selectionModel unselectAll" ] ] ] ].
 
 	^ index
 ]

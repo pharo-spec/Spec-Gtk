@@ -216,14 +216,15 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromPresenter: oldPaths [
 		^ paths ].
 
 	self innerWidgetDo: [ :w | 
-		| treeModel lastRow |
-		treeModel := w selectionModel model.
-		paths do: [ :path |
-			lastRow := self findAndExpandPath: path in: treeModel.
-			lastRow ifNotNil: [ 
-				w selectionModel 
-					selectItem: lastRow position
-					unselectRest: false ] ] ].
+		self withCycleDetectionOnBackendDo: [ 
+			| treeModel lastRow |
+			treeModel := w selectionModel model.
+			paths do: [ :path |
+				lastRow := self findAndExpandPath: path in: treeModel.
+				lastRow ifNotNil: [ 
+					w selectionModel 
+						selectItem: lastRow position
+						unselectRest: false ] ] ] ].
 	
 	^ paths
 ]
@@ -283,14 +284,15 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 		^ path ].
 
 	self innerWidgetDo: [ :w | 
-		| treeModel row |
-		treeModel := w selectionModel model.
-		row := self findAndExpandPath: path in: treeModel.
-		row ifNotNil: [ 
-			w 
-				scrollToPosition: row position - 1
-				flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
-			"w selectionModel select: row position" ] ].
+		self withCycleDetectionOnBackendDo: [  
+			| treeModel row |
+			treeModel := w selectionModel model.
+			row := self findAndExpandPath: path in: treeModel.
+			row ifNotNil: [ 
+				w 
+					scrollToPosition: row position - 1
+					flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
+				"w selectionModel select: row position" ] ] ].
 	
 	^ path
 ]
