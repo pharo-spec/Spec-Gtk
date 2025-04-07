@@ -71,7 +71,7 @@ GtkTreeColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn index: index [
 		title: aColumn title;
 		factory: (self newColumnFactory: aColumn index: index);
 		resizable: self presenter isResizable;
-		expand: aColumn isExpandable;
+		expand: aColumn isExpand;
 		in: [ :this | 
 			aColumn hasFixedWidth 
 				ifTrue: [ this fixedWidth: aColumn width ] ];
