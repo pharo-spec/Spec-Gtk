@@ -1,6 +1,9 @@
 Class {
 	#name : 'GtkPopoverAdapter',
 	#superclass : 'GtkAdapter',
+	#instVars : [
+		'runLoop'
+	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
@@ -72,17 +75,26 @@ GtkPopoverAdapter >> popupModal [
 	"is not really 'modal' but it will be hidden when lost focus/clicking 
 	 outside..."
 
-	self widgetDo: [ :w |
-		w autohide: true.
-		self popupPointingTo: nil ]
+	self popupModalPointingTo: nil
 ]
 
 { #category : 'api' }
 GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 
+	"runLoop := GtkContextRunLoop new."
 	self widgetDo: [ :w | 
 		w autohide: true.
-		self popupPointingTo: aRectangle ]
+		w parent: self presenter relativeTo adapter innerWidget.
+		aRectangle ifNotNil: [ 
+			w setPointingTo: aRectangle asGdkRectangle ].
+		self register: w.
+		w popup.
+		'POPUP MODAL' crTrace.
+		self processInitializationDeferredActions ].
+	self presenter takeKeyboardFocus.
+	[ self announceOpened ] fork.
+	"GRunLoop defer: [ runLoop run ]."
+	runLoop := nil
 ]
 
 { #category : 'api' }
@@ -96,7 +108,7 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 		w popup.
 		self processInitializationDeferredActions ].
 	self presenter takeKeyboardFocus.
-	self announceOpened
+	[ self announceOpened ] fork
 ]
 
 { #category : 'building' }
@@ -144,6 +156,8 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 GtkPopoverAdapter >> unregister: gtkPopover [
 
 	"gtkPopover child: GObject null."
+	'UNREGISTER' crTrace.
+	runLoop ifNotNil: [ runLoop done ].
 	gtkPopover autohide: false.
 	self presenter owner takeKeyboardFocus.
 	GEngine current unregisterWindow: gtkPopover.
