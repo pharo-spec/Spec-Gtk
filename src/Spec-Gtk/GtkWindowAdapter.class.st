@@ -350,7 +350,7 @@ GtkWindowAdapter >> newWidget [
 
 	^ GtkWindow new 
 		autoRelease;
-		hideOnClose: false;
+		hideOnClose: true;
 		yourself
 ]
 
