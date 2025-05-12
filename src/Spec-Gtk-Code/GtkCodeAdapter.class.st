@@ -244,10 +244,10 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 		 is positive (and existent).
 		 18@18 is a magic number to place the popover where I want. 
 		 Not cool, but hard to do better :( "
-		position := (position origin max: (1@1)) extent: 18@18.
-		position printToStdout.
-		popover popupModalPointingTo: position
-	] fork
+		position := (position origin max: 1@1) extent: 18@18.
+		logger trace: position.
+		popover popupModalPointingTo: position.
+	] forkAt: Processor lowIOPriority
 ]
 
 { #category : 'api' }
