@@ -57,6 +57,13 @@ GtkTextAdapter >> addTextBufferTo: gtkTextView [
 		self updatePresenterText: gtkTextView text ]
 ]
 
+{ #category : 'accessing' }
+GtkTextAdapter >> appendText: aString [
+
+	self innerWidgetDo: [ :w |
+		w textBuffer appendText: aString ]
+]
+
 { #category : 'api' }
 GtkTextAdapter >> backendIncludesEditionMenu [
 
