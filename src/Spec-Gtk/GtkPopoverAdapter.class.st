@@ -14,8 +14,7 @@ GtkPopoverAdapter >> addModelTo: gtkPopover [
 
 	gtkPopover child: self presenterWidget.	
 	gtkPopover connectHide: [
-		self unregister: gtkPopover.
-		self announceClosed ].
+		self unregister: gtkPopover ].
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
@@ -82,6 +81,7 @@ GtkPopoverAdapter >> popupModal [
 GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 
 	"runLoop := GtkContextRunLoop new."
+	logger trace.
 	self widgetDo: [ :w | 
 		w autohide: true.
 		w parent: self presenter relativeTo adapter innerWidget.
@@ -89,7 +89,7 @@ GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 			w setPointingTo: aRectangle asGdkRectangle ].
 		self register: w.
 		w popup.
-		'POPUP MODAL' crTrace.
+		logger trace.
 		self processInitializationDeferredActions ].
 	self presenter takeKeyboardFocus.
 	[ self announceOpened ] fork.
@@ -120,9 +120,10 @@ GtkPopoverAdapter >> presenterWidget [
 { #category : 'private' }
 GtkPopoverAdapter >> processInitializationDeferredActions [
 	
+	logger trace.
 	self presenter traversePresentersDo: [ :each | 
 		each adapter ifNotNil: [ :anAdapter |
-			anAdapter doInitializationDeferredActions ] ] 
+			anAdapter doInitializationDeferredActions ] ]
 ]
 
 { #category : 'building' }
@@ -155,12 +156,17 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 
-	"gtkPopover child: GObject null."
-	'UNREGISTER' crTrace.
+	logger trace.
 	runLoop ifNotNil: [ runLoop done ].
-	gtkPopover autohide: false.
-	self presenter owner takeKeyboardFocus.
-	GEngine current unregisterWindow: gtkPopover.
+	gtkPopover withObjectReferenceDo: [
+		gtkPopover child withObjectReferenceDo: [
+			gtkPopover child: GObject null.
+			"gtkPopover unparent" ] ].
+	self runInSystem: [  
+		100 milliSeconds wait.
+		self presenter owner takeKeyboardFocus.
+		GEngine current unregisterWindow: gtkPopover.
+		self announceClosed ].
 	gtkPopover objectUnref
 ]
 
