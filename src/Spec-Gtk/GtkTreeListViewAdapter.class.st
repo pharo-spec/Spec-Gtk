@@ -17,10 +17,11 @@ GtkTreeListViewAdapter >> addModelTo: gtkListView [
 	"self configureDragAndDrop: gtkListView."
 	"self addSearchTo: gtkListView"
 	
-	gtkListView factory: self newItemFactory.
+	self critical: [
+		gtkListView factory: self newItemFactory ].
 	self refreshSelectionModelIn: gtkListView.
 
-	gtkListView singleClickActivate: 	self presenter isActiveOnSingleClick.
+	gtkListView singleClickActivate: self presenter isActiveOnSingleClick.
 
 	self presenter hasHeaderTitle ifTrue: [ 
 		gtkListView headerFactory: self newHeaderFactory ].
@@ -33,7 +34,10 @@ GtkTreeListViewAdapter >> addModelTo: gtkListView [
 		self updateRoots ].
 
 	gtkListView connectRowActivated: [ :position |
-		self runInSystem: [ self presenter doActivateSelected ] ]
+		self runInSystem: [ self presenter doActivateSelected ] ].
+
+	logger trace: gtkListView getHandle message: 'tree'.
+	logger trace: self presenter owner styles		
 ]
 
 { #category : 'api' }
@@ -78,14 +82,16 @@ GtkTreeListViewAdapter >> refreshList [
 
 { #category : 'building' }
 GtkTreeListViewAdapter >> refreshSelectionModelIn: gtkListView [
-	| selectionModel |
 	
-	selectionModel := self newSelectionModel.	
-	"update store in factory. This has to be BEFORE setting it to the list view 
-	 because gtk will trigger an update *immediately*. and it needs to find the 
-	 right contents when it looks for them. "
-	gtkListView factory store: selectionModel model store.
-	gtkListView selectionModel: selectionModel
+	self critical: [
+		| selectionModel |
+		
+		selectionModel := self newSelectionModel.	
+		"update store in factory. This has to be BEFORE setting it to the list view 
+		 because gtk will trigger an update *immediately*. and it needs to find the 
+		 right contents when it looks for them. "
+		gtkListView factory store: selectionModel model store.
+		gtkListView selectionModel: selectionModel ]
 ]
 
 { #category : 'private - updating' }

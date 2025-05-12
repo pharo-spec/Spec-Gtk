@@ -4,7 +4,6 @@ Gtk adaptor for `SpListViewPresenter`.
 Class {
 	#name : 'GtkColumnViewAdapter',
 	#superclass : 'GtkBaseListViewAdapter',
-	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter-ListView'
@@ -19,7 +18,7 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	self presenter columns do: [ :each |
 		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
-	
+		
 	self refreshSelectionModelIn: gtkColumnView.
 	gtkColumnView singleClickActivate: self presenter isActiveOnSingleClick.
 
@@ -125,8 +124,9 @@ GtkColumnViewAdapter >> refreshList [
 			 back a non existing anymore model reference objects), causing a crash."
 			
 			"refresh items in factory (so they are not out of sync)"
-			w columns do: [ :each |
-				each factory items: self presenter items ].
+			self critical: [
+				w columns do: [ :each |
+					each factory items: self presenter items ] ].
 			"now change the model"
 			self refreshSelectionModelIn: w ] ]
 ]
@@ -134,7 +134,17 @@ GtkColumnViewAdapter >> refreshList [
 { #category : 'building' }
 GtkColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
 	
-	gtkColumnView selectionModel: self newSelectionModel
+	self critical: [
+		| selectionModel |
+		selectionModel := self newSelectionModel.
+		gtkColumnView selectionModel: selectionModel.
+		gtkColumnView columns 
+			detect: [ :each | each isSortable ]
+			ifFound: [ :aColumn | 
+				| sorter |
+				sorter := aColumn sorter.
+				sorter objectRef.
+				selectionModel model sorter: sorter ] ]
 ]
 
 { #category : 'private - updating' }

@@ -3,6 +3,9 @@ Class {
 	#superclass : 'GtkAbstractTextAdapter',
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
+	#instVars : [
+		'mutex'
+	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
@@ -98,6 +101,12 @@ GtkTextAdapter >> lineAtCursorPosition [
 	^ self innerWidgetDo: [ :w | w textBuffer lineAtCursorPosition ]
 ]
 
+{ #category : 'private' }
+GtkTextAdapter >> mutex [
+
+	^ mutex ifNil: [ mutex := Mutex new ]
+]
+
 { #category : 'commands' }
 GtkTextAdapter >> pasteText [
 ]
@@ -110,12 +119,11 @@ GtkTextAdapter >> setEditable: aBoolean [
 
 { #category : 'building' }
 GtkTextAdapter >> setText: aString to: gtkWidget [
-
-	gtkWidget textBuffer 
-		blockCallback: GChangedCallback signalName
-		during: [ 
-			self withCycleDetectionOnBackendDo: [
-				super setText: aString to: gtkWidget	] ]
+	self mutex critical: [
+		self withCycleDetectionOnBackendDo: [
+			"gtkWidget textBuffer 
+				blockCallback: GChangedCallback signalName
+				during: [" super setText: aString to: gtkWidget "]" ] ]
 ]
 
 { #category : 'private' }
@@ -130,8 +138,9 @@ GtkTextAdapter >> setWrapWord: value to: gtkTextView [
 GtkTextAdapter >> updatePresenterText: aString [
 
 	self runInSystem: [
-		self backendUpdatingDo: [
-			self presenter text: aString withInternalLineEndings ] ]
+		self mutex critical: [
+			self backendUpdatingDo: [
+				self presenter text: aString ] ] ]
 ]
 
 { #category : 'building' }

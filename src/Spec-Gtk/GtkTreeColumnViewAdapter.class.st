@@ -11,9 +11,9 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 	super addModelTo: gtkColumnView.
 
 	"gtkColumnView headerFactory: self newHeaderFactory."
-
-	self presenter columns withIndexDo: [ :each :index |
-		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each index: index) ].
+	self critical: [
+		self presenter columns withIndexDo: [ :each :index |
+			gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each index: index) ] ].
 	
 	self refreshSelectionModelIn: gtkColumnView.
 	gtkColumnView singleClickActivate: self presenter isActiveOnSingleClick.
@@ -26,7 +26,10 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 	self presenter whenRootsChangedDo: [ self updateRoots ].
 
 	gtkColumnView connectRowActivated: [ :position |
-		self runInSystem: [ self presenter doActivateSelected ] ]
+		self runInSystem: [ self presenter doActivateSelected ] ].
+		
+	logger trace: gtkColumnView getHandle message: 'tree'.
+	logger trace: self presenter owner styles
 ]
 
 { #category : 'api' }
@@ -86,15 +89,16 @@ GtkTreeColumnViewAdapter >> newHeaderFactory [
 
 { #category : 'building' }
 GtkTreeColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
-	| selectionModel |
+	self critical: [
+		| selectionModel |
 
-	selectionModel := self newSelectionModel.
-	"update store in factory. This has to be BEFORE setting it to the list view 
-	 because gtk will trigger an update *immediately*. and it needs to find the 
-	 right contents when it looks for them. "
-	gtkColumnView columns do: [ :each |
-		each factory store: selectionModel model store ].
-	gtkColumnView selectionModel: selectionModel 
+		selectionModel := self newSelectionModel.
+		"update store in factory. This has to be BEFORE setting it to the list view 
+		 because gtk will trigger an update *immediately*. and it needs to find the 
+		 right contents when it looks for them. "
+		gtkColumnView columns do: [ :each |
+			each factory store: selectionModel model store ].
+		gtkColumnView selectionModel: selectionModel ]
 ]
 
 { #category : 'accessing' }

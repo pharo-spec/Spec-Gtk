@@ -4,6 +4,7 @@ Class {
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
 	#instVars : [
+		'mutex',
 		'deferredAction',
 		'selectionCompanion'
 	],
@@ -40,13 +41,20 @@ GtkBaseTreeListViewAdapter >> collapsePath: aPath [
 	"same as expand, but collapse at the end"
 	path := aPath collect: [ :each | each - 1 ].
 	self innerWidgetDo: [ :w |
-		| treeModel |
-		treeModel := w selectionModel model.
-		self presenter roots do: [ :each | 
-			| row |
-			row := self findAndExpandPath: path in: treeModel.
-			row ifNotNil: [ 
-				row expand: false ] ] ]
+		self critical: [
+			| treeModel |
+			treeModel := w selectionModel model.
+			self presenter roots do: [ :each | 
+				| row |
+				row := self findAndExpandPath: path in: treeModel.
+				row ifNotNil: [ 
+					row expand: false ] ] ] ]
+]
+
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> critical: aBlock [
+
+	^ self mutex critical: aBlock
 ]
 
 { #category : 'private' }
@@ -68,15 +76,15 @@ GtkBaseTreeListViewAdapter >> expandAll [
 
 { #category : 'private' }
 GtkBaseTreeListViewAdapter >> expandAll: aCollection basePath: aPath in: aModel [
-
-	aCollection withIndexDo: [ :each :index |
-		| path |
-		path := aPath copyWith: index - 1.
-		self findAndExpandPath: path in: aModel.
-		self 
-			expandAll: (self presenter childrenFor: each) 
-			basePath: path 
-			in: aModel ]
+	self critical: [
+		aCollection withIndexDo: [ :each :index |
+			| path |
+			path := aPath copyWith: index - 1.
+			self findAndExpandPath: path in: aModel.
+			self 
+				expandAll: (self presenter childrenFor: each) 
+				basePath: path 
+				in: aModel ] ]
 ]
 
 { #category : 'expanding-collapsing' }
@@ -136,9 +144,16 @@ GtkBaseTreeListViewAdapter >> itemAtPath: aPath from: aCollection [
 	currentItem := aCollection at: aPath first.
 	aPath size = 1 ifTrue: [ ^ currentItem ].
 	
-	^ self 
-		itemAtPath: aPath allButFirst
-		from: (self presenter childrenFor: currentItem)
+	^ self critical: [ 
+		self 
+			itemAtPath: aPath allButFirst
+			from: (self presenter childrenFor: currentItem) ]
+]
+
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> mutex [
+
+	^ mutex ifNil: [ mutex := Mutex new ]
 ]
 
 { #category : 'private - factory' }
@@ -190,16 +205,18 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromGtk [
 
 	paths := OrderedCollection new.
 	self innerWidgetDo: [ :w |
-		| selection row  |
-		selection :=  w selectionModel.
-		selection selectedItems do: [ :rowHandle |
-			row := GtkTreeListRow fromHandleUnreferenced: rowHandle getHandle.
-			paths add: (row withItemDo: [ :item | 
-				selection model store pathOfItem: item ]) ] ].
+		self critical: [
+			| selection row  |
+			selection :=  w selectionModel.
+			selection selectedItems do: [ :rowHandle |
+				row := GtkTreeListRow fromHandleUnreferenced: rowHandle getHandle.
+				paths add: (row withItemDo: [ :item | 
+					selection model store pathOfItem: item ]) ] ] ].
 
 	self runInSystem: [ 
-		self backendUpdatingDo: [  
-			self presenter selection selectPaths: paths asArray ] ]
+		self backendUpdatingDo: [
+			self critical: [
+				self presenter selection selectPaths: paths asArray ] ] ]
 ]
 
 { #category : 'private - updating' }
@@ -259,15 +276,17 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromGtk [
 	| path |
 
 	self innerWidgetDo: [ :w |
-		| selection row |
-		selection :=  w selectionModel.
-		row := GtkTreeListRow fromHandleUnreferenced: selection selectedItem getHandle.
-		path := row withItemDo: [ :item |
-			selection model store pathOfItem: item ] ].
+		self critical: [
+			| selection row |
+			selection :=  w selectionModel.
+			row := GtkTreeListRow fromHandleUnreferenced: selection selectedItem getHandle.
+			path := row withItemDo: [ :item |
+				selection model store pathOfItem: item ] ] ].
 	
 	self runInSystem: [ 
 		self backendUpdatingDo: [ 
-			self presenter selection selectPath: path ] ]
+			self critical: [
+				self presenter selection selectPath: path ] ] ]
 ]
 
 { #category : 'private - updating' }

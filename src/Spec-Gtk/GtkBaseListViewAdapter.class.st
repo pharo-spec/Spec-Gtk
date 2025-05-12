@@ -4,6 +4,7 @@ Class {
 	#traits : 'GtkTHaveWrappingScrollBars',
 	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
 	#instVars : [
+		'mutex',
 		'deferredAction',
 		'selectionCompanion'
 	],
@@ -35,6 +36,18 @@ GtkBaseListViewAdapter >> addSpecialActions [
 ]
 
 { #category : 'private' }
+GtkBaseListViewAdapter >> critical: aBlock [ 
+
+	^ self mutex critical: aBlock
+]
+
+{ #category : 'private' }
+GtkBaseListViewAdapter >> mutex [
+
+	^ mutex ifNil: [ mutex := Mutex new ]
+]
+
+{ #category : 'private' }
 GtkBaseListViewAdapter >> selectionCompanion [
 
 	^ selectionCompanion ifNil: [ 
@@ -46,7 +59,8 @@ GtkBaseListViewAdapter >> updateMultiSelectionFromGtk [
 	| indexes |
 	
 	indexes := self innerWidgetDo: [ :w | w selectionModel allSelected ].
-	self runInSystem: [ self presenter selection selectIndexes: indexes ]
+	self runInSystem: [ 
+		self critical: [ self presenter selection selectIndexes: indexes ] ]
 ]
 
 { #category : 'private - updating' }
@@ -90,7 +104,8 @@ GtkBaseListViewAdapter >> updateSingleSelectionFromGtk [
 	index := self innerWidgetDo: [ :w | w selectionModel selected ].
 	self runInSystem: [
 		self backendUpdatingDo: [
-			self presenter selection selectIndex: index ] ]
+			self critical: [
+				self presenter selection selectIndex: index ] ] ]
 ]
 
 { #category : 'private - updating' }
