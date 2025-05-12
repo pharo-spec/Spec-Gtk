@@ -73,15 +73,27 @@ GtkAdapterActionManager >> anyCommandIsVisible [
 	^ self anyCommandInActionGroupIsVisible: self presenter actions
 ]
 
+{ #category : 'private' }
+GtkAdapterActionManager >> buildMenuModel [
+
+	^ self buildMenuModelFor: self actionGroups
+]
+
+{ #category : 'private' }
+GtkAdapterActionManager >> buildMenuModelFor: anArrayOfGroups [
+
+	^ GtkActionMenuBuilder new 
+		visit: anArrayOfGroups first;
+		in: [ :this | 
+			anArrayOfGroups allButFirstDo: [ :each | each acceptVisitor: this ] ];
+		root
+]
+
 { #category : 'private - actions' }
 GtkAdapterActionManager >> deferredShowPopoverMenuFor: anArrayOfGroups at: position owner: gtkWidget [
 	| menuModel |
 	
-	menuModel := GtkActionMenuBuilder new 
-		visit: anArrayOfGroups first;
-		in: [ :this | 
-			anArrayOfGroups allButFirstDo: [ :each | each acceptVisitor: this ] ];
-		root.
+	menuModel := self buildMenuModelFor: anArrayOfGroups.
 
 	popoverContextMenu := (GtkPopoverMenu newFromModelFull: menuModel)
 			ensureObjectRefAndAutoRelease.
