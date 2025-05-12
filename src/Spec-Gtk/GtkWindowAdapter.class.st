@@ -87,6 +87,7 @@ GtkWindowAdapter >> addVisibleSettingsTo: gtkWidget [
 { #category : 'private' }
 GtkWindowAdapter >> announceClosed [
 
+	logger trace.
 	self presenter windowIsClosing.
 	self presenter windowClosed
 ]
