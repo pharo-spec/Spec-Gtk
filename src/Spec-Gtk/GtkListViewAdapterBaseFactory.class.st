@@ -148,6 +148,7 @@ GtkListViewAdapterBaseFactory >> storePresenter: aPresenter [
 GtkListViewAdapterBaseFactory >> teardown: item [
 
 	"no idea what to do here"
+	super teardown: item
 ]
 
 { #category : 'accessing' }

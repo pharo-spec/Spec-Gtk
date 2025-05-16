@@ -19,10 +19,10 @@ GtkListViewAdapterHeaderFactory >> bind: listItem [
 
 { #category : 'accessing' }
 GtkListViewAdapterHeaderFactory >> bind: listItem to: anObject [
-	| child |
+	"| child |
 
 	child := self presenterAtHandle: listItem child.
-	child label: anObject asString
+	child label: anObject asString"
 ]
 
 { #category : 'private' }
@@ -41,7 +41,16 @@ GtkListViewAdapterHeaderFactory >> listItemClass [
 GtkListViewAdapterHeaderFactory >> setup: listItem [
 	| child |
 
-	child := presenter newLabel.
+	child := presenter newPresenter.
+	child layout: SpBoxLayout newHorizontal.
+	child addStyle: 'columnview-header'.
+
+	presenter columns do: [ :each | 
+		child layout add: (child newButton
+			label: each title;
+			yourself) ].
+	
+	"child := presenter newButton."
 	child build.
 
 	self storePresenter: child.

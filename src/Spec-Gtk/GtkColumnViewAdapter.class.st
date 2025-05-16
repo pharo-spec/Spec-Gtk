@@ -78,17 +78,39 @@ GtkColumnViewAdapter >> newColumnFactory: aColumn [
 ]
 
 { #category : 'private - factory' }
-GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
+GtkColumnViewAdapter >> newColumnSorterOn: aColumn [
 
-	^ GtkColumnViewColumn new
+	^ GtkCustomSorter newSorter: [ :a :b | 
+		logger trace: a.
+		logger trace: b. 
+		0 ]
+]
+
+{ #category : 'private - factory' }
+GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
+	| newColumn |
+
+	newColumn := GtkColumnViewColumn new
 		title: aColumn title;
 		factory: (self newColumnFactory: aColumn);
 		resizable: self presenter isResizable;
 		expand: aColumn isExpand;
-		in: [ :this | 
-			aColumn hasFixedWidth 
-				ifTrue: [ this fixedWidth: aColumn width ] ];
-		yourself
+		yourself.
+		
+	aColumn hasFixedWidth ifTrue: [ 
+		newColumn fixedWidth: aColumn width ].
+		
+	aColumn isSortable ifTrue: [ 
+		self flag: #TODO. "Temporary removal as I cannot find a fast way to solve the 
+		problem (which should be easy), and we need to release the PharoLauncherGtk"
+		"newColumn sorter: (self newColumnSorterOn: aColumn)."
+		"newColumn
+			connect: 'notify::sorter' 
+			signature: #(void (void *selfHandle, void *columnHandle, void *user_data)) 
+			do: [ :selfHandle :columnHandle :user_data | 
+				logger trace ]" ].
+
+	^ newColumn
 ]
 
 { #category : 'private - factory' }
@@ -100,8 +122,8 @@ GtkColumnViewAdapter >> newHeaderFactory [
 { #category : 'private - factory' }
 GtkColumnViewAdapter >> newSelectionModel [
 	| selectionModel |
-
-	selectionModel := self selectionCompanion newModel: self newStore.
+	logger trace.
+	selectionModel := self selectionCompanion newModel: "(GtkSortListModel newModel:" self newStore")".
 	selectionModel connectSelectionChanged: [ :position :numItems |
 		self updatePresenterSelection: position numItems: numItems ].
 	

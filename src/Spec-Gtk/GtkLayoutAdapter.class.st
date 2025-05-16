@@ -237,6 +237,7 @@ GtkLayoutAdapter >> remove: aPresenter [
 	^ self widgetDo: [ :w |
 		| widgetToRemove |
 		widgetToRemove := aPresenter adapter widget.
+		logger trace: widgetToRemove.
 		self ensureRetained: widgetToRemove.
 		w remove: widgetToRemove ]
 ]
