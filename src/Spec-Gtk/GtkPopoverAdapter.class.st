@@ -13,7 +13,7 @@ Class {
 GtkPopoverAdapter >> addModelTo: gtkPopover [
 
 	gtkPopover child: self presenterWidget.	
-	gtkPopover connectHide: [
+	gtkPopover connectClosed: [
 		self unregister: gtkPopover ].
 	self setPopoverPositionTo: gtkPopover.
 	
@@ -83,13 +83,18 @@ GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 	"runLoop := GtkContextRunLoop new."
 	logger trace.
 	self widgetDo: [ :w | 
-		w autohide: true.
-		w parent: self presenter relativeTo adapter innerWidget.
+		| relativeTo |
+		"try this to not grab input (which is probably causing the thing to not 
+		 give me back control... is annoying, however)"
+		w autohide: false.
+		self register: w.
+		relativeTo := self presenter relativeTo adapter innerWidget.
+		logger trace: relativeTo.
+		w parent: relativeTo.
+		logger trace:  aRectangle.
 		aRectangle ifNotNil: [ 
 			w setPointingTo: aRectangle asGdkRectangle ].
-		self register: w.
 		w popup.
-		logger trace.
 		self processInitializationDeferredActions ].
 	self presenter takeKeyboardFocus.
 	[ self announceOpened ] fork.
@@ -100,9 +105,15 @@ GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 { #category : 'api' }
 GtkPopoverAdapter >> popupPointingTo: aRectangle [
 	
-	self widgetDo: [ :w | 
+	logger trace.
+	self widgetDo: [ :w |
+		| relativeTo |
+		w autohide: false.
 		self register: w.
-		w parent: self presenter relativeTo adapter innerWidget.
+relativeTo := self presenter relativeTo adapter innerWidget.
+		logger trace: relativeTo.
+		w parent: relativeTo.
+		logger trace:  aRectangle.
 		aRectangle ifNotNil: [ 
 			w setPointingTo: aRectangle asGdkRectangle ].
 		w popup.
@@ -158,16 +169,11 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 
 	logger trace.
 	runLoop ifNotNil: [ runLoop done ].
-	gtkPopover withObjectReferenceDo: [
-		gtkPopover child withObjectReferenceDo: [
-			gtkPopover child: GObject null.
-			"gtkPopover unparent" ] ].
+	self presenter owner takeKeyboardFocus.
 	self runInSystem: [  
-		100 milliSeconds wait.
-		self presenter owner takeKeyboardFocus.
 		GEngine current unregisterWindow: gtkPopover.
-		self announceClosed ].
-	gtkPopover objectUnref
+		self announceClosed.
+		self widgetDo: [ :w | w objectUnref ] ]
 ]
 
 { #category : 'building' }
