@@ -11,6 +11,8 @@ GtkTreeListViewAdapter >> addModelTo: gtkListView [
 
 	super addModelTo: gtkListView.
 
+	gtkListView tabBehavior: GtkListTabBehavior GTK_LIST_TAB_ITEM.
+
 	"gtkListView showSeparators: true."
 	"gtkListView enableRubberband: true."
 
