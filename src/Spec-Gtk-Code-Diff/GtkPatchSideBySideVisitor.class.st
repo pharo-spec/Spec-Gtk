@@ -34,7 +34,7 @@ GtkPatchSideBySideVisitor >> leftSide [
 { #category : 'accessing' }
 GtkPatchSideBySideVisitor >> leftText [
 
-	^ (self leftSide collect: #second) asStringWithCr
+	^ String cr join: (self leftSide collect: #second)
 ]
 
 { #category : 'accessing' }
@@ -54,7 +54,7 @@ GtkPatchSideBySideVisitor >> rightSide [
 { #category : 'accessing' }
 GtkPatchSideBySideVisitor >> rightText [
 
-	^ (self rightSide collect: #second) asStringWithCr
+	^ String cr join: (self rightSide collect: #second)
 ]
 
 { #category : 'visiting' }
