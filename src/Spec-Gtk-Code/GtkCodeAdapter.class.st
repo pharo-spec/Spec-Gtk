@@ -238,8 +238,10 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 
 	[ 
 		"Another magic number,to give time the system to process any complex 
-		 drawing/updating/etc. (I may need to enlarge it in the future?)"
-	 	100 milliSeconds wait.
+		 drawing/updating/etc. (I may need to enlarge it in the future?). 
+		 Since I am using autohide=false for the popovers this hack looks not 
+		 needed..."
+	 	"100 milliSeconds wait."
 		"I'm ensuring a minimum rectangle to be sure the pointing position 
 		 is positive (and existent).
 		 18@18 is a magic number to place the popover where I want. 

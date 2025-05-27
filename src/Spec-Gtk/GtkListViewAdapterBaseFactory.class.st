@@ -28,6 +28,8 @@ GtkListViewAdapterBaseFactory class >> newPresenter: aPresenter [
 { #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> bind: listItem [
 
+	logger trace: listItem.
+	logger trace: listItem position.
 	self 
 		bind: listItem 
 		to: (self itemAt: (listItem position + 1))
@@ -157,4 +159,5 @@ GtkListViewAdapterBaseFactory >> unbind: listItem [
 
 	childHandle := listItem child.
 	self removeStoredPresenterAtHandle: childHandle"
+	logger trace
 ]
