@@ -30,6 +30,8 @@ BaselineOfSpecGtk >> baseline: spec [
 				package: 'Spec-Gtk-Pillar' with: [ spec requires: #('GtkCore') ];
 				"morphic"
 				package: 'Spec-Gtk-Morphic-Adapter' with: [ spec requires: #('GtkMorphic' 'Spec-Gtk') ];
+				"alexandrie"
+				package: 'Spec-Gtk-Alexandrie' with: [ spec requires: #('Spec-Gtk') ];
 				"testing"
 				package: 'Spec-GtkBackendTests' with: [ spec requires: ('Spec-Gtk') ] ].
 		
