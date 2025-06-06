@@ -31,10 +31,18 @@ GtkImageAdapter >> newWidget [
 
 { #category : 'updating' }
 GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImage [
+	| paintable |
 	
 	aFormOrGdkPixbuf ifNil: [ 
 		aGtkImage clear. 
 		^ self ].
 	
-	aGtkImage setFromPaintable: aFormOrGdkPixbuf asGdkPaintable
+	paintable := aFormOrGdkPixbuf asGdkPaintable.
+	aFormOrGdkPixbuf isForm ifTrue: [ 
+		| size |
+		size := aFormOrGdkPixbuf width@aFormOrGdkPixbuf height.
+		paintable 
+			computeConcreteSize: size
+			defaults: size ].
+	aGtkImage setFromPaintable: paintable
 ]
