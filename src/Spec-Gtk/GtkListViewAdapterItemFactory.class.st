@@ -13,9 +13,12 @@ GtkListViewAdapterItemFactory >> bind: listItem to: anObject [
 	child := self presenterAtHandle: listItem child.
 	child ifNil: [ ^ self ].
 	
-	presenter bindAction
-		value: child 
-		value: anObject
+	[ 
+		presenter bindAction
+			value: child 
+			value: anObject ]
+	on: Error 
+	fork: [ :e | e pass ]
 ]
 
 { #category : 'accessing' }
