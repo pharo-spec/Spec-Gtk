@@ -36,19 +36,8 @@ GtkBaseTreeListViewAdapter >> addSpecialActions [
 
 { #category : 'expanding-collapsing' }
 GtkBaseTreeListViewAdapter >> collapsePath: aPath [
-	| path |
 	
-	"same as expand, but collapse at the end"
-	path := aPath collect: [ :each | each - 1 ].
-	self innerWidgetDo: [ :w |
-		self critical: [
-			| treeModel |
-			treeModel := w selectionModel model.
-			self presenter roots do: [ :each | 
-				| row |
-				row := self findAndExpandPath: path in: treeModel.
-				row ifNotNil: [ 
-					row expand: false ] ] ] ]
+	self setPath: aPath expand: false
 ]
 
 { #category : 'private' }
@@ -89,17 +78,8 @@ GtkBaseTreeListViewAdapter >> expandAll: aCollection basePath: aPath in: aModel 
 
 { #category : 'expanding-collapsing' }
 GtkBaseTreeListViewAdapter >> expandPath: aPath [
-	| path |
 	
-	path := aPath collect: [ :each | each - 1 ].
-	self innerWidgetDo: [ :w |
-		| treeModel |
-		treeModel := w selectionModel model.
-		self presenter roots do: [ :each | 
-			| row |
-			row := self findAndExpandPath: path in: treeModel.
-			row ifNotNil: [ 
-				row expand: true ] ] ]
+	self setPath: aPath expand: true
 ]
 
 { #category : 'expanding-collapsing' }
@@ -197,6 +177,22 @@ GtkBaseTreeListViewAdapter >> selectionCompanion [
 GtkBaseTreeListViewAdapter >> setDeferredAction: aBlock [
 
 	deferredAction := aBlock
+]
+
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> setPath: aPath expand: aBoolean [ 
+	| path |
+	
+	"same as expand, but collapse at the end"
+	path := aPath collect: [ :each | each - 1 ].
+	self innerWidgetDo: [ :w |
+		self critical: [
+			| row |
+			row := self 
+				findAndExpandPath: path 
+				in: w selectionModel model.
+			row ifNotNil: [ 
+				row expand: aBoolean ] ] ]
 ]
 
 { #category : 'private - updating' }
