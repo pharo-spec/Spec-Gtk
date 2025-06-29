@@ -174,9 +174,9 @@ GtkWindowAdapter >> closeFromKeyboard [
 { #category : 'private' }
 GtkWindowAdapter >> closeFromSignal [
 	"this is called from connectDestroy (just one time)"
-
-	self announceClosed.
-	self widget unregister
+	self runInSystem: [
+		self announceClosed.
+		self widget unregister ]
 ]
 
 { #category : 'private' }
