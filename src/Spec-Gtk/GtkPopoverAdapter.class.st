@@ -2,7 +2,8 @@ Class {
 	#name : 'GtkPopoverAdapter',
 	#superclass : 'GtkAdapter',
 	#instVars : [
-		'runLoop'
+		'runLoop',
+		'popupTimestamp'
 	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
@@ -94,6 +95,7 @@ GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 		logger trace:  aRectangle.
 		aRectangle ifNotNil: [ 
 			w setPointingTo: aRectangle asGdkRectangle ].
+		popupTimestamp := DateAndTime now.
 		w popup.
 		self processInitializationDeferredActions ].
 	self presenter takeKeyboardFocus.
@@ -110,12 +112,13 @@ GtkPopoverAdapter >> popupPointingTo: aRectangle [
 		| relativeTo |
 		w autohide: false.
 		self register: w.
-relativeTo := self presenter relativeTo adapter innerWidget.
+		relativeTo := self presenter relativeTo adapter innerWidget.
 		logger trace: relativeTo.
 		w parent: relativeTo.
 		logger trace:  aRectangle.
 		aRectangle ifNotNil: [ 
 			w setPointingTo: aRectangle asGdkRectangle ].
+		popupTimestamp := DateAndTime now.		
 		w popup.
 		self processInitializationDeferredActions ].
 	self presenter takeKeyboardFocus.
@@ -166,8 +169,10 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
+	| timeRunning |
 
-	logger trace.
+	timeRunning := (DateAndTime now) - popupTimestamp.
+	logger trace: timeRunning.
 	runLoop ifNotNil: [ runLoop done ].
 	self presenter owner takeKeyboardFocus.
 	self runInSystem: [  
