@@ -15,7 +15,8 @@ GtkCheckBoxAdapter >> addModelTo: gtkWidget [
 	gtkWidget active: self presenter state.
 	
 	gtkWidget connectToggled: [
-		self backendUpdatingDo: [ self updatePresenterState ] ].
+		self runInSystem: [
+			self backendUpdatingDo: [ self updatePresenterState ] ] ].
 	self presenter whenChangedDo: [
 		self withCycleDetectionOnBackendDo: [ self updateState ] ].
 	
