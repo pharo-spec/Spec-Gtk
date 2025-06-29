@@ -62,16 +62,10 @@ GtkPatchAdapter >> bufferClass [
 ]
 
 { #category : 'private - factory' }
-GtkPatchAdapter >> newTagTable [
-	
-	^ GtkTextTagTable newForCode: self styleTable
-]
-
-{ #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
-	textBuffer := self bufferClass newTable: self newTagTable.
+	textBuffer := self bufferClass newTable: self usingTagTable.
 
 	^ textBuffer
 ]
@@ -81,6 +75,7 @@ GtkPatchAdapter >> newTextBufferForText: aString [
 	| textBuffer |
 
 	textBuffer := self newTextBufferForHighlight.
+	textBuffer styleScheme: self styleScheme.
 
 	aString ifNotNil: [ 
 		textBuffer text: aString ].
@@ -137,6 +132,15 @@ GtkPatchAdapter >> setText: aString to: gtkWidget [
 		textBuffer objectUnref ]
 ]
 
+{ #category : 'private' }
+GtkPatchAdapter >> styleScheme [
+	| schemeName |
+
+	schemeName := self presenter styleScheme 
+		ifNil: [ self presenter application styleScheme ]. 
+	^ GtkSourceStyleSchemeManager default schemeWithId: schemeName
+]
+
 { #category : 'private - accessing' }
 GtkPatchAdapter >> styleTable [
 	| styleTableName |	
@@ -150,6 +154,13 @@ GtkPatchAdapter >> styleTable [
 					^ SHRBTextStyler newAttributesForStyleTable: SHRBTextStyler styleTable ] ].
 
 	^ SHRBTextStyler newAttributesForStyleTableNamed: styleTableName
+]
+
+{ #category : 'private - factory' }
+GtkPatchAdapter >> usingTagTable [
+
+	^ (GtkCodeTagTableManager for: self presenter application) 
+		tagTableFor: self presenter
 ]
 
 { #category : 'building' }
