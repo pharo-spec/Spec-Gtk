@@ -109,6 +109,38 @@ GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel [
 				ifEmpty: [ row ] ]
 ]
 
+{ #category : 'testing' }
+GtkBaseTreeListViewAdapter >> isExpanded: aPath [
+	| path expanded |
+	
+	expanded := false.
+	path := aPath collect: [ :each | each - 1 ].
+	self innerWidgetDo: [ :w |
+		expanded := self 
+			isExpandedPath: path 
+			in: w selectionModel model ].
+
+	^ expanded
+]
+
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> isExpandedPath: aPath in: aModel [
+	
+	aPath ifEmpty: [ ^ true ].
+	^ aModel
+		withRowAt: aPath first 
+		do: [ :row | | expanded |
+			expanded := row isExpanded.
+			expanded 
+				ifTrue: [
+					aPath allButFirst 
+						ifNotEmpty: [ :nextPath | self isExpandedPath: nextPath in: row ]
+						ifEmpty: [ true ] ] 
+				ifFalse: [
+					"not expanded, answer it without continuing"
+					false ] ]
+]
+
 { #category : 'accessing' }
 GtkBaseTreeListViewAdapter >> itemAtPath: aPath [
 
