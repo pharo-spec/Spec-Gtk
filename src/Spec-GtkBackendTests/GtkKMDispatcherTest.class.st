@@ -1,10 +1,11 @@
 Class {
-	#name : #GtkKMDispatcherTest,
-	#superclass : #TestCase,
-	#category : #'Spec-GtkBackendTests'
+	#name : 'GtkKMDispatcherTest',
+	#superclass : 'TestCase',
+	#category : 'Spec-GtkBackendTests',
+	#package : 'Spec-GtkBackendTests'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 GtkKMDispatcherTest >> eventKey: character [
  
 	^ self 
@@ -15,7 +16,7 @@ GtkKMDispatcherTest >> eventKey: character [
 		shift: false
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 GtkKMDispatcherTest >> eventKey: character alt: aBoolean [
 
 	^ self 
@@ -26,7 +27,7 @@ GtkKMDispatcherTest >> eventKey: character alt: aBoolean [
 		shift: false
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 GtkKMDispatcherTest >> eventKey: character alt: useAlt ctrl: useCtrl meta: useMeta shift: useShift [
 	
 	^ GdkKeyEvent 
@@ -37,7 +38,7 @@ GtkKMDispatcherTest >> eventKey: character alt: useAlt ctrl: useCtrl meta: useMe
 		option: useAlt
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 GtkKMDispatcherTest >> eventKey: character ctrl: aBoolean [
 
 	^ self 
@@ -48,7 +49,7 @@ GtkKMDispatcherTest >> eventKey: character ctrl: aBoolean [
 		shift: false
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 GtkKMDispatcherTest >> eventKey: character meta: aBoolean [
 
 	^ self 
@@ -59,7 +60,7 @@ GtkKMDispatcherTest >> eventKey: character meta: aBoolean [
 		shift: false
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 GtkKMDispatcherTest >> eventKey: character shift: aBoolean [
 
 	^ self 
@@ -70,13 +71,13 @@ GtkKMDispatcherTest >> eventKey: character shift: aBoolean [
 		shift: aBoolean
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkKMDispatcherTest >> setUp [
 
 	GtkEngine ensureRunning
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GtkKMDispatcherTest >> testBuffering [
 	| dispatcher flag category event1 event2 event3 |
 	
@@ -114,7 +115,7 @@ GtkKMDispatcherTest >> testBuffering [
 	self assert: flag
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GtkKMDispatcherTest >> testDispatchKeyEvent [
 	| dispatcher flag category event |
 	

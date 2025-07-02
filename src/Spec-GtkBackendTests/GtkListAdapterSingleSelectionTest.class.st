@@ -1,15 +1,16 @@
 Class {
-	#name : #GtkListAdapterSingleSelectionTest,
-	#superclass : #GtkAbstractListAdapterSingleSelectionTest,
-	#category : #'Spec-GtkBackendTests'
+	#name : 'GtkListAdapterSingleSelectionTest',
+	#superclass : 'GtkAbstractListAdapterSingleSelectionTest',
+	#category : 'Spec-GtkBackendTests',
+	#package : 'Spec-GtkBackendTests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 GtkListAdapterSingleSelectionTest >> classToTest [
 	^ SpListPresenter
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkListAdapterSingleSelectionTest >> setUp [
 
 	super setUp.

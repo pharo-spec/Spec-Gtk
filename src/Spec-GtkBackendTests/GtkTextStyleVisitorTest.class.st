@@ -1,13 +1,14 @@
 Class {
-	#name : #GtkTextStyleVisitorTest,
-	#superclass : #TestCase,
+	#name : 'GtkTextStyleVisitorTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'visitor'
 	],
-	#category : #'Spec-GtkBackendTests'
+	#category : 'Spec-GtkBackendTests',
+	#package : 'Spec-GtkBackendTests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkTextStyleVisitorTest class >> syntaxInAPostcard [
 
 	^ 'exampleWithNumber: x
@@ -31,14 +32,14 @@ return and cascade. It has both zero argument and one argument blocks."
     ^ x < y'
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkTextStyleVisitorTest >> setUp [
 	
 	super setUp.
 	visitor := GtkTextStyleVisitor new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GtkTextStyleVisitorTest >> testStyleMethod [
 	| tags |
 

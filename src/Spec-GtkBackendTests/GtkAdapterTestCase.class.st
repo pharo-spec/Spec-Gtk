@@ -1,32 +1,33 @@
 Class {
-	#name : #GtkAdapterTestCase,
-	#superclass : #SpBaseTest,
+	#name : 'GtkAdapterTestCase',
+	#superclass : 'SpBaseTest',
 	#instVars : [
 		'app'
 	],
-	#category : #'Spec-GtkBackendTests'
+	#category : 'Spec-GtkBackendTests',
+	#package : 'Spec-GtkBackendTests'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkAdapterTestCase class >> isAbstract [
 
 	^ super isAbstract or: [ self = GtkAdapterTestCase ]
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkAdapterTestCase >> adapter [ 
 
 	^ presenter adapter
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkAdapterTestCase >> initializeTestedInstance [
 	super initializeTestedInstance.
 
 	presenter application: app.
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkAdapterTestCase >> runCaseManaged [
 	
 	GtkEngine ensureRunning. 

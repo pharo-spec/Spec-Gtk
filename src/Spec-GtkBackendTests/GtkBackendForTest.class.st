@@ -1,19 +1,20 @@
 Class {
-	#name : #GtkBackendForTest,
-	#superclass : #SpAbstractBackendForTest,
+	#name : 'GtkBackendForTest',
+	#superclass : 'SpAbstractBackendForTest',
 	#instVars : [
 		'app'
 	],
-	#category : #'Spec-GtkBackendTests'
+	#category : 'Spec-GtkBackendTests',
+	#package : 'Spec-GtkBackendTests'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkBackendForTest >> assertHasHeader: anAdapter [ 
 	
 	self assert: anAdapter innerWidget isHeadersVisible
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 GtkBackendForTest >> assertIcon: aGtkImage equals: aForm [ 
 	
 	(aForm isNil and: [ aGtkImage isNil ]) ifTrue: [ ^ self ].
@@ -24,7 +25,7 @@ GtkBackendForTest >> assertIcon: aGtkImage equals: aForm [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 GtkBackendForTest >> assertImage: aGtkImage equals: aForm [ 
 	
 	| pixbuf |
@@ -38,7 +39,7 @@ GtkBackendForTest >> assertImage: aGtkImage equals: aForm [
 
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 GtkBackendForTest >> assertList: aTreeTableAdapter displayItems: aCollection [ 
 	| iter |
 	
@@ -48,20 +49,20 @@ GtkBackendForTest >> assertList: aTreeTableAdapter displayItems: aCollection [
 		iter next ]
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 GtkBackendForTest >> assertListHeaderOf: aGtkTreeView equals: aCollection [
 
 	self assert: (aGtkTreeView columns collect: [ :c | c title ]) asArray = aCollection asArray
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBackendForTest >> canChangeFonts [
 	
 	^ false
 ]
 
-{ #category : #emulating }
+{ #category : 'emulating' }
 GtkBackendForTest >> clickFirstRowAndColumn: anAdapter [ 
 	| path |
 	path := (GtkTreePath newFromArray: #(1)) autoRelease.	
@@ -71,25 +72,25 @@ GtkBackendForTest >> clickFirstRowAndColumn: anAdapter [
 			column: w columns first ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkBackendForTest >> denyHasHeader: anAdapter [ 
 	
 	self assert: anAdapter innerWidget isHeadersVisible not
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 GtkBackendForTest >> doubleClickFirstRowAndColumn: anAdapter [ 
 	
 	self clickFirstRowAndColumn: anAdapter
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtkBackendForTest >> isGtkBackend [
 
 	^ true
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkBackendForTest >> openInstanceOf: aTest [ 
 		
 	aTest window ifNil: [ 
@@ -98,7 +99,7 @@ GtkBackendForTest >> openInstanceOf: aTest [
 
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkBackendForTest >> runTest: aBlockClosure [ 
 		
 	GtkEngine ensureRunning. 

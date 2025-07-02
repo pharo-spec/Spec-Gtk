@@ -1,16 +1,17 @@
 Class {
-	#name : #GtkListAdapterTest,
-	#superclass : #GtkAdapterTestCase,
-	#category : #'Spec-GtkBackendTests'
+	#name : 'GtkListAdapterTest',
+	#superclass : 'GtkAdapterTestCase',
+	#category : 'Spec-GtkBackendTests',
+	#package : 'Spec-GtkBackendTests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 GtkListAdapterTest >> classToTest [
 
 	^ SpListPresenter
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkListAdapterTest >> setUp [
 
 	super setUp.
@@ -21,7 +22,7 @@ GtkListAdapterTest >> setUp [
 		
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GtkListAdapterTest >> testListWithNoIcons [
 
 	self openInstance.

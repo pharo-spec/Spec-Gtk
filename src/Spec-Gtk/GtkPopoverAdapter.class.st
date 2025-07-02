@@ -151,6 +151,9 @@ GtkPopoverAdapter >> rebuild [
 GtkPopoverAdapter >> register: gtkPopover [
 
 	(GEngine current isWindowRegistered: gtkPopover) ifTrue: [ ^ self ].
+	
+	logger trace: gtkPopover.
+	
 	gtkPopover objectRef.
 	GEngine current registerWindow: gtkPopover
 ]
@@ -170,15 +173,20 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 	| timeRunning |
-
 	timeRunning := (DateAndTime now) - popupTimestamp.
+	logger trace: gtkPopover.
 	logger trace: timeRunning.
 	runLoop ifNotNil: [ runLoop done ].
 	self presenter owner takeKeyboardFocus.
 	self runInSystem: [  
 		GEngine current unregisterWindow: gtkPopover.
 		self announceClosed.
-		self widgetDo: [ :w | w objectUnref ] ]
+		self widgetDo: [ :w | 
+			| child |
+			child := w child.
+			w child: GtkWidget null.
+			child objectUnref.
+			w objectUnref ] ]
 ]
 
 { #category : 'building' }

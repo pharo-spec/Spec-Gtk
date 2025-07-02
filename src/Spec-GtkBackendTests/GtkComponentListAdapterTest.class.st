@@ -1,15 +1,16 @@
 Class {
-	#name : #GtkComponentListAdapterTest,
-	#superclass : #GtkAdapterTestCase,
-	#category : #'Spec-GtkBackendTests'
+	#name : 'GtkComponentListAdapterTest',
+	#superclass : 'GtkAdapterTestCase',
+	#category : 'Spec-GtkBackendTests',
+	#package : 'Spec-GtkBackendTests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 GtkComponentListAdapterTest >> classToTest [
 	^ SpComponentListPresenter
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkComponentListAdapterTest >> testAddingOnePresentersToAlreadyOpenedWidgetAddsOneRow [
 	self openInstance.
 	self assert: self adapter items size equals: 0.
@@ -26,7 +27,7 @@ GtkComponentListAdapterTest >> testAddingOnePresentersToAlreadyOpenedWidgetAddsO
 	self assert: self adapter items size equals: 2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkComponentListAdapterTest >> testAddingTwoPresentersToAlreadyOpenedWidgetAddsOneTwo [
 	self openInstance.
 	self assert: self adapter items size equals: 0.
@@ -40,7 +41,7 @@ GtkComponentListAdapterTest >> testAddingTwoPresentersToAlreadyOpenedWidgetAddsO
 	self assert: self adapter items size equals: 2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkComponentListAdapterTest >> testOpeningAComponentListPresenterWithOnePresenterGeneratesAWidgetWithOneRow [
 	presenter
 		addPresenter:
@@ -53,7 +54,7 @@ GtkComponentListAdapterTest >> testOpeningAComponentListPresenterWithOnePresente
 		equals: 1
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkComponentListAdapterTest >> testOpeningAComponentListPresenterWithTwoPresenterGeneratesAWidgetWithTwoRow [
 	presenter
 		addPresenter:
@@ -70,13 +71,13 @@ GtkComponentListAdapterTest >> testOpeningAComponentListPresenterWithTwoPresente
 		equals: 2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkComponentListAdapterTest >> testOpeningAnEmptyComponentListPresenterGeneratesAWidgetWithZeroRows [
 	self openInstance.
 	self assert: self adapter items isEmpty
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 GtkComponentListAdapterTest >> testPresenterStartsWithNonePresenter [
 	self assert: presenter presenters isEmpty
 ]

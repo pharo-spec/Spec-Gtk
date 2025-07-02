@@ -1,12 +1,12 @@
-Extension { #name : #GtkWindowAdapter }
+Extension { #name : 'GtkWindowAdapter' }
 
-{ #category : #'*Spec-GtkBackendTests' }
+{ #category : '*Spec-GtkBackendTests' }
 GtkWindowAdapter >> windowIsResizable [
 
 	^ self widgetDo: [ :w | w isResizable ]
 ]
 
-{ #category : #'*Spec-GtkBackendTests' }
+{ #category : '*Spec-GtkBackendTests' }
 GtkWindowAdapter >> windowSize [
 
 	^ self widgetDo: [ :w | w defaultSize ]

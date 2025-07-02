@@ -1,1 +1,1 @@
-Package { #name : #'Spec-GtkBackendTests' }
+Package { #name : 'Spec-GtkBackendTests' }
