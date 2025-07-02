@@ -35,6 +35,12 @@ GtkBaseTreeListViewAdapter >> addSpecialActions [
 ]
 
 { #category : 'expanding-collapsing' }
+GtkBaseTreeListViewAdapter >> collapseAll [
+
+	self setExpandRoots: false
+]
+
+{ #category : 'expanding-collapsing' }
 GtkBaseTreeListViewAdapter >> collapsePath: aPath [
 	
 	self setPath: aPath expand: false
@@ -85,13 +91,7 @@ GtkBaseTreeListViewAdapter >> expandPath: aPath [
 { #category : 'expanding-collapsing' }
 GtkBaseTreeListViewAdapter >> expandRoots [
 	
-	self innerWidgetDo: [ :w |
-		| treeModel |
-		treeModel := w selectionModel model.
-		self presenter roots withIndexDo: [ :each :index | 
-			| row |
-			row := self findAndExpandPath: { index - 1 } in: treeModel.
-			row ifNotNil: [ row expand: true ] ] ]
+	self setExpandRoots: true
 ]
 
 { #category : 'private - updating' }
@@ -209,6 +209,19 @@ GtkBaseTreeListViewAdapter >> selectionCompanion [
 GtkBaseTreeListViewAdapter >> setDeferredAction: aBlock [
 
 	deferredAction := aBlock
+]
+
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> setExpandRoots: aBoolean [
+	
+	self innerWidgetDo: [ :w |
+		| treeModel numberOfRoots |
+		treeModel := w selectionModel model.
+		numberOfRoots := self presenter roots size.
+		0 to: numberOfRoots - 1 do: [ :index | 
+			| row |
+			row := self findAndExpandPath: { index } in: treeModel.
+			row ifNotNil: [ row expand: aBoolean ] ] ]
 ]
 
 { #category : 'private' }
