@@ -215,13 +215,14 @@ GtkBaseTreeListViewAdapter >> setDeferredAction: aBlock [
 GtkBaseTreeListViewAdapter >> setExpandRoots: aBoolean [
 	
 	self innerWidgetDo: [ :w |
-		| treeModel numberOfRoots |
-		treeModel := w selectionModel model.
-		numberOfRoots := self presenter roots size.
-		0 to: numberOfRoots - 1 do: [ :index | 
-			| row |
-			row := self findAndExpandPath: { index } in: treeModel.
-			row ifNotNil: [ row expand: aBoolean ] ] ]
+		self mutex critical: [
+			| treeModel numberOfRoots |
+			treeModel := w selectionModel model.
+			numberOfRoots := self presenter roots size.
+			numberOfRoots - 1 to: 0 by: -1 do: [ :index | 
+				| row |
+				row := self findAndExpandPath: { index } in: treeModel.
+				row ifNotNil: [ row expand: aBoolean ] ] ] ]
 ]
 
 { #category : 'private' }

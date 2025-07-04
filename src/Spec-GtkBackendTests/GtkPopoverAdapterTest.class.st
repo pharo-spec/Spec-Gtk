@@ -43,7 +43,3 @@ GtkPopoverAdapterTest >> testPopoverIsCorrectlyDestroyedWhenClose [
 	presenter window close.
 	presenter := nil
 ]
-
-{ #category : 'tests' }
-GtkPopoverAdapterTest >> testPopoverWithListViewIsCorrectlyDestroyedWhenClose [
-]

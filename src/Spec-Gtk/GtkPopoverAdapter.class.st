@@ -178,15 +178,17 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 	logger trace: timeRunning.
 	runLoop ifNotNil: [ runLoop done ].
 	self presenter owner takeKeyboardFocus.
+	
 	self runInSystem: [  
 		GEngine current unregisterWindow: gtkPopover.
-		self announceClosed.
-		self widgetDo: [ :w | 
-			| child |
-			child := w child.
-			w child: GtkWidget null.
-			child objectUnref.
-			w objectUnref ] ]
+		self announceClosed ].
+	
+	self widgetDo: [ :w | 
+		| child |
+		child := w child.
+		w child: GtkWidget null.
+		child objectUnref.
+		w objectUnref ]
 ]
 
 { #category : 'building' }
