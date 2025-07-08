@@ -65,21 +65,7 @@ GtkPopoverAdapter >> dismiss [
 ]
 
 { #category : 'api' }
-GtkPopoverAdapter >> popup [
-
-	self popupPointingTo: nil
-]
-
-{ #category : 'api' }
-GtkPopoverAdapter >> popupModal [
-	"is not really 'modal' but it will be hidden when lost focus/clicking 
-	 outside..."
-
-	self popupModalPointingTo: nil
-]
-
-{ #category : 'api' }
-GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
+GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 
 	"runLoop := GtkContextRunLoop new."
 	logger trace.
@@ -87,7 +73,7 @@ GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 		| relativeTo |
 		"try this to not grab input (which is probably causing the thing to not 
 		 give me back control... is annoying, however)"
-		w autohide: false.
+		w autohide: false. "aBoolean"
 		self register: w.
 		relativeTo := self presenter relativeTo adapter innerWidget.
 		logger trace: relativeTo.
@@ -102,27 +88,6 @@ GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 	[ self announceOpened ] fork.
 	"GRunLoop defer: [ runLoop run ]."
 	runLoop := nil
-]
-
-{ #category : 'api' }
-GtkPopoverAdapter >> popupPointingTo: aRectangle [
-	
-	logger trace.
-	self widgetDo: [ :w |
-		| relativeTo |
-		w autohide: false.
-		self register: w.
-		relativeTo := self presenter relativeTo adapter innerWidget.
-		logger trace: relativeTo.
-		w parent: relativeTo.
-		logger trace:  aRectangle.
-		aRectangle ifNotNil: [ 
-			w setPointingTo: aRectangle asGdkRectangle ].
-		popupTimestamp := DateAndTime now.		
-		w popup.
-		self processInitializationDeferredActions ].
-	self presenter takeKeyboardFocus.
-	[ self announceOpened ] fork
 ]
 
 { #category : 'building' }

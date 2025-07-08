@@ -72,17 +72,11 @@ GtkPatchAdapter >> newTextBufferForHighlight [
 
 { #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForText: aString [
-	| textBuffer |
-
-	textBuffer := self newTextBufferForHighlight.
-	textBuffer styleScheme: self styleScheme.
-
-	aString ifNotNil: [ 
-		textBuffer text: aString ].
-
-	textBuffer highlightMatchingBrackets: true.
-
-	^ textBuffer
+	^ self newTextBufferForHighlight
+		styleScheme: self styleScheme;
+		highlightMatchingBrackets: true;
+		text: (aString ifNil: [ '' ]);
+		yourself
 ]
 
 { #category : 'private - accessing' }
@@ -99,7 +93,6 @@ GtkPatchAdapter >> setPatch: patch to: gtkTextView [
 	visitor := GtkPatchLineVisitor new 
 		visitPatch: patch;
 		yourself.	
-
 	self setText: visitor contents to: gtkTextView.
 	visitor lineMarks do: [ :eachAssoc |
 		self 
