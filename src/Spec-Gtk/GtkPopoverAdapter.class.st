@@ -84,7 +84,8 @@ GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 		popupTimestamp := DateAndTime now.
 		w popup.
 		self processInitializationDeferredActions ].
-	self presenter takeKeyboardFocus.
+	self presenter isTransferFocus 
+		ifTrue: [ self presenter takeKeyboardFocus ].
 	[ self announceOpened ] fork.
 	"GRunLoop defer: [ runLoop run ]."
 	runLoop := nil
