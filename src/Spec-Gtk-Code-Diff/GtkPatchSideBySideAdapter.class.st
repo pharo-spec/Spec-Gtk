@@ -72,7 +72,7 @@ GtkPatchSideBySideAdapter >> newSourceView [
 
 ]
 
-{ #category : 'factory' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> newWidget [
 
 	leftSourceView := self newSourceView.

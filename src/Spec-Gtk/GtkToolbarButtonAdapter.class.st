@@ -6,7 +6,7 @@ Class {
 	#tag : 'Adapter-Toolbar'
 }
 
-{ #category : 'factory' }
+{ #category : 'building' }
 GtkToolbarButtonAdapter >> newWidget [
  
 	^ super newWidget

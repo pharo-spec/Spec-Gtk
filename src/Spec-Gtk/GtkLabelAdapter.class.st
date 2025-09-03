@@ -91,7 +91,7 @@ GtkLabelAdapter >> label [
 	^ self getText
 ]
 
-{ #category : 'factory' }
+{ #category : 'building' }
 GtkLabelAdapter >> newWidget [
 
 	^ GtkLabel new

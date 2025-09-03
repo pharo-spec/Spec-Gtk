@@ -8,8 +8,8 @@ Class {
 
 { #category : 'private' }
 GtkNotebookAdapter >> addContentPage: gtkPage [
-
 	| box presenter |
+	
 	box := gtkPage content.
 	box hasChildren ifTrue: [ ^ self ].
 
@@ -23,24 +23,24 @@ GtkNotebookAdapter >> addModelTo: gtkWidget [
 
 	gtkWidget beScrollable.
 
-	self presenter pages do: [ :each | self appendPage: each to: gtkWidget ].
+	self presenter pages 
+		do: [ :each | self appendPage: each to: gtkWidget ].
 
 	"I add contents to fist page because this will shown anyway (and like this I allow
 	 the layout to act correctly)"
-	self presenter pages
-		ifNotEmpty: [ 
-			self presenter selectedPage
-				ifNil: [ self presenter selectPageIndex: 1 ].
-			self addContentPage: (gtkWidget pageWithData: self presenter selectedPage) ].
-	self presenter whenSelectedPageChangedDo: [ :page | self selectPage: page ].
+	self presenter pages ifNotEmpty: [ :pages |
+		self addContentPage: (gtkWidget pageWithData: pages first). 
+		self presenter selectedPage 
+			ifNil: [ self presenter selectPageIndex: 1 ] ].
 
 	self presenter selectedPage 
 		ifNotNil: [ :aPage | self selectPage: aPage on: gtkWidget ].
 
 	"get when page changed"
-	gtkWidget connectSwitchPage: [ :aPage | 
-		self addContentPage: aPage.
-		self backendUpdatingDo: [ self presenter selectPage: aPage data ] ].
+	gtkWidget connectSwitchPage: [ :gtkPage | 
+		self addContentPage: gtkPage.
+		self backendUpdatingDo: [
+			self presenter selectPage: gtkPage data ] ].
 
 	"get when model changed"
 	self presenter whenPagesChangedDo: [ :pages | self updatePagesWith: pages ]
@@ -109,9 +109,13 @@ GtkNotebookAdapter >> selectPage: aPage [
 
 { #category : 'private' }
 GtkNotebookAdapter >> selectPage: aPage on: aWidget [
+	| activePresenter gtkPage |
 	
 	aPage ifNil: [ ^ self ].
-	(aWidget pageWithData: aPage) select
+
+	gtkPage := aWidget pageWithData: aPage.
+	self addContentPage: gtkPage.
+	gtkPage select
 ]
 
 { #category : 'updating' }
@@ -137,8 +141,8 @@ GtkNotebookAdapter >> updatePageContent: aPage [
 	self widgetDo: [ :w | | widgetPage |
 		widgetPage := w pageWithData: aPage. 
 		self removePageContent: widgetPage.
-		self model selectedPage = aPage ifTrue: [ 
-			self addContentPage: widgetPage ] ]
+		self model selectedPage = aPage 
+			ifTrue: [ self addContentPage: widgetPage ] ]
 ]
 
 { #category : 'updating' }

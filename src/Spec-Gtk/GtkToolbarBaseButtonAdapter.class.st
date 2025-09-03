@@ -54,7 +54,7 @@ GtkToolbarBaseButtonAdapter >> labelAndIcon [
 	^ box
 ]
 
-{ #category : 'factory' }
+{ #category : 'building' }
 GtkToolbarBaseButtonAdapter >> newWidget [ 
 	
 	^ GtkButton new

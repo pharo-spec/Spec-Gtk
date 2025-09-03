@@ -52,7 +52,7 @@ GtkLinkAdapter >> labelAndIcon [
 	^ box
 ]
 
-{ #category : 'factory' }
+{ #category : 'building' }
 GtkLinkAdapter >> newWidget [ 
 	
 	^ GtkLinkButton newWithUri: ''

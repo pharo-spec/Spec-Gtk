@@ -26,7 +26,7 @@ GtkButtonAdapter >> clicked [
 	self deprecated: #Gtk4
 ]
 
-{ #category : 'factory' }
+{ #category : 'building' }
 GtkButtonAdapter >> newWidget [ 
 	
 	^ self widgetClass newLabel: self getLabelText 
