@@ -146,6 +146,12 @@ GtkListViewAdapterBaseFactory >> storePresenter: aPresenter [
 	^ aPresenter
 ]
 
+{ #category : 'private' }
+GtkListViewAdapterBaseFactory >> storedPresenters [
+
+	^ storedObjects values
+]
+
 { #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> teardown: item [
 

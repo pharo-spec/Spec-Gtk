@@ -149,6 +149,23 @@ GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
 			flags: GtkListScrollFlags GTK_LIST_SCROLL_FOCUS ]
 ]
 
+{ #category : 'api - selection' }
+GtkListViewAdapter >> selectedRowPresenter [
+	"answers the selected presenter. 
+	 This will just work if the presenters are model based presenter (so I can get them). "
+	| item |
+
+	self flag: #TODO. "Maybe I need to generalize this using a presenter property to 
+	weak-keep the calling object?"
+
+	item := self presenter selection selectedItem.
+	item ifNil: [ ^ nil ].
+	
+	^ self innerWidget factory storedPresenters
+		detect: [ :each | each model = item ]
+		ifNone: [ nil ]
+]
+
 { #category : 'private' }
 GtkListViewAdapter >> setDeferredAction: aBlock [
 
