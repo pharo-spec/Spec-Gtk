@@ -37,3 +37,9 @@ SpLabelPresenter >> isWrap [
 	
 	^ false
 ]
+
+{ #category : '*Spec-Gtk' }
+SpLabelPresenter >> useMarkup [
+
+	self withAdapterPerformOrDefer:  [ :anAdapter | anAdapter useMarkup ]
+]

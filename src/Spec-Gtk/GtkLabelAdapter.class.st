@@ -1,6 +1,9 @@
 Class {
 	#name : 'GtkLabelAdapter',
 	#superclass : 'GtkAdapter',
+	#instVars : [
+		'useMarkup'
+	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
@@ -79,6 +82,13 @@ GtkLabelAdapter >> getText [
 		localizedForPresenter: self presenter
 ]
 
+{ #category : 'initialization' }
+GtkLabelAdapter >> initialize [ 
+
+	useMarkup := false.
+	super initialize
+]
+
 { #category : 'testing' }
 GtkLabelAdapter >> isWrap [
 
@@ -102,6 +112,10 @@ GtkLabelAdapter >> setLabelTo: gtkWidget [
 	| label |
 	
 	label := self getText.
+	useMarkup ifTrue: [ 
+		gtkWidget markup: label.
+		^ self ].
+	
 	gtkWidget label: label.
 	self 
 		applyDecorationsTo: gtkWidget 
@@ -113,4 +127,10 @@ GtkLabelAdapter >> updateLabel [
 
 	self innerWidgetDo: [ :w | 
 		self setLabelTo: w ]
+]
+
+{ #category : 'accessing' }
+GtkLabelAdapter >> useMarkup [
+
+	useMarkup := true
 ]
