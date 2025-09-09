@@ -122,7 +122,9 @@ GtkColumnViewAdapter >> newHeaderFactory [
 { #category : 'private - factory' }
 GtkColumnViewAdapter >> newSelectionModel [
 	| selectionModel |
+	
 	logger trace.
+	
 	selectionModel := self selectionCompanion newModel: "(GtkSortListModel newModel:" self newStore")".
 	selectionModel connectSelectionChanged: [ :position :numItems |
 		self updatePresenterSelection: position numItems: numItems ].
