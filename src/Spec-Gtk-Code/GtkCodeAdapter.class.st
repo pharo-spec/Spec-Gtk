@@ -362,9 +362,9 @@ GtkCodeAdapter >> scrollToIter: iter in: gtkWidget [
 	gtkWidget 
 		scrollToIter: iter 
 		withinMargin: 0.25
-		useAlign: false 
-		xalign: 0.0 
-		yalign: 0.0 
+		useAlign: true 
+		xalign: 0.5
+		yalign: 0.5 
 ]
 
 { #category : 'api - search' }
