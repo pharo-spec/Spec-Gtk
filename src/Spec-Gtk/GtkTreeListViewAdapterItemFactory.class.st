@@ -51,6 +51,12 @@ GtkTreeListViewAdapterItemFactory >> setup: listItem [
 ]
 
 { #category : 'accessing' }
+GtkTreeListViewAdapterItemFactory >> store [
+
+	^ store
+]
+
+{ #category : 'accessing' }
 GtkTreeListViewAdapterItemFactory >> store: aRootStore [
 
 	store := aRootStore.

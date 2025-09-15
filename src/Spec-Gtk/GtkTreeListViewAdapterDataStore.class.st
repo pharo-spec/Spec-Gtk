@@ -55,3 +55,10 @@ GtkTreeListViewAdapterDataStore >> pushStore: aStore [
 		presenter: self presenter;
 		yourself
 ]
+
+{ #category : 'private' }
+GtkTreeListViewAdapterDataStore >> storedPresenters [
+
+	stores ifNil: [ ^ #() ].
+	^ stores flatCollect: [ :each | each storedPresenters ]
+]

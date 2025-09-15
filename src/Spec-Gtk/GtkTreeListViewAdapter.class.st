@@ -116,6 +116,23 @@ GtkTreeListViewAdapter >> scrollToSelection [
 	"not needed, in gtk it will always scroll to selection"
 ]
 
+{ #category : 'api - selection' }
+GtkTreeListViewAdapter >> selectedRowPresenter [
+	"answers the selected presenter. 
+	 This will just work if the presenters are model based presenter (so I can get them). "
+	| item |
+
+	self flag: #TODO. "Maybe I need to generalize this using a presenter property to 
+	weak-keep the calling object?"
+
+	item := self presenter selection selectedItem.
+	item ifNil: [ ^ nil ].
+	
+	^ self innerWidget factory storedPresenters
+		detect: [ :each | each isPresenter and: [ each model = item ] ]
+		ifNone: [ nil ]
+]
+
 { #category : 'building' }
 GtkTreeListViewAdapter >> widgetClass [
 
