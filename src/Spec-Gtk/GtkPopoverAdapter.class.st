@@ -152,8 +152,8 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 	self widgetDo: [ :w | 
 		| child |
 		child := w child.
-		w child: GtkWidget null.
-		child objectUnref.
+		child withObjectReferenceDo: [
+			w child: GtkWidget null ].
 		w objectUnref ]
 ]
 
