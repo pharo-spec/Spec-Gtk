@@ -119,9 +119,32 @@ GtkTextAdapter >> pasteText [
 ]
 
 { #category : 'private' }
+GtkTextAdapter >> scrollToLine: aNumberZeroBased [
+
+	[ 
+		25 milliSeconds wait.
+		self innerWidgetDo: [ :w |
+			self mutex critical: [
+				| iter |
+				iter := w textBuffer iterAtLine: aNumberZeroBased.
+				self scrollToIter: iter in: w.
+				w textBuffer placeCursor: iter. 
+				self innerWidget placeCursorOnScreen
+					ifTrue: [ self scrollToLine: aNumberZeroBased ] ] ]
+	] fork
+]
+
+{ #category : 'private' }
 GtkTextAdapter >> setEditable: aBoolean [ 
 
 	self innerWidgetDo: [ :w | w editable: aBoolean ]
+]
+
+{ #category : 'initialization' }
+GtkTextAdapter >> setScrollValue: aPoint [
+
+	"I am ignoring x value for the moment"
+	self scrollToLine: aPoint y	
 ]
 
 { #category : 'building' }
