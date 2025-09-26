@@ -27,12 +27,18 @@ GtkListViewAdapterBaseFactory class >> newPresenter: aPresenter [
 
 { #category : 'accessing' }
 GtkListViewAdapterBaseFactory >> bind: listItem [
+	| item |
 
 	logger trace: listItem.
 	logger trace: listItem position.
+	
+	[ item := self itemAt: (listItem position + 1) ]
+	on: Error 
+	fork: [ :e | e pass ].
+	
 	self 
 		bind: listItem 
-		to: (self itemAt: (listItem position + 1))
+		to: item
 ]
 
 { #category : 'accessing' }
