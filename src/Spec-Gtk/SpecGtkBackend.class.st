@@ -46,7 +46,7 @@ SpecGtkBackend >> defer: aBlock [
 { #category : 'accessing' }
 SpecGtkBackend >> dropListClass [
 
-	^ SpDropDownPresenter
+	^ SpEasyDropDownPresenter
 ]
 
 { #category : 'accessing' }
