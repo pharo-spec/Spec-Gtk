@@ -119,18 +119,27 @@ GtkTextAdapter >> pasteText [
 ]
 
 { #category : 'private' }
+GtkTextAdapter >> performScrollToLine: aNumberZeroBased [
+
+	self innerWidgetDo: [ :w |
+		self mutex critical: [
+			| iter |
+			iter := w textBuffer iterAtLine: aNumberZeroBased.
+			self scrollToIter: iter in: w.
+			w textBuffer placeCursor: iter. 
+			self innerWidget placeCursorOnScreen
+				ifTrue: [ self scrollToLine: aNumberZeroBased ] ] ]
+]
+
+{ #category : 'private' }
 GtkTextAdapter >> scrollToLine: aNumberZeroBased [
 
 	[ 
-		25 milliSeconds wait.
-		self innerWidgetDo: [ :w |
-			self mutex critical: [
-				| iter |
-				iter := w textBuffer iterAtLine: aNumberZeroBased.
-				self scrollToIter: iter in: w.
-				w textBuffer placeCursor: iter. 
-				self innerWidget placeCursorOnScreen
-					ifTrue: [ self scrollToLine: aNumberZeroBased ] ] ]
+		50 milliSeconds wait.
+		"I need to check this is running because system would be stop 
+		 while waiting (yes, that happens)"
+		GEngine isRunning 
+			ifTrue: [ self performScrollToLine: aNumberZeroBased ]
 	] fork
 ]
 
