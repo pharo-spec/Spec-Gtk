@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : 'private' }
+GtkTextStyleVisitor >> addStyle: style forNode: aNode [ 
+	
+	self addStyle: style from: aNode start to: aNode end
+]
+
+{ #category : 'private' }
 GtkTextStyleVisitor >> addStyle: style from: start to: end [ 
 	
 	tags add: (GtkTextStyleTag newName: style from: start to: end)
