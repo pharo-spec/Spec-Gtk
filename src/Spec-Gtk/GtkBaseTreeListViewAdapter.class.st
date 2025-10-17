@@ -71,11 +71,12 @@ GtkBaseTreeListViewAdapter >> expandAll [
 
 { #category : 'private' }
 GtkBaseTreeListViewAdapter >> expandAll: aCollection basePath: aPath in: aModel [
+
 	self critical: [
 		aCollection withIndexDo: [ :each :index |
 			| path |
 			path := aPath copyWith: index - 1.
-			self findAndExpandPath: path in: aModel.
+			self findAndExpandPath: path in: aModel thenDo: [ :row | "do nothing" ].
 			self 
 				expandAll: (self presenter childrenFor: each) 
 				basePath: path 
@@ -95,18 +96,23 @@ GtkBaseTreeListViewAdapter >> expandRoots [
 ]
 
 { #category : 'private - updating' }
-GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel [
+GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel thenDo: aBlock [
 	
 	aPath ifEmpty: [ ^ nil ].
 
-	^ aModel
+	aModel
 		withRowAt: aPath first 
 		do: [ :row |
 			aPath size = 1 
 				ifFalse: [ row expand: true ].
 			aPath allButFirst 
-				ifNotEmpty: [ :nextPath | self findAndExpandPath: nextPath in: row ]
-				ifEmpty: [ row ] ]
+				ifNotEmpty: [ :nextPath | 
+					self 
+						findAndExpandPath: nextPath 
+						in: row
+						thenDo: aBlock ]
+				ifEmpty: [ 
+					aBlock value: row ] ]
 ]
 
 { #category : 'testing' }
@@ -214,15 +220,20 @@ GtkBaseTreeListViewAdapter >> setDeferredAction: aBlock [
 { #category : 'private' }
 GtkBaseTreeListViewAdapter >> setExpandRoots: aBoolean [
 	
+	logger trace: aBoolean.
+	
 	self innerWidgetDo: [ :w |
 		self mutex critical: [
 			| treeModel numberOfRoots |
 			treeModel := w selectionModel model.
 			numberOfRoots := self presenter roots size.
-			numberOfRoots - 1 to: 0 by: -1 do: [ :index | 
-				| row |
-				row := self findAndExpandPath: { index } in: treeModel.
-				row ifNotNil: [ row expand: aBoolean ] ] ] ]
+			0 to: (numberOfRoots - 1) by: 1 do: [ :index | 
+				self 
+					withRootIndex: index 
+					in: treeModel 
+					do: [ :row |
+						logger trace: index.
+						row expand: aBoolean ] ] ] ]
 ]
 
 { #category : 'private' }
@@ -233,12 +244,12 @@ GtkBaseTreeListViewAdapter >> setPath: aPath expand: aBoolean [
 	path := aPath collect: [ :each | each - 1 ].
 	self innerWidgetDo: [ :w |
 		self critical: [
-			| row |
-			row := self 
+			self 
 				findAndExpandPath: path 
-				in: w selectionModel model.
-			row ifNotNil: [ 
-				row expand: aBoolean ] ] ]
+				in: w selectionModel model
+				thenDo: [ :row | 
+					row isNullOrNil ifFalse: [ 
+						row expand: aBoolean ] ] ] ]
 ]
 
 { #category : 'private - updating' }
@@ -276,15 +287,18 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromPresenter: oldPaths [
 
 	self innerWidgetDo: [ :w | 
 		self withCycleDetectionOnBackendDo: [ 
-			| treeModel lastRow |
+			| treeModel |
 			treeModel := w selectionModel model.
 			paths do: [ :path |
-				lastRow := self findAndExpandPath: path in: treeModel.
-				lastRow ifNotNil: [ 
-					w selectionModel 
-						selectItem: lastRow position
-						unselectRest: false ] ] ] ].
-	
+				self 
+					findAndExpandPath: path 
+					in: treeModel
+					thenDo: [ :lastRow |
+						lastRow isNullOrNil ifFalse: [ 
+							w selectionModel 
+								selectItem: lastRow position
+								unselectRest: false ] ] ] ] ].
+
 	^ paths
 ]
 
@@ -310,6 +324,7 @@ GtkBaseTreeListViewAdapter >> updateRoots [
 GtkBaseTreeListViewAdapter >> updateSelectionFromPresenter [
 
 	self withCycleDetectionOnBackendDo: [ 
+		self isAlive ifFalse: [ ^ self ].
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 
@@ -346,14 +361,28 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 
 	self innerWidgetDo: [ :w | 
 		self withCycleDetectionOnBackendDo: [  
-			| treeModel row |
+			| treeModel |
 			treeModel := w selectionModel model.
-			row := self findAndExpandPath: path in: treeModel.
-			row ifNotNil: [ 
-				w 
-					scrollToPosition: row position - 1
-					flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
-				"w selectionModel select: row position" ] ] ].
+			self 
+				findAndExpandPath: path 
+				in: treeModel
+				thenDo: [ :row |
+					row isNullOrNil ifFalse: [ 
+					w 
+						scrollToPosition: row position - 1
+						flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
+					"w selectionModel select: row position" ] ] ] ].
 	
 	^ path
+]
+
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> withRootIndex: index in: aModel do: aBlock [
+	"just traverses the roots. Utility for setExpandRoots:" 
+	
+	^ aModel
+		withRowAt: index 
+		do: [ :row | 
+			row isNullOrNil 
+				ifFalse: [ aBlock value: row ] ]
 ]
