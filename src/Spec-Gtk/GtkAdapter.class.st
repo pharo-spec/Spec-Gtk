@@ -297,7 +297,10 @@ GtkAdapter >> innerWidgetDo: aBlock [
 
 	self hasWidget ifFalse: [ ^ nil ].
 	^ GRunLoop defer: [ 
-		aBlock value: self innerWidget ]
+		[ aBlock value: self innerWidget ]
+		on: Error 
+		fork: [ :e | e pass ]
+		return: [ nil ] ]
 ]
 
 { #category : 'event installing' }
@@ -532,7 +535,11 @@ GtkAdapter >> widgetClass [
 GtkAdapter >> widgetDo: aBlock [ 
 
 	self hasWidget ifFalse: [ ^ nil ].
-	^ GRunLoop defer: [ aBlock value: widget ]
+	^ GRunLoop defer: [
+		[ aBlock value: widget ]
+		on: Error 
+		fork: [ :e | e pass ]
+		return: [ nil ] ]
 ]
 
 { #category : 'private - cycle detection' }
