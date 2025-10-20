@@ -16,7 +16,7 @@ Class {
 { #category : 'private' }
 GtkTextStyleVisitor >> addStyle: style forNode: aNode [ 
 	
-	self addStyle: style from: aNode start to: aNode end
+	self addStyle: style from: aNode start to: aNode stop
 ]
 
 { #category : 'private' }
@@ -139,18 +139,7 @@ GtkTextStyleVisitor >> reset [
 { #category : 'private' }
 GtkTextStyleVisitor >> resolveStyleFor: aVariableNode [
 
-	aVariableNode binding 						ifNil:  [ ^ #default].
-	aVariableNode isArgumentVariable 			ifTrue: [ ^ #methodArg].
-	aVariableNode isTempVariable 				ifTrue: [ ^ #tempVar].
-	aVariableNode isGlobalVariable 			ifTrue: [ ^ #globalVar].
-	"here we should add support for #classVar"
-	aVariableNode isClassVariable 				ifTrue: [ ^ #globalVar].
-	aVariableNode isInstanceVariable 			ifTrue: [ ^ #instVar]. 
-	"for now we use temp variable here, we could now color them with their own color"
-	aVariableNode isWorkspaceVariable 		ifTrue: [ ^ #tempVar]. 
-	aVariableNode hasIncompleteIdentifier 	ifTrue: [ ^ #incompleteIdentifier ].
-
-	^ #invalid
+	^ aVariableNode styleName
 ]
 
 { #category : 'styling' }
