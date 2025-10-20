@@ -72,8 +72,29 @@ GtkListViewAdapter >> doInitializationDeferredActions [
 GtkListViewAdapter >> elementAt: index [
 	| item |
 
-	item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ].
+	item := self innerWidgetDo: [ :w | 
+		[ 
+			self isAlive 
+				ifTrue: [ w selectionModel model itemAt: index ]
+				ifFalse: [ nil ] ] 
+		on: Error 
+		fork: [ :e | e pass ]
+		return: [ nil ] ].
+
 	^ item ifNil: [ self presenter items at: index ]
+]
+
+{ #category : 'testing' }
+GtkListViewAdapter >> isAlive [ 
+	"if there is no factory around, means component has been destroyed. 
+	 NOTE: I am using a trick that somehow violates demeters law: in spec-gtk factories 
+	 are registered to know when they are destroyed in gtk (to avoid crashed), and its 
+	 handle is reset when this happens. So, if I have a factory without a handle... 
+	 then the list is not there anymore.
+	 This is just a trick to avoid rwgistering *also the list* to the finalizeOnGtk 
+	 mechanism... it may be ugly, but it avoids too many registrations :P"
+
+	^ self innerWidget factory isNullOrNil not
 ]
 
 { #category : 'private - factory' }
@@ -176,6 +197,7 @@ GtkListViewAdapter >> setDeferredAction: aBlock [
 GtkListViewAdapter >> updateSelectionFromPresenter [
 
 	self withCycleDetectionOnBackendDo: [ 
+		self isAlive ifFalse: [ ^ self ].	
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 

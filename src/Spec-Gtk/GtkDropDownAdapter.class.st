@@ -63,6 +63,13 @@ GtkDropDownAdapter >> expressionFor: gtkDropDown atHandle: handle [
 	^ ExternalAddress null
 ]
 
+{ #category : 'testing' }
+GtkDropDownAdapter >> isAlive [
+	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
+
+	^ self innerWidget factory isNullOrNil not
+]
+
 { #category : 'private - factory' }
 GtkDropDownAdapter >> newItemFactory [
 
@@ -115,6 +122,9 @@ GtkDropDownAdapter >> updateSelectionFromPresenter [
 
 	self withCycleDetectionOnBackendDo: [ 
 		| index |
+		
+		self isAlive ifFalse: [ ^ self ].
+
 		index := self presenter selection selectedIndex - 1. 
 		self innerWidgetDo: [ :w |
 			index >= 0 

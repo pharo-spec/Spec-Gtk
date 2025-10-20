@@ -69,6 +69,13 @@ GtkColumnViewAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
+{ #category : 'testing' }
+GtkColumnViewAdapter >> isAlive [
+	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
+
+	^ self innerWidget columns anyOne factory isNullOrNil not
+]
+
 { #category : 'private - factory' }
 GtkColumnViewAdapter >> newColumnFactory: aColumn [
 

@@ -54,6 +54,13 @@ configureScrolling
 	self flag: #TODO. "see how this would work here"
 ]
 
+{ #category : 'testing' }
+GtkTreeColumnViewAdapter >> isAlive [
+	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
+
+	^ self innerWidget columns anyOne factory isNullOrNil not
+]
+
 { #category : 'private - factory' }
 GtkTreeColumnViewAdapter >> newColumnFactory: aColumn index: index [
 	| factoryClass |

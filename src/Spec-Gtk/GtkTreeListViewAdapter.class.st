@@ -57,6 +57,12 @@ GtkTreeListViewAdapter >> elementAt: index [
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
+{ #category : 'testing' }
+GtkTreeListViewAdapter >> isAlive [
+	
+	^ self innerWidget factory isNullOrNil not
+]
+
 { #category : 'private - factory' }
 GtkTreeListViewAdapter >> newHeaderFactory [
 

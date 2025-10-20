@@ -59,8 +59,9 @@ GtkListViewAdapterBaseFactory >> finalize [
 { #category : 'finalization' }
 GtkListViewAdapterBaseFactory >> finalizedOnGtk [
 
-	self freeStoredObjects.	
-	super finalizedOnGtk
+	self freeStoredObjects.
+	super finalizedOnGtk.
+	handle := nil
 ]
 
 { #category : 'finalization' }

@@ -41,6 +41,12 @@ GtkBaseListViewAdapter >> critical: aBlock [
 	^ self mutex critical: aBlock
 ]
 
+{ #category : 'testing' }
+GtkBaseListViewAdapter >> isAlive [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'private' }
 GtkBaseListViewAdapter >> mutex [
 
@@ -92,7 +98,8 @@ GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: pathsArray [
 GtkBaseListViewAdapter >> updatePresenterSelection: position numItems: numItems [
 	
 	self backendUpdatingDo: [
-		self selectionCompanion updateSelectionFromGtk ]
+		self critical: [
+			self selectionCompanion updateSelectionFromGtk ] ]
 ]
 
 { #category : 'private - updating' }

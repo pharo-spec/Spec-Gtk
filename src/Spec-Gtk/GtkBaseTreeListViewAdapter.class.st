@@ -116,6 +116,12 @@ GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel thenDo: aBlock
 ]
 
 { #category : 'testing' }
+GtkBaseTreeListViewAdapter >> isAlive [
+
+	self subclassResponsibility
+]
+
+{ #category : 'testing' }
 GtkBaseTreeListViewAdapter >> isExpanded: aPath [
 	| path expanded |
 	
