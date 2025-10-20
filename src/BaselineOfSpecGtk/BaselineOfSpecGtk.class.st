@@ -50,7 +50,7 @@ BaselineOfSpecGtk >> gtk: spec [
 
 	spec baseline: 'GtkCore' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings/src:gtk4';
+			repository: 'github://pharo-spec/gtk-bindings/src';
 			className: 'BaselineOfGtk';			
 			loads: 'Core' ]
 ]
@@ -60,7 +60,7 @@ BaselineOfSpecGtk >> gtkCode: spec [
 
 	spec baseline: 'GtkCode' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings/src:gtk4';
+			repository: 'github://pharo-spec/gtk-bindings/src';
 			className: 'BaselineOfGtk';
 			loads: 'Code' ]
 ]
@@ -70,7 +70,7 @@ BaselineOfSpecGtk >> gtkMorphic: spec [
 
 	spec baseline: 'GtkMorphic' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings/src:gtk4';
+			repository: 'github://pharo-spec/gtk-bindings/src';
 			className: 'BaselineOfGtk';
 			loads: 'Morphic' ]
 ]
