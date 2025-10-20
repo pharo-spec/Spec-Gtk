@@ -109,17 +109,21 @@ GtkCodeAdapter >> applyStyleTo: textBuffer [
 	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
 	self presenter text isEmptyOrNil ifTrue: [ ^ self ].
 	textBuffer removeAllTags.
-	(self isScripting or: [ self behavior isNil ])
-		ifTrue: [
-			self 
-				setExpressionText: textBuffer text 
-				class: self behavior 
-				toBuffer: textBuffer  ]
-		ifFalse: [ 
-			self 
-				setMethodText: textBuffer text 
-				class: self behavior 
-				toBuffer: textBuffer ]
+	
+	[ 
+		(self isScripting or: [ self behavior isNil ])
+			ifTrue: [
+				self 
+					setExpressionText: textBuffer text 
+					class: self behavior 
+					toBuffer: textBuffer  ]
+			ifFalse: [ 
+				self 
+					setMethodText: textBuffer text 
+					class: self behavior 
+					toBuffer: textBuffer ] ]
+	on: Error 
+	fork: [ :e | e pass ]
 ]
 
 { #category : 'api - shout' }
