@@ -219,6 +219,7 @@ GtkColumnViewAdapter >> updateResizableColumnsTo: aBoolean [
 GtkColumnViewAdapter >> updateSelectionFromPresenter [
 
 	self withCycleDetectionOnBackendDo: [ 
+		self isAlive ifFalse: [ ^ self ].
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 
