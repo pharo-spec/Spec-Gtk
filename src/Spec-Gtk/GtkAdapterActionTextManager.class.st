@@ -7,6 +7,9 @@ A manager for texts, they have some differences with the standar manager:
 Class {
 	#name : 'GtkAdapterActionTextManager',
 	#superclass : 'GtkAdapterActionManager',
+	#instVars : [
+		'filters'
+	],
 	#category : 'Spec-Gtk-Actions',
 	#package : 'Spec-Gtk',
 	#tag : 'Actions'
@@ -19,16 +22,39 @@ GtkAdapterActionTextManager >> actions [
 ]
 
 { #category : 'accessing' }
+GtkAdapterActionTextManager >> filters [
+
+	^  filters ifNil: [ #() ]
+]
+
+{ #category : 'accessing' }
+GtkAdapterActionTextManager >> filters: aCollection [
+
+	filters := aCollection
+]
+
+{ #category : 'accessing' }
 GtkAdapterActionTextManager >> hasContextMenu [
 
 	^ true
 ]
 
 { #category : 'private - actions' }
+GtkAdapterActionTextManager >> installActionGroupShortcuts: anActionGroup on: gtkWidget [ 
+
+	GtkActionShortcutInstaller new
+		widget: gtkWidget;
+		filters: self filters;
+		visit: anActionGroup
+]
+
+{ #category : 'private - actions' }
 GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
 
 	hasContextMenu := true.	
-	gtkWidget extraMenu: (GtkActionMenuBuilder new visit: self actions)
+	gtkWidget extraMenu: (GtkActionMenuBuilder new 
+		filters: self filters;
+		visit: self actions)
 ]
 
 { #category : 'actions' }

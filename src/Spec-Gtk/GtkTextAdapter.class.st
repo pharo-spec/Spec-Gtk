@@ -57,7 +57,7 @@ GtkTextAdapter >> addTextBufferTo: gtkTextView [
 		self updatePresenterText: gtkTextView text ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'api' }
 GtkTextAdapter >> appendText: aString [
 
 	self innerWidgetDo: [ :w |
@@ -95,7 +95,7 @@ GtkTextAdapter >> cutText [
 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'api' }
 GtkTextAdapter >> enabled: aBoolean [
 
 	self innerWidgetDo: [ :w |

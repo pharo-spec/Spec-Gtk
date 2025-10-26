@@ -6,7 +6,8 @@ Class {
 	#superclass : 'GtkActionVisitor',
 	#instVars : [
 		'menu',
-		'root'
+		'root',
+		'filters'
 	],
 	#category : 'Spec-Gtk-Actions',
 	#package : 'Spec-Gtk',
@@ -43,6 +44,25 @@ GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
 ]
 
 { #category : 'accessing' }
+GtkActionMenuBuilder >> filters: aCollection [
+
+	filters := aCollection
+]
+
+{ #category : 'initialization' }
+GtkActionMenuBuilder >> initialize [
+
+	super initialize. 
+	filters := #()
+]
+
+{ #category : 'private - testing' }
+GtkActionMenuBuilder >> isFiltered: aCommand [
+
+	^ filters includes: aCommand name
+]
+
+{ #category : 'accessing' }
 GtkActionMenuBuilder >> root [
 
 	^ root
@@ -60,6 +80,8 @@ GtkActionMenuBuilder >> visit: anObject [
 GtkActionMenuBuilder >> visitCommand: aCommand [
 	
 	aCommand isVisible ifFalse: [ ^ self ].
+	(self isFiltered: aCommand) ifTrue: [ ^ self ].
+
 	menu 
 		appendLabel: aCommand dynamicName 
 		actionName: (self actionNameFor: aCommand)

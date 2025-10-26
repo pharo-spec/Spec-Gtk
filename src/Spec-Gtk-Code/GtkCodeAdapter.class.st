@@ -173,6 +173,13 @@ GtkCodeAdapter >> doItReceiver [
 	^ self presenter doItReceiver
 ]
 
+{ #category : 'private' }
+GtkCodeAdapter >> filteredCommands [
+	"a list of commands that should be filtered because the sourceview component already provides it."
+	
+	^ #('Copy' 'Cut' 'Paste' 'Paste...')
+]
+
 { #category : 'building' }
 GtkCodeAdapter >> handleSmartCharacters: event [
 	| char selection |
@@ -270,8 +277,10 @@ GtkCodeAdapter >> isScripting [
 
 { #category : 'building' }
 GtkCodeAdapter >> newActionManager [
-
-	^ GtkAdapterActionCodeManager on: self
+	
+	^ (GtkAdapterActionCodeManager on: self)
+		filters: self filteredCommands;
+		yourself
 ]
 
 { #category : 'private - factory' }
