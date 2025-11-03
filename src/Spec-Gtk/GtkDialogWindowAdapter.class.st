@@ -1,6 +1,6 @@
 Class {
 	#name : 'GtkDialogWindowAdapter',
-	#superclass : 'GtkWindowAdapter',
+	#superclass : 'GtkBaseWindowAdapter',
 	#instVars : [
 		'runLoop',
 		'buttonBox'
@@ -12,22 +12,17 @@ Class {
 
 { #category : 'private' }
 GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
-	| containerBox |
+	| containerBox responseAreaPresenter |
 	
 	containerBox := GtkBox newVertical.
-	containerBox spacing: 2.
 	containerBox append: gtkBox.
 	
-	buttonBox := GtkBox newHorizontal.
-	buttonBox spacing: 0.
-	buttonBox addClass: 'action_area'.
+	responseAreaPresenter := self presenter instantiate: SpResponseAreaPresenter.
 	self presenter buttons do: [ :buttonPresenter |
-		buttonPresenter = self presenter defaultButton
-			ifTrue: [ buttonPresenter addStyle: 'suggested-action' ]. 
-		buttonBox append: (buttonPresenter build
-			hExpand: true;
-			yourself) ].
-	buttonBox vExpand: false.
+		(buttonPresenter = self presenter defaultButton
+			ifTrue: [ responseAreaPresenter makeSuggested: buttonPresenter ]).
+		responseAreaPresenter add: buttonPresenter ]. 
+	buttonBox := responseAreaPresenter build.
 	buttonBox visible: self presenter hasButtonDecorations.
 	containerBox append: buttonBox.
 	
