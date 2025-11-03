@@ -97,8 +97,8 @@ GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: pathsArray [
 { #category : 'private - updating' }
 GtkBaseListViewAdapter >> updatePresenterSelection: position numItems: numItems [
 	
-	self backendUpdatingDo: [
-		self critical: [
+	self critical: [
+		self backendUpdatingDo: [
 			self selectionCompanion updateSelectionFromGtk ] ]
 ]
 

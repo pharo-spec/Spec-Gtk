@@ -81,12 +81,13 @@ GtkComponentListAdapter >> doTakeKeyboardFocus: gtkListBox [
 { #category : 'accessing' }
 GtkComponentListAdapter >> elementAt: index [
 	| item |
-
-	item := self innerWidgetDo: [ :w | 
-		(w children 
-			at: index 
-			ifAbsent: [ nil ])
-			ifNotNil: [ :aRow | aRow data ] ].
+	item := nil.
+	self withCycleDetectionOnBackendDo: [
+		item := self innerWidgetDo: [ :w | 
+			(w children 
+				at: index 
+				ifAbsent: [ nil ])
+				ifNotNil: [ :aRow | aRow data ] ] ].
 	^ item ifNil: [ self presenter items at: index ]
 ]
 

@@ -64,8 +64,9 @@ GtkColumnViewAdapter >> doInitializationDeferredActions [
 { #category : 'accessing' }
 GtkColumnViewAdapter >> elementAt: index [
 	| item |
-
-	item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ].
+	item := nil.
+	self withCycleDetectionOnBackendDo: [
+		item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ] ].
 	^ item ifNil: [ self presenter items at: index ]
 ]
 

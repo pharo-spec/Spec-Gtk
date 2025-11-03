@@ -72,14 +72,16 @@ GtkListViewAdapter >> doInitializationDeferredActions [
 GtkListViewAdapter >> elementAt: index [
 	| item |
 
-	item := self innerWidgetDo: [ :w | 
-		[ 
-			self isAlive 
-				ifTrue: [ w selectionModel model itemAt: index ]
-				ifFalse: [ nil ] ] 
-		on: Error 
-		fork: [ :e | e pass ]
-		return: [ nil ] ].
+	item := nil.
+	self withCycleDetectionOnBackendDo: [
+		item := self innerWidgetDo: [ :w | 
+			[ 
+				self isAlive 
+					ifTrue: [ w selectionModel model itemAt: index ]
+					ifFalse: [ nil ] ] 
+			on: Error 
+			fork: [ :e | e pass ]
+			return: [ nil ] ] ].
 
 	^ item ifNil: [ self presenter items at: index ]
 ]
