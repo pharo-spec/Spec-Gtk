@@ -58,12 +58,15 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		autoIndent: true;
 		indentOnTab: true;
 		tabWidth: 4.
+		
 
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
 	
-	self presenter whenLineNumbersChangedDo: [ :hasLineNumbers |
-		gtkSourceView showLineNumbers: hasLineNumbers ]
+	self presenter 
+		whenSyntaxHighlightThemeChangedDo: [ :theme | self updateSyntaxHighlightTheme: theme ];
+		whenStyleSchemeChangedDo: [ :scheme | self updateStyleScheme: scheme ];
+		whenLineNumbersChangedDo: [ :hasLineNumbers | gtkSourceView showLineNumbers: hasLineNumbers ]	
 ]
 
 { #category : 'building' }
@@ -109,17 +112,21 @@ GtkCodeAdapter >> applyStyleTo: textBuffer [
 	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
 	self presenter text isEmptyOrNil ifTrue: [ ^ self ].
 	textBuffer removeAllTags.
-	(self isScripting or: [ self behavior isNil ])
-		ifTrue: [
-			self 
-				setExpressionText: textBuffer text 
-				class: self behavior 
-				toBuffer: textBuffer  ]
-		ifFalse: [ 
-			self 
-				setMethodText: textBuffer text 
-				class: self behavior 
-				toBuffer: textBuffer ]
+	
+	[ 
+		(self isScripting or: [ self behavior isNil ])
+			ifTrue: [
+				self 
+					setExpressionText: textBuffer text 
+					class: self behavior 
+					toBuffer: textBuffer  ]
+			ifFalse: [ 
+				self 
+					setMethodText: textBuffer text 
+					class: self behavior 
+					toBuffer: textBuffer ] ]
+	on: Error 
+	fork: [ :e | e pass ]
 ]
 
 { #category : 'api - shout' }
@@ -167,6 +174,13 @@ GtkCodeAdapter >> doItContext [
 GtkCodeAdapter >> doItReceiver [
 
 	^ self presenter doItReceiver
+]
+
+{ #category : 'private' }
+GtkCodeAdapter >> filteredCommands [
+	"a list of commands that should be filtered because the sourceview component already provides it."
+	
+	^ #('Copy' 'Cut' 'Paste' 'Paste...')
 ]
 
 { #category : 'building' }
@@ -266,8 +280,10 @@ GtkCodeAdapter >> isScripting [
 
 { #category : 'building' }
 GtkCodeAdapter >> newActionManager [
-
-	^ GtkAdapterActionCodeManager on: self
+	
+	^ (GtkAdapterActionCodeManager on: self)
+		filters: self filteredCommands;
+		yourself
 ]
 
 { #category : 'private - factory' }
@@ -486,6 +502,29 @@ GtkCodeAdapter >> updateCompletionProvider [
 	
 	completionProvider ifNotNil: [ :p | 
 		p completionEngine completionClass: self behavior ]
+]
+
+{ #category : 'building' }
+GtkCodeAdapter >> updateStyleScheme: aScheme [
+	
+	logger trace: aScheme.
+	
+	self innerWidgetDo: [ :w | 
+		| scheme |
+		scheme := GtkSourceStyleSchemeManager default schemeWithId: aScheme.
+		scheme isNullOrNil
+			ifTrue: [ logger debug: 'Style scheme "[aScheme]" not found.' ]
+			ifFalse: [ w textBuffer styleScheme: scheme ] ]
+]
+
+{ #category : 'building' }
+GtkCodeAdapter >> updateSyntaxHighlightTheme: aSyntaxHighlightTheme [
+
+	"I actually need to re-draw the text buffer to change the theme :("
+	self innerWidgetDo: [ :w |
+		self 
+			setText: self presenter text
+			to: w ]
 ]
 
 { #category : 'private' }

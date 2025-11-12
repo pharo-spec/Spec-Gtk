@@ -52,9 +52,17 @@ GtkTreeListViewAdapter >> alternateRowsColor [
 { #category : 'accessing' }
 GtkTreeListViewAdapter >> elementAt: index [
 	| item |
-
-	item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ].
+	item := nil.
+	self withCycleDetectionOnBackendDo: [
+		item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ] ].
 	^ item ifNil: [ self presenter items at: index ]
+]
+
+{ #category : 'testing' }
+GtkTreeListViewAdapter >> isAlive [ 
+	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
+
+	^ self innerWidget factory isNullOrNil not
 ]
 
 { #category : 'private - factory' }
@@ -73,6 +81,9 @@ GtkTreeListViewAdapter >> newItemFactory [
 GtkTreeListViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
+		
+		self isAlive ifFalse: [ ^ self ].
+		
 		self innerWidgetDo: [ :w |
 			w selectionModel unselectAll.
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!

@@ -89,8 +89,19 @@ SpGtkConfiguration >> baseStyle [
 box.toolbar { font-size: 0.6em; font-weight: lighter; }
 box.toolbar .toolbarButton > button { padding: 1px; margin: 1px; }
 
-/* action areas for dialogs */
-box.action_area { min-height: 45px; }
+/* 
+ * Response areas for dialogs. 
+ * This is simulating the adwaita style. 
+ * It may evolve with time :(. 
+ */
+box.response-area { margin: 12px; }
+box.response-area button { margin-top: 12px; margin-left: 12px; padding: 8px 30px 8px 30px; }
+box.response-area > button:first-child { margin-left: 0px; }
+box.message-area { margin: 18px; }
+box.message-area label.body { margin: 6px 18px 6px 18px; }
+box.message-area entry { margin-top: 24px; }
+
+/*
 box.action_area > button:first-child { 
 	border-radius: 0;
 	border-bottom-left-radius: 13px; 
@@ -101,6 +112,7 @@ box.action_area > button:last-child {
 	border-bottom-right-radius: 13px;
 	border-right: none; 
 }
+*/
 
 /* dialogs */
 label.message {

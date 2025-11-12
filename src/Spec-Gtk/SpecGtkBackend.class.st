@@ -44,6 +44,13 @@ SpecGtkBackend >> defer: aBlock [
 ]
 
 { #category : 'accessing' }
+SpecGtkBackend >> diffClass [
+	"fallback to patch presenter in gtk until we have a real diff component"
+
+	^ SpPatchPresenter
+]
+
+{ #category : 'accessing' }
 SpecGtkBackend >> dropListClass [
 
 	^ SpEasyDropDownPresenter

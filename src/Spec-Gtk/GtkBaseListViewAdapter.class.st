@@ -41,6 +41,12 @@ GtkBaseListViewAdapter >> critical: aBlock [
 	^ self mutex critical: aBlock
 ]
 
+{ #category : 'testing' }
+GtkBaseListViewAdapter >> isAlive [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'private' }
 GtkBaseListViewAdapter >> mutex [
 
@@ -91,21 +97,23 @@ GtkBaseListViewAdapter >> updateMultiSelectionFromPresenter: pathsArray [
 { #category : 'private - updating' }
 GtkBaseListViewAdapter >> updatePresenterSelection: position numItems: numItems [
 	
-	self backendUpdatingDo: [
-		self selectionCompanion updateSelectionFromGtk ]
+	self critical: [
+		self backendUpdatingDo: [
+			self selectionCompanion updateSelectionFromGtk ] ]
 ]
 
 { #category : 'private - updating' }
 GtkBaseListViewAdapter >> updateSingleSelectionFromGtk [
-	| index |
 
-	"Do not use the position received because is information about the change not 
-	 indicating the real selected index"	
-	index := self innerWidgetDo: [ :w | w selectionModel selected ].
 	self runInSystem: [
-		self backendUpdatingDo: [
-			self critical: [
-				self presenter selection selectIndex: index ] ] ]
+		self innerWidgetDo: [ :w | 
+			| index |
+			"Do not use the position received because is information about the change not 
+			 indicating the real selected index"	
+			self critical: [				
+				index := w selectionModel selected.
+				self backendUpdatingDo: [
+					self presenter selection selectIndex: index ] ] ] ]
 ]
 
 { #category : 'private - updating' }

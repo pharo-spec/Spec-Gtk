@@ -41,7 +41,7 @@ GtkActionInstaller >> visitCommand: aCommand [
 		connectActivate: [ 
 			self runInSystem: [ 
 				aCommand canBeExecuted 
-					ifTrue: [  [ aCommand execute ] fork ] ] ];
+					ifTrue: [ [ aCommand execute ] fork ] ] ];
 		yourself.
 
 	actionMap at: aCommand put: action.

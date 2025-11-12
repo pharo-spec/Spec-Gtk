@@ -18,7 +18,9 @@ GtkAbstractListAdapter >> doRefreshList: gtkWidget [
 GtkAbstractListAdapter >> elementAt: index [
 	| item |
 
-	item := self innerWidgetDo: [ :w | w model roots at: index ].
+	item := nil.
+	self withCycleDetectionOnBackendDo: [
+		item := self innerWidgetDo: [ :w | w model roots at: index ] ].
 	^ item ifNil: [ self presenter items at: index ]
 ]
 

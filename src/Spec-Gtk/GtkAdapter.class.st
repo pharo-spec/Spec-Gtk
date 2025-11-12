@@ -297,7 +297,10 @@ GtkAdapter >> innerWidgetDo: aBlock [
 
 	self hasWidget ifFalse: [ ^ nil ].
 	^ GRunLoop defer: [ 
-		aBlock value: self innerWidget ]
+		[ aBlock value: self innerWidget ]
+		on: Error 
+		fork: [ :e | e pass ]
+		return: [ nil ] ]
 ]
 
 { #category : 'event installing' }
@@ -386,6 +389,12 @@ GtkAdapter >> installMouseUpEvent: anEvent to: aWidget [
 GtkAdapter >> isBackendUpdating [
 
 	^ backendUpdating
+]
+
+{ #category : 'testing' }
+GtkAdapter >> isFocusedWidgetSameAsMe: aWidget [
+
+	^ self innerWidget getHandle = aWidget getHandle
 ]
 
 { #category : 'visibility' }
@@ -532,7 +541,11 @@ GtkAdapter >> widgetClass [
 GtkAdapter >> widgetDo: aBlock [ 
 
 	self hasWidget ifFalse: [ ^ nil ].
-	^ GRunLoop defer: [ aBlock value: widget ]
+	^ GRunLoop defer: [
+		[ aBlock value: widget ]
+		on: Error 
+		fork: [ :e | e pass ]
+		return: [ nil ] ]
 ]
 
 { #category : 'private - cycle detection' }

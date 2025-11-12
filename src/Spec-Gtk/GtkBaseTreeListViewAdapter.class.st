@@ -116,6 +116,12 @@ GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel thenDo: aBlock
 ]
 
 { #category : 'testing' }
+GtkBaseTreeListViewAdapter >> isAlive [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'testing' }
 GtkBaseTreeListViewAdapter >> isExpanded: aPath [
 	| path expanded |
 	
@@ -368,7 +374,7 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 				in: treeModel
 				thenDo: [ :row |
 					row isNullOrNil ifFalse: [ 
-					w 
+						w 
 						scrollToPosition: row position - 1
 						flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
 					"w selectionModel select: row position" ] ] ] ].

@@ -16,8 +16,13 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	"gtkColumnView headerFactory: self newHeaderFactory."
 
-	self presenter columns do: [ :each |
-		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
+	self presenter columns withIndexDo: [ :each :index |
+		| column |
+		column := self newGtkColumnViewColumnFrom: each.
+		gtkColumnView appendColumn: column.
+		"store the model in the first column"
+		index = 1 ifTrue: [
+			column factory storeModel ] ].
 		
 	self refreshSelectionModelIn: gtkColumnView.
 	gtkColumnView singleClickActivate: self presenter isActiveOnSingleClick.
@@ -64,9 +69,17 @@ GtkColumnViewAdapter >> doInitializationDeferredActions [
 { #category : 'accessing' }
 GtkColumnViewAdapter >> elementAt: index [
 	| item |
-
-	item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ].
+	item := nil.
+	self withCycleDetectionOnBackendDo: [
+		item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ] ].
 	^ item ifNil: [ self presenter items at: index ]
+]
+
+{ #category : 'testing' }
+GtkColumnViewAdapter >> isAlive [
+	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
+
+	^ self innerWidget columns anyOne factory isNullOrNil not
 ]
 
 { #category : 'private - factory' }
@@ -142,6 +155,9 @@ GtkColumnViewAdapter >> newStore [
 GtkColumnViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
+	
+		self isAlive ifFalse: [ ^ self ].	
+	
 		self innerWidgetDo: [ :w |
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
@@ -195,6 +211,21 @@ GtkColumnViewAdapter >> scrollToSelectionIfNeeded: index [
 			flags: GtkListScrollFlags GTK_LIST_SCROLL_FOCUS ]
 ]
 
+{ #category : 'api - selection' }
+GtkColumnViewAdapter >> selectedRowPresenter [
+	"answers the selected presenter. 
+	 This will just work if the presenters are model based presenter (so I can get them). "
+	| item |
+
+	self flag: #TODO. "Maybe I need to generalize this using a presenter property to 
+	weak-keep the calling object?"
+
+	item := self presenter selection selectedItem.
+	item ifNil: [ ^ nil ].
+	
+	^ self innerWidget columns first factory presenterForModel: item
+]
+
 { #category : 'private' }
 GtkColumnViewAdapter >> setDeferredAction: aBlock [
 
@@ -212,6 +243,7 @@ GtkColumnViewAdapter >> updateResizableColumnsTo: aBoolean [
 GtkColumnViewAdapter >> updateSelectionFromPresenter [
 
 	self withCycleDetectionOnBackendDo: [ 
+		self isAlive ifFalse: [ ^ self ].
 		self selectionCompanion updateSelectionFromPresenter ]
 ]
 

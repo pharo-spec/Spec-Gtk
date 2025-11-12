@@ -139,18 +139,24 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 	| timeRunning |
+	
 	timeRunning := (DateAndTime now) - popupTimestamp.
 	logger trace: gtkPopover.
 	logger trace: timeRunning.
 	runLoop ifNotNil: [ runLoop done ].
 	self presenter owner takeKeyboardFocus.
-	
+		
+	"fire close announcement"
 	self runInSystem: [  
 		GEngine current unregisterWindow: gtkPopover.
 		self announceClosed ].
 	
 	self widgetDo: [ :w | 
 		| child |
+		"ensure cleanup of adapters"
+		self presenter presenter 
+			traversePresentersDo: [ :aPresenter | aPresenter adapter: nil ].
+		"clean up of widget"
 		child := w child.
 		child withObjectReferenceDo: [
 			w child: GtkWidget null ].

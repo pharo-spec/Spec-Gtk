@@ -48,8 +48,9 @@ GtkDropDownAdapter >> doInitializationDeferredActions [
 { #category : 'accessing' }
 GtkDropDownAdapter >> elementAt: index [
 	| item |
-
-	item := self innerWidgetDo: [ :w | w model itemAt: index ].
+	item := nil.
+	self withCycleDetectionOnBackendDo: [
+		item := self innerWidgetDo: [ :w | w model itemAt: index ] ].
 	^ item ifNil: [ self presenter items at: index ]
 ]
 
@@ -61,6 +62,13 @@ GtkDropDownAdapter >> expressionFor: gtkDropDown atHandle: handle [
 			^ GLibLibrary uniqueInstance gstrdup: aString ] ].
 	
 	^ ExternalAddress null
+]
+
+{ #category : 'testing' }
+GtkDropDownAdapter >> isAlive [
+	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
+
+	^ self innerWidget factory isNullOrNil not
 ]
 
 { #category : 'private - factory' }
@@ -115,6 +123,9 @@ GtkDropDownAdapter >> updateSelectionFromPresenter [
 
 	self withCycleDetectionOnBackendDo: [ 
 		| index |
+		
+		self isAlive ifFalse: [ ^ self ].
+
 		index := self presenter selection selectedIndex - 1. 
 		self innerWidgetDo: [ :w |
 			index >= 0 
