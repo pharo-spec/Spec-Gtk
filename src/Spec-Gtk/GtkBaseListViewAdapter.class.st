@@ -64,9 +64,12 @@ GtkBaseListViewAdapter >> selectionCompanion [
 GtkBaseListViewAdapter >> updateMultiSelectionFromGtk [
 	| indexes |
 	
-	indexes := self innerWidgetDo: [ :w | w selectionModel allSelected ].
-	self runInSystem: [ 
-		self critical: [ self presenter selection selectIndexes: indexes ] ]
+	self critical: [ 
+		indexes := self innerWidgetDo: [ :w | w selectionModel allSelected ] ].
+		
+	self runInSystem: [
+		self backendUpdatingDo: [
+			self presenter selection selectIndexes: indexes ] ]
 ]
 
 { #category : 'private - updating' }
@@ -104,16 +107,14 @@ GtkBaseListViewAdapter >> updatePresenterSelection: position numItems: numItems 
 
 { #category : 'private - updating' }
 GtkBaseListViewAdapter >> updateSingleSelectionFromGtk [
+	| index |
 
+	self critical: [ 
+		index := self innerWidgetDo: [ :w | w selectionModel selected ] ].
+	
 	self runInSystem: [
-		self innerWidgetDo: [ :w | 
-			| index |
-			"Do not use the position received because is information about the change not 
-			 indicating the real selected index"	
-			self critical: [				
-				index := w selectionModel selected.
-				self backendUpdatingDo: [
-					self presenter selection selectIndex: index ] ] ] ]
+		self backendUpdatingDo: [
+			self presenter selection selectIndex: index ] ]
 ]
 
 { #category : 'private - updating' }

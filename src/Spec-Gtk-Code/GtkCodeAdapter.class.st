@@ -59,7 +59,6 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		indentOnTab: true;
 		tabWidth: 4.
 		
-
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
 	
@@ -147,6 +146,15 @@ GtkCodeAdapter >> bufferClass [
 	^ GtkSourceViewLibrary uniqueInstance isAvailable 
 		ifTrue: [ GtkSourceBuffer ]
 		ifFalse: [ super bufferClass ]
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> caseSensitive: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings caseSensitive: aBoolean ]
 ]
 
 { #category : 'private - shout' }
@@ -272,10 +280,37 @@ GtkCodeAdapter >> interactionModel: anInteractionModel [
 	self classOrMetaClass: anInteractionModel behavior
 ]
 
+{ #category : 'api - search' }
+GtkCodeAdapter >> isCaseSensitive [
+
+	^ self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings isCaseSensitive ]
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> isRegex [
+
+	^ self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings isRegexEnabled ]
+]
+
 { #category : 'api - shout' }
 GtkCodeAdapter >> isScripting [
 
 	^ self presenter isScripting
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> isWholeWord [
+
+	^ self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings atWordBoundaries ]
 ]
 
 { #category : 'building' }
@@ -321,13 +356,13 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 	textBuffer := self bufferClass newTable: self usingTagTable.
 	textBuffer connectChanged: [ 
 		self applyFullStyleTo: textBuffer ].
-
+	
 	^ textBuffer
 ]
 
 { #category : 'private - factory' }
 GtkCodeAdapter >> newTextBufferForText: aString [
-	| textBuffer |
+	| textBuffer tag |
 
 	"add style table"
 	textBuffer := self model hasSyntaxHighlight 
@@ -335,6 +370,11 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 		ifFalse: [ self newTextBuffer ].
 
 	textBuffer styleScheme: self styleScheme.
+
+	tag := self usingTagTable tags detect: [ :each | each name = 'comment' ].
+	textBuffer searchContext matchStyle: (GtkSourceStyle new 
+		apply: tag;
+		yourself).
 
 	aString ifNotNil: [ 
 		textBuffer text: aString ].
@@ -348,6 +388,7 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 	textBuffer connectChanged: [
 		self withCycleDetectionOnBackendDo: [ 
 			self innerWidgetDo: [ :w | self updatePresenterText: w text ] ] ].
+
 
 	^ textBuffer
 ]
@@ -366,10 +407,37 @@ GtkCodeAdapter >> refreshStyling [
 		self applyStyleTo: w textBuffer ]
 ]
 
+{ #category : 'api - search' }
+GtkCodeAdapter >> regex: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings regexEnabled: aBoolean ]
+]
+
 { #category : 'api - segments' }
 GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	
 	self flag: #TODO.
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> replaceAllMatchesWith: aString [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext replaceAllWith: aString ]
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> replaceSelectionWith: aString [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext replaceWith: aString ]
 ]
 
 { #category : 'private' }
@@ -411,7 +479,8 @@ GtkCodeAdapter >> searchForward [
 { #category : 'api - search' }
 GtkCodeAdapter >> searchText: aString [
 
-	self innerWidgetDo: [ :w | | searchContext |
+	self innerWidgetDo: [ :w | 
+		| searchContext |
 		searchContext := w textBuffer searchContext.
 		searchContext searchText: aString.
 		self startSearch: searchContext ]
@@ -553,6 +622,15 @@ GtkCodeAdapter >> usingTagTable [
 
 	^ (GtkCodeTagTableManager for: self presenter application) 
 		tagTableFor: self presenter
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> wholeWord: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings atWordBoundaries: aBoolean ]
 ]
 
 { #category : 'building' }
