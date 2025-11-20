@@ -27,8 +27,14 @@ GtkAdapterActionTextInputFieldManager >> maybeInstallCROn: gtkEntry [
 	 the shortcut as a signal"
 	enter := KeyboardKey enter asKeyCombination.
 	actionMap keysDo: [ :each | 
-		(each hasShortcutKey and: [ each shortcutKey  = enter ])
+		(each hasShortcutKey 
+			and: [ each shortcutKey = enter 
+			"2025-11-17: for some reason there are extra registrations of the activation on certain 
+			 cases and this is not good. I suspect I am registering several times the same because 
+			 of some weird logic. For now I just filter it (but obviously, this will explode in my 
+			 face later... :( )"
+			and: [ gtkEntry callbacks noneSatisfy: [ :each | each signalName = 'activate' ] ] ])
 			ifTrue: [ 
-				gtkEntry connectActivate: [ 
+				gtkEntry connectActivate: [
 					self runInSystem: [ each execute ] ] ] ]
 ]
