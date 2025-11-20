@@ -163,9 +163,14 @@ GtkBaseTreeListViewAdapter >> itemAtPath: aPath [
 
 { #category : 'private' }
 GtkBaseTreeListViewAdapter >> itemAtPath: aPath from: aCollection [
-	| currentItem |
+	| index currentItem |
 	
-	currentItem := aCollection at: aPath first.
+	index := aPath first.
+	"in some cases, e.g. replace collection while preserving selection, the 
+	 new collection may not be of the same size... quick escape then."
+	aCollection size < index ifTrue: [ ^ nil ].
+	
+	currentItem := aCollection at: index.
 	aPath size = 1 ifTrue: [ ^ currentItem ].
 	
 	^ self critical: [ 
