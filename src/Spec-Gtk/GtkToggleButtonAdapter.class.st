@@ -43,10 +43,9 @@ GtkToggleButtonAdapter >> updatePresenterStateOn: gtkToggleButton [
 GtkToggleButtonAdapter >> updateState [
 
 	self widgetDo: [ :w |
-		self state ifTrue: [ 
+		self presenter state ifTrue: [ 
 			self presenter associatedToggleButtons 
-				do: [ :each | each state: false ] ]. 
-		super updateState ]
+				do: [ :each | each state: false ] ] ]
 ]
 
 { #category : 'factory' }
