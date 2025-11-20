@@ -45,6 +45,9 @@ GtkCodeTagTableManager >> newTagTableFor: aName [
 		add: ((GtkTextTag newName: 'highlight')
 			background: (Color orange alpha: 0.2);
 			yourself);
+		add: ((GtkTextTag newName: 'search-occurrence')
+			background: (Color orange alpha: 0.2);
+			yourself);
 		yourself
 ]
 

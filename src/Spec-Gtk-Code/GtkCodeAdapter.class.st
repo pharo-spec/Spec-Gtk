@@ -110,6 +110,9 @@ GtkCodeAdapter >> applyStyleTo: textBuffer [
 
 	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
 	self presenter text isEmptyOrNil ifTrue: [ ^ self ].
+	
+	logger trace: textBuffer.
+	
 	textBuffer removeAllTags.
 	
 	[ 
@@ -184,6 +187,15 @@ GtkCodeAdapter >> doItReceiver [
 	^ self presenter doItReceiver
 ]
 
+{ #category : 'api - search' }
+GtkCodeAdapter >> endSearch [
+
+	self innerWidgetDo: [ :w | 
+		w textBuffer 
+			removeTagByName: 'search-occurrence';
+			resetSearchContext ]
+]
+
 { #category : 'private' }
 GtkCodeAdapter >> filteredCommands [
 	"a list of commands that should be filtered because the sourceview component already provides it."
@@ -228,8 +240,20 @@ GtkCodeAdapter >> hasSyntaxHighlightEnabled [
 	^ self presenter hasSyntaxHighlight
 ]
 
+{ #category : 'private - search' }
+GtkCodeAdapter >> highlightMatch: start end: end in: aWidget [
+	| buffer |
+	
+	buffer := aWidget textBuffer. 
+	buffer removeTagByName: 'search-occurrence'.
+	buffer 
+		applyTagByName: 'search-occurrence'
+		startIter: start
+		endIter: end
+]
+
 { #category : 'api - search' }
-GtkCodeAdapter >> highlightSearchText: aBoolean [ 
+GtkCodeAdapter >> highlightSearchText: aBoolean [
 
 	self innerWidgetDo: [ :w |
 		w textBuffer searchContext highlight: aBoolean ]
@@ -333,17 +357,6 @@ GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 ]
 
 { #category : 'private - factory' }
-GtkCodeAdapter >> newTagTable [
-	
-	self flag: #TODO. "highlight color in a setting"
-	^ (GtkTextTagTable newForCode: self styleTable)
-		add: ((GtkTextTag newName: 'highlight')
-			background: (Color orange alpha: 0.2);
-			yourself);
-		yourself
-]
-
-{ #category : 'private - factory' }
 GtkCodeAdapter >> newTextBuffer [
 
 	^ self bufferClass new
@@ -362,7 +375,7 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 
 { #category : 'private - factory' }
 GtkCodeAdapter >> newTextBufferForText: aString [
-	| textBuffer tag |
+	| textBuffer |
 
 	"add style table"
 	textBuffer := self model hasSyntaxHighlight 
@@ -370,11 +383,7 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 		ifFalse: [ self newTextBuffer ].
 
 	textBuffer styleScheme: self styleScheme.
-
-	tag := self usingTagTable tags detect: [ :each | each name = 'comment' ].
-	textBuffer searchContext matchStyle: (GtkSourceStyle new 
-		apply: tag;
-		yourself).
+	textBuffer searchContext highlight: false.
 
 	aString ifNotNil: [ 
 		textBuffer text: aString ].
@@ -433,11 +442,15 @@ GtkCodeAdapter >> replaceAllMatchesWith: aString [
 
 { #category : 'api - search' }
 GtkCodeAdapter >> replaceSelectionWith: aString [
+	
+	logger trace: aString.
 
-	self innerWidgetDo: [ :w |
-		| buffer |
-		buffer := w textBuffer.
-		buffer searchContext replaceWith: aString ]
+	self userActionDuring: [
+		self innerWidgetDo: [ :w |
+			| buffer |
+			buffer := w textBuffer.
+			buffer searchContext replaceMatchWith: aString.
+			self searchForward ] ]
 ]
 
 { #category : 'private' }
@@ -459,9 +472,8 @@ GtkCodeAdapter >> searchBackward [
 		buffer := w textBuffer.
 		buffer searchContext 
 			backwardThenDo: [ :start :end :wrappedAround | 
-				buffer
-					selectRangeInsert: start 
-					bound: end ] ]
+				buffer selectRangeInsert: start bound: end.
+				self highlightMatch: start end: end in: w ] ]
 ]
 
 { #category : 'api - search' }
@@ -472,18 +484,32 @@ GtkCodeAdapter >> searchForward [
 		buffer := w textBuffer.
 		buffer searchContext 
 			forwardThenDo: [ :start :end :wrappedAround | 
+				self scrollToIter: end in: w.
 				buffer selectRangeInsert: start bound: end.
-				self scrollToIter: start in: w ] ]
+				self highlightMatch: start end: end in: w ] ]
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> searchOccurrencesCount [
+	| result |
+
+	result := self innerWidgetDo: [ :w | w textBuffer searchContext occurrencesCount ].
+	
+	^ result max: 0
 ]
 
 { #category : 'api - search' }
 GtkCodeAdapter >> searchText: aString [
 
+	aString ifEmpty: [ ^ self endSearch ].
+
 	self innerWidgetDo: [ :w | 
 		| searchContext |
+
+		w textBuffer removeTagByName: 'search-occurrence'.
 		searchContext := w textBuffer searchContext.
 		searchContext searchText: aString.
-		self startSearch: searchContext ]
+		self searchForward ]
 ]
 
 { #category : 'api - shout' }
@@ -506,12 +532,13 @@ GtkCodeAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer 
 { #category : 'private - shout' }
 GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [ 
 
+	logger trace.
+
 	(GtkTextStyleVisitor new
 		requestor: self; 
 		contextClass: aClass;
 		styleMethod: aString)
 		do: [ :each | each acceptTextBuffer: textBuffer ].
-
 ]
 
 { #category : 'building' }
@@ -524,16 +551,19 @@ GtkCodeAdapter >> setText: aString to: gtkWidget [
 		self userActionDo: [ :action | action registerChange ] ]
 ]
 
-{ #category : 'private' }
+{ #category : 'private - search' }
 GtkCodeAdapter >> startSearch: aSearchContext [
-	| start |
-
-	self flag: #TODO. "maybe start this from cursor position"
-	start := self innerWidget textBuffer startIter.
+	| buffer start |
+	
+	self flag: #REMOVEME. "This is not used. Remove in next commit"
+	
+	buffer := self innerWidget textBuffer.
+	start := buffer iterAtCursorPosition.
 	aSearchContext 
 		forwardAsync: start 
 		onFirstPositionDo: [ :matchStart :matchEnd |
-			self scrollToIter: matchStart in: self innerWidget ]
+			self scrollToIter: matchStart in: self innerWidget.
+			self highlightMatch: matchStart end: matchEnd in: self innerWidget ]
 ]
 
 { #category : 'private' }
@@ -605,7 +635,8 @@ GtkCodeAdapter >> userActionDo: aBlock [
 
 { #category : 'api' }
 GtkCodeAdapter >> userActionDuring: aBlock [
-
+	logger trace. 
+	
 	userAction := GtkCodeUserAction new.
 	self innerWidgetDo: [ :w |
 		w textBuffer 
@@ -614,7 +645,7 @@ GtkCodeAdapter >> userActionDuring: aBlock [
 				w textBuffer userActionDuring: aBlock.
 				userAction hasChanged ifTrue: [
 					userAction := nil.
-					self applyFullStyleTo: w textBuffer ] ] ].
+					self applyFullStyleTo: w textBuffer ] ] ]
 ]
 
 { #category : 'private' }

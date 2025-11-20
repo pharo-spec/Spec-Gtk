@@ -7,6 +7,12 @@ SpCodePresenter >> caseSensitive: aBoolean [
 ]
 
 { #category : '*Spec-Gtk-Code' }
+SpCodePresenter >> endSearch [
+
+	self withAdapterDo: [ :anAdapter | anAdapter endSearch ]
+]
+
+{ #category : '*Spec-Gtk-Code' }
 SpCodePresenter >> highlightSearchText: aBoolean [
 
 	self withAdapterDo: [ :anAdapter | anAdapter highlightSearchText: aBoolean ]
@@ -64,6 +70,15 @@ SpCodePresenter >> searchBackward [
 SpCodePresenter >> searchForward [
 
 	self withAdapterDo: [ :anAdapter | anAdapter searchForward ]
+]
+
+{ #category : '*Spec-Gtk-Code' }
+SpCodePresenter >> searchOccurrencesCount [
+
+	self withAdapterDo: [ :anAdapter | 
+		^ anAdapter searchOccurrencesCount ].
+	
+	^ 0
 ]
 
 { #category : '*Spec-Gtk-Code' }
