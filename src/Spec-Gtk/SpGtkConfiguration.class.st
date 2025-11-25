@@ -230,7 +230,8 @@ SpGtkConfiguration >> initializeEngine [
 { #category : 'private' }
 SpGtkConfiguration >> installTheme: aString [
 
-	self settings themeName: aString
+	"in fact, this is not possible anymore"
+	"self settings themeName: aString" 
 ]
 
 { #category : 'testing' }
