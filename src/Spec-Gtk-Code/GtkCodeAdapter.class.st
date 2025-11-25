@@ -434,10 +434,18 @@ GtkCodeAdapter >> removeAllTextSegmentDecorations [
 { #category : 'api - search' }
 GtkCodeAdapter >> replaceAllMatchesWith: aString [
 
-	self innerWidgetDo: [ :w |
-		| buffer |
-		buffer := w textBuffer.
-		buffer searchContext replaceAllWith: aString ]
+	self backendUpdatingDo: [
+		self innerWidgetDo: [ :w |
+			| buffer |
+			buffer := w textBuffer.
+			buffer
+				blockCallback: GChangedCallback signalName 
+				during: [ 
+					buffer searchContext 
+						replaceAllWith: aString; 
+						resetCurrentMatch.
+					self applyStyleTo: buffer.
+					self presenter text: buffer text ] ] ]
 ]
 
 { #category : 'api - search' }
@@ -445,11 +453,17 @@ GtkCodeAdapter >> replaceSelectionWith: aString [
 	
 	logger trace: aString.
 
-	self userActionDuring: [
+	self backendUpdatingDo: [
 		self innerWidgetDo: [ :w |
 			| buffer |
 			buffer := w textBuffer.
-			buffer searchContext replaceMatchWith: aString.
+			buffer
+				blockCallback: GChangedCallback signalName 
+				during: [ 
+					buffer searchContext replaceMatchWith: aString.
+					buffer cursorPosition: buffer searchContext currentMatchRange last.
+					self applyStyleTo: buffer.
+					self presenter text: buffer text ].
 			self searchForward ] ]
 ]
 
