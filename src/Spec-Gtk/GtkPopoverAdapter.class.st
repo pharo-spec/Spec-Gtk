@@ -72,8 +72,11 @@ GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 	self widgetDo: [ :w | 
 		| relativeTo |
 		"try this to not grab input (which is probably causing the thing to not 
-		 give me back control... is annoying, however)"
-		w autohide: false. "aBoolean"
+		 give me back control... is annoying, however).
+		 Trying again setting it to boolean, to see if this is fixed by magic :P
+		 (if this does not works, remember autohide: false
+		 2025/11/27 - no, this is still not working :("
+		w autohide: "aBoolean" false.
 		self register: w.
 		relativeTo := self presenter relativeTo adapter innerWidget.
 		logger trace: relativeTo.

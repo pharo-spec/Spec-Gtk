@@ -125,6 +125,8 @@ GtkBaseTreeListViewAdapter >> isAlive [
 GtkBaseTreeListViewAdapter >> isExpanded: aPath [
 	| path expanded |
 	
+	aPath ifNil: [ ^ false ].
+	
 	expanded := false.
 	path := aPath collect: [ :each | each - 1 ].
 	self innerWidgetDo: [ :w |

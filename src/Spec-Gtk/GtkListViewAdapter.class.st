@@ -37,17 +37,25 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 
 	gtkListView connectRowActivated: [ :position |
-		self runInSystem: [ 
-			self presenter doActivateAtIndex: position + 1 ] ].
+		self announceActivated: position ].
 	
 	self configureScrolling
 ]
 
 { #category : 'api' }
 GtkListViewAdapter >> alternateRowsColor [
-
+	"since gtk does not plays nice with alternate row colors (and I need to 
+	 hack it if I want it), instead I am just showinf row separators, for now."
 	self innerWidgetDo: [ :w | 
 		w showSeparators: true ]
+]
+
+{ #category : 'private' }
+GtkListViewAdapter >> announceActivated: position [
+
+	self runInSystem: [
+		self critical: [
+			self presenter doActivateAtIndex: position + 1 ] ]
 ]
 
 { #category : 'building' }
@@ -167,8 +175,11 @@ GtkListViewAdapter >> refreshWidgetSelection [
 
 { #category : 'private' }
 GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
-
+	
 	((index < 1) or: [ self presenter items isEmpty ]) ifTrue: [ ^ self ].
+
+	logger trace: index.
+
 	self innerWidgetDo: [ :w |
 		w 
 			scrollToPosition: index - 1 
