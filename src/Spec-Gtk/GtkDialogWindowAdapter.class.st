@@ -120,7 +120,7 @@ GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 	"This will block until dialog is closed (see `closeFromSignal`)"
 	GRunLoop defer: [ runLoop run ].
 	self widgetDo: [ :w |
-		w withObjectReferenceDo: [ w destroy ] ]
+		w isNullOrNil ifFalse: [ w destroy ] ]
 ]
 
 { #category : 'private - updating' }
