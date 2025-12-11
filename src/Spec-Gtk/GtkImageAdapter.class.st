@@ -26,15 +26,17 @@ GtkImageAdapter >> image [
 { #category : 'building' }
 GtkImageAdapter >> newWidget [
 
-	^ GtkImage newEmpty 
+	^ self presenter isAutoScale 
+		ifTrue: [ GtkPicture new ]
+		ifFalse: [ GtkImage newEmpty ]
 ]
 
 { #category : 'updating' }
-GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImage [
+GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImageOrPicture [
 	| paintable |
 	
 	aFormOrGdkPixbuf ifNil: [ 
-		aGtkImage clear. 
+		aGtkImageOrPicture clear. 
 		^ self ].
 	
 	paintable := aFormOrGdkPixbuf asGdkPaintable.
@@ -44,5 +46,8 @@ GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImage [
 		paintable 
 			computeConcreteSize: size
 			defaults: size ].
-	aGtkImage setFromPaintable: paintable
+		
+	self presenter isAutoScale 
+		ifTrue: [ aGtkImageOrPicture setPaintable: paintable ]
+		ifFalse: [ aGtkImageOrPicture setFromPaintable: paintable ]
 ]
