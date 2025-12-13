@@ -192,7 +192,7 @@ GtkCodeAdapter >> endSearch [
 
 	self innerWidgetDo: [ :w | 
 		w textBuffer 
-			removeTagByName: 'search-occurrence';
+			removeTagByName: 'searchOccurrence';
 			resetSearchContext ]
 ]
 
@@ -245,9 +245,9 @@ GtkCodeAdapter >> highlightMatch: start end: end in: aWidget [
 	| buffer |
 	
 	buffer := aWidget textBuffer. 
-	buffer removeTagByName: 'search-occurrence'.
+	buffer removeTagByName: 'searchOccurrence'.
 	buffer 
-		applyTagByName: 'search-occurrence'
+		applyTagByName: 'searchOccurrence'
 		startIter: start
 		endIter: end
 ]
@@ -520,7 +520,7 @@ GtkCodeAdapter >> searchText: aString [
 	self innerWidgetDo: [ :w | 
 		| searchContext |
 
-		w textBuffer removeTagByName: 'search-occurrence'.
+		w textBuffer removeTagByName: 'searchOccurrence'.
 		searchContext := w textBuffer searchContext.
 		searchContext searchText: aString.
 		self searchForward ]
@@ -563,21 +563,6 @@ GtkCodeAdapter >> setText: aString to: gtkWidget [
 		textBuffer := self newTextBufferForText: aString.
 		gtkWidget textBuffer: textBuffer.
 		self userActionDo: [ :action | action registerChange ] ]
-]
-
-{ #category : 'private - search' }
-GtkCodeAdapter >> startSearch: aSearchContext [
-	| buffer start |
-	
-	self flag: #REMOVEME. "This is not used. Remove in next commit"
-	
-	buffer := self innerWidget textBuffer.
-	start := buffer iterAtCursorPosition.
-	aSearchContext 
-		forwardAsync: start 
-		onFirstPositionDo: [ :matchStart :matchEnd |
-			self scrollToIter: matchStart in: self innerWidget.
-			self highlightMatch: matchStart end: matchEnd in: self innerWidget ]
 ]
 
 { #category : 'private' }

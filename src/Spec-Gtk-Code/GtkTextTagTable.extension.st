@@ -1,14 +1,6 @@
 Extension { #name : 'GtkTextTagTable' }
 
 { #category : '*Spec-Gtk-Code' }
-GtkTextTagTable class >> newForCode [
-
-	^ self newForCode: (SHRBTextStyler initialTextAttributesForPixelHeight: 1) 
-
-	
-]
-
-{ #category : '*Spec-Gtk-Code' }
 GtkTextTagTable class >> newForCode: attrArray [
 	| table |
 	

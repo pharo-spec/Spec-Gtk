@@ -1,8 +1,6 @@
 Class {
 	#name : 'GtkPatchAdapter',
 	#superclass : 'GtkAdapter',
-	#traits : 'GtkTHaveWrappingScrollBars',
-	#classTraits : 'GtkTHaveWrappingScrollBars classTrait',
 	#category : 'Spec-Gtk-Code-Diff',
 	#package : 'Spec-Gtk-Code-Diff'
 }
@@ -39,7 +37,9 @@ GtkPatchAdapter >> addModelTo: gtkSourceView [
 
 	gtkSourceView monospace: true.
 	gtkSourceView
-		showLineNumbers: "self presenter hasLineNumbers" false;
+		"no line numbers because they should be related to the source version
+		 and then I need to assign different numbers"
+		showLineNumbers: false; 
 		showLineMarks: true;
 		autoIndent: true;
 		indentOnTab: true;
@@ -164,10 +164,12 @@ GtkPatchAdapter >> widgetClass [
 
 { #category : 'building' }
 GtkPatchAdapter >> wrapWidget: gtkWidget [
-	| wrapWidget |
+	"| wrapWidget |
 	
 	innerWidget := gtkWidget.
 	wrapWidget := self wrapWithScrollableWindow: innerWidget.
 	
-	^ wrapWidget
+	^ wrapWidget"	
+	
+	^ super wrapWidget: gtkWidget
 ]
