@@ -35,7 +35,14 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 		
 	gtkDropDown connectSelectedItem: [ 
-		self updatePresenterSelectionFromGtk ]
+		self updatePresenterSelectionFromGtk ].
+		
+	"hack because the first one will be selected anyway"
+	self presenter items ifNotEmpty: [
+		| selection |
+		selection := self presenter selection.
+		selection disableChangedDuring: [ 
+			selection selectIndex: 1 ] ]
 ]
 
 { #category : 'private' }
