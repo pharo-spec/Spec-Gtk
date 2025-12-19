@@ -27,7 +27,9 @@ GtkLayoutAdapter >> adapterWasBuilt [
 GtkLayoutAdapter >> add: aPresenter constraints: constraints [
 
 	aPresenter owner: self model. 
-	self widgetDo: [ :gtkWidget | | childWidget |
+	self widgetDo: [ :gtkWidget | 
+		| childWidget |
+		
 		childWidget := self 
 			basicAdd: aPresenter
 			constraints: constraints 

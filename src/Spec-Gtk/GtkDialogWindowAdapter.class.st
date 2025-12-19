@@ -26,6 +26,8 @@ GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
 	buttonBox visible: self presenter hasButtonDecorations.
 	containerBox append: buttonBox.
 	
+	gtkDialog defaultWidget: GtkWidget null.
+	
 	super add: containerBox toWindow: gtkDialog
 ]
 
