@@ -83,6 +83,15 @@ SpecGtkBackend >> newFileDialogFor: aFileDialog [
 	aFileDialog parentWindow 
 		ifNotNil: [ :aWindow | dialog parent: aWindow adapter widget ].
 	aFileDialog title ifNotNil: [ :aString | dialog title: aString ].
+	aFileDialog path ifNotNil: [ :aString |
+		| path |
+		path := aString. 
+		path asFileReference isDirectory
+			ifTrue: [ 
+				dialog initialFolderName: path fullName ]
+			ifFalse: [ 
+				dialog initialFolderName: path parent fullName.
+				dialog initialName: path basename ] ].
 	aFileDialog filters ifNotEmpty: [ :aList | 
 		| filters |
 		filters := GListStore newType: GtkFileFilter.
