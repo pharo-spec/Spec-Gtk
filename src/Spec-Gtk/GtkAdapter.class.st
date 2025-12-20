@@ -314,21 +314,27 @@ GtkAdapter >> installEvent: anEvent [
 GtkAdapter >> installFocusLostEvent: anEvent to: aWidget [
 
 	aWidget addFocusLeaveEvent: [ :event |
-		anEvent action cull: event ]
+		[ anEvent action cull: event ]
+		on: Error 
+		fork: [ :e | e pass ] ]
 ]
 
 { #category : 'event installing' }
 GtkAdapter >> installFocusReceivedEvent: anEvent to: aWidget [
 
 	aWidget addFocusEnterEvent: [ :event |
-		anEvent action cull: event ]
+		[ anEvent action cull: event ]
+		on: Error 
+		fork: [ :e | e pass ] ]
 ]
 
 { #category : 'event installing' }
 GtkAdapter >> installKeyDownEvent: anEvent to: aWidget [
 
 	aWidget addKeyPressEvent: [ :event |
-		anEvent action value: event.
+		[ anEvent action value: event ]
+			on: Error 
+			fork: [ :e | e pass ].		
 		event wasHandled ]
 ]
 
@@ -336,7 +342,9 @@ GtkAdapter >> installKeyDownEvent: anEvent to: aWidget [
 GtkAdapter >> installKeyUpEvent: anEvent to: aWidget [
 
 	aWidget addKeyReleaseEvent: [ :event |
-		anEvent action value: event.
+		[ anEvent action value: event ]
+			on: Error 
+			fork: [ :e | e pass ].		
 		event wasHandled ]
 ]
 
@@ -344,7 +352,9 @@ GtkAdapter >> installKeyUpEvent: anEvent to: aWidget [
 GtkAdapter >> installMouseDoubleClickEvent: anEvent to: aWidget [
 
 	aWidget addDoubleClickEvent: [ :event |
-		anEvent action value: event.
+		[ anEvent action value: event ]
+			on: Error 
+			fork: [ :e | e pass ].		
 		event wasHandled ]
 ]
 
@@ -352,7 +362,9 @@ GtkAdapter >> installMouseDoubleClickEvent: anEvent to: aWidget [
 GtkAdapter >> installMouseDownEvent: anEvent to: aWidget [
 
 	aWidget addButtonPressEvent: [ :event |
-		anEvent action value: event.
+		[ anEvent action value: event ]
+			on: Error 
+			fork: [ :e | e pass ].		
 		event wasHandled ]
 ]
 
@@ -360,28 +372,36 @@ GtkAdapter >> installMouseDownEvent: anEvent to: aWidget [
 GtkAdapter >> installMouseEnterEvent: anEvent to: aWidget [
 
 	aWidget addEnterEvent: [ :event |
-		anEvent action value: event ]
+		[ anEvent action value: event ]
+		on: Error 
+		fork: [ :e | e pass ] ]
 ]
 
 { #category : 'event installing' }
 GtkAdapter >> installMouseLeaveEvent: anEvent to: aWidget [
 
 	aWidget addLeaveEvent: [ :event |
-		anEvent action value: event ]
+		[ anEvent action value: event ]
+		on: Error 
+		fork: [ :e | e pass ] ]
 ]
 
 { #category : 'event installing' }
 GtkAdapter >> installMouseMoveEvent: anEvent to: aWidget [
 
 	aWidget addMotionEvent: [ :event |
-		anEvent action value: event ]
+		[ anEvent action value: event ]
+		on: Error 
+		fork: [ :e | e pass ] ]
 ]
 
 { #category : 'event installing' }
 GtkAdapter >> installMouseUpEvent: anEvent to: aWidget [
 
 	aWidget addButtonReleaseEvent: [ :event |
-		anEvent action value: event.
+		[ anEvent action value: event ]
+			on: Error 
+			fork: [ :e | e pass ].
 		event wasHandled ]
 ]
 
