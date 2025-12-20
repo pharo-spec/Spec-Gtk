@@ -41,8 +41,10 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 	self presenter items ifNotEmpty: [
 		| selection |
 		selection := self presenter selection.
-		selection disableChangedDuring: [ 
-			selection selectIndex: 1 ] ]
+		"index will be 0 if no selection"
+		selection selectedIndex = 0 ifTrue: [ 
+			selection disableChangedDuring: [ 
+				selection selectIndex: 1 ] ] ]
 ]
 
 { #category : 'private' }
