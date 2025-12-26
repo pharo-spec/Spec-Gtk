@@ -39,12 +39,12 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 		
 	"hack because the first one will be selected anyway"
 	self presenter items ifNotEmpty: [
-		| selection |
+		| selection index |
 		selection := self presenter selection.
 		"index will be 0 if no selection"
-		selection selectedIndex = 0 ifTrue: [ 
-			selection disableChangedDuring: [ 
-				selection selectIndex: 1 ] ] ]
+		index := selection selectedIndex max: 1.
+		selection disableChangedDuring: [ 
+			selection selectIndex: index ] ]
 ]
 
 { #category : 'private' }
