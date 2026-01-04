@@ -13,7 +13,10 @@ Class {
 		'adapter',
 		'actionMap',
 		'popoverContextMenu',
-		'hasContextMenu'
+		'hasContextMenu',
+		'dynamicGroups',
+		'dynamicGroupMap',
+		'dynamicGroupActionMap'
 	],
 	#category : 'Spec-Gtk-Actions',
 	#package : 'Spec-Gtk',
@@ -37,7 +40,8 @@ GtkAdapterActionManager class >> on: anAdapter [
 { #category : 'private - actions' }
 GtkAdapterActionManager >> actionGroups [
 
-	^ { self presenter actions }
+	dynamicGroupMap ifNil: [ ^ { self presenter actions } ].
+	^ { self presenter actions }, (dynamicGroupMap values)
 ]
 
 { #category : 'accessing' }
@@ -76,7 +80,10 @@ GtkAdapterActionManager >> anyCommandIsVisible [
 { #category : 'private' }
 GtkAdapterActionManager >> buildMenuModel [
 
-	^ self buildMenuModelFor: self actionGroups
+	^ [ self buildMenuModelFor: self actionGroups ]
+	on: Error 
+	fork: [ :e | e pass ]
+	return: [ nil ]
 ]
 
 { #category : 'private' }
@@ -84,7 +91,7 @@ GtkAdapterActionManager >> buildMenuModelFor: anArrayOfGroups [
 
 	^ GtkActionMenuBuilder new 
 		visit: anArrayOfGroups first;
-		in: [ :this | 
+		in: [ :this |
 			anArrayOfGroups allButFirstDo: [ :each | each acceptVisitor: this ] ];
 		root
 ]
@@ -94,9 +101,9 @@ GtkAdapterActionManager >> deferredShowPopoverMenuFor: anArrayOfGroups at: posit
 	| menuModel |
 	
 	menuModel := self buildMenuModelFor: anArrayOfGroups.
+	menuModel ifNil: [ ^ self ].
 
-	popoverContextMenu := (GtkPopoverMenu newFromModelFull: menuModel)
-			ensureObjectRefAndAutoRelease.
+	popoverContextMenu := (GtkPopoverMenu newFromModelFull: menuModel) ensureObjectRefAndAutoRelease.
 	popoverContextMenu parent: gtkWidget.
 	popoverContextMenu hasArrow: false.
 	popoverContextMenu autohide: true.
@@ -105,7 +112,7 @@ GtkAdapterActionManager >> deferredShowPopoverMenuFor: anArrayOfGroups at: posit
 	popoverContextMenu connectClosed: [
 		"release when closed, to ensure a finalize will happen before 
 		 close the window."
-		popoverContextMenu := nil ].
+		self resetContextMenu ].
 	
 	popoverContextMenu popup
 ]
@@ -126,13 +133,13 @@ GtkAdapterActionManager >> initialize [
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
+GtkAdapterActionManager >> installAction: aCommand actionGroup: aGroupName on: gtkWidget [
 	| actionGroup action | 
 
-	actionGroup := gtkWidget actionGroups at: 'global' ifAbsent: [ nil ]. 
+	actionGroup := gtkWidget actionGroups at: aGroupName ifAbsent: [ nil ]. 
 	actionGroup ifNil: [ 
 		actionGroup := GSimpleActionGroup new.
-		gtkWidget insertActionGroup: 'global' actions: actionGroup ].
+		gtkWidget insertActionGroup: aGroupName actions: actionGroup ].
 	
 	action := (GSimpleAction newName: aCommand id)
 		connectActivate: [ self runInSystem: [ [ aCommand execute ] fork ] ];
@@ -143,20 +150,33 @@ GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
 	aCommand hasShortcutKey ifTrue: [ 
 		gtkWidget addShortcut: (GtkShortcut 
 			newKeyCombination: aCommand shortcutKey 
-			actionName: ('global.', aCommand id)) ].	
+			actionName: (aGroupName, '.', aCommand id)) ].	
 	
 	aCommand isVisible ifTrue: [ 
 		self installContextMenuOn: gtkWidget ]
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionManager >> installActionGroup: actionGroup on: gtkWidget [
-	| map |
+GtkAdapterActionManager >> installAction: aCommand on: gtkWidget [
+	
+	^ self 
+		installAction: aCommand 
+		actionGroup: 'global' 
+		on: gtkWidget
+]
 
-	map := GtkActionInstaller new
+{ #category : 'private - actions' }
+GtkAdapterActionManager >> installActionGroup: actionGroup on: gtkWidget [
+	| actionInstaller |
+
+	actionInstaller := GtkActionInstaller new
 		widget: gtkWidget;
-		visit: actionGroup.
-	actionMap addAll: map
+		yourself.
+		
+	actionInstaller visit: actionGroup.
+
+	actionMap addAll: actionInstaller actionMap.
+	dynamicGroups := actionInstaller dynamicGroups
 ]
 
 { #category : 'private - actions' }
@@ -175,6 +195,7 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	hasContextMenu := true.
 
 	gtkWidget addRightClickEvent: [ :event |
+		self updateDynamicActions.
 		self updateEnabledActions.
 		self 
 			showPopoverMenuFor: self actionGroups
@@ -217,6 +238,14 @@ GtkAdapterActionManager >> presenter [
 	^ self adapter presenter
 ]
 
+{ #category : 'initialization' }
+GtkAdapterActionManager >> resetContextMenu [
+
+	popoverContextMenu := nil.
+	dynamicGroupMap := nil.
+	dynamicGroupActionMap := nil
+]
+
 { #category : 'private' }
 GtkAdapterActionManager >> runInSystem: aBlock [
 	
@@ -239,6 +268,29 @@ GtkAdapterActionManager >> showPopoverMenuFor: anArrayOfGroups at: position [
 		deferredShowPopoverMenuFor: anArrayOfGroups 
 		at: position 
 		owner: self adapter innerWidget
+]
+
+{ #category : 'private' }
+GtkAdapterActionManager >> updateDynamicActions [
+	"dynamic actions need to be installed each time we will show the menu 
+	 (as they are calculated dynamically)"
+	
+	dynamicGroups ifNil: [ ^ self ].
+	
+	dynamicGroupMap := Dictionary new.
+	dynamicGroupActionMap := Dictionary new.
+	dynamicGroups do: [ :eachGroup |
+		| group installer |
+		
+		self adapter innerWidgetDo: [ :w |
+			group := eachGroup resolve.
+			installer := GtkActionInstaller new
+				widget: w;
+				beReplaceGroup;
+				visit: group;
+				yourself.
+			dynamicGroupActionMap addAll: installer actionMap.
+			dynamicGroupMap at: eachGroup put: group ] ]
 ]
 
 { #category : 'updating' }
