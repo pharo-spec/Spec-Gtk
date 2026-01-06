@@ -195,8 +195,11 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	hasContextMenu := true.
 
 	gtkWidget addRightClickEvent: [ :event |
+		self flag: #WARNING. "For some reason if I put this inside of the #showPopoverMenuFor:at: 
+		function it will not work. This leads to some duplication of code, check at #showContextMenu 
+		if you will change this"
 		self updateDynamicActions.
-		self updateEnabledActions.
+		self updateEnabledActions.	
 		self 
 			showPopoverMenuFor: self actionGroups
 			at: event position ]
@@ -256,6 +259,8 @@ GtkAdapterActionManager >> runInSystem: aBlock [
 GtkAdapterActionManager >> showContextMenu [
 
 	self adapter innerWidgetDo: [ :w |
+		self updateDynamicActions.
+		self updateEnabledActions.
 		self 
 			showPopoverMenuFor: self actionGroups
 			at: (w root computePositionOfPointerTarget: w) ]
@@ -263,7 +268,7 @@ GtkAdapterActionManager >> showContextMenu [
 
 { #category : 'private - actions' }
 GtkAdapterActionManager >> showPopoverMenuFor: anArrayOfGroups at: position [
-
+	
 	self 
 		deferredShowPopoverMenuFor: anArrayOfGroups 
 		at: position 
