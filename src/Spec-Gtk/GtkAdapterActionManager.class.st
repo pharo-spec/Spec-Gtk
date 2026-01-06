@@ -196,8 +196,8 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 
 	gtkWidget addRightClickEvent: [ :event |
 		self flag: #WARNING. "For some reason if I put this inside of the #showPopoverMenuFor:at: 
-		function it will not work. This leads to some duplication of code, check at #showContextMenu 
-		if you will change this"
+		method (as it should be) it will not work. This leads to some duplication of code, check 
+		at #showContextMenu if you will change this"
 		self updateDynamicActions.
 		self updateEnabledActions.	
 		self 
