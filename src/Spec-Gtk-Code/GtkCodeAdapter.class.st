@@ -48,9 +48,9 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 
 	self flag: #TODO. "Find a better way to validate this"
 	(gtkSourceView isKindOf: GtkSourceView) ifFalse: [ ^ self ].
-	  
+
 	self flag: #TODO. "All this needs to come from settings"
-	gtkSourceView 
+	gtkSourceView
 		"this was leaking before 5.12.1, 
 		 see: https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/365
 		 I let the comment for future references"
@@ -58,14 +58,14 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		autoIndent: true;
 		indentOnTab: true;
 		tabWidth: 4.
-		
+
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
-	
-	self presenter 
+
+	self presenter
 		whenSyntaxHighlightThemeChangedDo: [ :theme | self updateSyntaxHighlightTheme: theme ];
 		whenStyleSchemeChangedDo: [ :scheme | self updateStyleScheme: scheme ];
-		whenLineNumbersChangedDo: [ :hasLineNumbers | gtkSourceView showLineNumbers: hasLineNumbers ]	
+		whenLineNumbersChangedDo: [ :hasLineNumbers | gtkSourceView showLineNumbers: hasLineNumbers ]
 ]
 
 { #category : 'building' }

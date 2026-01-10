@@ -3,7 +3,8 @@ Class {
 	#superclass : 'GtkAdapter',
 	#instVars : [
 		'runLoop',
-		'popupTimestamp'
+		'popupTimestamp',
+		'presented'
 	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
@@ -47,7 +48,7 @@ GtkPopoverAdapter >> buildWidget [
 
 { #category : 'api' }
 GtkPopoverAdapter >> dismiss [ 
-
+	presented ifFalse: [ ^ self ].
 	self widgetDo: [ :w | 
 		w popdown.
 		"I need to disconnect explicitly because it may cause gtk to send callbacks to 
@@ -62,6 +63,13 @@ GtkPopoverAdapter >> dismiss [
 		 "w unparent"
 		 "3/01/2025 -> I moved most of this to #unregister: (which is what happens on 
 		  hide... no idea how all this will work out." ]
+]
+
+{ #category : 'initialization' }
+GtkPopoverAdapter >> initialize [
+
+	presented := false.
+	super initialize
 ]
 
 { #category : 'api' }
@@ -86,6 +94,7 @@ GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 			w setPointingTo: aRectangle asGdkRectangle ].
 		popupTimestamp := DateAndTime now.
 		w popup.
+		presented := true.
 		self processInitializationDeferredActions ].
 	self presenter isTransferFocus 
 		ifTrue: [ self presenter takeKeyboardFocus ].
