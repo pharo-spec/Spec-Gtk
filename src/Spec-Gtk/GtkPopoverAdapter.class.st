@@ -15,8 +15,8 @@ Class {
 GtkPopoverAdapter >> addModelTo: gtkPopover [
 
 	gtkPopover child: self presenterWidget.	
-	gtkPopover connectClosed: [
-		self unregister: gtkPopover ].
+	gtkPopover connectClosed: [ self unregister: gtkPopover ].
+	
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
@@ -40,16 +40,11 @@ GtkPopoverAdapter >> announceOpened [
 	self presenter popoverOpened
 ]
 
-{ #category : 'building' }
-GtkPopoverAdapter >> buildWidget [
-	
-	^ super buildWidget
-]
-
 { #category : 'api' }
-GtkPopoverAdapter >> dismiss [ 
+GtkPopoverAdapter >> dismiss [
+
 	presented ifFalse: [ ^ self ].
-	self widgetDo: [ :w | 
+	self widgetDo: [ :w |
 		w popdown.
 		"I need to disconnect explicitly because it may cause gtk to send callbacks to 
 		 me and it may (most of the times it *will*) be already collected (then... 
@@ -153,8 +148,10 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 	| timeRunning |
 	
 	timeRunning := (DateAndTime now) - popupTimestamp.
+	
 	logger trace: gtkPopover.
 	logger trace: timeRunning.
+	
 	runLoop ifNotNil: [ runLoop done ].
 	self presenter owner takeKeyboardFocus.
 		
@@ -163,6 +160,7 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 		GEngine current unregisterWindow: gtkPopover.
 		self announceClosed ].
 	
+	"do some cleanup"
 	self widgetDo: [ :w | 
 		| child |
 		"ensure cleanup of adapters"
@@ -172,7 +170,16 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 		child := w child.
 		child withObjectReferenceDo: [
 			w child: GtkWidget null ].
-		w objectUnref ]
+		"unparent the popover before unreferencing it" 
+		w unparent ].
+	
+	"I give time GTK to perform all tasks they need for unparenting before release. 
+	 50 is a magic number get by 'guessing' technics"
+	[
+		50 milliSeconds wait.
+		self widgetDo: [ :w | w objectUnref ].
+		logger debug: 'UNREFERENCED'
+	] fork
 ]
 
 { #category : 'building' }
