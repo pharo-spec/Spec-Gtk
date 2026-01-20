@@ -61,7 +61,8 @@ GtkTreeListViewAdapter >> elementAt: index [
 { #category : 'testing' }
 GtkTreeListViewAdapter >> isAlive [ 
 	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget factory isNullOrNil not
 ]
 

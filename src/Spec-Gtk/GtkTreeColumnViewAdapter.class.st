@@ -62,7 +62,8 @@ configureScrolling
 { #category : 'testing' }
 GtkTreeColumnViewAdapter >> isAlive [
 	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget columns anyOne factory isNullOrNil not
 ]
 

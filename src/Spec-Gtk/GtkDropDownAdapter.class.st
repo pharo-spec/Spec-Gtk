@@ -76,7 +76,8 @@ GtkDropDownAdapter >> expressionFor: gtkDropDown atHandle: handle [
 { #category : 'testing' }
 GtkDropDownAdapter >> isAlive [
 	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget factory isNullOrNil not
 ]
 

@@ -103,7 +103,8 @@ GtkListViewAdapter >> isAlive [
 	 then the list is not there anymore.
 	 This is just a trick to avoid rwgistering *also the list* to the finalizeOnGtk 
 	 mechanism... it may be ugly, but it avoids too many registrations :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget factory isNullOrNil not
 ]
 
