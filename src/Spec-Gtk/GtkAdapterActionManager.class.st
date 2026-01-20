@@ -96,27 +96,6 @@ GtkAdapterActionManager >> buildMenuModelFor: anArrayOfGroups [
 		root
 ]
 
-{ #category : 'private - actions' }
-GtkAdapterActionManager >> deferredShowPopoverMenuFor: anArrayOfGroups at: position owner: gtkWidget [
-	| menuModel |
-	
-	menuModel := self buildMenuModelFor: anArrayOfGroups.
-	menuModel ifNil: [ ^ self ].
-
-	popoverContextMenu := (GtkPopoverMenu newFromModelFull: menuModel) ensureObjectRefAndAutoRelease.
-	popoverContextMenu parent: gtkWidget.
-	popoverContextMenu hasArrow: false.
-	popoverContextMenu autohide: true.
-	popoverContextMenu pointingTo: (position extent: 10@10).
-	
-	popoverContextMenu connectClosed: [
-		"release when closed, to ensure a finalize will happen before 
-		 close the window."
-		self resetContextMenu ].
-	
-	popoverContextMenu popup
-]
-
 { #category : 'accessing' }
 GtkAdapterActionManager >> hasContextMenu [
 
@@ -195,14 +174,9 @@ GtkAdapterActionManager >> installContextMenuOn: gtkWidget [
 	hasContextMenu := true.
 
 	gtkWidget addRightClickEvent: [ :event |
-		self flag: #WARNING. "For some reason if I put this inside of the #showPopoverMenuFor:at: 
-		method (as it should be) it will not work. This leads to some duplication of code, check 
-		at #showContextMenu if you will change this"
-		self updateDynamicActions.
-		self updateEnabledActions.	
-		self 
-			showPopoverMenuFor: self actionGroups
-			at: event position ]
+		(gtkWidget actionGroups flatCollect: #actions)
+			detect: [ :each | each name = 'show-context-menu' ]
+			ifFound: [ :anAction | anAction activate ] ]
 ]
 
 { #category : 'actions' }
@@ -259,20 +233,47 @@ GtkAdapterActionManager >> runInSystem: aBlock [
 GtkAdapterActionManager >> showContextMenu [
 
 	self adapter innerWidgetDo: [ :w |
+		self flag: #WARNING. "Is a mistery why, but if I put the update methods inside 
+		the show method as it should be this will not work correctly :("
 		self updateDynamicActions.
 		self updateEnabledActions.
 		self 
 			showPopoverMenuFor: self actionGroups
-			at: (w root computePositionOfPointerTarget: w) ]
+			at: (w root computePositionOfPointerTarget: w)
+			owner: w ]
 ]
 
 { #category : 'private - actions' }
-GtkAdapterActionManager >> showPopoverMenuFor: anArrayOfGroups at: position [
+GtkAdapterActionManager >> showPopoverMenuFor: anArrayOfGroups at: position owner: gtkWidget [
+	| menuModel |
 	
-	self 
-		deferredShowPopoverMenuFor: anArrayOfGroups 
-		at: position 
-		owner: self adapter innerWidget
+	menuModel := self buildMenuModelFor: anArrayOfGroups.
+	menuModel ifNil: [ ^ self ].
+
+	popoverContextMenu := GtkPopoverMenu newFromModelFull: menuModel.
+	popoverContextMenu objectRef.
+	popoverContextMenu parent: gtkWidget.
+	popoverContextMenu hasArrow: false.
+	popoverContextMenu autohide: true.
+	popoverContextMenu pointingTo: (position extent: 10@10).
+	
+	popoverContextMenu connectClosed: [
+		[ 	
+			"I need to wait to dispose the popover because otherwise action will not  be fired. 
+			 25 is a magic number"
+			25 milliSeconds wait.
+			GRunLoop defer: [
+				popoverContextMenu unparent.
+				popoverContextMenu objectUnref ].
+			self resetContextMenu 
+		] fork ].
+	
+	popoverContextMenu queueResize.
+	popoverContextMenu queueAllocate.
+		
+	gtkWidget addOneShotTickCallback: [ popoverContextMenu popup ].
+	
+	popoverContextMenu grabFocus
 ]
 
 { #category : 'private' }

@@ -71,7 +71,7 @@ GtkActionInstaller >> visitCommand: aCommand [
 	
 	action := (GSimpleAction newName: aCommand id)
 		connectActivate: [ 
-			self runInSystem: [ 
+			self runInSystem: [
 				aCommand canBeExecuted 
 					ifTrue: [ [ aCommand execute ] fork ] ] ];
 		yourself.
