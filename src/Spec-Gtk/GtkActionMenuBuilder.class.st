@@ -96,12 +96,11 @@ GtkActionMenuBuilder >> visitCommandGroup: aCommandGroup [
 	[ 
 		menu := GMenu new.
 		super visitCommandGroup: aCommandGroup.
-	  	oldMenu ifNotNil: [
-			aCommandGroup displayStrategy 
-				appendGroup: menu 
-				label: aCommandGroup name
-				to: oldMenu
-				in: self ]
+ 		aCommandGroup displayStrategy 
+			appendGroup: menu 
+			label: aCommandGroup name
+			to: oldMenu
+			in: self.
 	]	
 	ensure: [ 
 		menu := oldMenu ]
