@@ -132,5 +132,6 @@ GtkLabelAdapter >> updateLabel [
 { #category : 'accessing' }
 GtkLabelAdapter >> useMarkup [
 
-	useMarkup := true
+	useMarkup := true.
+	self updateLabel
 ]

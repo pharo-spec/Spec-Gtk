@@ -16,6 +16,28 @@ GtkToggleButtonAdapter >> addActionTo: gtkToggleButton [
 ]
 
 { #category : 'building' }
+GtkToggleButtonAdapter >> addGroupTo: gtkToggleButton [
+	| associated |
+	
+	associated := self presenter associatedToggleButtons.
+	"if there is no associated buttons I have nothing to do"
+	associated isEmptyOrNil ifTrue: [ ^ self ].
+	"doit at the end (after all the others have been do)"
+	(associated allSatisfy: [ :each | each hasAdapter ]) ifFalse: [ ^ self ].
+	"traverse all associated and set the group"
+	associated do: [ :each |
+		each adapter widget groupTo: gtkToggleButton ]
+]
+
+{ #category : 'building' }
+GtkToggleButtonAdapter >> addModelTo: gtkToggleButton [
+
+	gtkToggleButton active: self presenter state.
+	super addModelTo: gtkToggleButton.
+	self addGroupTo: gtkToggleButton
+]
+
+{ #category : 'building' }
 GtkToggleButtonAdapter >> setIconTo: gtkToggleButton [
 
 	gtkToggleButton image: self presenter icon asGtkImage
@@ -43,10 +65,9 @@ GtkToggleButtonAdapter >> updatePresenterStateOn: gtkToggleButton [
 GtkToggleButtonAdapter >> updateState [
 
 	self widgetDo: [ :w |
-		self state ifTrue: [ 
+		self presenter state ifTrue: [ 
 			self presenter associatedToggleButtons 
-				do: [ :each | each state: false ] ]. 
-		super updateState ]
+				do: [ :each | each state: false ] ] ]
 ]
 
 { #category : 'factory' }

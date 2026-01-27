@@ -16,7 +16,7 @@ GtkPatchLineVisitor >> addLineMark: anAssociation [
 	lineMarks add: anAssociation
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 GtkPatchLineVisitor >> incrementLineNumber [
 
 	lineNumber := lineNumber + 1

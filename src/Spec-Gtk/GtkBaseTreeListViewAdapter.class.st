@@ -118,12 +118,14 @@ GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel thenDo: aBlock
 { #category : 'testing' }
 GtkBaseTreeListViewAdapter >> isAlive [
 
-	self subclassResponsibility
+	^ self subclassResponsibility
 ]
 
 { #category : 'testing' }
 GtkBaseTreeListViewAdapter >> isExpanded: aPath [
 	| path expanded |
+	
+	aPath ifNil: [ ^ false ].
 	
 	expanded := false.
 	path := aPath collect: [ :each | each - 1 ].
@@ -163,9 +165,14 @@ GtkBaseTreeListViewAdapter >> itemAtPath: aPath [
 
 { #category : 'private' }
 GtkBaseTreeListViewAdapter >> itemAtPath: aPath from: aCollection [
-	| currentItem |
+	| index currentItem |
 	
-	currentItem := aCollection at: aPath first.
+	index := aPath first.
+	"in some cases, e.g. replace collection while preserving selection, the 
+	 new collection may not be of the same size... quick escape then."
+	aCollection size < index ifTrue: [ ^ nil ].
+	
+	currentItem := aCollection at: index.
 	aPath size = 1 ifTrue: [ ^ currentItem ].
 	
 	^ self critical: [ 
@@ -374,7 +381,7 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromPresenter: oldPath [
 				in: treeModel
 				thenDo: [ :row |
 					row isNullOrNil ifFalse: [ 
-					w 
+						w 
 						scrollToPosition: row position - 1
 						flags: GTK_LIST_SCROLL_FOCUS | GTK_LIST_SCROLL_SELECT.
 					"w selectionModel select: row position" ] ] ] ].

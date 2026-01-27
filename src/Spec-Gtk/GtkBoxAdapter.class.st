@@ -7,6 +7,27 @@ Class {
 }
 
 { #category : 'private' }
+GtkBoxAdapter >> add: aPresenter constraints: constraints after: siblingWidget [
+	"this is used while replacing, and is same as add:constraints: but with 
+	 a sibling widget"
+
+	aPresenter owner: self model. 
+	self widgetDo: [ :gtkWidget | 
+		| childWidget |
+		
+		childWidget := self 
+			basicInsert: aPresenter
+			constraints: constraints 
+			to: gtkWidget
+			after: siblingWidget.
+		self addWidgetAlignment: constraints to: childWidget.
+		"I'm keeping a reference to aPresenter into the built widget because in some cases 
+		 it can be GC (in case of the on-the-fly creation, for example). 
+		 Now this can be a real bad idea :)"
+		childWidget data: aPresenter ]
+]
+
+{ #category : 'private' }
 GtkBoxAdapter >> addConstraints: constraints toChild: childWidget [
 	"adds constraits by child."
 
@@ -77,6 +98,17 @@ GtkBoxAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	^ gtkWidget
 ]
 
+{ #category : 'private' }
+GtkBoxAdapter >> basicInsert: aPresenter constraints: constraints to: gtkWidget after: siblingWidget [
+
+	| childWidget |
+	childWidget := aPresenter buildWithSelector: constraints spec.
+	self addConstraints: constraints toChild: childWidget.
+	gtkWidget insert: childWidget after: siblingWidget.
+	
+	^ gtkWidget
+]
+
 { #category : 'testing' }
 GtkBoxAdapter >> childrenWidgets [
 	
@@ -97,17 +129,26 @@ GtkBoxAdapter >> newVertical [
 
 { #category : 'accessing' }
 GtkBoxAdapter >> replace: aPresenter with: otherPresenter withConstraints: constraints [
-	| index |
+	| oldWidget siblingWidget |
 	
 	"preserve aPresenter widget (in case it will be used later)"
-	aPresenter adapter widget ensureObjectRefAndAutoRelease.
-	index := widget children indexOf: aPresenter adapter widget.
+	oldWidget := aPresenter adapter widget. 
+	oldWidget ensureObjectRefAndAutoRelease.
+	siblingWidget := widget children before: oldWidget ifAbsent: [ nil ].	
+
 	self remove: aPresenter.
 	
-	self add: otherPresenter constraints: constraints.
+	siblingWidget
+		ifNotNil: [ 
+			self 
+				add: otherPresenter 
+				constraints: constraints 
+				after: siblingWidget ]
+		ifNil: [
+			self 
+				add: otherPresenter
+				constraints: constraints ] .
 	
-	self innerWidgetDo: [ :w |
-		w reorderChild: otherPresenter adapter widget position: index ]
 ]
 
 { #category : 'updating' }

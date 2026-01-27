@@ -72,6 +72,7 @@ GtkActionMenuBuilder >> root [
 GtkActionMenuBuilder >> visit: anObject [
 
 	root := GMenu new.
+	menu := root.
 	super visit: anObject.
 	^ root
 ]
@@ -92,17 +93,14 @@ GtkActionMenuBuilder >> visitCommandGroup: aCommandGroup [
 	| oldMenu |
 	
 	oldMenu := menu.
-	menu := menu 
-		ifNotNil: [ GMenu new ]
-		ifNil: [ root ].
 	[ 
+		menu := GMenu new.
 		super visitCommandGroup: aCommandGroup.
-	  	oldMenu ifNotNil: [
-			aCommandGroup displayStrategy 
-				appendGroup: menu 
-				label: aCommandGroup name
-				to: oldMenu
-				in: self ]
+ 		aCommandGroup displayStrategy 
+			appendGroup: menu 
+			label: aCommandGroup name
+			to: oldMenu
+			in: self.
 	]	
 	ensure: [ 
 		menu := oldMenu ]

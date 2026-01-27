@@ -10,7 +10,8 @@ Class {
 		'toolbar',
 		'statusBar',
 		'content',
-		'lastSizeAllocation'
+		'lastSizeAllocation',
+		'adapterHelper'
 	],
 	#pools : [
 		'GdkWindowState'
@@ -30,7 +31,9 @@ GtkBaseWindowAdapter >> activate [
 { #category : 'private' }
 GtkBaseWindowAdapter >> add: gtkBox toWindow: gtkWindow [
 
-	gtkWindow child: gtkBox
+	adapterHelper 
+		add: gtkBox 
+		toWindow: gtkWindow
 ]
 
 { #category : 'private - building' }
@@ -61,12 +64,10 @@ GtkBaseWindowAdapter >> addDeferredAction: aBlock [
 
 { #category : 'building' }
 GtkBaseWindowAdapter >> addModelTo: gtkWindow [
+
 	"model is not added here but in #addPresenterIn:withSpecLayout:. 
 	 Spec windows may have just ONE presenter"
 	
-	"gtkWindow connectWindowStateEvent: [ :event | 
-		minimized := (event new_window_state & GDK_WINDOW_STATE_ICONIFIED value) = GDK_WINDOW_STATE_ICONIFIED value.
-		false  ]"
 ]
 
 { #category : 'accessing' }
@@ -252,7 +253,7 @@ GtkBaseWindowAdapter >> deferredAddPresenterIn: gtkWindow withSpecLayout: aSpec 
 		gtkWindow defaultSize: extent ].
 	"self presenter initialPosition
 		ifNotNil: [ :position | gtkWindow moveTo: position ]."
-	gtkWindow decorated: self presenter hasDecorations.
+	self setDecorated: self presenter hasDecorations to: gtkWindow.
 	self subscribeDecorations.
 
 	"inner contents of window"
@@ -269,6 +270,16 @@ GtkBaseWindowAdapter >> delete [
 	self widgetDo: [ :w | 
 		w delete. 
 		self presenter application windowClosed: self ]
+]
+
+{ #category : 'private' }
+GtkBaseWindowAdapter >> findPresenterFocused: widgetFocused inTopLevel: aPresenter [
+
+	aPresenter traversePresentersDo: [ :each | 
+		(each adapter isFocusedWidgetSameAsMe: widgetFocused) 
+			ifTrue: [ ^ each ] ].
+
+	^ nil
 ]
 
 { #category : 'private - building' }
@@ -288,9 +299,10 @@ GtkBaseWindowAdapter >> inform: aString [
 
 { #category : 'initialization' }
 GtkBaseWindowAdapter >> initialize [
-
 	initialized := false.
+	adapterHelper := GtkWindowAdapterHelper on: self.
 	super initialize
+	
 ]
 
 { #category : 'spec protocol' }
@@ -321,6 +333,25 @@ GtkBaseWindowAdapter >> isTopWindow [
 		GEngine current ensureApplication activeWindow
 			ifNotNil: [ :active | active getHandle = w getHandle ]
 			ifNil: [ false ] ]
+]
+
+{ #category : 'accessing' }
+GtkBaseWindowAdapter >> lastPresenterFocused [
+	| widgetFocused |
+
+	widgetFocused := self innerWidget widgetFocused. 
+	widgetFocused isNullOrNil ifTrue: [ ^ nil ].
+	
+	(self findPresenterFocused: widgetFocused inTopLevel: self presenter presenter)
+		ifNotNil: [ :aPresenter | ^ aPresenter ].
+	"it may be a popover"
+	self presenter application windows 
+		select: [ :each | each isPopover ]
+		thenDo: [ :each | 
+			(self findPresenterFocused: widgetFocused inTopLevel: each presenter)
+				ifNotNil: [ :aPresenter | ^ aPresenter ] ].
+	
+	^ nil
 ]
 
 { #category : 'spec protocol' }
@@ -451,7 +482,16 @@ GtkBaseWindowAdapter >> resize: aPoint [
 { #category : 'private' }
 GtkBaseWindowAdapter >> setDecorated: aBoolean [
 
-	self widgetDo: [ :w | w decorated: aBoolean ]
+	self widgetDo: [ :w | 
+		self setDecorated: aBoolean to: w ]
+]
+
+{ #category : 'private - building' }
+GtkBaseWindowAdapter >> setDecorated: aBoolean to: gtkWindow [
+
+	adapterHelper 
+		setDecorated: aBoolean 
+		to: gtkWindow
 ]
 
 { #category : 'spec protocol' }
@@ -492,5 +532,5 @@ GtkBaseWindowAdapter >> toolbar [
 { #category : 'building' }
 GtkBaseWindowAdapter >> widgetClass [
 
-	^ GtkWindow "AdwWindow"
+	^ adapterHelper widgetClass
 ]

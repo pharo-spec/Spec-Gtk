@@ -1,6 +1,9 @@
 Class {
 	#name : 'GtkScrollableAdapter',
 	#superclass : 'GtkLayoutAdapter',
+	#pools : [
+		'GtkPolicyType'
+	],
 	#category : 'Spec-Gtk-Layout-Box',
 	#package : 'Spec-Gtk',
 	#tag : 'Layout-Box'
@@ -26,6 +29,18 @@ GtkScrollableAdapter >> addWidgetAlignment: constraints to: gtkWidget [
 GtkScrollableAdapter >> applyLayout: aLayout [
 
 	widget := GtkScrolledWindow new.
+	
+	widget propagateNaturalHeight: aLayout isPropagateNaturalHeight.
+	widget propagateNaturalWidth: aLayout isPropagateNaturalWidth.
+
+	widget 
+		policyHScrollbar: (aLayout hasHScrollbar 
+			ifTrue: [ GTK_POLICY_AUTOMATIC ] 
+			ifFalse: [ GTK_POLICY_NEVER ])
+		vScrollbar: (aLayout hasVScrollbar 
+			ifTrue: [ GTK_POLICY_AUTOMATIC ] 
+			ifFalse: [ GTK_POLICY_NEVER ]).
+	
 	self connectToEvents: aLayout
 ]
 
@@ -37,6 +52,18 @@ GtkScrollableAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWid
 	gtkWidget child: childWidget.
 			
 	^ gtkWidget
+]
+
+{ #category : 'removing' }
+GtkScrollableAdapter >> remove: aPresenter [
+
+	^ self widgetDo: [ :w |
+		| widgetToRemove |
+		widgetToRemove := aPresenter adapter widget.
+		logger trace: widgetToRemove.
+		widgetToRemove = w child ifTrue: [
+			self ensureRetained: widgetToRemove.
+			w removeChild ] ]
 ]
 
 { #category : 'scrolling' }

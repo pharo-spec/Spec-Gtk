@@ -40,12 +40,7 @@ GtkCodeTagTableManager >> initialize [
 { #category : 'private' }
 GtkCodeTagTableManager >> newTagTableFor: aName [
 	
-	self flag: #TODO. "highlight color in the style table? In any case, not here :P"
-	^ (GtkTextTagTable newForCode: (self styleTableFor: aName))
-		add: ((GtkTextTag newName: 'highlight')
-			background: (Color orange alpha: 0.2);
-			yourself);
-		yourself
+	^ GtkTextTagTable newForCode: (self styleTableFor: aName)
 ]
 
 { #category : 'private' }

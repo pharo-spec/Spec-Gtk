@@ -13,7 +13,12 @@ GtkTreeColumnViewAdapter >> addModelTo: gtkColumnView [
 	"gtkColumnView headerFactory: self newHeaderFactory."
 	self critical: [
 		self presenter columns withIndexDo: [ :each :index |
-			gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each index: index) ] ].
+			| column |
+			column := self newGtkColumnViewColumnFrom: each index: index.
+			gtkColumnView appendColumn: column.
+			"store the model in the first column"
+			index = 1 ifTrue: [
+				column factory storeModel ] ] ].
 	
 	self refreshSelectionModelIn: gtkColumnView.
 	gtkColumnView singleClickActivate: self presenter isActiveOnSingleClick.
@@ -57,7 +62,8 @@ configureScrolling
 { #category : 'testing' }
 GtkTreeColumnViewAdapter >> isAlive [
 	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget columns anyOne factory isNullOrNil not
 ]
 
@@ -116,6 +122,18 @@ GtkTreeColumnViewAdapter >> scrollToSelection [
 { #category : 'private' }
 GtkTreeColumnViewAdapter >> scrollToSelectionIfNeeded: index [ 
 	self flag: #TODO. "no sense here, but I need to refactory the presenter, I think"
+]
+
+{ #category : 'api - selection' }
+GtkTreeColumnViewAdapter >> selectedRowPresenter [
+	"answers the selected presenter. 
+	 This will just work if the presenters are model based presenter (so I can get them). "
+	| item |
+
+	item := self presenter selection selectedItem.
+	item ifNil: [ ^ nil ].
+	
+	^ self innerWidget columns first factory presenterForModel: item
 ]
 
 { #category : 'private - updating' }

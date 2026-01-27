@@ -40,21 +40,15 @@ GtkTextAdapter >> addModelTo: gtkTextView [
 	self presenter whenWrapWordChangedDo: [ :value |
 		self setWrapWord: value to: gtkTextView ].
 	
-	self addTextBufferTo: gtkTextView.	
-	
-	self flag: #Gtk4. "In fact, GtkTextView does not has undo/redo in Gtk3, but is 
-	present in Gtk4. I will wait until we move there to implement this (since it does not 
-	has sense to hack that before)"
-	self presenter hasUndoRedoHistory 
-		ifTrue: [ "do something" ]
-		ifFalse: [ "do something else" ]
+	self addTextBufferTo: gtkTextView
 ]
 
 { #category : 'building' }
 GtkTextAdapter >> addTextBufferTo: gtkTextView [
 
-	gtkTextView textBuffer connectChanged: [
-		self updatePresenterText: gtkTextView text ]
+	gtkTextView textBuffer
+		undoEnabled: self presenter hasUndoRedoHistory;
+		connectChanged: [ self updatePresenterText: gtkTextView text ]
 ]
 
 { #category : 'api' }
@@ -135,7 +129,10 @@ GtkTextAdapter >> performScrollToLine: aNumberZeroBased [
 GtkTextAdapter >> scrollToLine: aNumberZeroBased [
 
 	[ 
-		50 milliSeconds wait.
+		self flag: #MAGIC. "Waiting 100 milliseconds to ensure the buffer is updated or something. 
+		For some reason the scroll will not happen if done immediately... current number is taken
+		by proove and error :)"
+		100 milliSeconds wait.
 		"I need to check this is running because system would be stop 
 		 while waiting (yes, that happens)"
 		GEngine isRunning 

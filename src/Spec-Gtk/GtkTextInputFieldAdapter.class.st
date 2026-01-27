@@ -54,6 +54,14 @@ GtkTextInputFieldAdapter >> getPlaceholderText [
 ]
 
 { #category : 'testing' }
+GtkTextInputFieldAdapter >> isFocusedWidgetSameAsMe: aWidget [
+	| gtkText |
+
+	gtkText := self innerWidget widgetChildren first.
+	^ gtkText getHandle = aWidget getHandle
+]
+
+{ #category : 'testing' }
 GtkTextInputFieldAdapter >> isPassword [
 	
 	^ widget isPassword 

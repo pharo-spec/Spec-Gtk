@@ -37,17 +37,25 @@ GtkListViewAdapter >> addModelTo: gtkListView [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 
 	gtkListView connectRowActivated: [ :position |
-		self runInSystem: [ 
-			self presenter doActivateAtIndex: position + 1 ] ].
+		self announceActivated: position ].
 	
 	self configureScrolling
 ]
 
 { #category : 'api' }
 GtkListViewAdapter >> alternateRowsColor [
-
+	"since gtk does not plays nice with alternate row colors (and I need to 
+	 hack it if I want it), instead I am just showinf row separators, for now."
 	self innerWidgetDo: [ :w | 
 		w showSeparators: true ]
+]
+
+{ #category : 'private' }
+GtkListViewAdapter >> announceActivated: position [
+
+	self runInSystem: [
+		self critical: [
+			self presenter doActivateAtIndex: position + 1 ] ]
 ]
 
 { #category : 'building' }
@@ -95,7 +103,8 @@ GtkListViewAdapter >> isAlive [
 	 then the list is not there anymore.
 	 This is just a trick to avoid rwgistering *also the list* to the finalizeOnGtk 
 	 mechanism... it may be ugly, but it avoids too many registrations :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget factory isNullOrNil not
 ]
 
@@ -132,6 +141,9 @@ GtkListViewAdapter >> newStore [
 GtkListViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
+	
+		self isAlive ifFalse: [ ^ self ].
+	
 		self innerWidgetDo: [ :w |
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
@@ -164,8 +176,11 @@ GtkListViewAdapter >> refreshWidgetSelection [
 
 { #category : 'private' }
 GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
-
+	
 	((index < 1) or: [ self presenter items isEmpty ]) ifTrue: [ ^ self ].
+
+	logger trace: index.
+
 	self innerWidgetDo: [ :w |
 		w 
 			scrollToPosition: index - 1 

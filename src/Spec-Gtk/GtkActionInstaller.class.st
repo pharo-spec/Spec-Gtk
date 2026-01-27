@@ -1,12 +1,19 @@
 "
 installs the actions into a presenter.
+
+# Dynamic groups
+In addition, this class will collect **dynamic groups** (which actions cannot be installed directly).  
+This groups can be kept by the action manager to install them later (when menu is shown).
+ 
 "
 Class {
 	#name : 'GtkActionInstaller',
 	#superclass : 'GtkActionVisitor',
 	#instVars : [
 		'actionGroup',
-		'actionMap'
+		'actionMap',
+		'dynamicGroups',
+		'replaceGroup'
 	],
 	#category : 'Spec-Gtk-Actions',
 	#package : 'Spec-Gtk',
@@ -25,6 +32,31 @@ GtkActionInstaller >> actionGroup: anActionGroup [
 	actionGroup := anActionGroup
 ]
 
+{ #category : 'accessing' }
+GtkActionInstaller >> actionMap [
+
+	^ actionMap
+]
+
+{ #category : 'accessing' }
+GtkActionInstaller >> beReplaceGroup [
+
+	replaceGroup := true
+]
+
+{ #category : 'accessing' }
+GtkActionInstaller >> dynamicGroups [
+
+	^ dynamicGroups
+]
+
+{ #category : 'initialization' }
+GtkActionInstaller >> initialize [ 
+
+	replaceGroup := false.
+	super initialize
+]
+
 { #category : 'visiting' }
 GtkActionInstaller >> visit: anObject [
 
@@ -39,13 +71,20 @@ GtkActionInstaller >> visitCommand: aCommand [
 	
 	action := (GSimpleAction newName: aCommand id)
 		connectActivate: [ 
-			self runInSystem: [ 
+			self runInSystem: [
 				aCommand canBeExecuted 
 					ifTrue: [ [ aCommand execute ] fork ] ] ];
 		yourself.
 
 	actionMap at: aCommand put: action.
 	self actionGroup insert: action
+]
+
+{ #category : 'visiting' }
+GtkActionInstaller >> visitCommandDynamicGroup: aCommandGroup [
+
+	dynamicGroups ifNil: [ dynamicGroups := OrderedCollection new ].
+	dynamicGroups add: aCommandGroup
 ]
 
 { #category : 'visiting' }
@@ -57,6 +96,9 @@ GtkActionInstaller >> visitCommandGroup: aCommandGroup [
 	[	
 		actionGroup := GSimpleActionGroup new.
 		aCommandGroup entries do: [ :entry | entry acceptVisitor: self ].
+		"if replaceGroup is true I want to replace any existing group. So I try first to remove it"
+		replaceGroup ifTrue: [
+			self widget removeActionGroupNamed: self prefix ].
 		self widget 
 			insertActionGroup: self prefix
 			actions: self actionGroup ]

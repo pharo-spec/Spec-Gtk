@@ -68,6 +68,12 @@ GtkActionVisitor >> runInSystem: aBlock [
 ]
 
 { #category : 'visiting' }
+GtkActionVisitor >> visitCommandDynamicGroup: aDynamicGroup [
+	
+	"self visitCommandGroup: aDynamicGroup resolve"
+]
+
+{ #category : 'visiting' }
 GtkActionVisitor >> visitCommandGroup: aCommandGroup [
 
 	self pushPrefix: aCommandGroup.

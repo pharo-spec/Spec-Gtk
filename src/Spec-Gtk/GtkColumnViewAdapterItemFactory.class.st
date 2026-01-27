@@ -2,7 +2,9 @@ Class {
 	#name : 'GtkColumnViewAdapterItemFactory',
 	#superclass : 'GtkListViewAdapterBaseFactory',
 	#instVars : [
-		'column'
+		'column',
+		'storeModel',
+		'modelsAndPresenters'
 	],
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
@@ -25,9 +27,14 @@ GtkColumnViewAdapterItemFactory >> bind: listItem to: anObject [
 	child := self presenterAtHandle: listItem child.
 	child ifNil: [ ^ self ].
 	
+	storeModel ifTrue: [
+		self storeModelPresenter: child model: anObject ].
+	
 	self column bindAction
 		value: child 
-		value: anObject
+		value: anObject.
+		
+	
 ]
 
 { #category : 'accessing' }
@@ -42,6 +49,23 @@ GtkColumnViewAdapterItemFactory >> column: aColumn [
 	column := aColumn
 ]
 
+{ #category : 'initialization' }
+GtkColumnViewAdapterItemFactory >> initialize [
+
+	super initialize.
+	storeModel := false
+]
+
+{ #category : 'accessing' }
+GtkColumnViewAdapterItemFactory >> presenterForModel: anObject [
+
+	modelsAndPresenters ifNil: [ ^ nil ].
+	
+	^ modelsAndPresenters 
+		at: anObject 
+		ifAbsent: [ nil ]
+]
+
 { #category : 'accessing' }
 GtkColumnViewAdapterItemFactory >> setup: listItem [
 	| child |
@@ -52,4 +76,19 @@ GtkColumnViewAdapterItemFactory >> setup: listItem [
 	self storePresenter: child.
 
 	listItem child: child adapter widget
+]
+
+{ #category : 'accessing' }
+GtkColumnViewAdapterItemFactory >> storeModel [
+
+	storeModel := true
+]
+
+{ #category : 'private' }
+GtkColumnViewAdapterItemFactory >> storeModelPresenter: aPresenter model: anObject [
+
+	modelsAndPresenters ifNil: [ modelsAndPresenters := WeakValueDictionary new ].
+	modelsAndPresenters 
+		at: anObject 
+		put: aPresenter
 ]
