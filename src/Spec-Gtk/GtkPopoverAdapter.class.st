@@ -3,7 +3,8 @@ Class {
 	#superclass : 'GtkAdapter',
 	#instVars : [
 		'runLoop',
-		'popupTimestamp'
+		'popupTimestamp',
+		'presented'
 	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
@@ -14,8 +15,8 @@ Class {
 GtkPopoverAdapter >> addModelTo: gtkPopover [
 
 	gtkPopover child: self presenterWidget.	
-	gtkPopover connectClosed: [
-		self unregister: gtkPopover ].
+	gtkPopover connectClosed: [ self unregister: gtkPopover ].
+	
 	self setPopoverPositionTo: gtkPopover.
 	
 	self presenter whenPresenterChangedDo: [
@@ -39,16 +40,11 @@ GtkPopoverAdapter >> announceOpened [
 	self presenter popoverOpened
 ]
 
-{ #category : 'building' }
-GtkPopoverAdapter >> buildWidget [
-	
-	^ super buildWidget
-]
-
 { #category : 'api' }
-GtkPopoverAdapter >> dismiss [ 
+GtkPopoverAdapter >> dismiss [
 
-	self widgetDo: [ :w | 
+	presented ifFalse: [ ^ self ].
+	self widgetDo: [ :w |
 		w popdown.
 		"I need to disconnect explicitly because it may cause gtk to send callbacks to 
 		 me and it may (most of the times it *will*) be already collected (then... 
@@ -64,6 +60,13 @@ GtkPopoverAdapter >> dismiss [
 		  hide... no idea how all this will work out." ]
 ]
 
+{ #category : 'initialization' }
+GtkPopoverAdapter >> initialize [
+
+	presented := false.
+	super initialize
+]
+
 { #category : 'api' }
 GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 
@@ -72,8 +75,11 @@ GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 	self widgetDo: [ :w | 
 		| relativeTo |
 		"try this to not grab input (which is probably causing the thing to not 
-		 give me back control... is annoying, however)"
-		w autohide: false. "aBoolean"
+		 give me back control... is annoying, however).
+		 Trying again setting it to boolean, to see if this is fixed by magic :P
+		 (if this does not works, remember autohide: false
+		 2025/11/27 - no, this is still not working :("
+		w autohide: "aBoolean" false.
 		self register: w.
 		relativeTo := self presenter relativeTo adapter innerWidget.
 		logger trace: relativeTo.
@@ -83,6 +89,7 @@ GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 			w setPointingTo: aRectangle asGdkRectangle ].
 		popupTimestamp := DateAndTime now.
 		w popup.
+		presented := true.
 		self processInitializationDeferredActions ].
 	self presenter isTransferFocus 
 		ifTrue: [ self presenter takeKeyboardFocus ].
@@ -141,8 +148,10 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 	| timeRunning |
 	
 	timeRunning := (DateAndTime now) - popupTimestamp.
+	
 	logger trace: gtkPopover.
 	logger trace: timeRunning.
+	
 	runLoop ifNotNil: [ runLoop done ].
 	self presenter owner takeKeyboardFocus.
 		
@@ -151,6 +160,7 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 		GEngine current unregisterWindow: gtkPopover.
 		self announceClosed ].
 	
+	"do some cleanup"
 	self widgetDo: [ :w | 
 		| child |
 		"ensure cleanup of adapters"
@@ -160,7 +170,16 @@ GtkPopoverAdapter >> unregister: gtkPopover [
 		child := w child.
 		child withObjectReferenceDo: [
 			w child: GtkWidget null ].
-		w objectUnref ]
+		"unparent the popover before unreferencing it" 
+		w unparent ].
+	
+	"I give time GTK to perform all tasks they need for unparenting before release. 
+	 50 is a magic number get by 'guessing' technics"
+	[
+		50 milliSeconds wait.
+		self widgetDo: [ :w | w objectUnref ].
+		logger debug: 'UNREFERENCED'
+	] fork
 ]
 
 { #category : 'building' }

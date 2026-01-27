@@ -28,6 +28,14 @@ GtkNumberInputFieldAdapter >> addModelTo: gtkSpinButton [
 		ifNotNil: [ :rate | gtkSpinButton climbRate: rate ]
 ]
 
+{ #category : 'testing' }
+GtkNumberInputFieldAdapter >> isFocusedWidgetSameAsMe: aWidget [
+	| gtkText |
+
+	gtkText := self innerWidget widgetChildren first.
+	^ gtkText getHandle = aWidget getHandle
+]
+
 { #category : 'building' }
 GtkNumberInputFieldAdapter >> newActionManager [
 

@@ -1,6 +1,9 @@
 Class {
 	#name : 'GtkSpinnerAdapter',
 	#superclass : 'GtkAdapter',
+	#instVars : [
+		'adapterHelper'
+	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter'
@@ -15,6 +18,14 @@ GtkSpinnerAdapter >> addModelTo: aSpinner [
 		self updateSpinner: aSpinner withState: state. ]"
 ]
 
+{ #category : 'initialization' }
+GtkSpinnerAdapter >> initialize [
+
+	adapterHelper := GtkSpinnerAdapterHelper on: self.
+	super initialize
+	
+]
+
 { #category : 'building' }
 GtkSpinnerAdapter >> updateSpinner: aSpinner withState: state [
 
@@ -26,5 +37,5 @@ GtkSpinnerAdapter >> updateSpinner: aSpinner withState: state [
 { #category : 'building' }
 GtkSpinnerAdapter >> widgetClass [
 
-	^ GtkSpinner
+	^ adapterHelper widgetClass
 ]

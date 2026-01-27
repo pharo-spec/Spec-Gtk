@@ -48,9 +48,9 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 
 	self flag: #TODO. "Find a better way to validate this"
 	(gtkSourceView isKindOf: GtkSourceView) ifFalse: [ ^ self ].
-	  
+
 	self flag: #TODO. "All this needs to come from settings"
-	gtkSourceView 
+	gtkSourceView
 		"this was leaking before 5.12.1, 
 		 see: https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/365
 		 I let the comment for future references"
@@ -61,9 +61,11 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
-	
-	self presenter whenLineNumbersChangedDo: [ :hasLineNumbers |
-		gtkSourceView showLineNumbers: hasLineNumbers ]
+
+	self presenter
+		whenSyntaxHighlightThemeChangedDo: [ :theme | self updateSyntaxHighlightTheme: theme ];
+		whenStyleSchemeChangedDo: [ :scheme | self updateStyleScheme: scheme ];
+		whenLineNumbersChangedDo: [ :hasLineNumbers | gtkSourceView showLineNumbers: hasLineNumbers ]
 ]
 
 { #category : 'building' }
@@ -108,6 +110,9 @@ GtkCodeAdapter >> applyStyleTo: textBuffer [
 
 	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
 	self presenter text isEmptyOrNil ifTrue: [ ^ self ].
+	
+	logger trace: textBuffer.
+	
 	textBuffer removeAllTags.
 	
 	[ 
@@ -146,6 +151,15 @@ GtkCodeAdapter >> bufferClass [
 		ifFalse: [ super bufferClass ]
 ]
 
+{ #category : 'api - search' }
+GtkCodeAdapter >> caseSensitive: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings caseSensitive: aBoolean ]
+]
+
 { #category : 'private - shout' }
 GtkCodeAdapter >> classOrMetaClass: aClass [
 	"I will take the behavior from model, I just need to fire a refresh"
@@ -171,6 +185,15 @@ GtkCodeAdapter >> doItContext [
 GtkCodeAdapter >> doItReceiver [
 
 	^ self presenter doItReceiver
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> endSearch [
+
+	self innerWidgetDo: [ :w | 
+		w textBuffer 
+			removeTagByName: 'searchOccurrence';
+			resetSearchContext ]
 ]
 
 { #category : 'private' }
@@ -217,8 +240,20 @@ GtkCodeAdapter >> hasSyntaxHighlightEnabled [
 	^ self presenter hasSyntaxHighlight
 ]
 
+{ #category : 'private - search' }
+GtkCodeAdapter >> highlightMatch: start end: end in: aWidget [
+	| buffer |
+	
+	buffer := aWidget textBuffer. 
+	buffer removeTagByName: 'searchOccurrence'.
+	buffer 
+		applyTagByName: 'searchOccurrence'
+		startIter: start
+		endIter: end
+]
+
 { #category : 'api - search' }
-GtkCodeAdapter >> highlightSearchText: aBoolean [ 
+GtkCodeAdapter >> highlightSearchText: aBoolean [
 
 	self innerWidgetDo: [ :w |
 		w textBuffer searchContext highlight: aBoolean ]
@@ -269,10 +304,37 @@ GtkCodeAdapter >> interactionModel: anInteractionModel [
 	self classOrMetaClass: anInteractionModel behavior
 ]
 
+{ #category : 'api - search' }
+GtkCodeAdapter >> isCaseSensitive [
+
+	^ self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings isCaseSensitive ]
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> isRegex [
+
+	^ self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings isRegexEnabled ]
+]
+
 { #category : 'api - shout' }
 GtkCodeAdapter >> isScripting [
 
 	^ self presenter isScripting
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> isWholeWord [
+
+	^ self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings atWordBoundaries ]
 ]
 
 { #category : 'building' }
@@ -295,17 +357,6 @@ GtkCodeAdapter >> newCompletionEngine: anInteractionModel [
 ]
 
 { #category : 'private - factory' }
-GtkCodeAdapter >> newTagTable [
-	
-	self flag: #TODO. "highlight color in a setting"
-	^ (GtkTextTagTable newForCode: self styleTable)
-		add: ((GtkTextTag newName: 'highlight')
-			background: (Color orange alpha: 0.2);
-			yourself);
-		yourself
-]
-
-{ #category : 'private - factory' }
 GtkCodeAdapter >> newTextBuffer [
 
 	^ self bufferClass new
@@ -318,7 +369,7 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 	textBuffer := self bufferClass newTable: self usingTagTable.
 	textBuffer connectChanged: [ 
 		self applyFullStyleTo: textBuffer ].
-
+	
 	^ textBuffer
 ]
 
@@ -332,6 +383,7 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 		ifFalse: [ self newTextBuffer ].
 
 	textBuffer styleScheme: self styleScheme.
+	textBuffer searchContext highlight: false.
 
 	aString ifNotNil: [ 
 		textBuffer text: aString ].
@@ -345,6 +397,7 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 	textBuffer connectChanged: [
 		self withCycleDetectionOnBackendDo: [ 
 			self innerWidgetDo: [ :w | self updatePresenterText: w text ] ] ].
+
 
 	^ textBuffer
 ]
@@ -363,10 +416,55 @@ GtkCodeAdapter >> refreshStyling [
 		self applyStyleTo: w textBuffer ]
 ]
 
+{ #category : 'api - search' }
+GtkCodeAdapter >> regex: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings regexEnabled: aBoolean ]
+]
+
 { #category : 'api - segments' }
 GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	
 	self flag: #TODO.
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> replaceAllMatchesWith: aString [
+
+	self backendUpdatingDo: [
+		self innerWidgetDo: [ :w |
+			| buffer |
+			buffer := w textBuffer.
+			buffer
+				blockCallback: GChangedCallback signalName 
+				during: [ 
+					buffer searchContext 
+						replaceAllWith: aString; 
+						resetCurrentMatch.
+					self applyStyleTo: buffer.
+					self presenter text: buffer text ] ] ]
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> replaceSelectionWith: aString [
+	
+	logger trace: aString.
+
+	self backendUpdatingDo: [
+		self innerWidgetDo: [ :w |
+			| buffer |
+			buffer := w textBuffer.
+			buffer
+				blockCallback: GChangedCallback signalName 
+				during: [ 
+					buffer searchContext replaceMatchWith: aString.
+					buffer cursorPosition: buffer searchContext currentMatchRange last.
+					self applyStyleTo: buffer.
+					self presenter text: buffer text ].
+			self searchForward ] ]
 ]
 
 { #category : 'private' }
@@ -388,9 +486,8 @@ GtkCodeAdapter >> searchBackward [
 		buffer := w textBuffer.
 		buffer searchContext 
 			backwardThenDo: [ :start :end :wrappedAround | 
-				buffer
-					selectRangeInsert: start 
-					bound: end ] ]
+				buffer selectRangeInsert: start bound: end.
+				self highlightMatch: start end: end in: w ] ]
 ]
 
 { #category : 'api - search' }
@@ -401,17 +498,32 @@ GtkCodeAdapter >> searchForward [
 		buffer := w textBuffer.
 		buffer searchContext 
 			forwardThenDo: [ :start :end :wrappedAround | 
+				self scrollToIter: end in: w.
 				buffer selectRangeInsert: start bound: end.
-				self scrollToIter: start in: w ] ]
+				self highlightMatch: start end: end in: w ] ]
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> searchOccurrencesCount [
+	| result |
+
+	result := self innerWidgetDo: [ :w | w textBuffer searchContext occurrencesCount ].
+	
+	^ result max: 0
 ]
 
 { #category : 'api - search' }
 GtkCodeAdapter >> searchText: aString [
 
-	self innerWidgetDo: [ :w | | searchContext |
+	aString ifEmpty: [ ^ self endSearch ].
+
+	self innerWidgetDo: [ :w | 
+		| searchContext |
+
+		w textBuffer removeTagByName: 'searchOccurrence'.
 		searchContext := w textBuffer searchContext.
 		searchContext searchText: aString.
-		self startSearch: searchContext ]
+		self searchForward ]
 ]
 
 { #category : 'api - shout' }
@@ -434,12 +546,13 @@ GtkCodeAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer 
 { #category : 'private - shout' }
 GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [ 
 
+	logger trace.
+
 	(GtkTextStyleVisitor new
 		requestor: self; 
 		contextClass: aClass;
 		styleMethod: aString)
 		do: [ :each | each acceptTextBuffer: textBuffer ].
-
 ]
 
 { #category : 'building' }
@@ -450,18 +563,6 @@ GtkCodeAdapter >> setText: aString to: gtkWidget [
 		textBuffer := self newTextBufferForText: aString.
 		gtkWidget textBuffer: textBuffer.
 		self userActionDo: [ :action | action registerChange ] ]
-]
-
-{ #category : 'private' }
-GtkCodeAdapter >> startSearch: aSearchContext [
-	| start |
-
-	self flag: #TODO. "maybe start this from cursor position"
-	start := self innerWidget textBuffer startIter.
-	aSearchContext 
-		forwardAsync: start 
-		onFirstPositionDo: [ :matchStart :matchEnd |
-			self scrollToIter: matchStart in: self innerWidget ]
 ]
 
 { #category : 'private' }
@@ -501,6 +602,29 @@ GtkCodeAdapter >> updateCompletionProvider [
 		p completionEngine completionClass: self behavior ]
 ]
 
+{ #category : 'building' }
+GtkCodeAdapter >> updateStyleScheme: aScheme [
+	
+	logger trace: aScheme.
+	
+	self innerWidgetDo: [ :w | 
+		| scheme |
+		scheme := GtkSourceStyleSchemeManager default schemeWithId: aScheme.
+		scheme isNullOrNil
+			ifTrue: [ logger debug: 'Style scheme "[aScheme]" not found.' ]
+			ifFalse: [ w textBuffer styleScheme: scheme ] ]
+]
+
+{ #category : 'building' }
+GtkCodeAdapter >> updateSyntaxHighlightTheme: aSyntaxHighlightTheme [
+
+	"I actually need to re-draw the text buffer to change the theme :("
+	self innerWidgetDo: [ :w |
+		self 
+			setText: self presenter text
+			to: w ]
+]
+
 { #category : 'private' }
 GtkCodeAdapter >> userActionDo: aBlock [
 
@@ -510,7 +634,8 @@ GtkCodeAdapter >> userActionDo: aBlock [
 
 { #category : 'api' }
 GtkCodeAdapter >> userActionDuring: aBlock [
-
+	logger trace. 
+	
 	userAction := GtkCodeUserAction new.
 	self innerWidgetDo: [ :w |
 		w textBuffer 
@@ -519,7 +644,7 @@ GtkCodeAdapter >> userActionDuring: aBlock [
 				w textBuffer userActionDuring: aBlock.
 				userAction hasChanged ifTrue: [
 					userAction := nil.
-					self applyFullStyleTo: w textBuffer ] ] ].
+					self applyFullStyleTo: w textBuffer ] ] ]
 ]
 
 { #category : 'private' }
@@ -527,6 +652,15 @@ GtkCodeAdapter >> usingTagTable [
 
 	^ (GtkCodeTagTableManager for: self presenter application) 
 		tagTableFor: self presenter
+]
+
+{ #category : 'api - search' }
+GtkCodeAdapter >> wholeWord: aBoolean [
+
+	self innerWidgetDo: [ :w |
+		| buffer |
+		buffer := w textBuffer.
+		buffer searchContext settings atWordBoundaries: aBoolean ]
 ]
 
 { #category : 'building' }

@@ -21,6 +21,8 @@ GtkTreeColumnViewAdapterItemFactory >> bind: listItem [
 	itemStore := store storeAt: (itemReference dataAt: 'store').
 	item := itemStore itemAtHandle: itemReference getHandle.
 	itemReference objectUnref.
+	storeModel ifTrue: [
+		self storeModelPresenter: child model: item ].
 
 	self column bindAction
 		value: child 

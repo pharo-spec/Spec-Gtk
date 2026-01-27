@@ -35,7 +35,16 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 		
 	gtkDropDown connectSelectedItem: [ 
-		self updatePresenterSelectionFromGtk ]
+		self updatePresenterSelectionFromGtk ].
+		
+	"hack because the first one will be selected anyway"
+	self presenter items ifNotEmpty: [
+		| selection index |
+		selection := self presenter selection.
+		"index will be 0 if no selection"
+		index := selection selectedIndex max: 1.
+		selection disableChangedDuring: [ 
+			selection selectIndex: index ] ]
 ]
 
 { #category : 'private' }
@@ -67,7 +76,8 @@ GtkDropDownAdapter >> expressionFor: gtkDropDown atHandle: handle [
 { #category : 'testing' }
 GtkDropDownAdapter >> isAlive [
 	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget factory isNullOrNil not
 ]
 

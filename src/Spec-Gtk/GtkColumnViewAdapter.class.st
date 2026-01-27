@@ -16,8 +16,13 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 
 	"gtkColumnView headerFactory: self newHeaderFactory."
 
-	self presenter columns do: [ :each |
-		gtkColumnView appendColumn: (self newGtkColumnViewColumnFrom: each) ].
+	self presenter columns withIndexDo: [ :each :index |
+		| column |
+		column := self newGtkColumnViewColumnFrom: each.
+		gtkColumnView appendColumn: column.
+		"store the model in the first column"
+		index = 1 ifTrue: [
+			column factory storeModel ] ].
 		
 	self refreshSelectionModelIn: gtkColumnView.
 	gtkColumnView singleClickActivate: self presenter isActiveOnSingleClick.
@@ -73,7 +78,8 @@ GtkColumnViewAdapter >> elementAt: index [
 { #category : 'testing' }
 GtkColumnViewAdapter >> isAlive [
 	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
-
+	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget columns anyOne factory isNullOrNil not
 ]
 
@@ -150,6 +156,9 @@ GtkColumnViewAdapter >> newStore [
 GtkColumnViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
+	
+		self isAlive ifFalse: [ ^ self ].	
+	
 		self innerWidgetDo: [ :w |
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
@@ -197,10 +206,23 @@ GtkColumnViewAdapter >> refreshWidgetSelection [
 { #category : 'private' }
 GtkColumnViewAdapter >> scrollToSelectionIfNeeded: index [
 
+	((index < 1) or: [ self presenter items isEmpty ]) ifTrue: [ ^ self ].
 	self innerWidgetDo: [ :w |
 		w 
 			scrollToPosition: index - 1 
 			flags: GtkListScrollFlags GTK_LIST_SCROLL_FOCUS ]
+]
+
+{ #category : 'api - selection' }
+GtkColumnViewAdapter >> selectedRowPresenter [
+	"answers the selected presenter. 
+	 This will just work if the presenters are model based presenter (so I can get them). "
+	| item |
+
+	item := self presenter selection selectedItem.
+	item ifNil: [ ^ nil ].
+	
+	^ self innerWidget columns first factory presenterForModel: item
 ]
 
 { #category : 'private' }

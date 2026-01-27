@@ -95,9 +95,10 @@ box.toolbar .toolbarButton > button { padding: 1px; margin: 1px; }
  * It may evolve with time :(. 
  */
 box.response-area { margin: 12px; }
-box.response-area button { margin-left: 12px; padding: 8px 30px 8px 30px; }
+box.response-area button { margin-top: 12px; margin-left: 12px; padding: 8px 30px 8px 30px; }
 box.response-area > button:first-child { margin-left: 0px; }
-box.message-area { margin: 24px; }
+box.message-area { margin: 18px; }
+box.message-area label.body { margin: 6px 18px 6px 18px; }
 box.message-area entry { margin-top: 24px; }
 
 /*
@@ -229,7 +230,8 @@ SpGtkConfiguration >> initializeEngine [
 { #category : 'private' }
 SpGtkConfiguration >> installTheme: aString [
 
-	self settings themeName: aString
+	"in fact, this is not possible anymore"
+	"self settings themeName: aString" 
 ]
 
 { #category : 'testing' }

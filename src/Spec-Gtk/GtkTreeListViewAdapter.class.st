@@ -59,8 +59,10 @@ GtkTreeListViewAdapter >> elementAt: index [
 ]
 
 { #category : 'testing' }
-GtkTreeListViewAdapter >> isAlive [
+GtkTreeListViewAdapter >> isAlive [ 
+	"this trick is important, see GtkListViewAdapter>>#isAlive comment :P"
 	
+	self innerWidget ifNil: [ ^ false ].
 	^ self innerWidget factory isNullOrNil not
 ]
 
@@ -80,6 +82,9 @@ GtkTreeListViewAdapter >> newItemFactory [
 GtkTreeListViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
+		
+		self isAlive ifFalse: [ ^ self ].
+		
 		self innerWidgetDo: [ :w |
 			w selectionModel unselectAll.
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
