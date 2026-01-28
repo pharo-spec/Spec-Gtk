@@ -32,7 +32,7 @@ GtkActionMenuBuilder >> appendSection: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
 		appendLabel: nil
-		section: menu
+		section: aMenu
 ]
 
 { #category : 'visiting' }
@@ -40,7 +40,7 @@ GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
 		appendLabel: aName 
-		submenu: menu
+		submenu: aMenu
 ]
 
 { #category : 'accessing' }
