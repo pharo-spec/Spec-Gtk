@@ -69,12 +69,17 @@ GtkActionInstaller >> visit: anObject [
 GtkActionInstaller >> visitCommand: aCommand [
 	| action |
 	
-	action := (GSimpleAction newName: aCommand id)
-		connectActivate: [ 
-			self runInSystem: [
-				aCommand canBeExecuted 
-					ifTrue: [ [ aCommand execute ] fork ] ] ];
-		yourself.
+	action := aCommand hasState 
+		ifTrue: [ GSimpleAction newNameStateful: aCommand id state: aCommand state ]
+		ifFalse: [ GSimpleAction newName: aCommand id ].
+	action connectActivate: [
+		self runInSystem: [
+			aCommand canBeExecuted ifTrue: [ 
+				aCommand hasState ifTrue: [ 
+					aCommand toggleState.
+					GRunLoop defer: [ 
+						action state: aCommand state ] ].
+				aCommand execute ] ] ].
 
 	actionMap at: aCommand put: action.
 	self actionGroup insert: action
