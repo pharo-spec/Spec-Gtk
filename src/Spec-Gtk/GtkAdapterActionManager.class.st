@@ -235,9 +235,8 @@ GtkAdapterActionManager >> showContextMenu [
 	self adapter innerWidgetDo: [ :w |
 		self flag: #WARNING. "Is a mistery why, but if I put the update methods inside 
 		the show method as it should be this will not work correctly :("
-		self updateDynamicActions.
-		self updateEnabledActions.
-		self 
+		self updateActions.
+		self
 			showPopoverMenuFor: self actionGroups
 			at: (w root computePositionOfPointerTarget: w)
 			owner: w ]
@@ -276,7 +275,15 @@ GtkAdapterActionManager >> showPopoverMenuFor: anArrayOfGroups at: position owne
 	popoverContextMenu grabFocus
 ]
 
-{ #category : 'private' }
+{ #category : 'updating' }
+GtkAdapterActionManager >> updateActions [
+
+	self updateDynamicActions.
+	self updateEnabledActions.
+	self updateStatefulActions
+]
+
+{ #category : 'updating' }
 GtkAdapterActionManager >> updateDynamicActions [
 	"dynamic actions need to be installed each time we will show the menu 
 	 (as they are calculated dynamically)"
@@ -316,4 +323,13 @@ GtkAdapterActionManager >> updateOn: gtkWidget [
 	gtkWidget removeAllActions.
 	
 	self installOn: gtkWidget
+]
+
+{ #category : 'updating' }
+GtkAdapterActionManager >> updateStatefulActions [
+	
+	self adapter innerWidgetDo: [ :w | 
+		actionMap keysAndValuesDo: [ :command :action |
+			command hasState 
+				ifTrue: [ action state: command state ] ] ]
 ]

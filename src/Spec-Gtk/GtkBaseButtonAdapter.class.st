@@ -17,7 +17,7 @@ GtkBaseButtonAdapter >> addModelTo: gtkButton [
 	gtkButton child: self labelAndIcon.
 
 	self hasLabelOrIcon
-		ifTrue: [ self updateLabelAndIconTo: gtkButton ] .
+		ifTrue: [ self updateLabelAndIconTo: gtkButton ].
 
 	self connectToSpecEvents: gtkButton
 ]
