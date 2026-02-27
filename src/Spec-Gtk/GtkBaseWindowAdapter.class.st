@@ -413,7 +413,10 @@ GtkBaseWindowAdapter >> open [
 GtkBaseWindowAdapter >> openWithDeferredAction: aBlock [
  
 	self hasWidget ifFalse: [ ^ nil ].
-	self widgetDo: [ :w | w present ].
+	self widgetDo: [ :w | 
+		self presenter owner 
+			ifNotNil: [ :anOwner | w transientTo: anOwner adapter widget ].
+		w present ].
 	self processInitializationDeferredActions.
 	self presenter presenter takeKeyboardFocus.
 	self announceOpened.
@@ -452,6 +455,7 @@ GtkBaseWindowAdapter >> processDeferredActions [
 { #category : 'private' }
 GtkBaseWindowAdapter >> processInitializationDeferredActions [
 	
+	logger trace.
 	self presenter traversePresentersDo: [ :each | 
 		each adapter ifNotNil: [ :anAdapter |
 			anAdapter doInitializationDeferredActions ] ] 
