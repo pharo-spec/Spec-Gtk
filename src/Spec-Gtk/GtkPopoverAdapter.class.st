@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'runLoop',
 		'popupTimestamp',
-		'presented'
+		'presented',
+		'mutex'
 	],
 	#category : 'Spec-Gtk-Adapter',
 	#package : 'Spec-Gtk',
@@ -45,19 +46,7 @@ GtkPopoverAdapter >> dismiss [
 
 	presented ifFalse: [ ^ self ].
 	self widgetDo: [ :w |
-		w popdown.
-		"I need to disconnect explicitly because it may cause gtk to send callbacks to 
-		 me and it may (most of the times it *will*) be already collected (then... 
-		 well, crash)."
-		"3/01/2025 -> testing without"
-		"w disconnectAll."
-		"unset parent (no idea if this is ok, but there is an error around saying: 
-		 Funalizing X but it has children left
-			- GtkPopover... etc.
-		 which indicates I am not disposing correcly this guys..."
-		 "w unparent"
-		 "3/01/2025 -> I moved most of this to #unregister: (which is what happens on 
-		  hide... no idea how all this will work out." ]
+		w popdown ]
 ]
 
 { #category : 'initialization' }
@@ -65,6 +54,12 @@ GtkPopoverAdapter >> initialize [
 
 	presented := false.
 	super initialize
+]
+
+{ #category : 'accessing' }
+GtkPopoverAdapter >> mutex [
+
+	^ mutex ifNil: [ mutex := Mutex new ]
 ]
 
 { #category : 'api' }
@@ -146,40 +141,49 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 	| timeRunning |
-	
+		
 	timeRunning := (DateAndTime now) - popupTimestamp.
 	
 	logger trace: gtkPopover.
 	logger trace: timeRunning.
-	
-	runLoop ifNotNil: [ runLoop done ].
-	self presenter owner takeKeyboardFocus.
+
+	self mutex critical: [ 
+		| copyHandle |		
 		
-	"fire close announcement"
-	self runInSystem: [  
-		GEngine current unregisterWindow: gtkPopover.
-		self announceClosed ].
-	
-	"do some cleanup"
-	self widgetDo: [ :w | 
-		| child |
-		"ensure cleanup of adapters"
-		self presenter presenter 
-			traversePresentersDo: [ :aPresenter | aPresenter adapter: nil ].
-		"clean up of widget"
-		child := w child.
-		child withObjectReferenceDo: [
-			w child: GtkWidget null ].
-		"unparent the popover before unreferencing it" 
-		w unparent ].
-	
-	"I give time GTK to perform all tasks they need for unparenting before release. 
-	 50 is a magic number get by 'guessing' technics"
-	[
-		50 milliSeconds wait.
-		self widgetDo: [ :w | w objectUnref ].
-		logger debug: 'UNREFERENCED'
-	] fork
+		presented := false.
+		
+		runLoop ifNotNil: [ runLoop done ].
+		self presenter owner takeKeyboardFocus.
+			
+		"fire close announcement"
+		self runInSystem: [  
+			GEngine current unregisterWindow: gtkPopover.
+			self announceClosed ].
+		
+		"do some cleanup"
+		self widgetDo: [ :w | 
+			| child |
+			"ensure cleanup of adapters"
+			self presenter presenter 
+				traversePresentersDo: [ :aPresenter | aPresenter adapter: nil ].
+			"clean up of widget"
+			child := w child.
+			child withObjectReferenceDo: [
+				w child: GtkWidget null ].
+			"unparent the popover before unreferencing it" 
+			w unparent.
+			"I take a copy because I will nil but I still need to unref it"
+			copyHandle := w getHandle copy. 
+			w getHandle beNull ].
+		
+		"I give time GTK to perform all tasks they need for unparenting before release. 
+		 50 is a magic number get by 'guessing' technics"
+		[
+			50 milliSeconds wait.
+			GRunLoop defer: [ GObject objectUnref: copyHandle ].
+			logger debug: 'DELAYED UNREFERENCED'
+		] fork 
+	]
 ]
 
 { #category : 'building' }

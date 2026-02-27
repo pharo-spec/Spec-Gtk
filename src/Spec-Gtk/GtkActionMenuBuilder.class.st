@@ -27,12 +27,29 @@ GtkActionMenuBuilder >> allPrefixes [
 	^ super allPrefixes
 ]
 
+{ #category : 'private' }
+GtkActionMenuBuilder >> appendCommand: aCommand withIcon: anIcon [
+	| item icon |
+
+	icon := anIcon asGIcon.
+	item := GMenuItem 
+		newLabel: aCommand dynamicName 
+		action: (self actionNameFor: aCommand). 
+	
+	item label: aCommand dynamicName.
+	item icon: icon.
+	
+	menu appendItem: item.
+	
+	item objectUnref
+]
+
 { #category : 'visiting' }
 GtkActionMenuBuilder >> appendSection: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
 		appendLabel: nil
-		section: menu
+		section: aMenu
 ]
 
 { #category : 'visiting' }
@@ -40,7 +57,7 @@ GtkActionMenuBuilder >> appendSubmenu: aMenu label: aName to: parentMenu [
 	
 	parentMenu 
 		appendLabel: aName 
-		submenu: menu
+		submenu: aMenu
 ]
 
 { #category : 'accessing' }
@@ -82,7 +99,11 @@ GtkActionMenuBuilder >> visitCommand: aCommand [
 	
 	aCommand isVisible ifFalse: [ ^ self ].
 	(self isFiltered: aCommand) ifTrue: [ ^ self ].
-
+	
+	"aCommand icon ifNotNil: [ :anIcon | 
+		self appendCommand: aCommand withIcon: anIcon.		
+		^ self ]."
+	
 	menu 
 		appendLabel: aCommand dynamicName 
 		actionName: (self actionNameFor: aCommand)
