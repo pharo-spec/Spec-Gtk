@@ -463,6 +463,7 @@ GtkBaseWindowAdapter >> processDeferredActions [
 { #category : 'private' }
 GtkBaseWindowAdapter >> processInitializationDeferredActions [
 	
+	logger trace.
 	self presenter traversePresentersDo: [ :each | 
 		each adapter ifNotNil: [ :anAdapter |
 			anAdapter doInitializationDeferredActions ] ] 
