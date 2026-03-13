@@ -6,7 +6,7 @@ GtkTextTagTable class >> newForCode: attrArray [
 	
 	table := self new.
 	attrArray keysAndValuesDo: [ :aName :attributes | | tag |
-		tag := GtkTextTag newName: aName asString.
+		tag := GtkTextTag newUnownedName: aName asString.
 		attributes do: [ :each | each acceptTag: tag ].
 		table add: tag ].
 

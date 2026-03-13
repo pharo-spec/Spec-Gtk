@@ -13,10 +13,25 @@ Class {
 		'applicationClass',
 		'applicationId'
 	],
+	#classVars : [
+		'UseApplicationEngine'
+	],
 	#category : 'Spec-Gtk-Base',
 	#package : 'Spec-Gtk',
 	#tag : 'Base'
 }
+
+{ #category : 'accessing' }
+SpGtkConfiguration class >> useApplicationEngine: aBoolean [
+
+	UseApplicationEngine := aBoolean
+]
+
+{ #category : 'testing' }
+SpGtkConfiguration class >> usesApplicationEngine [
+
+	^ UseApplicationEngine ifNil: [ false ]
+]
 
 { #category : 'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromPath: aString [
@@ -141,6 +156,28 @@ SpGtkConfiguration >> buttonSelectedColor [
 { #category : 'configuring' }
 SpGtkConfiguration >> configure: anApplication [
 
+	self class usesApplicationEngine
+		ifTrue: [ self configureApplicationEngine: anApplication ]
+		ifFalse: [ self configureEngine: anApplication ]
+]
+
+{ #category : 'configuring' }
+SpGtkConfiguration >> configureApplicationEngine: anApplication [
+
+	GtkApplicationEngine new
+		applicationClass: AdwApplication;
+		whenActivatedDo: [ 
+			self addPredefinedStyles.
+			self configureGeneral: anApplication.
+			self configurePlatform: anApplication.
+			anApplication start ];
+		install
+
+]
+
+{ #category : 'configuring' }
+SpGtkConfiguration >> configureEngine: anApplication [
+
 	self initializeEngine.
 	GRunLoop defer: [
 		self addPredefinedStyles.
@@ -208,7 +245,7 @@ SpGtkConfiguration >> getTextBackgroundColor [
 	self deprecated: #Gtk4
 ]
 
-{ #category : 'configuring' }
+{ #category : 'private' }
 SpGtkConfiguration >> initializeEngine [
 	
 	GEngine isRunning ifTrue: [

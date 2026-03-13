@@ -65,7 +65,7 @@ SpecGtkBackend >> forceDefer: aBlock [
 { #category : 'initialization' }
 SpecGtkBackend >> initialize [
 
-	GtkEngine ensureRunning.
+	"GtkEngine ensureRunning."
 	super initialize
 ]
 
@@ -140,6 +140,14 @@ SpecGtkBackend >> openFileDialog: aFileDialog [
 				sem signal ] ].
 	sem wait.
 	^ result ifNotNil: [ result path asFileReference ]
+]
+
+{ #category : 'running' }
+SpecGtkBackend >> runOn: anApplication [
+
+	(GEngine current isKindOf: GtkApplicationEngine)
+		ifTrue: [ GEngine current run ]
+		ifFalse: [ super runOn: anApplication ]
 ]
 
 { #category : 'private' }

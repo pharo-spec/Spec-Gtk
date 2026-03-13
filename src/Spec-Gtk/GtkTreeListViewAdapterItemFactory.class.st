@@ -15,7 +15,7 @@ GtkTreeListViewAdapterItemFactory >> bind: listItem [
 
 	expander :=  self objectAtHandle: listItem child.
 	
-	row := GtkTreeListRow fromHandleUnreferenced: listItem item getHandle.
+	row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
 	expander listRow: row.
 	child := self presenterAtHandle: expander child getHandle.
 	child ifNil: [ ^ self ].

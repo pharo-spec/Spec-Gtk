@@ -275,7 +275,7 @@ GtkBaseTreeListViewAdapter >> updateMultiSelectionFromGtk [
 			| selection row  |
 			selection :=  w selectionModel.
 			selection selectedItems do: [ :rowHandle |
-				row := GtkTreeListRow fromHandleUnreferenced: rowHandle getHandle.
+				row := GtkTreeListRow fromHandleUnowned: rowHandle getHandle.
 				paths add: (row withItemDo: [ :item | 
 					selection model store pathOfItem: item ]) ] ] ].
 
@@ -349,7 +349,7 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromGtk [
 		self critical: [
 			| selection row |
 			selection :=  w selectionModel.
-			row := GtkTreeListRow fromHandleUnreferenced: selection selectedItem getHandle.
+			row := GtkTreeListRow fromHandleUnowned: selection selectedItem getHandle.
 			path := row withItemDo: [ :item |
 				selection model store pathOfItem: item ] ] ].
 	
