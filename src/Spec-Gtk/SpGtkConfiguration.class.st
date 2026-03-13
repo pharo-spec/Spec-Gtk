@@ -165,6 +165,7 @@ SpGtkConfiguration >> configure: anApplication [
 SpGtkConfiguration >> configureApplicationEngine: anApplication [
 
 	GtkApplicationEngine new
+		id: self applicationId;
 		applicationClass: AdwApplication;
 		whenActivatedDo: [ 
 			self addPredefinedStyles.
