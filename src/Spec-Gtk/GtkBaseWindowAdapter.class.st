@@ -299,10 +299,10 @@ GtkBaseWindowAdapter >> inform: aString [
 
 { #category : 'initialization' }
 GtkBaseWindowAdapter >> initialize [
+
 	initialized := false.
 	adapterHelper := GtkWindowAdapterHelper on: self.
 	super initialize
-	
 ]
 
 { #category : 'spec protocol' }
@@ -528,10 +528,14 @@ GtkBaseWindowAdapter >> subscribeDecorations [
 
 { #category : 'accessing' }
 GtkBaseWindowAdapter >> title: aString [ 
+	| localizedTitle |
+
+	localizedTitle := aString ifNotNil: [ :theString | theString localizedForPresenter: self presenter].
+
+	logger trace: localizedTitle.
 
 	self widgetDo: [ :w | 
-		w title: (aString ifNotNil: [ :theString | 
-			theString localizedForPresenter: self presenter]) ]
+		adapterHelper setTitle: localizedTitle to: w ]
 ]
 
 { #category : 'private - building' }
