@@ -299,10 +299,10 @@ GtkBaseWindowAdapter >> inform: aString [
 
 { #category : 'initialization' }
 GtkBaseWindowAdapter >> initialize [
+
 	initialized := false.
 	adapterHelper := GtkWindowAdapterHelper on: self.
 	super initialize
-	
 ]
 
 { #category : 'spec protocol' }
@@ -360,6 +360,15 @@ GtkBaseWindowAdapter >> maximize [
 	self widgetDo: [ :w | w maximize ]
 ]
 
+{ #category : 'private' }
+GtkBaseWindowAdapter >> maybeAddTransientTo: gtkWindow [
+	| presenterOwner |
+
+	presenterOwner := self presenter owner.
+	(presenterOwner isNotNil and: [ presenterOwner isWindow ])
+		ifTrue: [ gtkWindow transientTo: presenterOwner adapter widget ]
+]
+
 { #category : 'private - building' }
 GtkBaseWindowAdapter >> menuBarAccelInstalledOn: gtkWindow [
 
@@ -413,7 +422,9 @@ GtkBaseWindowAdapter >> open [
 GtkBaseWindowAdapter >> openWithDeferredAction: aBlock [
  
 	self hasWidget ifFalse: [ ^ nil ].
-	self widgetDo: [ :w | w present ].
+	self widgetDo: [ :w | 
+		self maybeAddTransientTo: w.
+		w present ].
 	self processInitializationDeferredActions.
 	self presenter presenter takeKeyboardFocus.
 	self announceOpened.
@@ -452,6 +463,7 @@ GtkBaseWindowAdapter >> processDeferredActions [
 { #category : 'private' }
 GtkBaseWindowAdapter >> processInitializationDeferredActions [
 	
+	logger trace.
 	self presenter traversePresentersDo: [ :each | 
 		each adapter ifNotNil: [ :anAdapter |
 			anAdapter doInitializationDeferredActions ] ] 
@@ -516,10 +528,14 @@ GtkBaseWindowAdapter >> subscribeDecorations [
 
 { #category : 'accessing' }
 GtkBaseWindowAdapter >> title: aString [ 
+	| localizedTitle |
+
+	localizedTitle := aString ifNotNil: [ :theString | theString localizedForPresenter: self presenter].
+
+	logger trace: localizedTitle.
 
 	self widgetDo: [ :w | 
-		w title: (aString ifNotNil: [ :theString | 
-			theString localizedForPresenter: self presenter]) ]
+		adapterHelper setTitle: localizedTitle to: w ]
 ]
 
 { #category : 'private - building' }

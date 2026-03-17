@@ -129,10 +129,10 @@ GtkTextAdapter >> performScrollToLine: aNumberZeroBased [
 GtkTextAdapter >> scrollToLine: aNumberZeroBased [
 
 	[ 
-		self flag: #MAGIC. "Waiting 100 milliseconds to ensure the buffer is updated or something. 
+		self flag: #MAGIC. "Waiting 250 milliseconds to ensure the buffer is updated or something. 
 		For some reason the scroll will not happen if done immediately... current number is taken
 		by proove and error :)"
-		100 milliSeconds wait.
+		250 milliSeconds wait.
 		"I need to check this is running because system would be stop 
 		 while waiting (yes, that happens)"
 		GEngine isRunning 

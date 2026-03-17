@@ -29,7 +29,8 @@ GtkSwitchAdapter >> state [
 { #category : 'updating' }
 GtkSwitchAdapter >> updatePresenterState [
 	
-	self presenter state: self state
+	self runInSystem: [ 
+		self presenter state: self state ]
 ]
 
 { #category : 'updating' }

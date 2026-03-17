@@ -33,6 +33,12 @@ GtkWindowAdapterHelper >> setDecorated: aBoolean to: gtkWindow [
 	gtkWindow decorated: aBoolean
 ]
 
+{ #category : 'initialization' }
+GtkWindowAdapterHelper >> setTitle: aString to: gtkWindow [
+
+	GRunLoop defer: [ gtkWindow title: aString ]
+]
+
 { #category : 'accessing' }
 GtkWindowAdapterHelper >> widgetClass [
 

@@ -13,7 +13,7 @@ Class {
 GtkTreeColumnViewAdapterItemFactory >> bind: listItem [
 	| child row itemReference itemStore item |
 
-	row := GtkTreeListRow fromHandleUnreferenced: listItem item getHandle.
+	row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
 	child := self presenterAtHandle: listItem child getHandle.
 	child ifNil: [ ^ self ].
 	

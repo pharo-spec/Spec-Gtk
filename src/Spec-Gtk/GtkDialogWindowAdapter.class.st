@@ -57,7 +57,7 @@ GtkDialogWindowAdapter >> close [
 GtkDialogWindowAdapter >> closeFromSignal [
 
 	super closeFromSignal.
-	runLoop done
+	runLoop stop
 ]
 
 { #category : 'private - building' }
@@ -109,7 +109,7 @@ GtkDialogWindowAdapter >> newWidget [
 { #category : 'accessing' }
 GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 
-	runLoop := GtkContextRunLoop new.
+	runLoop := GtkContextRunLoop forContext: GRunLoop current isInCallback.
 	self widgetDo: [ :w |
 		self presenter owner 
 			ifNotNil: [ :parent | w transientTo: parent adapter widget ].
@@ -119,8 +119,7 @@ GtkDialogWindowAdapter >> openWithDeferredAction: aBlock [
 		self presenter presenter takeKeyboardFocus ].
 	self announceOpened.
 	aBlock value.	
-	"This will block until dialog is closed (see `closeFromSignal`)"
-	GRunLoop defer: [ runLoop run ].
+	runLoop start. "run loop will be stopped in #closeFromSignal"
 	self widgetDo: [ :w | adapterHelper destroy: w ]
 ]
 

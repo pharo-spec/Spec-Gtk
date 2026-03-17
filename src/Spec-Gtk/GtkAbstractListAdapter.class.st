@@ -88,8 +88,7 @@ GtkAbstractListAdapter >> takeKeyboardFocus [
 	| needToCleanUP |
 
 	self hasWidget ifFalse: [ ^ self ].
-	self flag: #hack.
-	"GTK has an issue when giving the focus to a List. When it gives the focus selects the first element"	
+	self flag: #hack. "GTK has an issue when giving the focus to a List. When it gives the focus selects the first element"	
 	needToCleanUP := self presenter selection isEmpty.
 	needToCleanUP 
 		ifTrue: [ 

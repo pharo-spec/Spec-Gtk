@@ -88,12 +88,14 @@ GtkPatchAdapter >> setPatch: aPatchModel [
 
 { #category : 'private - accessing' }
 GtkPatchAdapter >> setPatch: patch to: gtkTextView [ 
-	| visitor |
+	| visitor contents |
 	
 	visitor := GtkPatchLineVisitor new 
 		visitPatch: patch;
 		yourself.	
-	self setText: visitor contents to: gtkTextView.
+	
+	contents := visitor contents.
+	self setText: contents to: gtkTextView.
 	visitor lineMarks do: [ :eachAssoc |
 		self 
 			addMark: eachAssoc value 
@@ -121,8 +123,7 @@ GtkPatchAdapter >> setText: aString to: gtkWidget [
 	self withCycleDetectionOnBackendDo: [
 		| textBuffer |
 		textBuffer := self newTextBufferForText: aString.
-		gtkWidget textBuffer: textBuffer.
-		textBuffer objectUnref ]
+		gtkWidget textBuffer: textBuffer ]
 ]
 
 { #category : 'private' }
