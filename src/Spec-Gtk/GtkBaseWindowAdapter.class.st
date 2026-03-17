@@ -1,3 +1,6 @@
+"
+A base for window adapters.
+"
 Class {
 	#name : 'GtkBaseWindowAdapter',
 	#superclass : 'GtkAdapter',
