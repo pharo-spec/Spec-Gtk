@@ -64,6 +64,9 @@ GtkPopoverAdapter >> mutex [
 
 { #category : 'api' }
 GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
+	self flag: #EXPERIMENTAL. "Lets see if this time I can fix my popover problem"
+	aBoolean ifTrue: [
+		^ self popupModalPointingTo: aRectangle ].
 
 	"runLoop := GtkContextRunLoop new."
 	logger trace.
@@ -91,6 +94,33 @@ GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 	[ self announceOpened ] fork.
 	"GRunLoop defer: [ runLoop run ]."
 	runLoop := nil
+]
+
+{ #category : 'api' }
+GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
+
+	runLoop := GtkContextRunLoop forContext: GRunLoop current isInCallback.
+	
+	logger trace: runLoop.
+	
+	self widgetDo: [ :w | 
+		| relativeTo |
+		w autohide: true.
+		self register: w.
+		relativeTo := self presenter relativeTo adapter innerWidget.
+		logger trace: relativeTo.
+		w parent: relativeTo.
+		logger trace: aRectangle.
+		aRectangle ifNotNil: [ 
+			w setPointingTo: aRectangle asGdkRectangle ].
+		popupTimestamp := DateAndTime now.
+		w popup.
+		presented := true.
+		self processInitializationDeferredActions ].
+	self presenter isTransferFocus 
+		ifTrue: [ self presenter takeKeyboardFocus ].
+	[ self announceOpened ] fork.
+	runLoop run
 ]
 
 { #category : 'building' }
