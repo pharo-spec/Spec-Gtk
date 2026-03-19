@@ -65,7 +65,7 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 	self presenter
 		whenSyntaxHighlightThemeChangedDo: [ :theme | self updateSyntaxHighlightTheme: theme ];
 		whenStyleSchemeChangedDo: [ :scheme | self updateStyleScheme: scheme ];
-		whenLineNumbersChangedDo: [ :hasLineNumbers | gtkSourceView showLineNumbers: hasLineNumbers ]
+		whenLineNumbersChangedDo: [ :hasLineNumbers | self updateLineNumbers: hasLineNumbers ]
 ]
 
 { #category : 'building' }
@@ -600,6 +600,13 @@ GtkCodeAdapter >> updateCompletionProvider [
 	
 	completionProvider ifNotNil: [ :p | 
 		p completionEngine completionClass: self behavior ]
+]
+
+{ #category : 'building' }
+GtkCodeAdapter >> updateLineNumbers: hasLineNumbers [
+
+	self innerWidgetDo: [ :w |
+		w showLineNumbers: hasLineNumbers ]
 ]
 
 { #category : 'building' }
