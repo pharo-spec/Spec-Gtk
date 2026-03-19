@@ -71,25 +71,28 @@ GtkPatchSideBySideAdapter >> applyFullStyleTo: textBuffer [
 
 { #category : 'private' }
 GtkPatchSideBySideAdapter >> applyStyleTo: textBuffer [
+	| behavior |
 
-	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
-	self presenter text isEmptyOrNil ifTrue: [ ^ self ].
+	"self presenter hasSyntaxHighlight ifFalse: [ ^ self ]."
+	"self presenter text isEmptyOrNil ifTrue: [ ^ self ]."
 	
 	logger trace: textBuffer.
 	
 	textBuffer removeAllTags.
 	
+	behavior := self presenter model originBehavior. 
+	
 	[ 
-		(self isScripting or: [ self behavior isNil ])
+		behavior isNil
 			ifTrue: [
 				self 
 					setExpressionText: textBuffer text 
-					class: self behavior 
+					class: behavior 
 					toBuffer: textBuffer  ]
 			ifFalse: [ 
 				self 
 					setMethodText: textBuffer text 
-					class: self behavior 
+					class: behavior 
 					toBuffer: textBuffer ] ]
 	on: Error 
 	fork: [ :e | e pass ]
@@ -126,8 +129,8 @@ GtkPatchSideBySideAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
 	textBuffer := self bufferClass newTable: self usingTagTable.
-	"textBuffer connectChanged: [ 
-		self applyFullStyleTo: textBuffer ]."
+	textBuffer connectChanged: [ 
+		self applyFullStyleTo: textBuffer ].
 	
 	^ textBuffer
 ]
@@ -153,6 +156,29 @@ GtkPatchSideBySideAdapter >> newWidget [
 		append: leftSourceView;
 		append: rightSourceView;
 		yourself
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer [
+	logger trace.
+
+	(GtkTextStyleVisitor new 
+		requestor: SpCodeScriptingInteractionModel new;
+		contextClass: aClass;
+		styleExpression: aString)
+		do: [ :each | each acceptTextBuffer: textBuffer ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [ 
+
+	logger trace.
+
+	(GtkTextStyleVisitor new
+		requestor: (SpCodeBehaviorInteractionModel on: aClass); 
+		contextClass: aClass;
+		styleMethod: aString)
+		do: [ :each | each acceptTextBuffer: textBuffer ]
 ]
 
 { #category : 'private - accessing' }
