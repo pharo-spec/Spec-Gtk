@@ -74,6 +74,7 @@ GtkPatchAdapter >> newTextBufferForHighlight [
 
 { #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForText: aString [
+
 	^ self newTextBufferForHighlight
 		styleScheme: self styleScheme;
 		highlightMatchingBrackets: true;

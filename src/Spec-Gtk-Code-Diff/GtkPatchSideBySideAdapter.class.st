@@ -3,7 +3,8 @@ Class {
 	#superclass : 'GtkAdapter',
 	#instVars : [
 		'leftSourceView',
-		'rightSourceView'
+		'rightSourceView',
+		'userAction'
 	],
 	#category : 'Spec-Gtk-Code-Diff',
 	#package : 'Spec-Gtk-Code-Diff'
@@ -56,6 +57,51 @@ GtkPatchSideBySideAdapter >> addPatchTo: aView [
 ]
 
 { #category : 'private' }
+GtkPatchSideBySideAdapter >> applyFullStyleTo: textBuffer [
+
+	"If I am in an user action, I will not do anything now, just register for change (it 
+	 will be executed later)."
+	self userActionDo: [ :anUserAction | 
+		anUserAction registerChange.
+		^ self ].
+
+	textBuffer userActionDuring: [ 
+		self applyStyleTo: textBuffer ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> applyStyleTo: textBuffer [
+
+	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
+	self presenter text isEmptyOrNil ifTrue: [ ^ self ].
+	
+	logger trace: textBuffer.
+	
+	textBuffer removeAllTags.
+	
+	[ 
+		(self isScripting or: [ self behavior isNil ])
+			ifTrue: [
+				self 
+					setExpressionText: textBuffer text 
+					class: self behavior 
+					toBuffer: textBuffer  ]
+			ifFalse: [ 
+				self 
+					setMethodText: textBuffer text 
+					class: self behavior 
+					toBuffer: textBuffer ] ]
+	on: Error 
+	fork: [ :e | e pass ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> bufferClass [ 
+	
+	^ GtkSourceBuffer
+]
+
+{ #category : 'private' }
 GtkPatchSideBySideAdapter >> marks [
 	
 	^ self presenter marks
@@ -73,6 +119,27 @@ GtkPatchSideBySideAdapter >> newSourceView [
 		tabWidth: 4;
 		yourself
 
+]
+
+{ #category : 'private - factory' }
+GtkPatchSideBySideAdapter >> newTextBufferForHighlight [
+	| textBuffer |
+
+	textBuffer := self bufferClass newTable: self usingTagTable.
+	"textBuffer connectChanged: [ 
+		self applyFullStyleTo: textBuffer ]."
+	
+	^ textBuffer
+]
+
+{ #category : 'private - factory' }
+GtkPatchSideBySideAdapter >> newTextBufferForText: aString [
+
+	^ self newTextBufferForHighlight
+		styleScheme: self styleScheme;
+		highlightMatchingBrackets: true;
+		text: (aString ifNil: [ '' ]);
+		yourself
 ]
 
 { #category : 'building' }
@@ -108,19 +175,28 @@ GtkPatchSideBySideAdapter >> setPatch: patch [
 		visitPatch: patch;
 		yourself.	
 
-	leftSourceView text: visitor leftText.
+	leftSourceView textBuffer: (self newTextBufferForText: visitor leftText).
 	visitor leftMarks do: [ :aMark | 
 		self 
 			addMark: aMark value 
 			line: aMark key 
 			to: leftSourceView textBuffer ].
 	
-	rightSourceView text: visitor rightText.
+	rightSourceView textBuffer: (self newTextBufferForText: visitor rightText).
 	visitor rightMarks do: [ :aMark | 
 		self 
 			addMark: aMark value 
 			line: aMark key 
 			to: rightSourceView textBuffer ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> styleScheme [
+	| schemeName |
+
+	schemeName := self presenter styleScheme 
+		ifNil: [ self presenter application styleScheme ]. 
+	^ GtkSourceStyleSchemeManager default schemeWithId: schemeName
 ]
 
 { #category : 'adding' }
@@ -135,4 +211,18 @@ GtkPatchSideBySideAdapter >> updateLineNumbers: hasLineNumbers [
 GtkPatchSideBySideAdapter >> updatePatch: aPatch [
 
 	self widgetDo: [ :w | self setPatch: aPatch ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> userActionDo: aBlock [
+
+	userAction ifNil: [ ^ self ].
+	aBlock value: userAction
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> usingTagTable [
+
+	^ (GtkCodeTagTableManager for: self presenter application) 
+		tagTableFor: self presenter
 ]
