@@ -10,7 +10,7 @@ Class {
 	#package : 'Spec-Gtk-Code-Diff'
 }
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 	| start |
 
@@ -22,7 +22,7 @@ GtkPatchSideBySideAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 		where: start
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 	
 	self marks valuesDo: [ :each |
@@ -35,7 +35,7 @@ GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 				priority: 0 ]
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addModelTo: aView [
 
 	super addModelTo: aView.
@@ -49,7 +49,7 @@ GtkPatchSideBySideAdapter >> addModelTo: aView [
 		self updateLineNumbers: hasLineNumbers ]
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addPatchTo: aView [
 	
 	self setPatch.
@@ -199,7 +199,7 @@ GtkPatchSideBySideAdapter >> styleScheme [
 	^ GtkSourceStyleSchemeManager default schemeWithId: schemeName
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> updateLineNumbers: hasLineNumbers [
 
 	self widgetDo: [ :w |
@@ -207,7 +207,7 @@ GtkPatchSideBySideAdapter >> updateLineNumbers: hasLineNumbers [
 		rightSourceView showLineNumbers: hasLineNumbers ]
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> updatePatch: aPatch [
 
 	self widgetDo: [ :w | self setPatch: aPatch ]
