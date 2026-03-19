@@ -52,7 +52,9 @@ GtkPatchAdapter >> addModelTo: gtkSourceView [
 	self addMarksTo: gtkSourceView.
 
 	self setPatchTo: gtkSourceView.
-	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
+	
+	self presenter 
+		whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
 ]
 
 { #category : 'private - accessing' }

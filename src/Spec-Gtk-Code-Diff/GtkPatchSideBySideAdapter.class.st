@@ -42,14 +42,17 @@ GtkPatchSideBySideAdapter >> addModelTo: aView [
 	self addMarksTo: leftSourceView.
 	self addMarksTo: rightSourceView.
 	
-	self addPatchTo: aView
+	self addPatchTo: aView.
+	
+	self presenter whenLineNumbersChangedDo: [ :hasLineNumbers | 
+		self updateLineNumbers: hasLineNumbers ]
 ]
 
 { #category : 'adding' }
 GtkPatchSideBySideAdapter >> addPatchTo: aView [
 	
 	self setPatch.
-	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
+	self presenter whenPatchChangedDo: [ :aPatch |self updatePatch: aPatch ]
 ]
 
 { #category : 'private' }
@@ -64,7 +67,7 @@ GtkPatchSideBySideAdapter >> newSourceView [
 	^ GtkSourceView new
 		beWrapWord;
 		monospace: true;
-		showLineNumbers: "self presenter hasLineNumbers" false;
+		showLineNumbers: self presenter hasLineNumbers;
 		showLineMarks: true;
 		editable: false;
 		tabWidth: 4;
@@ -87,7 +90,6 @@ GtkPatchSideBySideAdapter >> newWidget [
 
 { #category : 'private - accessing' }
 GtkPatchSideBySideAdapter >> setPatch [
-
 	(self presenter model isNil 
 		or: [ self presenter model isEmpty ])
 		ifTrue: [ 
@@ -119,4 +121,18 @@ GtkPatchSideBySideAdapter >> setPatch: patch [
 			addMark: aMark value 
 			line: aMark key 
 			to: rightSourceView textBuffer ]
+]
+
+{ #category : 'adding' }
+GtkPatchSideBySideAdapter >> updateLineNumbers: hasLineNumbers [
+
+	self widgetDo: [ :w |
+		leftSourceView showLineNumbers: hasLineNumbers.
+		rightSourceView showLineNumbers: hasLineNumbers ]
+]
+
+{ #category : 'adding' }
+GtkPatchSideBySideAdapter >> updatePatch: aPatch [
+
+	self widgetDo: [ :w | self setPatch: aPatch ]
 ]
