@@ -552,7 +552,7 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 		requestor: self; 
 		contextClass: aClass;
 		styleMethod: aString)
-		do: [ :each | each acceptTextBuffer: textBuffer ].
+		do: [ :each | each acceptTextBuffer: textBuffer ]
 ]
 
 { #category : 'building' }
