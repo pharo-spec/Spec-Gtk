@@ -52,7 +52,9 @@ GtkPatchAdapter >> addModelTo: gtkSourceView [
 	self addMarksTo: gtkSourceView.
 
 	self setPatchTo: gtkSourceView.
-	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
+	
+	self presenter 
+		whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
 ]
 
 { #category : 'private - accessing' }
@@ -72,6 +74,7 @@ GtkPatchAdapter >> newTextBufferForHighlight [
 
 { #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForText: aString [
+
 	^ self newTextBufferForHighlight
 		styleScheme: self styleScheme;
 		highlightMatchingBrackets: true;

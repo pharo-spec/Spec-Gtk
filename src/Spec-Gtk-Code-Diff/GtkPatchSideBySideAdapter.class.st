@@ -3,13 +3,14 @@ Class {
 	#superclass : 'GtkAdapter',
 	#instVars : [
 		'leftSourceView',
-		'rightSourceView'
+		'rightSourceView',
+		'userAction'
 	],
 	#category : 'Spec-Gtk-Code-Diff',
 	#package : 'Spec-Gtk-Code-Diff'
 }
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 	| start |
 
@@ -21,7 +22,7 @@ GtkPatchSideBySideAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 		where: start
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 	
 	self marks valuesDo: [ :each |
@@ -34,7 +35,7 @@ GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 				priority: 0 ]
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addModelTo: aView [
 
 	super addModelTo: aView.
@@ -42,14 +43,65 @@ GtkPatchSideBySideAdapter >> addModelTo: aView [
 	self addMarksTo: leftSourceView.
 	self addMarksTo: rightSourceView.
 	
-	self addPatchTo: aView
+	self addPatchTo: aView.
+	
+	self presenter whenLineNumbersChangedDo: [ :hasLineNumbers | 
+		self updateLineNumbers: hasLineNumbers ]
 ]
 
-{ #category : 'adding' }
+{ #category : 'building' }
 GtkPatchSideBySideAdapter >> addPatchTo: aView [
 	
 	self setPatch.
-	self presenter whenPatchChangedDo: [ :aPatch | self setPatch: aPatch ]
+	self presenter whenPatchChangedDo: [ :aPatch |self updatePatch: aPatch ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> applyFullStyleTo: textBuffer [
+
+	"If I am in an user action, I will not do anything now, just register for change (it 
+	 will be executed later)."
+	self userActionDo: [ :anUserAction | 
+		anUserAction registerChange.
+		^ self ].
+
+	textBuffer userActionDuring: [ 
+		self applyStyleTo: textBuffer ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> applyStyleTo: textBuffer [
+	| behavior |
+
+	"self presenter hasSyntaxHighlight ifFalse: [ ^ self ]."
+	"self presenter text isEmptyOrNil ifTrue: [ ^ self ]."
+	
+	logger trace: textBuffer.
+	
+	textBuffer removeAllTags.
+	
+	behavior := self presenter model originBehavior. 
+	
+	[ 
+		behavior isNil
+			ifTrue: [
+				self 
+					setExpressionText: textBuffer text 
+					class: behavior 
+					toBuffer: textBuffer  ]
+			ifFalse: [ 
+				self 
+					setMethodText: textBuffer text 
+					class: behavior 
+					toBuffer: textBuffer ] ]
+	on: Error 
+	fork: [ :e | e pass ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> bufferClass [ 
+	
+	^ GtkSourceBuffer
 ]
 
 { #category : 'private' }
@@ -64,12 +116,33 @@ GtkPatchSideBySideAdapter >> newSourceView [
 	^ GtkSourceView new
 		beWrapWord;
 		monospace: true;
-		showLineNumbers: "self presenter hasLineNumbers" false;
+		showLineNumbers: self presenter hasLineNumbers;
 		showLineMarks: true;
 		editable: false;
 		tabWidth: 4;
 		yourself
 
+]
+
+{ #category : 'private - factory' }
+GtkPatchSideBySideAdapter >> newTextBufferForHighlight [
+	| textBuffer |
+
+	textBuffer := self bufferClass newTable: self usingTagTable.
+	textBuffer connectChanged: [ 
+		self applyFullStyleTo: textBuffer ].
+	
+	^ textBuffer
+]
+
+{ #category : 'private - factory' }
+GtkPatchSideBySideAdapter >> newTextBufferForText: aString [
+
+	^ self newTextBufferForHighlight
+		styleScheme: self styleScheme;
+		highlightMatchingBrackets: true;
+		text: (aString ifNil: [ '' ]);
+		yourself
 ]
 
 { #category : 'building' }
@@ -78,18 +151,38 @@ GtkPatchSideBySideAdapter >> newWidget [
 	leftSourceView := self newSourceView.
 	rightSourceView := self newSourceView.
 	
-	^ GtkScrolledWindow new 
-		child: (GtkBox newHorizontal 
-			homogeneous: true;
-			append: leftSourceView;
-			append: rightSourceView;
-			yourself);
+	^ GtkBox newHorizontal 
+		homogeneous: true;
+		append: leftSourceView;
+		append: rightSourceView;
 		yourself
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> setExpressionText: aString class: aClass toBuffer: textBuffer [
+	logger trace.
+
+	(GtkTextStyleVisitor new 
+		requestor: SpCodeScriptingInteractionModel new;
+		contextClass: aClass;
+		styleExpression: aString)
+		do: [ :each | each acceptTextBuffer: textBuffer ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [ 
+
+	logger trace.
+
+	(GtkTextStyleVisitor new
+		requestor: (SpCodeBehaviorInteractionModel on: aClass); 
+		contextClass: aClass;
+		styleMethod: aString)
+		do: [ :each | each acceptTextBuffer: textBuffer ]
 ]
 
 { #category : 'private - accessing' }
 GtkPatchSideBySideAdapter >> setPatch [
-
 	(self presenter model isNil 
 		or: [ self presenter model isEmpty ])
 		ifTrue: [ 
@@ -108,17 +201,54 @@ GtkPatchSideBySideAdapter >> setPatch: patch [
 		visitPatch: patch;
 		yourself.	
 
-	leftSourceView text: visitor leftText.
+	leftSourceView textBuffer: (self newTextBufferForText: visitor leftText).
 	visitor leftMarks do: [ :aMark | 
 		self 
 			addMark: aMark value 
 			line: aMark key 
 			to: leftSourceView textBuffer ].
 	
-	rightSourceView text: visitor rightText.
+	rightSourceView textBuffer: (self newTextBufferForText: visitor rightText).
 	visitor rightMarks do: [ :aMark | 
 		self 
 			addMark: aMark value 
 			line: aMark key 
 			to: rightSourceView textBuffer ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> styleScheme [
+	| schemeName |
+
+	schemeName := self presenter styleScheme 
+		ifNil: [ self presenter application styleScheme ]. 
+	^ GtkSourceStyleSchemeManager default schemeWithId: schemeName
+]
+
+{ #category : 'building' }
+GtkPatchSideBySideAdapter >> updateLineNumbers: hasLineNumbers [
+
+	self widgetDo: [ :w |
+		leftSourceView showLineNumbers: hasLineNumbers.
+		rightSourceView showLineNumbers: hasLineNumbers ]
+]
+
+{ #category : 'building' }
+GtkPatchSideBySideAdapter >> updatePatch: aPatch [
+
+	self widgetDo: [ :w | self setPatch: aPatch ]
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> userActionDo: aBlock [
+
+	userAction ifNil: [ ^ self ].
+	aBlock value: userAction
+]
+
+{ #category : 'private' }
+GtkPatchSideBySideAdapter >> usingTagTable [
+
+	^ (GtkCodeTagTableManager for: self presenter application) 
+		tagTableFor: self presenter
 ]
