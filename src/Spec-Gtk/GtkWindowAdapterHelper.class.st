@@ -21,10 +21,22 @@ GtkWindowAdapterHelper >> add: aWidget toWindow: aWindow [
 ]
 
 { #category : 'accessing' }
+GtkWindowAdapterHelper >> addWindowControl: gtkWidget in: gtkWindow [
+
+	self notYetImplemented
+]
+
+{ #category : 'accessing' }
 GtkWindowAdapterHelper >> destroy: gtkWindow [
 
 	gtkWindow isNullOrNil 
 		ifFalse: [ gtkWindow destroy ]
+]
+
+{ #category : 'instance creation' }
+GtkWindowAdapterHelper >> newActionManager [
+
+	^ GtkAdapterActionManager on: self owner
 ]
 
 { #category : 'accessing' }

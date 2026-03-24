@@ -64,9 +64,11 @@ GtkPopoverAdapter >> mutex [
 
 { #category : 'api' }
 GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
-	self flag: #EXPERIMENTAL. "Lets see if this time I can fix my popover problem"
-	aBoolean ifTrue: [
-		^ self popupModalPointingTo: aRectangle ].
+	
+	self flag: #EXPERIMENTAL. "Lets see if this time I can fix my popover problem. 
+	For now, it is not working yet (even if it is slightly better than before)"
+	"aBoolean ifTrue: [
+		^ self popupModalPointingTo: aRectangle ]."
 
 	"runLoop := GtkContextRunLoop new."
 	logger trace.
