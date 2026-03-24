@@ -64,7 +64,7 @@ GtkRadioButtonAdapter >> newChildLabel [
 { #category : 'accessing' }
 GtkRadioButtonAdapter >> state [
 	
-	^ widget isActive
+	^ self widgetDo: [ :w | w isActive ]
 ]
 
 { #category : 'updating' }
