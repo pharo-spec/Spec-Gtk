@@ -64,9 +64,10 @@ GtkLayoutAdapter >> applyStyle: aWidget [
 { #category : 'private' }
 GtkLayoutAdapter >> applyVisibility [ 
 	
-	self presenter isVisible 
-		ifTrue: [ widget beVisible ] 
-		ifFalse: [ widget beNotVisible ]
+	self widgetDo: [ :w |
+		self presenter isVisible 
+			ifTrue: [ w beVisible ] 
+			ifFalse: [ w beNotVisible ] ]
 ]
 
 { #category : 'private' }
@@ -310,4 +311,15 @@ GtkLayoutAdapter >> unsubscribed [
 GtkLayoutAdapter >> updateBorderWidth [
 
 	self widgetDo: [ :w | w margin: layout borderWidth ]
+]
+
+{ #category : 'private' }
+GtkLayoutAdapter >> widgetDo: aBlock [ 
+
+	widget ifNil: [ ^ nil ].
+	^ GRunLoop defer: [
+		[ aBlock value: widget ]
+		on: Error 
+		fork: [ :e | e pass ]
+		return: [ nil ] ]
 ]

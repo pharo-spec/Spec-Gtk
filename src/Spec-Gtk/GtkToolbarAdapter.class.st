@@ -11,7 +11,7 @@ GtkToolbarAdapter >> addModelTo: gtkToolbar [
 
 	super addModelTo: gtkToolbar.
 
-	self model whenItemsChangeDo: [ self updateItems: gtkToolbar ].
+	self model whenItemsChangeDo: [ self updateItems ].
 	self updateItems: gtkToolbar 
 ]
 
@@ -40,6 +40,13 @@ GtkToolbarAdapter >> newWidget [
 GtkToolbarAdapter >> numberOfItems [
 
 	^ self widget size
+]
+
+{ #category : 'building' }
+GtkToolbarAdapter >> updateItems [
+
+	self widgetDo: [ :w | 
+		self updateItems: w ]
 ]
 
 { #category : 'building' }
