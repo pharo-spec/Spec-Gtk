@@ -8,7 +8,6 @@ Class {
 	#instVars : [
 		'listSelectedColor',
 		'providers',
-		'syntaxHighlightThemeName',
 		'styleScheme',
 		'applicationClass',
 		'applicationId'
@@ -346,20 +345,6 @@ SpGtkConfiguration >> styleScheme: aName [
 	"The name of the style scheme theme to use (e.g. 'Adwaita', 'Adwaita-dark', 'classic', 'classic-dark', 'cobalt', 'cobalt-light', 'kate', 'kate-dark', 'oblivion', 'solarized-dark', 'solarized-light', 'tango'"
 
 	styleScheme := aName
-]
-
-{ #category : 'accessing - style' }
-SpGtkConfiguration >> syntaxHighlightTheme [
-	"Name of theme: Blue, Dark, Vintage, Solarized, Tango"
-
-	^ syntaxHighlightThemeName
-]
-
-{ #category : 'accessing - style' }
-SpGtkConfiguration >> syntaxHighlightTheme: aName [
-	"Name of theme: Blue, Dark, Vintage, Solarized, Tango"
-
-	syntaxHighlightThemeName := aName
 ]
 
 { #category : 'accessing - colors' }
