@@ -155,8 +155,9 @@ SpGtkConfiguration >> buttonSelectedColor [
 
 { #category : 'configuring' }
 SpGtkConfiguration >> configure: anApplication [
-
-	self class usesApplicationEngine
+	"just use GtkApplicationEngine on the first execution (to allow other application to run 
+	 on top of a gtk application"
+	(self class usesApplicationEngine and: [ GEngine isRunning not ])
 		ifTrue: [ self configureApplicationEngine: anApplication ]
 		ifFalse: [ self configureEngine: anApplication ]
 ]
@@ -251,12 +252,13 @@ SpGtkConfiguration >> initializeEngine [
 	
 	GEngine isRunning ifTrue: [
 		"if already initialized with the same class, abort"
-		(self applicationClass isNil 
+		"(self applicationClass isNil 
 			or: [ 
 				GEngine current applicationClass = self applicationClass
 				and: [  GEngine current applicationId = self applicationId ] ])
 			ifTrue: [ ^ self ].
-		GEngine current shutDown: true ].
+		GEngine current shutDown: true"
+		^ self ].
 	
 	GEngine availableEngineClass new
 		applicationId: self applicationId;
