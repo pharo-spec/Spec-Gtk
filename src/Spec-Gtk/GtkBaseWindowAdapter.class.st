@@ -427,8 +427,8 @@ GtkBaseWindowAdapter >> openWithDeferredAction: aBlock [
 	self hasWidget ifFalse: [ ^ nil ].
 	self widgetDo: [ :w | 
 		self maybeAddTransientTo: w.
-		w present ].
-	self processInitializationDeferredActions.
+		w present.
+		self processInitializationDeferredActions ].
 	self presenter presenter takeKeyboardFocus.
 	self announceOpened.
 	aBlock value
