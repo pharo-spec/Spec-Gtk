@@ -9,6 +9,12 @@ Class {
 	#tag : 'Adapter-Toolbar'
 }
 
+{ #category : 'building' }
+GtkToolbarMenuButtonAdapter >> addActionTo: gtkMenuButton [
+
+	
+]
+
 { #category : 'private' }
 GtkToolbarMenuButtonAdapter >> addModelTo: gtkButton [
 
