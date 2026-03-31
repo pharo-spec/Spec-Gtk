@@ -67,8 +67,9 @@ GtkPopoverAdapter >> popupModal: isModal pointingTo: aRectangle [
 	
 	logger trace: isModal.
 	
-	self flag: #EXPERIMENTAL. "Lets see if this time I can fix my popover problem. 
-	For now, it is not working yet (even if it is slightly better than before)"
+	self flag: #EXPERIMENTAL. "2026/03/31. Lets see if this time I can fix my popover problem. 
+	For now, it is not working yet (even if it is slightly better than before), but I am 
+	checking on case by case (not all popover fail, just some, and in some cases... :( )"
 	isModal ifTrue: [
 		^ self popupModalPointingTo: aRectangle ].
 
