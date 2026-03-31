@@ -63,15 +63,16 @@ GtkPopoverAdapter >> mutex [
 ]
 
 { #category : 'api' }
-GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
+GtkPopoverAdapter >> popupModal: isModal pointingTo: aRectangle [
+	
+	logger trace: isModal.
 	
 	self flag: #EXPERIMENTAL. "Lets see if this time I can fix my popover problem. 
 	For now, it is not working yet (even if it is slightly better than before)"
-	"aBoolean ifTrue: [
-		^ self popupModalPointingTo: aRectangle ]."
+	isModal ifTrue: [
+		^ self popupModalPointingTo: aRectangle ].
 
 	"runLoop := GtkContextRunLoop new."
-	logger trace.
 	self widgetDo: [ :w | 
 		| relativeTo |
 		"try this to not grab input (which is probably causing the thing to not 
@@ -79,7 +80,7 @@ GtkPopoverAdapter >> popupModal: aBoolean pointingTo: aRectangle [
 		 Trying again setting it to boolean, to see if this is fixed by magic :P
 		 (if this does not works, remember autohide: false
 		 2025/11/27 - no, this is still not working :("
-		w autohide: "aBoolean" false.
+		w autohide: false.
 		self register: w.
 		relativeTo := self presenter relativeTo adapter innerWidget.
 		logger trace: relativeTo.
