@@ -1,15 +1,16 @@
 Class {
-	#name : #GtkKMDispatcher,
-	#superclass : #Object,
+	#name : 'GtkKMDispatcher',
+	#superclass : 'Object',
 	#instVars : [
 		'buffer',
 		'categories',
 		'target'
 	],
-	#category : #'Spec-Gtk-Keybindings'
+	#category : 'Spec-Gtk-Keybindings',
+	#package : 'Spec-Gtk-Keybindings'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtkKMDispatcher class >> on: aTarget [
 
 	^ self new 
@@ -17,19 +18,19 @@ GtkKMDispatcher class >> on: aTarget [
 		yourself
 ]
 
-{ #category : #compatibility }
+{ #category : 'compatibility' }
 GtkKMDispatcher >> addKeymapEntry: aKeymap [
 
 	self directCategory addKeymapEntry: aKeymap
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkKMDispatcher >> attachCategory: aCategory [
 
 	categories := categories copyWith: aCategory
 ]
 
-{ #category : #compatibility }
+{ #category : 'compatibility' }
 GtkKMDispatcher >> bindKeyCombination: aShortcut toAction: aBlock [
 
 	^ self addKeymapEntry: (KMKeymap
@@ -37,19 +38,19 @@ GtkKMDispatcher >> bindKeyCombination: aShortcut toAction: aBlock [
 			action: aBlock)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkKMDispatcher >> buffer [
 
 	^ buffer buffer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkKMDispatcher >> categories [
 
 	^ categories
 ]
 
-{ #category : #matching }
+{ #category : 'matching' }
 GtkKMDispatcher >> completeMatch: aKeymapEntry buffer: aBuffer [
 
 	"KMLog logCompleteMatchBetween: morph and: aKeymapEntry."
@@ -61,19 +62,19 @@ GtkKMDispatcher >> completeMatch: aKeymapEntry buffer: aBuffer [
 	"self announcer announce: (KMCompleteMatch event: currentEvent from: self)."
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkKMDispatcher >> detachAllKeymapCategories [
 	
 	categories := { KMCategory new }.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkKMDispatcher >> directCategory [
 
 	^ categories first
 ]
 
-{ #category : #dispatching }
+{ #category : 'dispatching' }
 GtkKMDispatcher >> dispatch: anEventBuffer [
 
 	self categories do: [ :aCategory | 
@@ -86,7 +87,7 @@ GtkKMDispatcher >> dispatch: anEventBuffer [
 	self noMatch
 ]
 
-{ #category : #dispatching }
+{ #category : 'dispatching' }
 GtkKMDispatcher >> dispatchKeyEvent: aKeyEvent [
 
 	KMLog log: aKeyEvent.
@@ -96,7 +97,7 @@ GtkKMDispatcher >> dispatchKeyEvent: aKeyEvent [
 		buffer clearBuffer ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkKMDispatcher >> initialize [
 	
 	super initialize.
@@ -104,11 +105,11 @@ GtkKMDispatcher >> initialize [
 	buffer := KMBuffer new
 ]
 
-{ #category : #matching }
+{ #category : 'matching' }
 GtkKMDispatcher >> noMatch [
 ]
 
-{ #category : #matching }
+{ #category : 'matching' }
 GtkKMDispatcher >> partialMatch [
 	| event |
 	
@@ -117,7 +118,7 @@ GtkKMDispatcher >> partialMatch [
 	"self announcer announce: (KMPartialMatch event: event from: self)."
 ]
 
-{ #category : #compatibility }
+{ #category : 'compatibility' }
 GtkKMDispatcher >> removeKeyCombination: aShortcut [
 
 	self categories do: [ :each |
@@ -125,13 +126,13 @@ GtkKMDispatcher >> removeKeyCombination: aShortcut [
 			ifNotNil: [ :keymap | each removeKeymapEntry: keymap ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkKMDispatcher >> target [
 
 	^ target
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtkKMDispatcher >> target: aTarget [
 
 	target := aTarget
