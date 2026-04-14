@@ -187,6 +187,12 @@ GtkBaseTreeListViewAdapter >> mutex [
 	^ mutex ifNil: [ mutex := Mutex new ]
 ]
 
+{ #category : 'private - actions' }
+GtkBaseTreeListViewAdapter >> newActionManager [
+
+	^ GtkAdapterActionListViewManager on: self
+]
+
 { #category : 'private - factory' }
 GtkBaseTreeListViewAdapter >> newSelectionModel [
 	| selectionModel |
