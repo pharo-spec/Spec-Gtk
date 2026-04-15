@@ -12,21 +12,24 @@ Class {
 
 { #category : 'private' }
 GtkDialogWindowAdapter >> add: gtkBox toWindow: gtkDialog [
-	| containerBox responseAreaPresenter |
+	| containerBox responseAreaPresenter hasSuggested |
 	
 	containerBox := GtkBox newVertical.
 	containerBox append: gtkBox.
 	
+	hasSuggested := false.
 	responseAreaPresenter := self presenter instantiate: SpResponseAreaPresenter.
 	self presenter buttons do: [ :buttonPresenter |
-		(buttonPresenter = self presenter defaultButton
-			ifTrue: [ responseAreaPresenter makeSuggested: buttonPresenter ]).
+		(buttonPresenter = self presenter defaultButton) 
+			ifTrue: [ 
+				responseAreaPresenter makeSuggested: buttonPresenter.
+				hasSuggested := true.].
 		responseAreaPresenter add: buttonPresenter ]. 
 	buttonBox := responseAreaPresenter build.
 	buttonBox visible: self presenter hasButtonDecorations.
 	containerBox append: buttonBox.
-	
-	gtkDialog defaultWidget: GtkWidget null.
+	hasSuggested 
+		ifFalse: [ gtkDialog defaultWidget: GtkWidget null ].
 	
 	super add: containerBox toWindow: gtkDialog
 ]
