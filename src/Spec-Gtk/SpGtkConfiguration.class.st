@@ -8,7 +8,6 @@ Class {
 	#instVars : [
 		'listSelectedColor',
 		'providers',
-		'syntaxHighlightThemeName',
 		'styleScheme',
 		'applicationClass',
 		'applicationId'
