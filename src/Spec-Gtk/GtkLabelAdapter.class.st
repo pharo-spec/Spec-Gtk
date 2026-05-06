@@ -35,6 +35,9 @@ GtkLabelAdapter >> applyDecorationsTo: aWidget label: aString [
 	self presenter displayUnderline ifNotNil: [ :block |
 		(block cull: aString) ifTrue: [ 
 			attrs add: PangoAttribute newUnderline ] ].
+	self presenter displayStrikethrough ifNotNil: [ :block |
+		(block cull: aString) ifTrue: [ 
+			attrs add: PangoAttribute newStrikethrough ] ].
 	self presenter displayBackgroundColor ifNotNil: [ :block |
 		(block cull: aString) ifNotNil: [ :aColor |
 		  	attrs add: (PangoAttribute newBackgroundColor: aColor) ] ].
