@@ -17,6 +17,25 @@ GtkImageAdapter >> addModelTo: gtkImage [
 			self updateForm: self model image into: gtkImage ] ]
 ]
 
+{ #category : 'private' }
+GtkImageAdapter >> cachedPaintableForForm: aForm [
+	| cache paintable size |
+
+	cache := self presenter application
+		propertyAt: #gtkPaintablesByForm
+		ifAbsentPut: [ IdentityDictionary new ].
+
+	^ cache
+		at: aForm
+		ifAbsentPut: [
+			paintable := aForm asGdkPaintable.
+			size := aForm width@aForm height.
+			paintable
+				computeConcreteSize: size
+				defaults: size.
+			paintable ]
+]
+
 { #category : 'accessing' }
 GtkImageAdapter >> image [
 	
@@ -31,23 +50,19 @@ GtkImageAdapter >> newWidget [
 		ifFalse: [ GtkImage newEmpty ]
 ]
 
-{ #category : 'updating' }
+{ #category : 'private' }
 GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImageOrPicture [
 	| paintable |
-	
-	aFormOrGdkPixbuf ifNil: [ 
-		aGtkImageOrPicture clear. 
+
+	aFormOrGdkPixbuf ifNil: [
+		aGtkImageOrPicture clear.
 		^ self ].
-	
-	paintable := aFormOrGdkPixbuf asGdkPaintable.
-	aFormOrGdkPixbuf isForm ifTrue: [ 
-		| size |
-		size := aFormOrGdkPixbuf width@aFormOrGdkPixbuf height.
-		paintable 
-			computeConcreteSize: size
-			defaults: size ].
-		
-	self presenter isAutoScale 
+
+	paintable := aFormOrGdkPixbuf isForm
+		ifTrue: [ self cachedPaintableForForm: aFormOrGdkPixbuf ]
+		ifFalse: [ aFormOrGdkPixbuf asGdkPaintable ].
+
+	self presenter isAutoScale
 		ifTrue: [ aGtkImageOrPicture setPaintable: paintable ]
 		ifFalse: [ aGtkImageOrPicture setFromPaintable: paintable ]
 ]
