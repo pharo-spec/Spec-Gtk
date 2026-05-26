@@ -66,6 +66,15 @@ GtkBaseListViewAdapter >> selectionCompanion [
 		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
 ]
 
+{ #category : 'enumerating' }
+GtkBaseListViewAdapter >> traversePresentersDo: aBlock excluding: aSet [
+
+	self innerWidget factory storedPresenters do: [ :each | 
+		each 
+			traversePresentersDo: aBlock 
+			excluding: aSet ]
+]
+
 { #category : 'private - updating' }
 GtkBaseListViewAdapter >> updateMultiSelectionFromGtk [
 	| indexes |

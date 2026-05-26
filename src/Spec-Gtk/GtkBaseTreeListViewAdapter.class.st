@@ -271,6 +271,17 @@ GtkBaseTreeListViewAdapter >> setPath: aPath expand: aBoolean [
 						row expand: aBoolean ] ] ] ]
 ]
 
+{ #category : 'enumerating' }
+GtkBaseTreeListViewAdapter >> traversePresentersDo: aBlock excluding: aSet [
+
+	self innerWidget factory storedPresenters 
+		select: [ :each | each isPresenter ] 
+		thenDo: [ :each |
+			each 
+				traversePresentersDo: aBlock 
+				excluding: aSet ]
+]
+
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> updateMultiSelectionFromGtk [
 	| paths |

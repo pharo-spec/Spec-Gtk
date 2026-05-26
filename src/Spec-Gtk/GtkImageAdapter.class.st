@@ -11,10 +11,12 @@ GtkImageAdapter >> addModelTo: gtkImage [
 
 	super addModelTo: gtkImage.
 	
-	self updateForm: self model image into: gtkImage.
+	self updateForm: self presenter image into: gtkImage.
 	self model whenImageChangeDo: [ 
 		self widgetDo: [ :w |
-			self updateForm: self model image into: gtkImage ] ]
+			self 
+				updateForm: self presenter image 
+				into: gtkImage ] ]
 ]
 
 { #category : 'private' }

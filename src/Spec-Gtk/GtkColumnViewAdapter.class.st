@@ -261,6 +261,14 @@ GtkColumnViewAdapter >> setDeferredAction: aBlock [
 	deferredAction := aBlock
 ]
 
+{ #category : 'enumerating' }
+GtkColumnViewAdapter >> traversePresentersDo: aBlock excluding: aSet [
+
+	self innerWidget columns do: [ :eachColumn |
+		eachColumn factory storedPresenters do: [ :each | 
+			each traversePresentersDo: aBlock excluding: aSet ] ]
+]
+
 { #category : 'private - updating' }
 GtkColumnViewAdapter >> updateResizableColumnsTo: aBoolean [
 

@@ -136,6 +136,18 @@ GtkTreeColumnViewAdapter >> selectedRowPresenter [
 	^ self innerWidget columns first factory presenterForModel: item
 ]
 
+{ #category : 'enumerating' }
+GtkTreeColumnViewAdapter >> traversePresentersDo: aBlock excluding: aSet [
+
+	self innerWidget columns do: [ :eachColumn |
+		eachColumn factory storedPresenters 
+			select: [ :each | each isPresenter ] 
+			thenDo: [ :each | 
+				each 
+					traversePresentersDo: aBlock 
+					excluding: aSet ] ]
+]
+
 { #category : 'private - updating' }
 GtkTreeColumnViewAdapter >> updateResizableColumnsTo: aBoolean [
 
