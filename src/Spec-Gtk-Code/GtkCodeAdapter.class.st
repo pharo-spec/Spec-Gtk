@@ -295,7 +295,7 @@ GtkCodeAdapter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNam
 		position := (position origin max: 1@1) extent: 18@18.
 		logger trace: position.
 		popover popupModalPointingTo: position.
-	] forkAt: Processor lowIOPriority
+	] forkAt: Processor userSchedulingPriority
 ]
 
 { #category : 'api' }

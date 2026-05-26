@@ -53,6 +53,12 @@ GtkBaseListViewAdapter >> mutex [
 	^ mutex ifNil: [ mutex := Mutex new ]
 ]
 
+{ #category : 'private - actions' }
+GtkBaseListViewAdapter >> newActionManager [
+
+	^ GtkAdapterActionListViewManager on: self
+]
+
 { #category : 'private' }
 GtkBaseListViewAdapter >> selectionCompanion [
 

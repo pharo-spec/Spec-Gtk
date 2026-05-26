@@ -62,8 +62,7 @@ GtkAdapter >> addActionsTo: gtkWidget [
 	
 	self hasActions ifFalse: [ ^ self ].
 
-	actionManager := self ensureActionManager.
-	actionManager installOn: gtkWidget
+	self ensureActionManager installOn: gtkWidget
 ]
 
 { #category : 'private - actions' }

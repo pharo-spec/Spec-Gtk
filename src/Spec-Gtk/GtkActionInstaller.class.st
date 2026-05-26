@@ -79,7 +79,7 @@ GtkActionInstaller >> visitCommand: aCommand [
 					aCommand toggleState.
 					GRunLoop defer: [ 
 						action state: aCommand state ] ].
-				aCommand execute ] ] ].
+				[ aCommand execute ] fork ] ] ].
 
 	actionMap at: aCommand put: action.
 	self actionGroup insert: action

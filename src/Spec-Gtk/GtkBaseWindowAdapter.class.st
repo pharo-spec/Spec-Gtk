@@ -11,7 +11,7 @@ Class {
 		'contentBox',
 		'menuBar',
 		'toolbar',
-		'statusBar',
+		'statusbar',
 		'content',
 		'lastSizeAllocation',
 		'adapterHelper'
@@ -427,8 +427,8 @@ GtkBaseWindowAdapter >> openWithDeferredAction: aBlock [
 	self hasWidget ifFalse: [ ^ nil ].
 	self widgetDo: [ :w | 
 		self maybeAddTransientTo: w.
-		w present ].
-	self processInitializationDeferredActions.
+		w present.
+		self processInitializationDeferredActions ].
 	self presenter presenter takeKeyboardFocus.
 	self announceOpened.
 	aBlock value
@@ -439,10 +439,10 @@ GtkBaseWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 	| windowContent |
 
 	"menu bar"
-	self model hasMenu 
+	self presenter hasMenu 
 		ifTrue: [ gtkBox append: (self menuBarAccelInstalledOn: gtkWindow) ].
 	"tool bar"
-	self model hasToolbar 
+	self presenter hasToolbar 
 		ifTrue: [ gtkBox append: self toolbar ].
 	"infoArea"
 	contentBox append: self infoArea adapter widget.
@@ -451,8 +451,8 @@ GtkBaseWindowAdapter >> populateContent: gtkBox spec: aSpec window: gtkWindow [
 	gtkBox append: windowContent.
 	windowContent expand: true.
 	"status bar"
-	self model hasStatusBar 
-		ifTrue: [ gtkBox append: self statusBar ]
+	self presenter hasStatusbar 
+		ifTrue: [ gtkBox append: self statusbar ]
 ]
 
 { #category : 'private - deferring' }
@@ -518,8 +518,13 @@ GtkBaseWindowAdapter >> size [
 { #category : 'private - building' }
 GtkBaseWindowAdapter >> statusBar [
 
-	^ statusBar ifNil: [ statusBar := self model statusBar build ]
+	^ statusBar ifNil: [ statusBar := self model statusbar build ]
+]
 
+{ #category : 'private - building' }
+GtkBaseWindowAdapter >> statusbar [
+
+	^ statusbar ifNil: [ statusbar := self presenter statusbar build ]
 ]
 
 { #category : 'private' }

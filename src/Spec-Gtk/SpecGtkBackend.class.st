@@ -28,7 +28,7 @@ SpecGtkBackend >> componentListClass [
 SpecGtkBackend >> copyToClipboard: aString [
 
 	GRunLoop defer: [
-		GdkClipboard primary text: aString ]
+		GdkClipboard default text: aString ]
 ]
 
 { #category : 'accessing' }

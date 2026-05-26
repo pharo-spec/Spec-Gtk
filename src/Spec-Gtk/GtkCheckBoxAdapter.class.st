@@ -39,7 +39,7 @@ GtkCheckBoxAdapter >> getLabelText [
 { #category : 'accessing' }
 GtkCheckBoxAdapter >> state [
 	
-	^ widget isActive
+	^ self widgetDo: [ :w | w isActive ]
 ]
 
 { #category : 'updating' }

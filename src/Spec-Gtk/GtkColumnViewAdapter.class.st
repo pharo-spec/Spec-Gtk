@@ -4,6 +4,9 @@ Gtk adaptor for `SpListViewPresenter`.
 Class {
 	#name : 'GtkColumnViewAdapter',
 	#superclass : 'GtkBaseListViewAdapter',
+	#instVars : [
+		'elements'
+	],
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
 	#tag : 'Adapter-ListView'
@@ -31,8 +34,8 @@ GtkColumnViewAdapter >> addModelTo: gtkColumnView [
 		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
 	self presenter selection 
 		whenChangedDo: [ self updateSelectionFromPresenter ].
-	self presenter whenIsResizableChangedDo: [ :aBoolean |
-		self updateResizableColumnsTo: aBoolean ].
+	self presenter 
+		whenIsResizableChangedDo: [ :aBoolean | self updateResizableColumnsTo: aBoolean ].
 
 	gtkColumnView connectRowActivated: [ :position |
 		self runInSystem: [
@@ -46,6 +49,13 @@ GtkColumnViewAdapter >> alternateRowsColor [
 
 	self innerWidgetDo: [ :w | 
 		w showRowSeparators: true ]
+]
+
+{ #category : 'private' }
+GtkColumnViewAdapter >> columnWithHandle: aGtkColumnViewColumn [
+
+	^ self presenter	columns
+		detect: [ :each | each adapter innerWidget getHandle = aGtkColumnViewColumn getHandle ]
 ]
 
 { #category : 'building' }
@@ -68,11 +78,13 @@ GtkColumnViewAdapter >> doInitializationDeferredActions [
 
 { #category : 'accessing' }
 GtkColumnViewAdapter >> elementAt: index [
-	| item |
-	item := nil.
-	self withCycleDetectionOnBackendDo: [
-		item := self innerWidgetDo: [ :w | w selectionModel model itemAt: index ] ].
-	^ item ifNil: [ self presenter items at: index ]
+	^ self elements at: index
+]
+
+{ #category : 'private - updating' }
+GtkColumnViewAdapter >> elements [
+
+	^ elements ifNil: [ elements := self presenter items ]
 ]
 
 { #category : 'testing' }
@@ -93,11 +105,8 @@ GtkColumnViewAdapter >> newColumnFactory: aColumn [
 
 { #category : 'private - factory' }
 GtkColumnViewAdapter >> newColumnSorterOn: aColumn [
-
-	^ GtkCustomSorter newSorter: [ :a :b | 
-		logger trace: a.
-		logger trace: b. 
-		0 ]
+	"do not pass a sorter, real sorting will happen on `changed` event`"
+	^ GtkCustomSorter new
 ]
 
 { #category : 'private - factory' }
@@ -115,14 +124,7 @@ GtkColumnViewAdapter >> newGtkColumnViewColumnFrom: aColumn [
 		newColumn fixedWidth: aColumn width ].
 		
 	aColumn isSortable ifTrue: [ 
-		self flag: #TODO. "Temporary removal as I cannot find a fast way to solve the 
-		problem (which should be easy), and we need to release the PharoLauncherGtk"
-		"newColumn sorter: (self newColumnSorterOn: aColumn)."
-		"newColumn
-			connect: 'notify::sorter' 
-			signature: #(void (void *selfHandle, void *columnHandle, void *user_data)) 
-			do: [ :selfHandle :columnHandle :user_data | 
-				logger trace ]" ].
+		newColumn sorter: (self newColumnSorterOn: aColumn) ].
 
 	^ newColumn
 ]
@@ -134,12 +136,38 @@ GtkColumnViewAdapter >> newHeaderFactory [
 ]
 
 { #category : 'private - factory' }
-GtkColumnViewAdapter >> newSelectionModel [
-	| selectionModel |
+GtkColumnViewAdapter >> newSelectionModelOn: gtkColumnView [
+	| selectionModel usingModel |
 	
 	logger trace.
 	
-	selectionModel := self selectionCompanion newModel: "(GtkSortListModel newModel:" self newStore")".
+	"sorterModel := GtkSortListModel newModel: self newStore.
+	sorterModel sorter: gtkColumnView sorter."
+	
+	usingModel := (gtkColumnView columns anySatisfy: [ :each | each isSortable ])
+		ifTrue: [ 
+			| sorter |
+			sorter := gtkColumnView sorter.
+			sorter objectRef.
+			sorter 
+				detectCallbackBySignal: 'changed' 
+				ifFound: [ :aCallback | "do nothing" ] 
+				ifNone: [
+					sorter connect: 'changed'
+						signature: #(void (void *selfHandle, int change, gpointer user_data)) 
+						do: [ :selfHandle :change :user_data |
+							| index |
+							index := sorter primarySortColumnIndex.
+							index > 0 ifTrue: [  
+								self 
+									performSortByColumn: (self presenter columns at: index)   
+									order: sorter primarySortOrder ] ] ].
+
+			GtkSortListModel newModel: self newStore sorter: sorter ]
+		ifFalse: [
+			self newStore ].
+	
+	selectionModel := self selectionCompanion newModel: usingModel.
 	selectionModel connectSelectionChanged: [ :position :numItems |
 		self updatePresenterSelection: position numItems: numItems ].
 	
@@ -150,6 +178,15 @@ GtkColumnViewAdapter >> newSelectionModel [
 GtkColumnViewAdapter >> newStore [
 	
 	^ GtkListViewAdapterDataStore newPresenter: self presenter
+]
+
+{ #category : 'private' }
+GtkColumnViewAdapter >> performSortByColumn: aColumn order: sortOrder [
+	
+	self runInSystem: [
+		self elements sort: aColumn sortFunction.
+		aColumn sortFunction: aColumn sortFunction reversed.
+		self refreshList ]
 ]
 
 { #category : 'private - updating' }
@@ -167,7 +204,7 @@ GtkColumnViewAdapter >> refreshList [
 			"refresh items in factory (so they are not out of sync)"
 			self critical: [
 				w columns do: [ :each |
-					each factory items: self presenter items ] ].
+					each factory items: self elements ] ].
 			"now change the model"
 			self refreshSelectionModelIn: w ] ]
 ]
@@ -177,15 +214,8 @@ GtkColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
 	
 	self critical: [
 		| selectionModel |
-		selectionModel := self newSelectionModel.
-		gtkColumnView selectionModel: selectionModel.
-		gtkColumnView columns 
-			detect: [ :each | each isSortable ]
-			ifFound: [ :aColumn | 
-				| sorter |
-				sorter := aColumn sorter.
-				sorter objectRef.
-				selectionModel model sorter: sorter ] ]
+		selectionModel := self newSelectionModelOn: gtkColumnView.
+		gtkColumnView selectionModel: selectionModel ]
 ]
 
 { #category : 'private - updating' }

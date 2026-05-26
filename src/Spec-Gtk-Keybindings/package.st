@@ -1,1 +1,1 @@
-Package { #name : #'Spec-Gtk-Keybindings' }
+Package { #name : 'Spec-Gtk-Keybindings' }

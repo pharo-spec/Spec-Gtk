@@ -1,6 +1,6 @@
-Extension { #name : #KMKeyCombination }
+Extension { #name : 'KMKeyCombination' }
 
-{ #category : #'*Spec-Gtk-Keybindings' }
+{ #category : '*Spec-Gtk-Keybindings' }
 KMKeyCombination class >> fromEventKey: evt [
 	| modifier control command shift alt |
 

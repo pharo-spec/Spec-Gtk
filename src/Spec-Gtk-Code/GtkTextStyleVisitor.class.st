@@ -195,7 +195,6 @@ GtkTextStyleVisitor >> styleMethod: aString [
 	ast := requestor compiler
 		class: requestor behavior;
 		source: aString;
-		failBlock: [ ^ nil ];
 		options: #( +optionParseErrors +optionSkipSemanticWarnings );
 		parse.
 

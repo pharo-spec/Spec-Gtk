@@ -53,7 +53,8 @@ GtkPatchSideBySideAdapter >> addModelTo: aView [
 GtkPatchSideBySideAdapter >> addPatchTo: aView [
 	
 	self setPatch.
-	self presenter whenPatchChangedDo: [ :aPatch |self updatePatch: aPatch ]
+	self presenter whenPatchChangedDo: [ :aPatchModel |
+		self updatePatch: aPatchModel ]
 ]
 
 { #category : 'private' }
@@ -234,9 +235,9 @@ GtkPatchSideBySideAdapter >> updateLineNumbers: hasLineNumbers [
 ]
 
 { #category : 'building' }
-GtkPatchSideBySideAdapter >> updatePatch: aPatch [
+GtkPatchSideBySideAdapter >> updatePatch: aPatchModel [
 
-	self widgetDo: [ :w | self setPatch: aPatch ]
+	self widgetDo: [ :w | self setPatch: aPatchModel patch ]
 ]
 
 { #category : 'private' }

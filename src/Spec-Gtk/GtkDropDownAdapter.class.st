@@ -28,9 +28,11 @@ GtkDropDownAdapter >> addModelTo: gtkDropDown [
 		newType: GType G_TYPE_STRING 
 		signature: #(void *(void *handle))
 		block: [ :handle | self expressionFor: gtkDropDown atHandle: handle ])."
-		
+
 	self presenter selection isEmpty 
-		ifFalse: [ self setDeferredAction: [ self updateSelectionFromPresenter ] ].
+		ifFalse: [ 
+			self runInSystem: [
+				self updateSelectionFromPresenter ] ].
 	self presenter selection 
 		whenChangedDo: [ self updateSelectionFromPresenter ].
 		
@@ -121,11 +123,12 @@ GtkDropDownAdapter >> setDeferredAction: aBlock [
 
 { #category : 'private - updating' }
 GtkDropDownAdapter >> updatePresenterSelectionFromGtk [
-	
-	self backendUpdatingDo: [
-		| index |
-		index := self innerWidgetDo: [ :w | w selected ].
-		self presenter selection selectIndex: index + 1 ]
+	| index |
+			
+	index := self innerWidgetDo: [ :w | w selected ].
+	self runInSystem: [
+		self backendUpdatingDo: [
+			self presenter selection selectIndex: index + 1 ] ]
 ]
 
 { #category : 'private - updating' }
