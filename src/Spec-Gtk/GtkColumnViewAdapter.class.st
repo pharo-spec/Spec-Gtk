@@ -51,6 +51,26 @@ GtkColumnViewAdapter >> alternateRowsColor [
 		w showRowSeparators: true ]
 ]
 
+{ #category : 'private - updating' }
+GtkColumnViewAdapter >> basicRefreshList [
+
+	self backendUpdatingDo: [
+	
+		self isAlive ifFalse: [ ^ self ].	
+	
+		self innerWidgetDo: [ :w |
+			"IMPORTANT: Do not attempt to change the inner model of the selection model!
+			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
+			 back a non existing anymore model reference objects), causing a crash."
+			
+			"refresh items in factory (so they are not out of sync)"
+			self critical: [
+				w columns do: [ :each |
+					each factory items: self elements ] ].
+			"now change the model"
+			self refreshSelectionModelIn: w ] ]
+]
+
 { #category : 'private' }
 GtkColumnViewAdapter >> columnWithHandle: aGtkColumnViewColumn [
 
@@ -85,6 +105,28 @@ GtkColumnViewAdapter >> elementAt: index [
 GtkColumnViewAdapter >> elements [
 
 	^ elements ifNil: [ elements := self presenter items ]
+]
+
+{ #category : 'instance creation' }
+GtkColumnViewAdapter >> getSorterFor: gtkColumnView [
+	| sorter |
+	sorter := gtkColumnView sorter.
+	sorter objectRef.
+	sorter 
+		detectCallbackBySignal: 'changed' 
+		ifFound: [ :aCallback | "do nothing" ] 
+		ifNone: [
+			sorter connect: 'changed'
+				signature: #(void (void *selfHandle, int change, gpointer user_data)) 
+				do: [ :selfHandle :change :user_data |
+					| index |
+					index := sorter primarySortColumnIndex.
+					index > 0 ifTrue: [  
+						self 
+							performSortByColumn: (self presenter columns at: index)   
+							order: sorter primarySortOrder ] ] ].
+							
+	^ sorter
 ]
 
 { #category : 'testing' }
@@ -141,29 +183,11 @@ GtkColumnViewAdapter >> newSelectionModelOn: gtkColumnView [
 	
 	logger trace.
 	
-	"sorterModel := GtkSortListModel newModel: self newStore.
-	sorterModel sorter: gtkColumnView sorter."
-	
 	usingModel := (gtkColumnView columns anySatisfy: [ :each | each isSortable ])
 		ifTrue: [ 
-			| sorter |
-			sorter := gtkColumnView sorter.
-			sorter objectRef.
-			sorter 
-				detectCallbackBySignal: 'changed' 
-				ifFound: [ :aCallback | "do nothing" ] 
-				ifNone: [
-					sorter connect: 'changed'
-						signature: #(void (void *selfHandle, int change, gpointer user_data)) 
-						do: [ :selfHandle :change :user_data |
-							| index |
-							index := sorter primarySortColumnIndex.
-							index > 0 ifTrue: [  
-								self 
-									performSortByColumn: (self presenter columns at: index)   
-									order: sorter primarySortOrder ] ] ].
-
-			GtkSortListModel newModel: self newStore sorter: sorter ]
+			GtkSortListModel 
+				newModel: self newStore 
+				sorter: (self getSorterFor: gtkColumnView) ]
 		ifFalse: [
 			self newStore ].
 	
@@ -186,27 +210,17 @@ GtkColumnViewAdapter >> performSortByColumn: aColumn order: sortOrder [
 	self runInSystem: [
 		self elements sort: aColumn sortFunction.
 		aColumn sortFunction: aColumn sortFunction reversed.
-		self refreshList ]
+		self basicRefreshList ]
 ]
 
 { #category : 'private - updating' }
 GtkColumnViewAdapter >> refreshList [
 
 	self backendUpdatingDo: [
-	
-		self isAlive ifFalse: [ ^ self ].	
-	
+		self resetElements.
 		self innerWidgetDo: [ :w |
-			"IMPORTANT: Do not attempt to change the inner model of the selection model!
-			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
-			 back a non existing anymore model reference objects), causing a crash."
-			
-			"refresh items in factory (so they are not out of sync)"
-			self critical: [
-				w columns do: [ :each |
-					each factory items: self elements ] ].
-			"now change the model"
-			self refreshSelectionModelIn: w ] ]
+			w resetSorting.
+			self basicRefreshList ] ]
 ]
 
 { #category : 'building' }
@@ -222,21 +236,19 @@ GtkColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
 GtkColumnViewAdapter >> refreshWidgetSelection [
 
 	self flag: #TODO. "not sure this is needed?"
+]
 
-	"self innerWidgetDo: [ :w |
-		| rowIndex selection |
-		rowIndex := self presenter selection selectedIndex.
-		selection :=  w selectionModel selected.
-		selection = rowIndex ifTrue: [ ^ self ].
-		rowIndex > 0
-			ifTrue: [ w selectionModel select: rowIndex ]
-			ifFalse: [ w selectionModel unselectAll ] ]"
+{ #category : 'private - updating' }
+GtkColumnViewAdapter >> resetElements [
+
+	"force reset of elements"
+	elements := nil
 ]
 
 { #category : 'private' }
 GtkColumnViewAdapter >> scrollToSelectionIfNeeded: index [
 
-	((index < 1) or: [ self presenter items isEmpty ]) ifTrue: [ ^ self ].
+	((index < 1) or: [ self elements isEmpty ]) ifTrue: [ ^ self ].
 	self innerWidgetDo: [ :w |
 		w 
 			scrollToPosition: index - 1 
