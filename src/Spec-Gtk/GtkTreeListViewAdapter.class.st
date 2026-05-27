@@ -109,6 +109,12 @@ GtkTreeListViewAdapter >> refreshSelectionModelIn: gtkListView [
 ]
 
 { #category : 'private - updating' }
+GtkTreeListViewAdapter >> refreshTree [
+
+	self flag: #TODO. "just using refreshList seems to break everything"
+]
+
+{ #category : 'private - updating' }
 GtkTreeListViewAdapter >> refreshWidgetSelection [
 
 	self flag: #TODO. "not sure this is needed?"
