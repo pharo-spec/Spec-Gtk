@@ -44,6 +44,16 @@ GtkTreeColumnViewAdapter >> alternateRowsColor [
 		w showRowSeparators: true ]
 ]
 
+{ #category : 'private - factory' }
+GtkTreeColumnViewAdapter >> announceElement: anItem expanded: aBoolean [
+
+	self runInSystem: [
+			self presenter announce: (SpTreeExpansionChanged new
+					 item: anItem;
+					 expanded: aBoolean;
+					 yourself) ]
+]
+
 { #category : 'private' }
 GtkTreeColumnViewAdapter >> configureScrolling [
 	"
@@ -69,15 +79,19 @@ GtkTreeColumnViewAdapter >> isAlive [
 
 { #category : 'private - factory' }
 GtkTreeColumnViewAdapter >> newColumnFactory: aColumn index: index [
-	| factoryClass |
+	| factoryClass factory |
 	
 	factoryClass := index = 1
-		ifTrue: [ GtkTreeColumnViewExpanderAdapterItemFactory ]
-		ifFalse: [ GtkTreeColumnViewAdapterItemFactory ]. 
+        ifTrue: [ GtkTreeColumnViewExpanderAdapterItemFactory ]
+        ifFalse: [ GtkTreeColumnViewAdapterItemFactory ].
 
-	^ factoryClass
-		newPresenter: self presenter 
-		column: aColumn
+	factory := factoryClass newPresenter: self presenter column: aColumn.
+
+	index = 1 ifTrue: [ 
+		factory connectNotifyExpand: [ :item :expanded | 
+			self announceElement: item expanded: expanded ] ].
+
+	^ factory
 ]
 
 { #category : 'private - factory' }

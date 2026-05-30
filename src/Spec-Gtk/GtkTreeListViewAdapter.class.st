@@ -49,6 +49,16 @@ GtkTreeListViewAdapter >> alternateRowsColor [
 		w showSeparators: true ]
 ]
 
+{ #category : 'private - factory' }
+GtkTreeListViewAdapter >> announceElement: anItem expanded: aBoolean [
+
+	self runInSystem: [
+			self presenter announce: (SpTreeExpansionChanged new
+					 item: anItem;
+					 expanded: aBoolean;
+					 yourself) ]
+]
+
 { #category : 'accessing' }
 GtkTreeListViewAdapter >> elementAt: index [
 	| item |
@@ -75,7 +85,9 @@ GtkTreeListViewAdapter >> newHeaderFactory [
 { #category : 'private - factory' }
 GtkTreeListViewAdapter >> newItemFactory [
 
-	^ GtkTreeListViewAdapterItemFactory newPresenter: self presenter
+	^ (GtkTreeListViewAdapterItemFactory newPresenter: self presenter)
+		connectNotifyExpand: [ :item :expanded | self announceElement: item expanded: expanded ];
+		yourself
 ]
 
 { #category : 'private - updating' }
