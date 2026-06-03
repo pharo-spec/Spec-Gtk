@@ -89,7 +89,7 @@ GtkAdapterActionManager >> buildMenuModel [
 { #category : 'private' }
 GtkAdapterActionManager >> buildMenuModelFor: anArrayOfGroups [
 
-	^ GtkActionMenuBuilder new 
+	^ self newActionMenuBuilder
 		visit: anArrayOfGroups first;
 		in: [ :this |
 			anArrayOfGroups allButFirstDo: [ :each | each acceptVisitor: this ] ];
@@ -155,7 +155,9 @@ GtkAdapterActionManager >> installActionGroup: actionGroup on: gtkWidget [
 	actionInstaller visit: actionGroup.
 
 	actionMap addAll: actionInstaller actionMap.
-	dynamicGroups := actionInstaller dynamicGroups
+	actionInstaller dynamicGroups ifNotNil: [ 
+		dynamicGroups ifNil: [ dynamicGroups := #() ].
+		dynamicGroups := dynamicGroups, actionInstaller dynamicGroups ]
 ]
 
 { #category : 'private - actions' }
@@ -207,6 +209,24 @@ GtkAdapterActionManager >> installOn: gtkWidget [
 	 just keybindings), and just for root action group"
 	self anyCommandIsVisible 
 		ifTrue: [ self installContextMenuOn: gtkWidget ]	
+]
+
+{ #category : 'private - factory' }
+GtkAdapterActionManager >> newActionMenuBuilder [
+
+	logger trace.
+
+	^ self newActionMenuBuilderOn: nil
+]
+
+{ #category : 'private - factory' }
+GtkAdapterActionManager >> newActionMenuBuilderOn: aWidget [
+
+	logger trace: aWidget.
+
+	^ GtkActionMenuBuilder new
+		widget: aWidget;
+		yourself
 ]
 
 { #category : 'accessing' }

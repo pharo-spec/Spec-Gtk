@@ -52,7 +52,7 @@ GtkAdapterActionTextManager >> installActionGroupShortcuts: anActionGroup on: gt
 GtkAdapterActionTextManager >> installContextMenuOn: gtkWidget [
 
 	hasContextMenu := true.	
-	gtkWidget extraMenu: (GtkActionMenuBuilder new 
+	gtkWidget extraMenu: ((self newActionMenuBuilderOn: gtkWidget) 
 		filters: self filters;
 		visit: self actions)
 ]

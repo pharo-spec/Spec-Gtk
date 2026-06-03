@@ -28,6 +28,18 @@ GtkActionMenuBuilder >> allPrefixes [
 ]
 
 { #category : 'private' }
+GtkActionMenuBuilder >> appendCommand: aCommand [
+	| item actionName |
+	
+	actionName := self actionNameFor: aCommand.
+	item := GMenuItem 
+		newLabel: aCommand dynamicName 
+		action: actionName.
+	
+	menu appendItem: item
+]
+
+{ #category : 'private' }
 GtkActionMenuBuilder >> appendCommand: aCommand withIcon: anIcon [
 	| item icon |
 
@@ -39,9 +51,7 @@ GtkActionMenuBuilder >> appendCommand: aCommand withIcon: anIcon [
 	item label: aCommand dynamicName.
 	item icon: icon.
 	
-	menu appendItem: item.
-	
-	item objectUnref
+	menu appendItem: item
 ]
 
 { #category : 'visiting' }
@@ -104,9 +114,7 @@ GtkActionMenuBuilder >> visitCommand: aCommand [
 		self appendCommand: aCommand withIcon: anIcon.		
 		^ self ]."
 	
-	menu 
-		appendLabel: aCommand dynamicName 
-		actionName: (self actionNameFor: aCommand)
+	self appendCommand: aCommand
 ]
 
 { #category : 'visiting' }
