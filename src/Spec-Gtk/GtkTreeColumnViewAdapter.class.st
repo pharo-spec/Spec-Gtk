@@ -116,6 +116,7 @@ GtkTreeColumnViewAdapter >> newHeaderFactory [
 
 { #category : 'building' }
 GtkTreeColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
+
 	self critical: [
 		| selectionModel |
 

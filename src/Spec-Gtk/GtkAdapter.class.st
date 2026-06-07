@@ -464,13 +464,6 @@ GtkAdapter >> newWidget [
 	^ self widgetClass new
 ]
 
-{ #category : 'private' }
-GtkAdapter >> rebuild [
-	"stub for polymorphism. 
-	 Do not use.
-	 Do not remove."
-]
-
 { #category : 'accessing - style' }
 GtkAdapter >> removeStyle: aStyle [
 

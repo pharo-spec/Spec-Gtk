@@ -60,6 +60,19 @@ GtkBaseListViewAdapter >> newActionManager [
 ]
 
 { #category : 'private' }
+GtkBaseListViewAdapter >> rebuild [
+
+	"when updating a row, as its owner is the list, it may arrive here."
+	self refreshList
+]
+
+{ #category : 'private' }
+GtkBaseListViewAdapter >> refreshList [
+
+	self subclassResponsibility
+]
+
+{ #category : 'private' }
 GtkBaseListViewAdapter >> selectionCompanion [
 
 	^ selectionCompanion ifNil: [ 

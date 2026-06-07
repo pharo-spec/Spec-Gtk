@@ -213,6 +213,8 @@ GtkLayoutAdapter >> layout: aLayout [
 { #category : 'private' }
 GtkLayoutAdapter >> rebuild [ 
 	| oldChildren |
+	
+logger trace.
 
 	oldChildren := widget children.
 	"keep old"

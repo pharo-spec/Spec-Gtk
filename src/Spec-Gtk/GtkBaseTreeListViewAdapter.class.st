@@ -217,10 +217,24 @@ GtkBaseTreeListViewAdapter >> newStore [
 				children: self presenter children ])
 ]
 
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> rebuild [
+
+	"when updating a row, as its owner is the tree, it may arrive here."
+	self refreshTree
+]
+
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> refreshSelectionModelIn: gtkWidget [
 
 	self subclassResponsibility
+]
+
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> refreshTree [
+
+	self innerWidgetDo: [ :w |
+		self refreshSelectionModelIn: w ]
 ]
 
 { #category : 'building' }
