@@ -78,7 +78,12 @@ GtkListViewAdapter >> doInitializationDeferredActions [
 
 { #category : 'accessing' }
 GtkListViewAdapter >> elementAt: index [
-	| item |
+	| item currentItems |
+	
+	currentItems := self presenter items.
+	(currentItems isEmpty 
+		or: [ (index between: 1 and: currentItems size) not ])
+		ifTrue: [ ^ nil ].
 
 	item := nil.
 	self withCycleDetectionOnBackendDo: [
@@ -91,7 +96,7 @@ GtkListViewAdapter >> elementAt: index [
 			fork: [ :e | e pass ]
 			return: [ nil ] ] ].
 
-	^ item ifNil: [ self presenter items at: index ]
+	^ item ifNil: [ currentItems at: index ]
 ]
 
 { #category : 'testing' }
