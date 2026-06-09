@@ -35,7 +35,7 @@ BaselineOfSpecGtk >> baseline: spec [
 				"testing"
 				package: 'Spec-GtkBackendTests' with: [ spec requires: ('Spec-Gtk') ] ].
 		
-		spec group: 'Core' with: #('GtkCore' 'SpecCore' 'Spec-Gtk' 'Spec-Gtk-Frame' 'Spec-Gtk-Keybindings').
+		spec group: 'Core' with: #('GtkCore' "'SpecCore'" 'Spec-Gtk' 'Spec-Gtk-Frame' 'Spec-Gtk-Keybindings').
 		spec group: 'Code' with: #('GtkCode' 'Spec-Gtk-Code' 'Spec-Gtk-Code-Diff').	
 		spec group: 'Morphic' with: #('GtkMorphic' 'Spec-Gtk-Morphic-Adapter').
 		spec group: 'Tests' with: #('Spec-GtkBackendTests').
