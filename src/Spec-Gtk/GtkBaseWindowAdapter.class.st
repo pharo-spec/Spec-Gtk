@@ -516,12 +516,6 @@ GtkBaseWindowAdapter >> size [
 ]
 
 { #category : 'private - building' }
-GtkBaseWindowAdapter >> statusBar [
-
-	^ statusBar ifNil: [ statusBar := self model statusbar build ]
-]
-
-{ #category : 'private - building' }
 GtkBaseWindowAdapter >> statusbar [
 
 	^ statusbar ifNil: [ statusbar := self presenter statusbar build ]
