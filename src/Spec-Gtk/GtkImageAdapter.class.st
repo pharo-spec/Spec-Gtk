@@ -21,21 +21,8 @@ GtkImageAdapter >> addModelTo: gtkImage [
 
 { #category : 'private' }
 GtkImageAdapter >> cachedPaintableForForm: aForm [
-	| cache paintable size |
 
-	cache := self presenter application
-		propertyAt: #gtkPaintablesByForm
-		ifAbsentPut: [ IdentityDictionary new ].
-
-	^ cache
-		at: aForm
-		ifAbsentPut: [
-			paintable := aForm asGdkPaintable.
-			size := aForm width@aForm height.
-			paintable
-				computeConcreteSize: size
-				defaults: size.
-			paintable ]
+	^ aForm asGdkPaintableOnApplication: self presenter application
 ]
 
 { #category : 'accessing' }

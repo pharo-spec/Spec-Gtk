@@ -96,20 +96,30 @@ GtkBaseButtonAdapter >> updateLabel [
 		self updateLabelAndIconTo: w ]
 ]
 
-{ #category : 'private - updating' }
+{ #category : 'private' }
 GtkBaseButtonAdapter >> updateLabelAndIconTo: gtkButton [
 	| label gtkIcon gtkLabel |
 	
 	gtkIcon := gtkButton child children first.
 	self hasIcon
-		ifTrue: [ gtkIcon setFromPaintable: self presenter icon asGdkPaintable; beVisible ]
-		ifFalse: [ gtkIcon beNotVisible ].
+		ifTrue: [
+			| gtkPaintable |
+			gtkPaintable := self presenter icon asGdkPaintableOnApplication: self presenter application.
+			gtkIcon
+				setFromPaintable: gtkPaintable;
+				beVisible ]
+		ifFalse: [ 
+			gtkIcon beNotVisible ].
 
 	label := self getLabelText.
 	gtkLabel := gtkButton child children second.
 	self hasLabel
-		ifTrue: [ gtkLabel label: label; beVisible ]
-		ifFalse: [ gtkLabel beNotVisible ]
+		ifTrue: [
+			gtkLabel
+				label: label;
+				beVisible ]
+		ifFalse: [ 
+			gtkLabel beNotVisible ]
 ]
 
 { #category : 'updating' }
