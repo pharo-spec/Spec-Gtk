@@ -45,7 +45,7 @@ curl get.pharo.org/120 | bash
 2) Open your image using `./pharo-ui Pharo.image` and evaluate:
 ```Smalltalk
  Metacello new
-        repository: 'github://pharo-spec/Spec-Gtk:gtk4';
+        repository: 'github://pharo-spec/Spec-Gtk:main';
         baseline: 'SpecGtk';
         onConflict: [ :e | e useIncoming ];
         onUpgrade: [ :e | e useIncoming ];
