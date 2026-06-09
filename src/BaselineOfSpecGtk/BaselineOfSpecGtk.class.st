@@ -50,7 +50,7 @@ BaselineOfSpecGtk >> gtk: spec [
 
 	spec baseline: 'GtkCore' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings/src';
+			repository: 'github://pharo-spec/gtk-bindings:main/src';
 			className: 'BaselineOfGtk';			
 			loads: 'Core' ]
 ]
@@ -60,7 +60,7 @@ BaselineOfSpecGtk >> gtkCode: spec [
 
 	spec baseline: 'GtkCode' with: [ 
 		spec 
-			repository: 'github://pharo-spec/gtk-bindings/src';
+			repository: 'github://pharo-spec/gtk-bindings:main/src';
 			className: 'BaselineOfGtk';
 			loads: 'Code' ]
 ]
