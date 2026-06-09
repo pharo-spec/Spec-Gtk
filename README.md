@@ -5,7 +5,8 @@ The Spec Gtk bindings for Pharo
 
 ### On Windows
 Windows version is currently not working (an FFI problem we are working to solve, 
-hopefully in the next weeks. Sorry for the (momentary) inconvenience.
+hopefully in the next weeks.  
+Sorry for the (momentary) inconvenience.
 <!--
 You need Gtk4!  
 And you need to put it at the same place of the `Pharo.exe` executable.  
