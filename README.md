@@ -43,10 +43,10 @@ NOTE: If you are running under cygwin subsystem, remember to `chmod +x *`. Libra
 1) Download a Pharo 14.0 image:
 
 ```
-curl get.pharo.org/120 | bash
+curl get.pharo.org/140 | bash
 ```
 
-2) Open your image using `./pharo-ui Pharo.image` and evaluate:
+2) Open your image using `./pharo --worker Pharo.image --interactive` and evaluate:
 ```Smalltalk
  Metacello new
         repository: 'github://pharo-spec/Spec-Gtk:main';
