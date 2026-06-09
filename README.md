@@ -3,17 +3,7 @@ The Spec Gtk bindings for Pharo
 
 # How to install
 
-### On Windows
-You need Gtk4!  
-And you need to put it at the same place of the `Pharo.exe` executable.  
-To simplify the process we created a VM bundled with all the DLL and resources needed to execute GTK+3  
-
-You can get it from: http://files.pharo.org/vm/pharo-spur64-headless/win/latest-win64-GTK.zip
-
-NOTE: If you are running under cygwin subsystem, remember to `chmod +x *`. Libraries have to be executable!
-
 ### On macOS: 
-
 You need Gtk4 (installed by brew because paths are fixed for now)
 ```
 brew install gtk+4
@@ -34,9 +24,23 @@ You will need to remove some library files shipped with the Pharo VM:
 rm ~/pharo/vm/lib/libfreetype.so* ~/pharo/vm/lib/libcairo*.so*
 ```
 
+### On Windows
+Windows version is currently not working (an FFI problem we are working to solve, 
+hopefully in the next weeks.  
+Sorry for the (momentary) inconvenience.
+<!--
+You need Gtk4!  
+And you need to put it at the same place of the `Pharo.exe` executable.  
+To simplify the process we created a VM bundled with all the DLL and resources needed to execute GTK+3  
+
+You can get it from: http://files.pharo.org/vm/pharo-spur64-headless/win/latest-win64-GTK.zip
+
+NOTE: If you are running under cygwin subsystem, remember to `chmod +x *`. Libraries have to be executable!
+--> 
+
 ## Installing in your image
 
-1) Download a Pharo 12.0 image:
+1) Download a Pharo 14.0 image:
 
 ```
 curl get.pharo.org/120 | bash
