@@ -4,6 +4,9 @@ The Spec Gtk bindings for Pharo
 # How to install
 
 ### On Windows
+Windows version is currently not working (an FFI problem we are working to solve, 
+hopefully in the next weeks. Sorry for the (momentary) inconvenience.
+<!--
 You need Gtk4!  
 And you need to put it at the same place of the `Pharo.exe` executable.  
 To simplify the process we created a VM bundled with all the DLL and resources needed to execute GTK+3  
@@ -11,6 +14,7 @@ To simplify the process we created a VM bundled with all the DLL and resources n
 You can get it from: http://files.pharo.org/vm/pharo-spur64-headless/win/latest-win64-GTK.zip
 
 NOTE: If you are running under cygwin subsystem, remember to `chmod +x *`. Libraries have to be executable!
+--> 
 
 ### On macOS: 
 
