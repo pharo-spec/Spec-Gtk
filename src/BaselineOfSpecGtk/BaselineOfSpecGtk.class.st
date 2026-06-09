@@ -15,18 +15,18 @@ BaselineOfSpecGtk >> baseline: spec [
 			self gtk: spec.
 			self gtkCode: spec.
 			self gtkMorphic: spec.
-			self spec: spec.
+			"self spec: spec.
 			self specCode: spec.
-			self specMorphic: spec.
+			self specMorphic: spec."
 			
 			spec
 				"spec"
-				package: 'Spec-Gtk-Frame' with: [ spec requires: #('GtkCore' 'SpecCore' 'Spec-Gtk') ];
+				package: 'Spec-Gtk-Frame' with: [ spec requires: #('GtkCore' "'SpecCore'" 'Spec-Gtk') ];
 				package: 'Spec-Gtk-Keybindings' with: [ spec requires: #('GtkCore') ];
 				package: 'Spec-Gtk' with: [ spec requires: #('GtkCore' 'Spec-Gtk-Keybindings') ];
 				"spec-code"
-				package: 'Spec-Gtk-Code' with: [ spec requires: #('SpecCode' 'GtkCode') ];
-				package: 'Spec-Gtk-Code-Diff' with: [ spec requires: #('SpecCode' 'GtkCode') ];
+				package: 'Spec-Gtk-Code' with: [ spec requires: #("'SpecCode'" 'GtkCode') ];
+				package: 'Spec-Gtk-Code-Diff' with: [ spec requires: #("'SpecCode'" 'GtkCode') ];
 				package: 'Spec-Gtk-Pillar' with: [ spec requires: #('GtkCore') ];
 				"morphic"
 				package: 'Spec-Gtk-Morphic-Adapter' with: [ spec requires: #('GtkMorphic' 'Spec-Gtk') ];
