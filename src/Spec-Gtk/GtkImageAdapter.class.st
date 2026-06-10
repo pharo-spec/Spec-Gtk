@@ -46,11 +46,11 @@ GtkImageAdapter >> updateForm: aFormOrGdkPixbuf into: aGtkImageOrPicture [
 	aFormOrGdkPixbuf ifNil: [
 		aGtkImageOrPicture clear.
 		^ self ].
-
+	
 	paintable := aFormOrGdkPixbuf isForm
 		ifTrue: [ self cachedPaintableForForm: aFormOrGdkPixbuf ]
 		ifFalse: [ aFormOrGdkPixbuf asGdkPaintable ].
-
+	
 	self presenter isAutoScale
 		ifTrue: [ aGtkImageOrPicture setPaintable: paintable ]
 		ifFalse: [ aGtkImageOrPicture setFromPaintable: paintable ]

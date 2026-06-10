@@ -53,10 +53,10 @@ GtkTreeListViewAdapter >> alternateRowsColor [
 GtkTreeListViewAdapter >> announceElement: anItem expanded: aBoolean [
 
 	self runInSystem: [
-			self presenter announce: (SpTreeExpansionChanged new
-					 item: anItem;
-					 expanded: aBoolean;
-					 yourself) ]
+		self presenter announce: (SpTreeExpansionChanged new
+			item: anItem;
+			expanded: aBoolean;
+			yourself) ]
 ]
 
 { #category : 'accessing' }
