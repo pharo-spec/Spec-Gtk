@@ -10,6 +10,12 @@ brew install gtk+4
 ```
 
 ### On Linux
+
+**WARNING:** You cannot run gtk applications using a PharoVM downloaded with zeroconf. 
+The reason is zeroconf downloads some libraries required to run the vm and those libraries 
+conflicts with the system libraries.  
+Instead, please go to the [OBS (Open Build Service) Pharo Package](https://software.opensuse.org//download.html?project=devel:languages:pharo:stable&package=pharo-ui) built and install the VM for your distribution. 
+
 You need to have Gtk4 installed (this should be already the case).
 You can verify with this command: 
 ```
