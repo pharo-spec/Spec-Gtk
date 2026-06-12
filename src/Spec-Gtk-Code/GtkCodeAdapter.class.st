@@ -4,12 +4,92 @@ Class {
 	#instVars : [
 		'completionProvider',
 		'lastPopover',
-		'userAction'
+		'userAction',
+		'marksAddedToText',
+		'decorationsByMark'
 	],
 	#category : 'Spec-Gtk-Code-Base',
 	#package : 'Spec-Gtk-Code',
 	#tag : 'Base'
 }
+
+{ #category : 'accessing' }
+GtkCodeAdapter >> addDecoration: aDecoration forMark: aName [
+
+	decorationsByMark ifNil: [ decorationsByMark := SmallDictionary new ].
+	
+	(decorationsByMark 
+		at: aName
+		ifAbsentPut: [ OrderedCollection new ])
+		add: aDecoration
+]
+
+{ #category : 'private' }
+GtkCodeAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
+	| start markName marks mark |
+	
+	markName := '{1}_{2}' format: { tagName. lineNumber }.
+	
+	marksAddedToText ifNil: [ marksAddedToText := SmallDictionary new ].
+	marks := marksAddedToText 
+		at: tagName
+		ifAbsentPut: [ Set new ].
+	(marks includes: lineNumber) ifTrue: [ 
+		logger debug: 'Skipping'.
+		^ markName ].
+		
+	marks add: lineNumber.
+	start := aTextBuffer iterAtLine: lineNumber - 1.
+	mark := aTextBuffer 
+		createSourceMarkNamed: markName 
+		category: tagName 
+		where: start.
+		
+	^ markName
+]
+
+{ #category : 'private' }
+GtkCodeAdapter >> addMarkForDecoration: aDecoration in: aTextBuffer [
+	| markName |
+
+	"skip if we do not have the categorie (we will not print anything anyway)"
+	(self innerWidget markAttributeCategories includes: aDecoration name)
+		ifTrue: [ ^ self ].
+	
+	logger trace: aDecoration.
+
+	markName := self
+		addMark: aDecoration name
+		line: (self presenter text lineNumberCorrespondingToIndex: aDecoration start)
+		to: aTextBuffer.
+		
+	logger debug: markName.
+		
+	self addDecoration: aDecoration forMark: markName
+]
+
+{ #category : 'building' }
+GtkCodeAdapter >> addMarksCategoriesTo: gtkSourceView [
+
+	logger trace.
+
+	gtkSourceView
+		markAttributesForCategory: 'error' 
+			attributes: (GtkSourceMarkAttributes new
+				pixbuf: (self presenter iconNamed: 'error') asGdkPixbuf;
+				yourself) 
+			priority: 1;
+		markAttributesForCategory: 'warning' 
+			attributes: (GtkSourceMarkAttributes new
+				pixbuf: (self presenter iconNamed: #warning) asGdkPixbuf;
+				yourself) 
+			priority: 100;
+		markAttributesForCategory: 'info' 
+			attributes: (GtkSourceMarkAttributes new
+				pixbuf: (self presenter iconNamed: #info) asGdkPixbuf;
+				yourself) 
+			priority: 100
+]
 
 { #category : 'building' }
 GtkCodeAdapter >> addModelTo: gtkTextView [ 
@@ -55,9 +135,26 @@ GtkCodeAdapter >> addSourceFeaturesTo: gtkSourceView [
 		 see: https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/365
 		 I let the comment for future references"
 		showLineNumbers: self presenter hasLineNumbers;
+		showLineMarks: true;
+		hasTooltip: true;
 		autoIndent: true;
 		indentOnTab: true;
 		tabWidth: 4.
+		
+	gtkSourceView gutterLeft 
+		hasTooltip: true;
+		connect: 'query-tooltip' 
+			signature: #(gboolean (
+				void* selfHandle, 
+				gint x, 
+				gint y, 
+				gboolean keyboard_mode, 
+				"GtkTooltip*"void *tooltip,
+				gpointer user_data))
+			do: [ :selfHandle :x :y :keyboard_mode :tooltip :user_data |
+				self handleMarkTooltipAt: x@y  keyboardMode: keyboard_mode in: tooltip ].
+		
+	self addMarksCategoriesTo: gtkSourceView .
 
 	self presenter interactionModel ifNotNil: [
 		self addSourceCompletionProviderTo: gtkSourceView ].
@@ -77,11 +174,15 @@ GtkCodeAdapter >> addTextBufferTo: gtkTextView [
 { #category : 'api - segments' }
 GtkCodeAdapter >> addTextSegmentDecoration: aDecoration [
 	
+	logger trace.
+	
 	self innerWidgetDo: [ :w | 
 		w textBuffer 
-			applyTagByName: 'highlight' 
-			start: aDecoration start - 1 
-			end: aDecoration stop ]
+			applyTagByName: aDecoration name asString
+			start: aDecoration start - 1
+			end: aDecoration stop.
+	
+		self addMarkForDecoration: aDecoration in: w textBuffer ]
 ]
 
 { #category : 'building' }
@@ -204,6 +305,27 @@ GtkCodeAdapter >> filteredCommands [
 ]
 
 { #category : 'building' }
+GtkCodeAdapter >> handleMarkTooltipAt: aPoint keyboardMode: aKeyboardMode in: tooltipHandle [
+	| shouldShowPopover |
+
+	shouldShowPopover := false.
+	self innerWidgetDo: [ :w | 
+		| bufferPoint line marks hoverMessage |
+		bufferPoint := (w windowToBufferCoordinates: aPoint) max: 0@0.
+		line := w lineAtY: bufferPoint y.
+		marks := w textBuffer allMarksAtLine: line.
+		marks isNullOrNil ifFalse: [ 
+			marks do: [ :eachHandle |
+				hoverMessage := self hoverMarkupOnMark: (GtkSourceMark fromHandleUnowned: eachHandle) name.
+				hoverMessage ifNotNil: [
+					(GtkTooltip fromHandleUnowned: tooltipHandle) markup: hoverMessage.
+					shouldShowPopover := true ] ].
+			marks free ] ].
+		
+	^ shouldShowPopover
+]
+
+{ #category : 'building' }
 GtkCodeAdapter >> handleSmartCharacters: event [
 	| char selection |
 		
@@ -257,6 +379,27 @@ GtkCodeAdapter >> highlightSearchText: aBoolean [
 
 	self innerWidgetDo: [ :w |
 		w textBuffer searchContext highlight: aBoolean ]
+]
+
+{ #category : 'private' }
+GtkCodeAdapter >> hoverMarkupOnMark: aName [
+
+	logger debug: aName.
+
+	"this should not happen, but it does not hurts to check"
+	decorationsByMark ifNil: [ ^ nil ].
+
+	decorationsByMark at: aName ifPresent: [ :aCollection | 
+		| markup |
+		
+		markup := '<br>' join: (aCollection 
+			select: [ :each | each title isNotNil ]
+			thenCollect: [ :each | each title ]).
+		
+		markup ifNotEmpty: [ 
+			^ markup ] ].
+	
+	^ nil
 ]
 
 { #category : 'api' }
@@ -368,7 +511,7 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 
 	textBuffer := self bufferClass newTable: self usingTagTable.
 	textBuffer connectChanged: [ 
-		self applyFullStyleTo: textBuffer ].
+		self textChangedInTextBuffer: textBuffer ].
 	
 	^ textBuffer
 ]
@@ -425,10 +568,36 @@ GtkCodeAdapter >> regex: aBoolean [
 		buffer searchContext settings regexEnabled: aBoolean ]
 ]
 
+{ #category : 'private' }
+GtkCodeAdapter >> removeAllMarks [
+
+	marksAddedToText ifNil: [ ^ self ].
+	
+	self innerWidgetDo: [ :w |
+		marksAddedToText keysAndValuesDo: [ :aName :aSet |
+			aSet do: [ :aLine |
+				self removeMark: aName atLine: aLine in: w textBuffer ] ] ].
+	marksAddedToText := nil.
+	decorationsByMark := nil
+]
+
 { #category : 'api - segments' }
 GtkCodeAdapter >> removeAllTextSegmentDecorations [
 	
-	self flag: #TODO.
+	self flag: #TODO. "we need to remove all segments and marks!"
+	
+	self innerWidgetDo: [ :w | self removeAllMarks ]
+]
+
+{ #category : 'private' }
+GtkCodeAdapter >> removeMark: category atLine: lineNumber in: buffer [
+	| iter |
+	
+	iter := buffer iterAtLine: lineNumber - 1.
+	buffer 
+		removeSourceMarksStart: iter 
+		end: iter 
+		category: category
 ]
 
 { #category : 'api - search' }
@@ -587,6 +756,13 @@ GtkCodeAdapter >> styleTable [
 					^ SHRBTextStyler newAttributesForStyleTable: SHRBTextStyler styleTable ] ].
 
 	^ SHRBTextStyler newAttributesForStyleTableNamed: styleTableName
+]
+
+{ #category : 'private' }
+GtkCodeAdapter >> textChangedInTextBuffer: aTextBuffer [ 
+
+	self removeAllMarks.
+	self applyFullStyleTo: aTextBuffer
 ]
 
 { #category : 'private' }

@@ -81,7 +81,7 @@ GtkTableColumnPacker >> addUnderlineAttribute: aTableColumn column: aColumn rend
 	aTableColumn displayUnderline ifNil: [ ^ self ].
 	aColumn 
 		addAttribute: 'underline'
-		column: (self columnIndexOf: aTableColumn tag: #underline) 
+		column: (self columnIndexOf: aTableColumn tag: #isUnderline) 
 		renderer: aRenderer
 ]
 

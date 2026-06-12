@@ -82,7 +82,7 @@ GtkTableDataStoreColumnCollector >> addUnderlineColumn: aTableColumn [
 
 	store addColumn: (GtkTreeDataIntegerColumn new 
 		column: aTableColumn;
-		tag: #underline;
+		tag: #isUnderline;
 		evaluated: [ :aClass | 
 			(aTableColumn displayUnderline cull: aClass) 
 				ifTrue: [ 1  "PANGO_UNDERLINE_SINGLE" ]

@@ -40,7 +40,11 @@ GtkCodeTagTableManager >> initialize [
 { #category : 'private' }
 GtkCodeTagTableManager >> newTagTableFor: aName [
 	
-	^ GtkTextTagTable newForCode: (self styleTableFor: aName)
+	^ (GtkTextTagTable newForCode: (self styleTableFor: aName))
+		add: ((GtkTextTag newName: 'error')
+			underline: PangoUnderline PANGO_UNDERLINE_ERROR;
+			yourself);
+		yourself
 ]
 
 { #category : 'private' }
