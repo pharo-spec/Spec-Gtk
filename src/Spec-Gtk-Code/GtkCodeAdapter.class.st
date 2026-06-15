@@ -51,44 +51,40 @@ GtkCodeAdapter >> addMark: tagName line: lineNumber to: aTextBuffer [
 { #category : 'private' }
 GtkCodeAdapter >> addMarkForDecoration: aDecoration in: aTextBuffer [
 	| markName |
-
-	"skip if we do not have the categorie (we will not print anything anyway)"
-	(self innerWidget markAttributeCategories includes: aDecoration name)
-		ifTrue: [ ^ self ].
 	
+	"skip if we do not have the category (we will not print anything anyway)"
+	(self innerWidget markAttributeCategories includes: aDecoration name) 
+		ifFalse: [ ^ self ].
+
 	logger trace: aDecoration.
 
 	markName := self
 		addMark: aDecoration name
 		line: (self presenter text lineNumberCorrespondingToIndex: aDecoration start)
 		to: aTextBuffer.
-		
-	logger debug: markName.
-		
+
 	self addDecoration: aDecoration forMark: markName
 ]
 
 { #category : 'building' }
 GtkCodeAdapter >> addMarksCategoriesTo: gtkSourceView [
-
+	
 	logger trace.
-
-	gtkSourceView
-		markAttributesForCategory: 'error' 
-			attributes: (GtkSourceMarkAttributes new
-				pixbuf: (self presenter iconNamed: 'error') asGdkPixbuf;
-				yourself) 
-			priority: 1;
-		markAttributesForCategory: 'warning' 
-			attributes: (GtkSourceMarkAttributes new
-				pixbuf: (self presenter iconNamed: #warning) asGdkPixbuf;
-				yourself) 
-			priority: 100;
-		markAttributesForCategory: 'info' 
-			attributes: (GtkSourceMarkAttributes new
-				pixbuf: (self presenter iconNamed: #info) asGdkPixbuf;
-				yourself) 
-			priority: 100
+	
+	#(  "category"   	"icon"			"priority"
+		('error' 		'error'			100)
+		('warning' 		'warning'		90)
+		('info' 			'info'			80)
+		('breakpoint' 	'breakpoint'		10)
+		('flag' 			'flag'			10)
+		('metalink' 		'metalink'		10)
+		('doc-comment' 	'info'			10)
+		('debug-point' 	'smallDebug'		10)
+	) do: [ :eachTuple |
+		gtkSourceView 
+			markAttributesForCategory: eachTuple first
+			attributes: (GtkSourceMarkAttributes newForm: (self presenter iconNamed: eachTuple second))
+			priority: eachTuple third ]
 ]
 
 { #category : 'building' }
@@ -392,7 +388,7 @@ GtkCodeAdapter >> hoverMarkupOnMark: aName [
 	decorationsByMark at: aName ifPresent: [ :aCollection | 
 		| markup |
 		
-		markup := '<br>' join: (aCollection 
+		markup := String cr join: (aCollection 
 			select: [ :each | each title isNotNil ]
 			thenCollect: [ :each | each title ]).
 		
@@ -519,28 +515,26 @@ GtkCodeAdapter >> newTextBufferForHighlight [
 { #category : 'private - factory' }
 GtkCodeAdapter >> newTextBufferForText: aString [
 	| textBuffer |
-
+	
 	"add style table"
-	textBuffer := self model hasSyntaxHighlight 
+	textBuffer := self model hasSyntaxHighlight
 		ifTrue: [ self newTextBufferForHighlight ]
 		ifFalse: [ self newTextBuffer ].
 
 	textBuffer styleScheme: self styleScheme.
 	textBuffer searchContext highlight: false.
 
-	aString ifNotNil: [ 
-		textBuffer text: aString ].
+	aString ifNotNil: [ textBuffer text: aString ].
 
-	self presenter hasUndoRedoHistory 
+	self presenter hasUndoRedoHistory
 		ifTrue: [ textBuffer infiniteUndoLevels ]
- 		ifFalse: [ textBuffer disableUndo ].
-	
+		ifFalse: [ textBuffer disableUndo ].
+
 	textBuffer highlightMatchingBrackets: true.
 
 	textBuffer connectChanged: [
 		self withCycleDetectionOnBackendDo: [ 
 			self innerWidgetDo: [ :w | self updatePresenterText: w text ] ] ].
-
 
 	^ textBuffer
 ]
@@ -727,11 +721,12 @@ GtkCodeAdapter >> setMethodText: aString class: aClass toBuffer: textBuffer [
 { #category : 'building' }
 GtkCodeAdapter >> setText: aString to: gtkWidget [
 
-	self withCycleDetectionOnBackendDo: [
-		| textBuffer |
-		textBuffer := self newTextBufferForText: aString.
-		gtkWidget textBuffer: textBuffer.
-		self userActionDo: [ :action | action registerChange ] ]
+	self mutex critical: [
+		self withCycleDetectionOnBackendDo: [
+			| textBuffer |
+			textBuffer := self newTextBufferForText: aString.
+			gtkWidget textBuffer: textBuffer.
+			self userActionDo: [ :action | action registerChange ] ] ]
 ]
 
 { #category : 'private' }

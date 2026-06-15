@@ -39,10 +39,28 @@ GtkCodeTagTableManager >> initialize [
 
 { #category : 'private' }
 GtkCodeTagTableManager >> newTagTableFor: aName [
-	
+
 	^ (GtkTextTagTable newForCode: (self styleTableFor: aName))
 		add: ((GtkTextTag newName: 'error')
 			underline: PangoUnderline PANGO_UNDERLINE_ERROR;
+			yourself);
+		add: ((GtkTextTag newName: 'breakpoint')
+			background: (Color red alpha: 0.1);
+			yourself);
+		add: ((GtkTextTag newName: 'flag')
+			background: (Color yellow alpha: 0.15);
+			yourself);
+		add: ((GtkTextTag newName: 'metalink')
+			background: (Color orange alpha: 0.1);
+			yourself);
+		add: ((GtkTextTag newName: 'doc-comment')
+			background: (Color green alpha: 0.1);
+			yourself);
+		add: ((GtkTextTag newName: 'debug-point')
+			background: (Color yellow alpha: 0.2);
+			yourself);
+		add: ((GtkTextTag newName: 'icon')
+			background: (Color green alpha: 0.1);
 			yourself);
 		yourself
 ]
