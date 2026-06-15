@@ -385,9 +385,9 @@ GtkBaseTreeListViewAdapter >> updateSingleSelectionFromGtk [
 				selection model store pathOfItem: item ] ] ].
 	
 	self runInSystem: [ 
-		self backendUpdatingDo: [ 
-			self critical: [
-				self presenter selection selectPath: path ] ] ]
+		self backendUpdatingDo: [
+			"do not hold the mutex, as this will trigger updates that can cause deadlocks"
+			self presenter selection selectPath: path ] ]
 ]
 
 { #category : 'private - updating' }
