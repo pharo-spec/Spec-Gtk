@@ -98,7 +98,11 @@ GtkTreeListViewAdapter >> refreshList [
 		self isAlive ifFalse: [ ^ self ].
 		
 		self innerWidgetDo: [ :w |
-			w selectionModel unselectAll.
+			| selectionModel |
+			selectionModel := w selectionModel.
+			selectionModel
+				blockCallback: GSelectionChangedCallback signalName
+				during: [ selectionModel unselectAll ].
 			"IMPORTANT: Do not attempt to change the inner model of the selection model!
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
 			 back a non existing anymore model reference objects), causing a crash."

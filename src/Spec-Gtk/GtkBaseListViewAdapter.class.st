@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'mutex',
 		'deferredAction',
-		'selectionCompanion'
+		'selectionCompanion',
+		'selectionModelGeneration'
 	],
 	#pools : [
 		'GtkListScrollFlags'
@@ -41,6 +42,23 @@ GtkBaseListViewAdapter >> critical: aBlock [
 	^ self mutex critical: aBlock
 ]
 
+{ #category : 'private - selection' }
+GtkBaseListViewAdapter >> connectSelectionChangedOn: aSelectionModel [
+	| generation |
+
+	generation := self nextSelectionModelGeneration.
+	aSelectionModel connectSelectionChanged: [ :position :numItems |
+		(self isCurrentSelectionModelGeneration: generation) ifTrue: [
+			self updatePresenterSelection: position numItems: numItems ] ].
+	^ aSelectionModel
+]
+
+{ #category : 'private - selection' }
+GtkBaseListViewAdapter >> isCurrentSelectionModelGeneration: aGeneration [
+
+	^ self selectionModelGeneration = aGeneration
+]
+
 { #category : 'testing' }
 GtkBaseListViewAdapter >> isAlive [
 
@@ -57,6 +75,13 @@ GtkBaseListViewAdapter >> mutex [
 GtkBaseListViewAdapter >> newActionManager [
 
 	^ GtkAdapterActionListViewManager on: self
+]
+
+{ #category : 'private - selection' }
+GtkBaseListViewAdapter >> nextSelectionModelGeneration [
+
+	selectionModelGeneration := self selectionModelGeneration + 1.
+	^ selectionModelGeneration
 ]
 
 { #category : 'private' }
@@ -77,6 +102,12 @@ GtkBaseListViewAdapter >> selectionCompanion [
 
 	^ selectionCompanion ifNil: [ 
 		selectionCompanion := self presenter selectionMode gtkAdapterCompanion on: self ]
+]
+
+{ #category : 'private - selection' }
+GtkBaseListViewAdapter >> selectionModelGeneration [
+
+	^ selectionModelGeneration ifNil: [ selectionModelGeneration := 0 ]
 ]
 
 { #category : 'enumerating' }

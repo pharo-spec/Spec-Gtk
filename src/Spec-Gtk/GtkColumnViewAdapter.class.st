@@ -192,8 +192,7 @@ GtkColumnViewAdapter >> newSelectionModelOn: gtkColumnView [
 			self newStore ].
 	
 	selectionModel := self selectionCompanion newModel: usingModel.
-	selectionModel connectSelectionChanged: [ :position :numItems |
-		self updatePresenterSelection: position numItems: numItems ].
+	self connectSelectionChangedOn: selectionModel.
 	
 	^ selectionModel
 ]
