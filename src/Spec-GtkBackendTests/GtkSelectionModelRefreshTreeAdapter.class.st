@@ -2,7 +2,6 @@ Class {
 	#name : 'GtkSelectionModelRefreshTreeAdapter',
 	#superclass : 'GtkTreeListViewAdapter',
 	#instVars : [
-		'widget',
 		'nextSelectionModel'
 	],
 	#category : 'Spec-GtkBackendTests',
