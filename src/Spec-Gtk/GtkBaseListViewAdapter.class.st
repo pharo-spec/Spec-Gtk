@@ -36,12 +36,6 @@ GtkBaseListViewAdapter >> addSpecialActions [
 			anAdapter addSpecialActionsToListWidget: self ] ]
 ]
 
-{ #category : 'private' }
-GtkBaseListViewAdapter >> critical: aBlock [ 
-
-	^ self mutex critical: aBlock
-]
-
 { #category : 'private - selection' }
 GtkBaseListViewAdapter >> connectSelectionChangedOn: aSelectionModel [
 	| generation |
@@ -53,16 +47,22 @@ GtkBaseListViewAdapter >> connectSelectionChangedOn: aSelectionModel [
 	^ aSelectionModel
 ]
 
-{ #category : 'private - selection' }
-GtkBaseListViewAdapter >> isCurrentSelectionModelGeneration: aGeneration [
+{ #category : 'private' }
+GtkBaseListViewAdapter >> critical: aBlock [ 
 
-	^ self selectionModelGeneration = aGeneration
+	^ self mutex critical: aBlock
 ]
 
 { #category : 'testing' }
 GtkBaseListViewAdapter >> isAlive [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'private - selection' }
+GtkBaseListViewAdapter >> isCurrentSelectionModelGeneration: aGeneration [
+
+	^ self selectionModelGeneration = aGeneration
 ]
 
 { #category : 'private' }

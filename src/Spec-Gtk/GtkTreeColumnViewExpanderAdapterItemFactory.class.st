@@ -85,8 +85,7 @@ GtkTreeColumnViewExpanderAdapterItemFactory >> setup: listItem [
 			callback := self expandCallback.
 			row 
 				signal: 'notify::expanded' 
-				connectAfter: callback 
-				data: callback thunk ] ].
+				connectAfter: callback ] ].
 
 	self storePresenter: child.
 	expander := GtkTreeExpander newWidget: child adapter widget.

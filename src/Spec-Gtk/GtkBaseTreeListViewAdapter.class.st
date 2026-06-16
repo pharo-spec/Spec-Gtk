@@ -47,12 +47,6 @@ GtkBaseTreeListViewAdapter >> collapsePath: aPath [
 	self setPath: aPath expand: false
 ]
 
-{ #category : 'private' }
-GtkBaseTreeListViewAdapter >> critical: aBlock [
-
-	^ self mutex critical: aBlock
-]
-
 { #category : 'private - selection' }
 GtkBaseTreeListViewAdapter >> connectSelectionChangedOn: aSelectionModel [
 	| generation |
@@ -62,6 +56,12 @@ GtkBaseTreeListViewAdapter >> connectSelectionChangedOn: aSelectionModel [
 		(self isCurrentSelectionModelGeneration: generation) ifTrue: [
 			self updatePresenterSelection: position numItems: numItems ] ].
 	^ aSelectionModel
+]
+
+{ #category : 'private' }
+GtkBaseTreeListViewAdapter >> critical: aBlock [
+
+	^ self mutex critical: aBlock
 ]
 
 { #category : 'private' }
@@ -133,6 +133,12 @@ GtkBaseTreeListViewAdapter >> isAlive [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'private - selection' }
+GtkBaseTreeListViewAdapter >> isCurrentSelectionModelGeneration: aGeneration [
+
+	^ self selectionModelGeneration = aGeneration
+]
+
 { #category : 'testing' }
 GtkBaseTreeListViewAdapter >> isExpanded: aPath [
 	| path expanded |
@@ -165,12 +171,6 @@ GtkBaseTreeListViewAdapter >> isExpandedPath: aPath in: aModel [
 				ifFalse: [
 					"not expanded, answer it without continuing"
 					false ] ]
-]
-
-{ #category : 'private - selection' }
-GtkBaseTreeListViewAdapter >> isCurrentSelectionModelGeneration: aGeneration [
-
-	^ self selectionModelGeneration = aGeneration
 ]
 
 { #category : 'accessing' }
@@ -211,13 +211,6 @@ GtkBaseTreeListViewAdapter >> newActionManager [
 	^ GtkAdapterActionListViewManager on: self
 ]
 
-{ #category : 'private - selection' }
-GtkBaseTreeListViewAdapter >> nextSelectionModelGeneration [
-
-	selectionModelGeneration := self selectionModelGeneration + 1.
-	^ selectionModelGeneration
-]
-
 { #category : 'private - factory' }
 GtkBaseTreeListViewAdapter >> newSelectionModel [
 	| selectionModel |
@@ -239,6 +232,13 @@ GtkBaseTreeListViewAdapter >> newStore [
 			store 
 				itemAtHandle: itemHandle 
 				children: self presenter children ])
+]
+
+{ #category : 'private - selection' }
+GtkBaseTreeListViewAdapter >> nextSelectionModelGeneration [
+
+	selectionModelGeneration := self selectionModelGeneration + 1.
+	^ selectionModelGeneration
 ]
 
 { #category : 'private' }
