@@ -166,6 +166,39 @@ GtkPopoverAdapter >> replaceChildPresenterOn: gtkPopover [
 	gtkPopover child: self presenterWidget
 ]
 
+{ #category : 'private' }
+GtkPopoverAdapter >> scheduleCleanupOf: gtkPopover [
+
+	[
+		[
+			| copyHandle |
+			
+			50 milliSeconds wait.
+			GRunLoop defer: [
+				gtkPopover isValidHandle ifTrue: [
+					| child |
+					self presenter presenter 
+						traversePresentersDo: [ :each | each adapter: nil ].
+					child := gtkPopover child.
+					child withObjectReferenceDo: [ 
+						gtkPopover child: GtkWidget null ].
+					gtkPopover unparent.
+					copyHandle := gtkPopover getHandle copy.
+					gtkPopover getHandle beNull ] ].
+			
+			copyHandle isNullOrNil ifFalse: [
+				50 milliSeconds wait.
+				GRunLoop defer: [
+					GObject objectUnref: copyHandle.
+					logger debug: 'DELAYED UNREFERENCED' ] ] 
+		]
+		on: Error
+		do: [ :e | 
+			"eat it, but report it"
+			logger error: e ] 
+	] fork
+]
+
 { #category : 'building' }
 GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 		
@@ -175,49 +208,21 @@ GtkPopoverAdapter >> setPopoverPositionTo: gtkPopover [
 { #category : 'private' }
 GtkPopoverAdapter >> unregister: gtkPopover [
 	| timeRunning |
-		
-	timeRunning := (DateAndTime now) - popupTimestamp.
 	
+	timeRunning := DateAndTime now - popupTimestamp.
 	logger trace: gtkPopover.
 	logger trace: timeRunning.
 
-	self mutex critical: [ 
-		| copyHandle |		
-		
+	self mutex critical: [
 		presented := false.
-		
 		runLoop ifNotNil: [ runLoop done ].
 		self presenter owner takeKeyboardFocus.
-			
-		"fire close announcement"
-		self runInSystem: [  
+
+		self runInSystem: [
 			GEngine current unregisterWindow: gtkPopover.
 			self announceClosed ].
-		
-		"do some cleanup"
-		self widgetDo: [ :w | 
-			| child |
-			"ensure cleanup of adapters"
-			self presenter presenter 
-				traversePresentersDo: [ :aPresenter | aPresenter adapter: nil ].
-			"clean up of widget"
-			child := w child.
-			child withObjectReferenceDo: [
-				w child: GtkWidget null ].
-			"unparent the popover before unreferencing it" 
-			w unparent.
-			"I take a copy because I will nil but I still need to unref it"
-			copyHandle := w getHandle copy. 
-			w getHandle beNull ].
-		
-		"I give time GTK to perform all tasks they need for unparenting before release. 
-		 50 is a magic number get by 'guessing' technics"
-		[
-			50 milliSeconds wait.
-			GRunLoop defer: [ GObject objectUnref: copyHandle ].
-			logger debug: 'DELAYED UNREFERENCED'
-		] fork 
-	]
+
+		self scheduleCleanupOf: gtkPopover ]
 ]
 
 { #category : 'building' }
