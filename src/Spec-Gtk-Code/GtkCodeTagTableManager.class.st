@@ -53,6 +53,10 @@ GtkCodeTagTableManager >> newTagTableFor: aName [
 		add: ((GtkTextTag newName: 'metalink')
 			background: (Color orange alpha: 0.1);
 			yourself);
+		add: ((GtkTextTag newName: 'warning')
+			underline: PangoUnderline PANGO_UNDERLINE_SINGLE_LINE;
+			underlineColor: Color yellow;
+			yourself);
 		add: ((GtkTextTag newName: 'doc-comment')
 			background: (Color green alpha: 0.1);
 			yourself);
