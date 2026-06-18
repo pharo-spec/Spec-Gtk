@@ -114,7 +114,8 @@ GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 			w popup.
 			presented := true.
 			self processInitializationDeferredActions ].
-	self presenter isTransferFocus ifTrue: [ self presenter takeKeyboardFocus ].
+	self presenter isTransferFocus 
+		ifTrue: [ self presenter takeKeyboardFocus ].
 	[ self announceOpened ] fork.
 	runLoop run
 ]
@@ -172,9 +173,9 @@ GtkPopoverAdapter >> scheduleCleanupOf: gtkPopover [
 					child := gtkPopover child.
 					child withObjectReferenceDo: [ gtkPopover child: GtkWidget null ].
 					gtkPopover unparent.
-					[ GdkDisplay default forceReleaseDestroyedDeviceGrabs ]
+					"[ GdkDisplay default forceReleaseDestroyedDeviceGrabs ]
 						on: Error
-						do: [ :e | logger error: e ].
+						do: [ :e | logger error: e ]."
 					copyHandle := gtkPopover getHandle copy.
 					gtkPopover getHandle beNull ] ].
 
