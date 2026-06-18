@@ -45,8 +45,7 @@ GtkPopoverAdapter >> announceOpened [
 GtkPopoverAdapter >> dismiss [
 
 	presented ifFalse: [ ^ self ].
-	self widgetDo: [ :w |
-		w popdown ]
+	self widgetDo: [ :w | w popdown ]
 ]
 
 { #category : 'initialization' }
@@ -64,19 +63,17 @@ GtkPopoverAdapter >> mutex [
 
 { #category : 'api' }
 GtkPopoverAdapter >> popupModal: isModal pointingTo: aRectangle [
-	
-	logger trace: isModal.
-	
-	self flag: #EXPERIMENTAL. "2026/03/31. Lets see if this time I can fix my popover problem. 
-	For now, it is not working yet (even if it is slightly better than before), but I am 
-	checking on case by case (not all popover fail, just some, and in some cases... :( )"
-	isModal ifTrue: [
-		^ self popupModalPointingTo: aRectangle ].
 
-	"runLoop := GtkContextRunLoop new."
-	self widgetDo: [ :w | 
+	logger trace: isModal.
+
+	self flag: #EXPERIMENTAL. "2026/03/31. Lets see if this time I can fix my popover problem.
+	For now, it is not working yet (even if it is slightly better than before), but I am
+	checking on case by case (not all popover fail, just some, and in some cases... :( )"
+	isModal ifTrue: [ ^ self popupModalPointingTo: aRectangle ].
+
+	self widgetDo: [ :w |
 		| relativeTo |
-		"try this to not grab input (which is probably causing the thing to not 
+		"try this to not grab input (which is probably causing the thing to not
 		 give me back control... is annoying, however).
 		 Trying again setting it to boolean, to see if this is fixed by magic :P
 		 (if this does not works, remember autohide: false
@@ -86,17 +83,14 @@ GtkPopoverAdapter >> popupModal: isModal pointingTo: aRectangle [
 		relativeTo := self presenter relativeTo adapter innerWidget.
 		logger trace: relativeTo.
 		w parent: relativeTo.
-		logger trace:  aRectangle.
-		aRectangle ifNotNil: [ 
-			w setPointingTo: aRectangle asGdkRectangle ].
+		logger trace: aRectangle.
+		aRectangle ifNotNil: [ w setPointingTo: aRectangle asGdkRectangle ].
 		popupTimestamp := DateAndTime now.
 		w popup.
 		presented := true.
 		self processInitializationDeferredActions ].
-	self presenter isTransferFocus 
-		ifTrue: [ self presenter takeKeyboardFocus ].
+	self presenter isTransferFocus ifTrue: [ self presenter takeKeyboardFocus ].
 	[ self announceOpened ] fork.
-	"GRunLoop defer: [ runLoop run ]."
 	runLoop := nil
 ]
 
@@ -104,25 +98,23 @@ GtkPopoverAdapter >> popupModal: isModal pointingTo: aRectangle [
 GtkPopoverAdapter >> popupModalPointingTo: aRectangle [
 
 	runLoop := GtkContextRunLoop forContext: GRunLoop current isInCallback.
-	
+
 	logger trace: runLoop.
-	
-	self widgetDo: [ :w | 
+
+	self widgetDo: [ :w |
 		| relativeTo |
 		w autohide: true.
-		self register: w.
-		relativeTo := self presenter relativeTo adapter innerWidget.
-		logger trace: relativeTo.
-		w parent: relativeTo.
-		logger trace: aRectangle.
-		aRectangle ifNotNil: [ 
-			w setPointingTo: aRectangle asGdkRectangle ].
-		popupTimestamp := DateAndTime now.
-		w popup.
-		presented := true.
-		self processInitializationDeferredActions ].
-	self presenter isTransferFocus 
-		ifTrue: [ self presenter takeKeyboardFocus ].
+			self register: w.
+			relativeTo := self presenter relativeTo adapter innerWidget.
+			logger trace: relativeTo.
+			w parent: relativeTo.
+			logger trace: aRectangle.
+			aRectangle ifNotNil: [ w setPointingTo: aRectangle asGdkRectangle ].
+			popupTimestamp := DateAndTime now.
+			w popup.
+			presented := true.
+			self processInitializationDeferredActions ].
+	self presenter isTransferFocus ifTrue: [ self presenter takeKeyboardFocus ].
 	[ self announceOpened ] fork.
 	runLoop run
 ]
@@ -172,20 +164,20 @@ GtkPopoverAdapter >> scheduleCleanupOf: gtkPopover [
 	[
 		[
 			| copyHandle |
-			
 			50 milliSeconds wait.
 			GRunLoop defer: [
 				gtkPopover isValidHandle ifTrue: [
 					| child |
-					self presenter presenter 
-						traversePresentersDo: [ :each | each adapter: nil ].
+					self presenter presenter traversePresentersDo: [ :each | each adapter: nil ].
 					child := gtkPopover child.
-					child withObjectReferenceDo: [ 
-						gtkPopover child: GtkWidget null ].
+					child withObjectReferenceDo: [ gtkPopover child: GtkWidget null ].
 					gtkPopover unparent.
+					[ GdkDisplay default forceReleaseDestroyedDeviceGrabs ]
+						on: Error
+						do: [ :e | logger error: e ].
 					copyHandle := gtkPopover getHandle copy.
 					gtkPopover getHandle beNull ] ].
-			
+
 			copyHandle isNullOrNil ifFalse: [
 				50 milliSeconds wait.
 				GRunLoop defer: [
@@ -194,7 +186,7 @@ GtkPopoverAdapter >> scheduleCleanupOf: gtkPopover [
 		]
 		on: Error
 		do: [ :e | 
-			"eat it, but report it"
+			"eat it, but report it" 
 			logger error: e ] 
 	] fork
 ]

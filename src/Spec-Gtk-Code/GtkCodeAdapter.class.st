@@ -176,7 +176,7 @@ GtkCodeAdapter >> addTextSegmentDecoration: aDecoration [
 		w textBuffer 
 			applyTagByName: aDecoration name asString
 			start: aDecoration start - 1
-			end: aDecoration stop.
+			end: aDecoration stop - 1.
 	
 		self addMarkForDecoration: aDecoration in: w textBuffer ]
 ]
