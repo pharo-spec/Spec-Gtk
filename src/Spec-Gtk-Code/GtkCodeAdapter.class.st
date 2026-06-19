@@ -524,7 +524,7 @@ GtkCodeAdapter >> newTextBufferForText: aString [
 	textBuffer styleScheme: self styleScheme.
 	textBuffer searchContext highlight: false.
 
-	aString ifNotNil: [ textBuffer text: aString ].
+	aString ifNotNil: [ textBuffer text: aString withPlatformLineEndings ].
 
 	self presenter hasUndoRedoHistory
 		ifTrue: [ textBuffer infiniteUndoLevels ]
