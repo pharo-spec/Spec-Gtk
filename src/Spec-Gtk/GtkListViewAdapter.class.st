@@ -181,7 +181,7 @@ GtkListViewAdapter >> refreshWidgetSelection [
 { #category : 'private' }
 GtkListViewAdapter >> scrollToSelectionIfNeeded: index [
 	
-	((index < 1) or: [ self presenter items isEmpty ]) ifTrue: [ ^ self ].
+	(index between: 1 and: self presenter items size) ifFalse: [ ^ self ].
 
 	logger trace: index.
 

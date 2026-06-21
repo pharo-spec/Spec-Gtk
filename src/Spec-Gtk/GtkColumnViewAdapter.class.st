@@ -247,7 +247,8 @@ GtkColumnViewAdapter >> resetElements [
 { #category : 'private' }
 GtkColumnViewAdapter >> scrollToSelectionIfNeeded: index [
 
-	((index < 1) or: [ self elements isEmpty ]) ifTrue: [ ^ self ].
+	(index between: 1 and: self presenter items size) ifFalse: [ ^ self ].
+
 	self innerWidgetDo: [ :w |
 		w 
 			scrollToPosition: index - 1 
