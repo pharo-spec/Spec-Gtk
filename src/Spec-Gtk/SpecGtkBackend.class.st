@@ -139,7 +139,10 @@ SpecGtkBackend >> openFileDialog: aFileDialog [
 				result := file.
 				sem signal ] ].
 	sem wait.
-	^ result ifNotNil: [ result path asFileReference ]
+	^ result ifNotNil: [ 
+		| path |
+		path := GRunLoop defer: [ result path ].
+		path asFileReference ]
 ]
 
 { #category : 'running' }
