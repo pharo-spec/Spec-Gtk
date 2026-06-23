@@ -64,6 +64,12 @@ GtkPatchAdapter >> bufferClass [
 ]
 
 { #category : 'private - factory' }
+GtkPatchAdapter >> newTextBuffer [
+
+	^ self bufferClass new
+]
+
+{ #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForHighlight [
 	| textBuffer |
 
@@ -75,11 +81,13 @@ GtkPatchAdapter >> newTextBufferForHighlight [
 { #category : 'private - factory' }
 GtkPatchAdapter >> newTextBufferForText: aString [
 
-	^ self newTextBufferForHighlight
-		styleScheme: self styleScheme;
-		highlightMatchingBrackets: true;
-		text: (aString ifNil: [ '' ]);
-		yourself
+	^ (self presenter hasSyntaxHighlight
+		   ifTrue: [ self newTextBufferForHighlight ]
+		   ifFalse: [ self newTextBuffer ])
+		  styleScheme: self styleScheme;
+		  highlightMatchingBrackets: true;
+		  text: (aString ifNil: [ '' ]);
+		  yourself
 ]
 
 { #category : 'private - accessing' }

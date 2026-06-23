@@ -39,14 +39,15 @@ GtkPatchSideBySideAdapter >> addMarksTo: gtkSourceView [
 GtkPatchSideBySideAdapter >> addModelTo: aView [
 
 	super addModelTo: aView.
-	
+
 	self addMarksTo: leftSourceView.
 	self addMarksTo: rightSourceView.
-	
+
 	self addPatchTo: aView.
-	
-	self presenter whenLineNumbersChangedDo: [ :hasLineNumbers | 
-		self updateLineNumbers: hasLineNumbers ]
+
+	self presenter whenLineNumbersChangedDo: [ :hasLineNumbers | self updateLineNumbers: hasLineNumbers ].
+
+	self presenter whenSyntaxHighlightChangedDo: [ :hasSyntaxHighlight | self setPatch ]
 ]
 
 { #category : 'building' }
@@ -73,28 +74,26 @@ GtkPatchSideBySideAdapter >> applyFullStyleTo: textBuffer [
 { #category : 'private' }
 GtkPatchSideBySideAdapter >> applyStyleTo: textBuffer [
 	| behavior |
+	
+	self presenter hasSyntaxHighlight ifFalse: [ ^ self ].
+	textBuffer text isEmptyOrNil ifTrue: [ ^ self ].
 
-	"self presenter hasSyntaxHighlight ifFalse: [ ^ self ]."
-	"self presenter text isEmptyOrNil ifTrue: [ ^ self ]."
-	
 	logger trace: textBuffer.
-	
+
 	textBuffer removeAllTags.
-	
-	behavior := self presenter model originBehavior. 
-	
-	[ 
+	behavior := self presenter model originBehavior.
+	[
 		behavior isNil
-			ifTrue: [
+			ifTrue: [ 
 				self 
 					setExpressionText: textBuffer text 
 					class: behavior 
-					toBuffer: textBuffer  ]
+					toBuffer: textBuffer ]
 			ifFalse: [ 
 				self 
 					setMethodText: textBuffer text 
 					class: behavior 
-					toBuffer: textBuffer ] ]
+					toBuffer: textBuffer ] ] 
 	on: Error 
 	fork: [ :e | e pass ]
 ]
@@ -125,6 +124,12 @@ GtkPatchSideBySideAdapter >> newSourceView [
 
 ]
 
+{ #category : 'instance creation' }
+GtkPatchSideBySideAdapter >> newTextBuffer [
+
+	^ self bufferClass new
+]
+
 { #category : 'private - factory' }
 GtkPatchSideBySideAdapter >> newTextBufferForHighlight [
 	| textBuffer |
@@ -139,7 +144,9 @@ GtkPatchSideBySideAdapter >> newTextBufferForHighlight [
 { #category : 'private - factory' }
 GtkPatchSideBySideAdapter >> newTextBufferForText: aString [
 
-	^ self newTextBufferForHighlight
+	^ (self presenter hasSyntaxHighlight
+		   ifTrue: [ self newTextBufferForHighlight ]
+		   ifFalse: [ self newTextBuffer ])
 		styleScheme: self styleScheme;
 		highlightMatchingBrackets: true;
 		text: (aString ifNil: [ '' ]);
