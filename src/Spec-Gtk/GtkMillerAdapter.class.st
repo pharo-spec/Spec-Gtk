@@ -109,15 +109,18 @@ GtkMillerAdapter >> disableHScrollBar [
 GtkMillerAdapter >> doScrollToShow: aWidget [
 	| pos |
 
-	pos := aWidget 
-		translateCoordinates: 0@0 
-		to: innerWidget.
+	self widgetDo: [ :w |
+		pos := aWidget 
+			translateCoordinates: 0@0 
+			to: innerWidget ].
+
 	pos = (-1@ -1) ifTrue: [ 
 		"reschedule to be sure is executed"
 		^ self scrollToShow: aWidget ].
-	
-	self widget hAdjustment value: pos x asFloat.
-	self widget vAdjustment value: pos y asFloat
+		
+	self widgetDo: [ :w |
+		self widget hAdjustment value: pos x asFloat.
+		self widget vAdjustment value: pos y asFloat ]
 ]
 
 { #category : 'private' }

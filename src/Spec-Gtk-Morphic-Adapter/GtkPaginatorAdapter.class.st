@@ -5,6 +5,12 @@ Class {
 	#package : 'Spec-Gtk-Morphic-Adapter'
 }
 
+{ #category : 'private' }
+GtkPaginatorAdapter >> accentColor [
+
+	^ self presenter application configuration accentColor
+]
+
 { #category : 'building' }
 GtkPaginatorAdapter >> addModelTo: gtkWidget [
 	| morph |
@@ -22,7 +28,8 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 
 	self presenter whenSelectedPageChangedDo: [ :aNumber |
 		self withCycleDetectionOnBackendDo: [ 
-			morph selectPage: aNumber ] ].
+			self widgetDo: [ :w |
+				morph selectPage: aNumber ] ] ].
 	morph whenSelectedPageChangedDo: [ :aNumber |
 		self backendUpdatingDo: [ 
 			self presenter selectPage: aNumber ] ].
@@ -35,20 +42,22 @@ GtkPaginatorAdapter >> addModelTo: gtkWidget [
 			self presenter visiblePages: aNumber ] ].
 	
 	self presenter whenPageAddedDo: [ :anObject | 
-		morph 
-			addPage: anObject; 
-			selectLastPage ].
+		self widgetDo: [ :w |
+			morph 
+				addPage: anObject; 
+				selectLastPage ] ].
 	self presenter whenPageRemovedDo: [ :anObject |
-		anObject 
-			ifNotNil: [ morph removePage: anObject ]
-			ifNil: [ morph removeAllPages ] ]
+		self widgetDo: [ :w |
+			anObject 
+				ifNotNil: [ morph removePage: anObject ]
+				ifNil: [ morph removeAllPages ] ] ]
 
 ]
 
 { #category : 'private' }
 GtkPaginatorAdapter >> backgroundColor [
 
-	^ self presenter application configuration panelBackgroundColor
+	^ Color transparent
 ]
 
 { #category : 'private' }
@@ -72,7 +81,7 @@ GtkPaginatorAdapter >> panelBackgroundColor [
 { #category : 'private' }
 GtkPaginatorAdapter >> selectedColor [
 
-	^ self presenter application configuration listSelectedColor alpha: 0.3
+	^ self accentColor alpha: 0.3
 ]
 
 { #category : 'building' }

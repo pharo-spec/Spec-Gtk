@@ -149,7 +149,11 @@ SpecGtkBackend >> openFileDialog: aFileDialog [
 SpecGtkBackend >> runOn: anApplication [
 
 	(GEngine current isKindOf: GtkApplicationEngine)
-		ifTrue: [ GEngine current run ]
+		ifTrue: [
+			logger debug: GEngine isRunning.
+			GEngine isRunning 
+				ifTrue: [ super runOn: anApplication ]
+				ifFalse: [ GEngine current run ] ]
 		ifFalse: [ super runOn: anApplication ]
 ]
 

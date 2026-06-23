@@ -18,10 +18,11 @@ GtkToolbarPopoverButtonAdapter >> addModelTo: gtkToolButton [
 
 { #category : 'building' }
 GtkToolbarPopoverButtonAdapter >> newWidget [
-	
-	^ GtkToolButton 
-		newForm: self presenter icon 
-		label: self presenter label
+ 
+	^ super newWidget
+		addClass: 'image-button';
+		addClass: 'toolbar-button';
+		yourself
 ]
 
 { #category : 'building' }

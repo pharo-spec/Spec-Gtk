@@ -32,6 +32,14 @@ SpGtkConfiguration class >> usesApplicationEngine [
 	^ UseApplicationEngine ifNil: [ false ]
 ]
 
+{ #category : 'accessing - colors' }
+SpGtkConfiguration >> accentColor [
+
+	^ (self class environment classNamed: #AdwStyleManager)
+		ifNotNil: [ :aClass |  GRunLoop defer: [ aClass default accentColor ] ]
+		ifNil: [ Color blue ]
+]
+
 { #category : 'accessing - style' }
 SpGtkConfiguration >> addCSSProviderFromPath: aString [
 	| provider |
@@ -227,11 +235,9 @@ SpGtkConfiguration >> getListActiveColor [
 { #category : 'private' }
 SpGtkConfiguration >> getListSelectedColor [
 
-	^ GRunLoop defer: [
-		| widget |
-		widget := GtkListView new.
-		widget autoRelease.
-		widget styleContext getSelectedRGBAColor asColor ]
+	self deprecated: #Gtk4.
+
+	^ Color lightBlue
 ]
 
 { #category : 'private' }
@@ -301,7 +307,9 @@ SpGtkConfiguration >> listSelectedColor [
 { #category : 'accessing - colors' }
 SpGtkConfiguration >> panelBackgroundColor [
 
-	self deprecated: #Gtk4
+	self deprecated: #Gtk4.
+	
+	^ Color transparent
 ]
 
 { #category : 'accessing' }
