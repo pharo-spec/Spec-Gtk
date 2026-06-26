@@ -7,7 +7,12 @@ Class {
 		'lastPageSize',
 		'realised',
 		'keepShowingPage',
-		'firstShowingWidget'
+		'firstShowingWidget',
+		'horizontalAdjustment',
+		'visibleStart',
+		'visibleCount',
+		'columnWidth',
+		'isUpdatingScroll'
 	],
 	#category : 'Spec-Gtk-Layout-Box',
 	#package : 'Spec-Gtk',
@@ -22,18 +27,14 @@ GtkMillerAdapter >> add: aPresenter [
 
 { #category : 'private' }
 GtkMillerAdapter >> add: aPresenter constraints: constraints [
-	
-	aPresenter owner: self model. 
-	self widgetDo: [ :w |
+
+	aPresenter owner: self model.
+	self innerWidgetDo: [ :gtkWidget |
 		| childWidget |
-		
 		childWidget := self 
-			basicAdd: aPresenter
+			basicAdd: aPresenter 
 			constraints: constraints 
-			to: innerWidget.
-		"I'm keeping a reference to aPresenter into the built widget because in some cases 
-		 it can be GC (in case of the on-the-fly creation, for example). 
-		 Now this can be a real bad idea :)"
+			to: gtkWidget.
 		childWidget data: aPresenter.
 		self recalculatePages.
 		self scrollToShowLastPage ]
@@ -48,99 +49,191 @@ GtkMillerAdapter >> addConstraints: constraints toChild: childWidget [
 
 { #category : 'private' }
 GtkMillerAdapter >> applyLayout: aLayout [
-	"build of widget was differed up to here (to know what is the direction)"
 
-	innerWidget := layout direction newWidgetOn: self.
+	innerWidget := GtkBox newHorizontal.
 	innerWidget connectRealize: [
-		realised := true.
-		self scrollToShowLastPage ].
+			realised := true.
+			self updateViewportGeometryWhenAllocatedDo: [ self scrollToShowLastPage ] ].
 
 	innerWidget
-		homogeneous: true;
+		homogeneous: false;
 		spacing: aLayout spacing;
 		margin: aLayout borderWidth;
+		hExpand: false;
 		beVisible.
 
 	widget := GtkScrolledWindow newWidget: innerWidget.
-	"widget connectSizeAllocate: [ :aRect | self widgetResized ]."
+	widget
+		policyHScrollbar: GtkPolicyType GTK_POLICY_NEVER vScrollbar: GtkPolicyType GTK_POLICY_NEVER;
+		overlayScrolling: true.
+	horizontalAdjustment := widget hAdjustment.
+	visibleCount := self initialVisibleCount.
+	visibleStart := 0.
+	widget connectNotifyProperty: 'width' do: [ :parameterSpec | self viewportWidthChanged ].
+	aLayout whenVisiblePagesChangedDo: [ self visiblePagesChanged ].
 
 	self toggleVisible: self presenter isVisible.
-	self presenter whenVisibleChangedDo: [
-		self toggleVisible: self presenter isVisible ].
+	self presenter whenVisibleChangedDo: [ self toggleVisible: self presenter isVisible ].
 
-	self presenter hasHorizontalScrollBar
-		ifTrue: [ self enableHScrollBar ]
-		ifFalse: [ self disableHScrollBar ].
-	self presenter whenHorizontalScrollBarChangedDo: [ :show |
-		show
-			ifTrue: [ self enableHScrollBar ]
-			ifFalse: [ self disableHScrollBar ] ]
+	self hideHorizontalScrollBar.
+	self presenter whenHorizontalScrollBarChangedDo: [ :show | self hideHorizontalScrollBar ]
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
 	| childWidget |
-
+	
 	childWidget := aPresenter buildWithSelector: constraints spec.
 	self addConstraints: constraints toChild: childWidget.
-		
-	childWidget 
-		vExpand: true;
-		hExpand: true.
+	self configureColumnWidget: childWidget.
 	gtkWidget append: childWidget.
-			
-	^ gtkWidget
+	
+	^ childWidget
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> childrenWidgets [
-	
-	^ innerWidget children
+
+	^ innerWidget 
+		ifNotNil: [ innerWidget children ]
+		ifNil: [ #() ]
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> clampVisibleStart [
+
+	visibleStart := (self visibleStart min: self maximumStart) max: 0
+]
+
+{ #category : 'accessing' }
+GtkMillerAdapter >> columnSpacing [
+
+	layout ifNil: [ ^ 0 ].
+	^ layout spacing
+]
+
+{ #category : 'accessing' }
+GtkMillerAdapter >> columnStep [
+
+	^ self columnWidth + self columnSpacing
+]
+
+{ #category : 'accessing' }
+GtkMillerAdapter >> columnWidth [
+
+	^ columnWidth ifNil: [ columnWidth := self defaultColumnWidth ]
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> columnWidthForViewportWidth: aNumber [
+
+	| availableWidth spacingWidth visiblePanelCount |
+	visiblePanelCount := self preferredVisibleCount max: 1.
+	spacingWidth := self columnSpacing * (visiblePanelCount - 1 max: 0).
+	availableWidth := aNumber - spacingWidth max: visiblePanelCount.
+
+	^ (availableWidth / visiblePanelCount) floor max: 1
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> configureColumnWidget: childWidget [
+
+	childWidget
+		sizeRequestWidth: self columnWidth height: -1;
+		vExpand: true;
+		hExpand: false;
+		addClass: 'miller-column'.
+	^ childWidget
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> configureColumnWidgets [
+
+	self childrenWidgets do: [ :each | self configureColumnWidget: each ]
+]
+
+{ #category : 'defaults' }
+GtkMillerAdapter >> defaultColumnWidth [
+
+	^ 260
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> disableHScrollBar [
 
 	keepShowingPage := true.
-	self widgetDo: [ :w | w hScrollBar beNotVisible ]
+	self hideHorizontalScrollBar
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> doScrollToShow: aWidget [
-	| pos |
 
-	self widgetDo: [ :w |
-		pos := aWidget 
-			translateCoordinates: 0@0 
-			to: innerWidget ].
-
-	pos = (-1@ -1) ifTrue: [ 
-		"reschedule to be sure is executed"
-		^ self scrollToShow: aWidget ].
-		
-	self widgetDo: [ :w |
-		self widget hAdjustment value: pos x asFloat.
-		self widget vAdjustment value: pos y asFloat ]
+	self scrollToShow: aWidget
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> enableHScrollBar [
 
-	keepShowingPage := true.
-	self widgetDo: [ :w | w hScrollBar show ]
+	keepShowingPage := false.
+	self hideHorizontalScrollBar
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> ensureAllColumnWidgetsAreRetained [
+
+	self childrenWidgets do: [ :each | self ensureRetained: each ]
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> firstVisibleWidget [
+
+	^ self childrenWidgets at: self visibleStart + 1 ifAbsent: [ nil ]
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> hideHorizontalScrollBar [
+
+	self widgetDo: [ :w | w hScrollBar beNotVisible ]
+]
+
+{ #category : 'accessing' }
+GtkMillerAdapter >> horizontalAdjustment [
+
+	^ horizontalAdjustment ifNil: [ 
+		widget 
+			ifNotNil: [ horizontalAdjustment := widget hAdjustment ]
+			ifNil: [ nil ]  ]
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> initialVisibleCount [
+
+	layout ifNil: [ ^ 1 ].
+	^ layout visiblePages max: 1
 ]
 
 { #category : 'initialization' }
 GtkMillerAdapter >> initialize [
 
 	super initialize.
-	realised := false
+	realised := false.
+	keepShowingPage := false.
+	visibleStart := 0.
+	visibleCount := 1.
+	columnWidth := self defaultColumnWidth.
+	isUpdatingScroll := false
 ]
 
 { #category : 'private accessing' }
 GtkMillerAdapter >> innerWidget [
 
 	^ innerWidget
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> maximumStart [
+
+	^ self childrenWidgets size - self visibleCount max: 0
 ]
 
 { #category : 'factory' }
@@ -156,102 +249,121 @@ GtkMillerAdapter >> newVertical [
 ]
 
 { #category : 'private' }
-GtkMillerAdapter >> recalculatePageHeights [
-	| newHeight widgets height |
+GtkMillerAdapter >> preferredVisibleCount [
+	| childCount layoutCount |
+	
+	layoutCount := self initialVisibleCount.
+	childCount := self childrenWidgets size.
+	
+	childCount = 0 ifTrue: [ ^ layoutCount ].
+	^ (layoutCount min: childCount) max: 1
+]
 
-	height := self widget height.
-	widgets := self childrenWidgets.
-	newHeight := widgets size = 1
-		ifTrue: [ height ]
-		ifFalse: [ height / (layout visiblePages min: widgets size) - (layout spacing / (layout visiblePages min: widgets size)) ].
-		
-	"since the container box is homogeneous, I just need to change the size of 
-	 first element to get all the rest to follow"
-	widgets first sizeRequest: (widgets first preferredSizeMinimum x)@newHeight
+{ #category : 'private' }
+GtkMillerAdapter >> recalculateColumnWidthFromViewport [
+
+	| width |
+	self widget ifNil: [ ^ self ].
+	width := self widget width.
+	width <= 0 ifTrue: [ ^ self ].
+	columnWidth := self columnWidthForViewportWidth: width
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> recalculatePageHeights [
+
+	self recalculatePages
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> recalculatePageWidths [
-	| newWidth widgets width |
 
-	width := self widget width.
-	widgets := self childrenWidgets.
-	newWidth := widgets size = 1
-		ifTrue: [ width ]
-		ifFalse: [ width / (layout visiblePages min: widgets size) - (layout spacing / (layout visiblePages min: widgets size)) ].
-	
-	"since the container box is homogeneous, I just need to change the size of 
-	 first element to get all the rest to follow"
-	widgets first sizeRequest: newWidth asInteger @ (widgets first preferredSizeMinimum y asInteger).
-	
+	self recalculatePages
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> recalculatePages [
 
 	self widget ifNil: [ ^ self ].
-	self childrenWidgets ifEmpty: [ ^ self ].
-	((lastExtent = self widget size) 
-		and: [ lastPageSize = self childrenWidgets size ]) 
-		ifTrue: [ ^ self ].
-
-	[ layout direction recalculatePages: self ]
-	ensure: [ 
-		lastExtent := self widget size.
-		lastPageSize := self childrenWidgets size ]
+	self updateViewportGeometryWhenAllocatedDo: [ ]
 ]
 
 { #category : 'api' }
 GtkMillerAdapter >> remove: aPresenter [
 	| childWidget |
+	
+	aPresenter adapter ifNil: [ ^ self ].
+	
+	childWidget := aPresenter adapter widget.
+	self innerWidgetDo: [ :gtkWidget |
+		(gtkWidget children includes: childWidget) ifTrue: [
+			self ensureRetained: childWidget.
+			gtkWidget remove: childWidget.
+			self clampVisibleStart.
+			self snapToVisibleStart ] ]
+]
 
-	self innerWidgetDo: [ :w |
-		childWidget := aPresenter adapter widget.
-		(w children includes: childWidget) ifTrue: [  
-			w remove: childWidget.
-			self recalculatePages.
-			self scrollToShowLastPage ] ]
+{ #category : 'accessing children' }
+GtkMillerAdapter >> removeAll [
+
+	self innerWidgetDo: [ :gtkWidget |
+		self ensureAllColumnWidgetsAreRetained.
+		gtkWidget removeAll.
+		visibleStart := 0.
+		self snapToVisibleStart ]
+]
+
+{ #category : 'paginator' }
+GtkMillerAdapter >> scrollByDeltaPercent: percent [
+	| deltaPixels newStart |
+	
+	self widget ifNil: [ ^ self ].
+	
+	deltaPixels := self widget width * (percent / 100).
+	newStart := (self visibleStart * self columnStep + deltaPixels / self columnStep) rounded.
+	visibleStart := newStart.
+	self clampVisibleStart.
+	self snapToVisibleStart
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> scrollToShow: aWidget [
-
-	realised ifFalse: [ ^ self ].
-	innerWidget children ifEmpty: [ ^ self ].
-	innerWidget children size = 1 ifTrue: [ ^ self ].
-
-	self flag: #HACK. "This is needed because once added a children, the children will 
-	not have immediately a real position, so we cannot scroll. 
-	Positions and sizes in Gtk3 are calculated in the redrawing loop, to prevent multiple 
-	sizing at once. We need to wait until this happens so the scrolling has sense."
-	[
-		15 milliSecond wait.
-		[ self doScrollToShow: aWidget ]
-		on: Error do: [ :e | 
-			"do not lost the error if any, but do not stop because of it"
-			e emit. 
-			e messageText crTrace ]
-	] asTask schedule: TKTNewProcessTaskRunner new
+	| index |
+	
+	index := self childrenWidgets indexOf: aWidget.
+	index = 0 ifTrue: [ ^ self ].
+	self selectPage: index
 ]
 
 { #category : 'private' }
 GtkMillerAdapter >> scrollToShowLastPage [
 
-	realised ifFalse: [ ^ self ].
-	innerWidget children ifEmpty: [ ^ self ].
-	innerWidget children size = 1 ifTrue: [ ^ self ].
-
-	self scrollToShow: innerWidget children last
+	self childrenWidgets ifEmpty: [ ^ self ].
+	visibleStart := self maximumStart.
+	self snapToVisibleStart
 ]
 
 { #category : 'api' }
 GtkMillerAdapter >> selectPage: aNumber [
-	| child |
 
-	child := innerWidget children at: (aNumber max: 1).
-	keepShowingPage 
-		ifTrue: [ firstShowingWidget := child ].
-	self widgetDo: [ :w | self scrollToShow: child ]
+	visibleStart := (aNumber max: 1) - 1.
+	self clampVisibleStart.
+	keepShowingPage ifTrue: [ firstShowingWidget := self firstVisibleWidget ].
+	self snapToVisibleStart
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> snapToVisibleStart [
+	| adjustment targetX |
+	
+	adjustment := self horizontalAdjustment.
+	adjustment ifNil: [ ^ self ].
+	
+	targetX := self visibleStart * self columnStep.
+	isUpdatingScroll := true.
+	[ adjustment value: targetX asFloat ] 
+	ensure: [ 
+		isUpdatingScroll := false ]
 ]
 
 { #category : 'private' }
@@ -263,9 +375,65 @@ GtkMillerAdapter >> toggleVisible: isVisible [
 ]
 
 { #category : 'private' }
+GtkMillerAdapter >> updateViewportGeometry [
+
+	self updateVisibleCount.
+	self recalculateColumnWidthFromViewport.
+	self configureColumnWidgets.
+	self clampVisibleStart.
+	self snapToVisibleStart
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> updateViewportGeometryWhenAllocatedDo: aBlock [
+
+	| gtkWidget |
+	gtkWidget := self widget ifNil: [ ^ self ].
+	self updateVisibleCount.
+	self clampVisibleStart.
+	gtkWidget width > 0 ifTrue: [
+			self updateViewportGeometry.
+			^ aBlock value ].
+	gtkWidget addOneShotTickCallback: [
+			gtkWidget width > 0 ifTrue: [
+					self updateViewportGeometry.
+					aBlock value ] ]
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> updateVisibleCount [
+
+	visibleCount := self preferredVisibleCount
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> viewportWidthChanged [
+
+	self updateViewportGeometryWhenAllocatedDo: [ ]
+]
+
+{ #category : 'accessing' }
+GtkMillerAdapter >> visibleCount [
+
+	^ visibleCount ifNil: [ visibleCount := self initialVisibleCount ]
+]
+
+{ #category : 'private' }
+GtkMillerAdapter >> visiblePagesChanged [
+
+	self updateViewportGeometryWhenAllocatedDo: [ ]
+]
+
+{ #category : 'accessing' }
+GtkMillerAdapter >> visibleStart [
+
+	^ visibleStart ifNil: [ visibleStart := 0 ]
+]
+
+{ #category : 'private' }
 GtkMillerAdapter >> widgetResized [
 
-	self recalculatePages.
-	(keepShowingPage and: [ firstShowingWidget notNil ])
+	self viewportWidthChanged.
+	(keepShowingPage and: [ firstShowingWidget notNil ]) 
 		ifTrue: [ self scrollToShow: firstShowingWidget ]
 ]
