@@ -67,8 +67,8 @@ GtkBaseButtonAdapter >> labelAndIcon [
 	| box gtkIcon gtkLabel |
 
 	box := GtkBox newHorizontal
+		addClass: 'button_content';
 		hAlignCenter;
-		spacing: 3;
 		yourself.
 
 	gtkIcon := GtkImage new.
