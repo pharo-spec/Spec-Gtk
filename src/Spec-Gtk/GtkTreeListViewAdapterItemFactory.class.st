@@ -13,14 +13,17 @@ Class {
 
 { #category : 'accessing' }
 GtkTreeListViewAdapterItemFactory >> bind: listItem [
-	| child expander row itemReference itemStore item |
+	| child expander row item |
 
 	expander :=  self objectAtHandle: listItem child.
 	
 	row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
+
+	self ensureExpandSignalOn: listItem.
+
 	expander listRow: row.
 	
-child := self presenterAtHandle: expander child getHandle.
+	child := self presenterAtHandle: expander child getHandle.
 	child ifNil: [ ^ self ].
 	
 	item := self itemFromRow: row.
@@ -39,7 +42,29 @@ GtkTreeListViewAdapterItemFactory >> bind: listItem to: anObject [
 { #category : 'signaling' }
 GtkTreeListViewAdapterItemFactory >> connectNotifyExpand: aBlock [
 
+	logger trace.
 	expandAction := aBlock
+]
+
+{ #category : 'private' }
+GtkTreeListViewAdapterItemFactory >> ensureExpandSignalOn: listItem [
+	"I am using this mechanism because on setup there is no list row yet, it will 
+	 be created at a point between setup and bind. As I want to avoid multiple
+	 registration of the signal, I mark the item on setup, then I realise on bind."
+	| row |
+
+	(listItem dataAt: 'first-setup') asInteger = 1 ifFalse: [ ^ self ].
+	
+	listItem dataAt: 'first-setup' put: ExternalAddress null.
+
+	expandAction ifNotNil: [ 
+		row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
+		row isValidHandle ifTrue: [
+			| callback |
+			callback := self expandCallback.
+			row 
+				signal: 'notify::expanded' 
+				connectAfter: callback ] ]
 ]
 
 { #category : 'private' }
@@ -60,6 +85,7 @@ GtkTreeListViewAdapterItemFactory >> itemFromRow: row [
 	itemStore := store storeAt: (itemReference dataAt: 'store').
 	item := itemStore itemAtHandle: itemReference getHandle.
 	itemReference objectUnref.
+
 	^ item
 ]
 
@@ -78,21 +104,12 @@ GtkTreeListViewAdapterItemFactory >> rowExpanded: rowHandle [
 
 { #category : 'accessing' }
 GtkTreeListViewAdapterItemFactory >> setup: listItem [
-	| child expander row |
+	| child expander |
 
 	child := presenter setupAction cull: presenter.
 	child build.
 
-	"we hang from the expand just if there is an action defined. 
-	 (even if usually yes, this is cleaner)"
-	expandAction ifNotNil: [ 
-		row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
-		row isValidHandle ifTrue: [
-			| callback |
-			callback := self expandCallback.
-			row 
-				signal: 'notify::expanded' 
-				connectAfter: callback ] ].
+	listItem dataAt: 'first-setup' put: (ExternalAddress fromAddress: 1).
 
 	self storePresenter: child.
 	expander := GtkTreeExpander newWidget: child adapter widget.

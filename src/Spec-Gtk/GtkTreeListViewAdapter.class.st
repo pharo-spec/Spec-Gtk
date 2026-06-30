@@ -52,6 +52,8 @@ GtkTreeListViewAdapter >> alternateRowsColor [
 { #category : 'private - factory' }
 GtkTreeListViewAdapter >> announceElement: anItem expanded: aBoolean [
 
+	logger trace: anItem.
+
 	self runInSystem: [	
 		self presenter announce: (SpTreeExpansionChanged new
 			item: anItem;

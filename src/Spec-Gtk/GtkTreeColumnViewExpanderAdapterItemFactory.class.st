@@ -16,6 +16,8 @@ GtkTreeColumnViewExpanderAdapterItemFactory >> bind: listItem [
 
 	expander :=  self objectAtHandle: listItem child.
 	
+	self ensureExpandSignalOn: listItem.
+	
 	row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
 	expander listRow: row.
 	child := self presenterAtHandle: expander child getHandle.
@@ -39,23 +41,45 @@ GtkTreeColumnViewExpanderAdapterItemFactory >> connectNotifyExpand: aBlock [
 	expandAction := aBlock
 ]
 
+{ #category : 'as yet unclassified' }
+GtkTreeColumnViewExpanderAdapterItemFactory >> ensureExpandSignalOn: listItem [
+	"I am using this mechanism because on setup there is no list row yet, it will 
+	 be created at a point between setup and bind. As I want to avoid multiple
+	 registration of the signal, I mark the item on setup, then I realise on bind."
+	| row |
+
+	(listItem dataAt: 'first-setup') asInteger = 1 ifFalse: [ ^ self ].
+	
+	listItem dataAt: 'first-setup' put: ExternalAddress null.
+
+	expandAction ifNotNil: [ 
+		row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
+		row isValidHandle ifTrue: [
+			| callback |
+			callback := self expandCallback.
+			row 
+				signal: 'notify::expanded' 
+				connectAfter: callback ] ]
+]
+
 { #category : 'private' }
 GtkTreeColumnViewExpanderAdapterItemFactory >> expandCallback [
 
 	^ expandCallback ifNil: [
-			  expandCallback := GCallback
-				                    signature: #( void #( void #* rowHandle #, void #* pspec #, gpointer user_data ) )
-				                    block: [ :rowHandle :pspec :user_data | self rowExpanded: rowHandle ] ]
+		expandCallback := GCallback
+		    signature: #(void #(void *rowHandle, void *pspec, gpointer user_data))
+		    block: [ :rowHandle :pspec :user_data | self rowExpanded: rowHandle ] ]
 ]
 
 { #category : 'private' }
 GtkTreeColumnViewExpanderAdapterItemFactory >> itemFromRow: row [
-
 	| itemReference itemStore item |
+	
 	itemReference := row item.
 	itemStore := store storeAt: (itemReference dataAt: 'store').
 	item := itemStore itemAtHandle: itemReference getHandle.
 	itemReference objectUnref.
+	
 	^ item
 ]
 
@@ -77,15 +101,7 @@ GtkTreeColumnViewExpanderAdapterItemFactory >> setup: listItem [
 	child := self column setupAction cull: presenter.
 	child build.
 
-	expandAction ifNotNil: [
-		| row |
-		row := GtkTreeListRow fromHandleUnowned: listItem item getHandle.
-		row isValidHandle ifTrue: [
-			| callback |
-			callback := self expandCallback.
-			row 
-				signal: 'notify::expanded' 
-				connectAfter: callback ] ].
+	listItem dataAt: 'first-setup' put: (ExternalAddress fromAddress: 1).
 
 	self storePresenter: child.
 	expander := GtkTreeExpander newWidget: child adapter widget.
