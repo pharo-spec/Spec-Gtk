@@ -79,10 +79,15 @@ GtkTreeListViewAdapterItemFactory >> expandCallback [
 
 { #category : 'private' }
 GtkTreeListViewAdapterItemFactory >> itemFromRow: row [
-	| itemReference itemStore item |
+	| storeReference itemReference itemStore item |
 
 	itemReference := row item.
-	itemStore := store storeAt: (itemReference dataAt: 'store').
+	itemReference isNullOrNil ifTrue: [ ^ nil ].
+	
+	storeReference := itemReference dataAt: 'store'.
+	itemStore := store storeAt: storeReference ifAbsent: [ nil ].
+	itemStore ifNil: [ ^ nil ].
+	
 	item := itemStore itemAtHandle: itemReference getHandle.
 	itemReference objectUnref.
 
@@ -97,9 +102,10 @@ GtkTreeListViewAdapterItemFactory >> rowExpanded: rowHandle [
 	
 	row := GtkTreeListRow fromHandleUnowned: rowHandle.
 	
-	expandAction
-		cull: (self itemFromRow: row)
-		cull: row isExpanded
+	(self itemFromRow: row) ifNotNil: [ :item |
+		expandAction
+			cull: item
+			cull: row isExpanded ]
 ]
 
 { #category : 'accessing' }
