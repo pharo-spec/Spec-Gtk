@@ -129,26 +129,27 @@ GtkBoxAdapter >> newVertical [
 
 { #category : 'accessing' }
 GtkBoxAdapter >> replace: aPresenter with: otherPresenter withConstraints: constraints [
-	| oldWidget siblingWidget |
 	
-	"preserve aPresenter widget (in case it will be used later)"
-	oldWidget := aPresenter adapter widget. 
-	oldWidget ensureObjectRefAndAutoRelease.
-	siblingWidget := widget children before: oldWidget ifAbsent: [ nil ].	
+	self innerWidgetDo: [ :w |
+		| oldWidget siblingWidget |
 
-	self remove: aPresenter.
-	
-	siblingWidget
-		ifNotNil: [ 
-			self 
-				add: otherPresenter 
-				constraints: constraints 
-				after: siblingWidget ]
-		ifNil: [
-			self 
-				add: otherPresenter
-				constraints: constraints ] .
-	
+		"preserve aPresenter widget (in case it will be used later)"
+		oldWidget := aPresenter adapter widget. 
+		oldWidget ensureObjectRefAndAutoRelease.
+		siblingWidget := widget children before: oldWidget ifAbsent: [ nil ].	
+
+		self remove: aPresenter.
+		
+		siblingWidget
+			ifNotNil: [ 
+				self 
+					add: otherPresenter 
+					constraints: constraints 
+					after: siblingWidget ]
+			ifNil: [
+				self 
+					add: otherPresenter
+					constraints: constraints ] ]
 ]
 
 { #category : 'updating' }
