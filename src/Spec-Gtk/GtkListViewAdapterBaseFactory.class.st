@@ -172,5 +172,6 @@ GtkListViewAdapterBaseFactory >> unbind: listItem [
 
 	childHandle := listItem child.
 	self removeStoredPresenterAtHandle: childHandle"
+	
 	logger trace
 ]

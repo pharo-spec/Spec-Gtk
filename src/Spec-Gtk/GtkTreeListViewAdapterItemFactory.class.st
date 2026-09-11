@@ -136,3 +136,29 @@ GtkTreeListViewAdapterItemFactory >> store: aRootStore [
 	store := aRootStore.
 	storedObjects removeAll
 ]
+
+{ #category : 'accessing' }
+GtkTreeListViewAdapterItemFactory >> unbind: listItem [
+	"Releasing model of cell presenter on unbind because 
+	 - it will not be show anymore, is wrong to think is already binded.
+	 - models can have announcements related to the living row, and keeping them there can cause 
+	   crashes (as the model send events to a potenatial inexistent row.
+	 
+	 This method is mirrored with GtkTreeColumnViewAdapterItemFactory>>unbind:
+	 Any change here needs to be replicated there!"
+	| expander cellPresenter |
+	
+	logger trace.
+	
+	expander := self presenterAtHandle: listItem child.
+	"child will be a an expander as this is a single column tree, but I validate, just in case :P"
+	expander class = GtkTreeExpander ifFalse: [ ^ self ].	
+	
+	cellPresenter := self presenterAtHandle: expander child getHandle.
+	logger trace: cellPresenter.
+	"I check for model as a guard, but all cells of listView components should understand it"
+	(cellPresenter isNil or: [ (cellPresenter respondsTo: #model:) not])
+		ifTrue: [ ^ self ].
+	
+	cellPresenter model: nil
+]

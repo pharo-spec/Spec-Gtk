@@ -41,7 +41,7 @@ GtkTreeColumnViewExpanderAdapterItemFactory >> connectNotifyExpand: aBlock [
 	expandAction := aBlock
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 GtkTreeColumnViewExpanderAdapterItemFactory >> ensureExpandSignalOn: listItem [
 	"I am using this mechanism because on setup there is no list row yet, it will 
 	 be created at a point between setup and bind. As I want to avoid multiple
