@@ -50,15 +50,17 @@ GtkDialogWindowAdapter >> centeredRelativeTo: aWindowPresenter [
 	self widgetDo: [ :w | w transientTo: aWindowPresenter window ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'private' }
 GtkDialogWindowAdapter >> close [
 
-	self widgetDo: [ :w | w visible: false ]
+	logger trace.
+	super close
 ]
 
 { #category : 'private' }
 GtkDialogWindowAdapter >> closeFromSignal [
 
+	logger trace.
 	super closeFromSignal.
 	runLoop stop
 ]
