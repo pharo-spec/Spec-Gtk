@@ -1,5 +1,5 @@
 "
-Gtk adaptor for `SpListViewPresenter`.
+Gtk adaptor for `SpColumnViewPresenter`.
 "
 Class {
 	#name : 'GtkColumnViewAdapter',

@@ -98,6 +98,38 @@ GtkBaseListViewAdapter >> refreshList [
 ]
 
 { #category : 'private' }
+GtkBaseListViewAdapter >> refreshList: anAnnouncement [
+
+	"if this is not a generator, continue the regular path"
+	(anAnnouncement isKindOf: SpListValueChangedByGeneration) ifFalse: [ ^ self refreshList ].
+	
+	"otherwise, we added rows from a generator, update that"
+	self 
+		refreshListGeneratedFrom: anAnnouncement oldValue 
+		to: anAnnouncement newValue	
+]
+
+{ #category : 'private' }
+GtkBaseListViewAdapter >> refreshListGeneratedFrom: oldSize to: newSize [
+
+	oldSize < newSize ifFalse: [ ^ self ].
+
+	logger trace.
+
+	self runInSystem: [
+		self innerWidgetDo: [ :w |
+			"update items (do not reset!)"
+			w selectionModel model basicItems: self presenter items copy.
+			"inform modification"
+			w selectionModel
+				itemsChangedAt: oldSize
+				removed: 0
+				added: newSize
+		] 
+	]
+]
+
+{ #category : 'private' }
 GtkBaseListViewAdapter >> selectionCompanion [
 
 	^ selectionCompanion ifNil: [ 

@@ -39,6 +39,14 @@ GtkAbstractListAdapter >> refreshList [
 			during: [ self doRefreshList: w ] ]
 ]
 
+{ #category : 'events' }
+GtkAbstractListAdapter >> refreshList: anAnnouncement [
+	"this can provide special handling of the kind of refresh, but for now just 
+	 letting it as is"
+	
+	self refreshList
+]
+
 { #category : 'accessing' }
 GtkAbstractListAdapter >> refreshWidgetSelection [
 	| rowIndexes selection |
