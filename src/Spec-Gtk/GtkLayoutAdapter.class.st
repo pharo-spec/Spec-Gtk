@@ -55,10 +55,13 @@ GtkLayoutAdapter >> applyLayout: aLayout [
 ]
 
 { #category : 'private' }
-GtkLayoutAdapter >> applyStyle: aWidget [
-
-	self presenter styles do: [ :each | 
-		aWidget addClass: each ]
+GtkLayoutAdapter >> applyStyle: aWidget [ 
+	
+	"presenter stylo just applies to first widget"
+	self layout isNested ifTrue: [ ^ self ].
+	
+	self presenter styles 
+		do: [ :each | aWidget addClass: each ]
 ]
 
 { #category : 'private' }

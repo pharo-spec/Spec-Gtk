@@ -76,7 +76,7 @@ GtkMillerAdapter >> applyLayout: aLayout [
 	self presenter whenVisibleChangedDo: [ self toggleVisible: self presenter isVisible ].
 
 	self hideHorizontalScrollBar.
-	self presenter whenHorizontalScrollBarChangedDo: [ :show | self hideHorizontalScrollBar ]
+	"self presenter whenHorizontalScrollBarChangedDo: [ :show | self hideHorizontalScrollBar ]"
 ]
 
 { #category : 'private' }
@@ -303,7 +303,7 @@ GtkMillerAdapter >> remove: aPresenter [
 			self snapToVisibleStart ] ]
 ]
 
-{ #category : 'accessing children' }
+{ #category : 'accessing - children' }
 GtkMillerAdapter >> removeAll [
 
 	self innerWidgetDo: [ :gtkWidget |

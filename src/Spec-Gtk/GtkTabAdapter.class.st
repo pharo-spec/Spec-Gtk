@@ -46,15 +46,15 @@ GtkTabAdapter >> applyLayout: aLayout [
 
 { #category : 'private' }
 GtkTabAdapter >> basicAdd: aPresenter constraints: constraints to: gtkWidget [
-
 	| childWidget labelPresenter labelWidget page |
+	
 	labelPresenter := constraints label asPresenter.
 	labelWidget := labelPresenter hasAdapter
-		               ifTrue: [ labelPresenter adapter widget ]
-		               ifFalse: [ 
-			               labelPresenter
-				               owner: aPresenter owner;
-				               build ].
+		ifTrue: [ labelPresenter adapter widget ]
+		ifFalse: [ 
+		   labelPresenter
+			   owner: aPresenter owner;
+			   build ].
 
 	childWidget := aPresenter buildWithSelector: constraints spec.
 	page := widget newPageLabel: labelWidget content: childWidget.
