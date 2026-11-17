@@ -5,8 +5,7 @@ Class {
 	#name : 'GtkColumnViewAdapter',
 	#superclass : 'GtkBaseListViewAdapter',
 	#instVars : [
-		'elements',
-		'updating'
+		'elements'
 	],
 	#category : 'Spec-Gtk-Adapter-ListView',
 	#package : 'Spec-Gtk',
@@ -228,11 +227,8 @@ GtkColumnViewAdapter >> refreshSelectionModelIn: gtkColumnView [
 	
 	self critical: [
 		| selectionModel |
-		updating == true ifTrue: [ ^ self ].
-		updating := true.
 		selectionModel := self newSelectionModelOn: gtkColumnView.
-		gtkColumnView selectionModel: selectionModel.
-		updating := false ]
+		gtkColumnView selectionModel: selectionModel ]
 ]
 
 { #category : 'private - updating' }
