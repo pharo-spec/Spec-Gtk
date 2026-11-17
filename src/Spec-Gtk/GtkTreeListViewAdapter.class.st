@@ -61,6 +61,17 @@ GtkTreeListViewAdapter >> announceElement: anItem expanded: aBoolean [
 			yourself) ]
 ]
 
+{ #category : 'building' }
+GtkTreeListViewAdapter >> basicRefreshSelectionModelIn: gtkListView [
+	
+	| selectionModel |
+
+	selectionModel := self newSelectionModel.
+	"Update the factory before the setter, which immediately calls back into GTK."
+	gtkListView factory store: selectionModel model store.
+	gtkListView selectionModel: selectionModel
+]
+
 { #category : 'accessing' }
 GtkTreeListViewAdapter >> elementAt: index [
 	| item |
@@ -95,7 +106,8 @@ GtkTreeListViewAdapter >> newItemFactory [
 { #category : 'private - updating' }
 GtkTreeListViewAdapter >> refreshList [
 
-	self backendUpdatingDo: [
+	self withSelectionModelRefreshDo: [
+		self backendUpdatingDo: [
 		
 		self isAlive ifFalse: [ ^ self ].
 		
@@ -109,7 +121,7 @@ GtkTreeListViewAdapter >> refreshList [
 			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
 			 back a non existing anymore model reference objects), causing a crash."
 			w factory reset.
-			w selectionModel: self newSelectionModel ] ]
+			w selectionModel: self newSelectionModel ] ] ]
 ]
 
 { #category : 'building' }

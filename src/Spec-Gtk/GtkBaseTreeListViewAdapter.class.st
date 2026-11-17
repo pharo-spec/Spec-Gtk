@@ -7,7 +7,10 @@ Class {
 		'mutex',
 		'deferredAction',
 		'selectionCompanion',
-		'selectionModelGeneration'
+		'selectionModelGeneration',
+		'refreshStateMutex',
+		'refreshInProgress',
+		'refreshPending'
 	],
 	#pools : [
 		'GtkListScrollFlags'
@@ -33,6 +36,12 @@ GtkBaseTreeListViewAdapter >> addSpecialActions [
 	self presenter allWindowLike do: [ :each |
 		each withAdapterDo: [ :anAdapter |
 			anAdapter addSpecialActionsToListWidget: self ] ]
+]
+
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> basicRefreshSelectionModelIn: gtkWidget [
+
+	self subclassResponsibility
 ]
 
 { #category : 'expanding-collapsing' }
@@ -125,6 +134,13 @@ GtkBaseTreeListViewAdapter >> findAndExpandPath: aPath in: aModel thenDo: aBlock
 						thenDo: aBlock ]
 				ifEmpty: [ 
 					aBlock value: row ] ]
+]
+
+{ #category : 'initialization' }
+GtkBaseTreeListViewAdapter >> initialize [
+
+	super initialize.
+	refreshStateMutex := Mutex new
 ]
 
 { #category : 'testing' }
@@ -251,7 +267,8 @@ GtkBaseTreeListViewAdapter >> rebuild [
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> refreshSelectionModelIn: gtkWidget [
 
-	self subclassResponsibility
+	self withSelectionModelRefreshDo: [
+		self basicRefreshSelectionModelIn: gtkWidget ]
 ]
 
 { #category : 'private' }
@@ -259,6 +276,12 @@ GtkBaseTreeListViewAdapter >> refreshTree [
 
 	self innerWidgetDo: [ :w |
 		self refreshSelectionModelIn: w ]
+]
+
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> schedulePendingSelectionModelRefresh [
+
+	GRunLoop asyncDefer: [ self updateRoots ]
 ]
 
 { #category : 'building' }
@@ -386,12 +409,12 @@ GtkBaseTreeListViewAdapter >> updatePresenterSelection: position numItems: numIt
 { #category : 'private - updating' }
 GtkBaseTreeListViewAdapter >> updateRoots [
 
-	self backendUpdatingDo: [
-		self innerWidgetDo: [ :w |
-			"IMPORTANT: Do not attempt to change the inner model of the selection model!
-			 GTK will try to inform/notice the removal/addition of elements on it (and calling 
-		 	back a non existing anymore model reference objects), causing a crash."
-			self refreshSelectionModelIn: w ] ]
+	self withSelectionModelRefreshDo: [
+		self backendUpdatingDo: [
+			self innerWidgetDo: [ :w |
+				"GTK can call back before this replacement returns. Keep the factory and
+				 selection model paired until it does."
+				self basicRefreshSelectionModelIn: w ] ] ]
 ]
 
 { #category : 'building' }
@@ -459,4 +482,23 @@ GtkBaseTreeListViewAdapter >> withRootIndex: index in: aModel do: aBlock [
 		do: [ :row | 
 			row isNullOrNil 
 				ifFalse: [ aBlock value: row ] ]
+]
+
+{ #category : 'private - updating' }
+GtkBaseTreeListViewAdapter >> withSelectionModelRefreshDo: aBlock [
+	| shouldRefresh scheduleAgain |
+
+	shouldRefresh := refreshStateMutex critical: [
+		refreshInProgress == true
+			ifTrue: [ refreshPending := true. false ]
+			ifFalse: [ refreshInProgress := true. true ] ].
+	shouldRefresh ifFalse: [ ^ self ].
+
+	^ aBlock ensure: [
+		scheduleAgain := refreshStateMutex critical: [
+			refreshInProgress := false.
+			refreshPending == true
+				ifTrue: [ refreshPending := false. true ]
+				ifFalse: [ false ] ].
+		scheduleAgain ifTrue: [ self schedulePendingSelectionModelRefresh ] ]
 ]

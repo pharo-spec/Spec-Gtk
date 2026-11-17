@@ -54,6 +54,18 @@ GtkTreeColumnViewAdapter >> announceElement: anItem expanded: aBoolean [
 			yourself) ]
 ]
 
+{ #category : 'building' }
+GtkTreeColumnViewAdapter >> basicRefreshSelectionModelIn: gtkColumnView [
+
+	| selectionModel |
+
+	selectionModel := self newSelectionModel.
+	"Update factories before the setter, which immediately calls back into GTK."
+	gtkColumnView columns do: [ :each |
+		each factory store: selectionModel model store ].
+	gtkColumnView selectionModel: selectionModel
+]
+
 { #category : 'private' }
 GtkTreeColumnViewAdapter >> configureScrolling [
 	"
